@@ -6,6 +6,7 @@
   "prettier.bracketSpacing": false,
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "files.exclude": {
+    "build": true,
     ".bash_history": true,
     ".viminfo": true,
     ".vimrc": true

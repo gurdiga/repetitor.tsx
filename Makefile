@@ -7,12 +7,12 @@ build: umd_node_modules
 	@for module_path in $(PAGE_MODULES); do \
 		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
 			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
-		echo "$$module_path -> docs/$$path_name"; \
-		mkdir -p docs/$$path_name; \
-		cp src/page-template.html docs/$$path_name/index.html; \
+		echo "$$module_path -> build/$$path_name"; \
+		mkdir -p build/$$path_name; \
+		cp src/page-template.html build/$$path_name/index.html; \
 		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
 		tsc-bundle $$tsconfig \
-			--outFile docs/$$path_name/bundle.js \
+			--outFile build/$$path_name/bundle.js \
 			--importAs React=react \
 			--importAs ReactDOM=react-dom \
 			--importAs typestyle=typestyle \
@@ -28,10 +28,10 @@ watch: umd_node_modules
 	@for module_path in $(PAGE_MODULES); do \
 		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
 			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
-		cp src/page-template.html docs/$$path_name/index.html; \
+		cp src/page-template.html build/$$path_name/index.html; \
 		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
 		tsc-bundle $$tsconfig \
-			--outFile docs/$$path_name/bundle.js \
+			--outFile build/$$path_name/bundle.js \
 			--importAs React=react \
 			--importAs ReactDOM=react-dom \
 			--importAs typestyle=typestyle \
@@ -39,21 +39,21 @@ watch: umd_node_modules
 			--watch & \
 	done
 
-umd_node_modules: docs/umd_node_modules \
-	docs/umd_node_modules/react.production.min.js \
-	docs/umd_node_modules/react-dom.production.min.js \
-	docs/umd_node_modules/typestyle.min.js
+umd_node_modules: build/umd_node_modules \
+	build/umd_node_modules/react.production.min.js \
+	build/umd_node_modules/react-dom.production.min.js \
+	build/umd_node_modules/typestyle.min.js
 
-docs/umd_node_modules:
-	mkdir -p docs/umd_node_modules
+build/umd_node_modules:
+	mkdir -p build/umd_node_modules
 
-docs/umd_node_modules/react.production.min.js: node_modules/react/umd/react.production.min.js
+build/umd_node_modules/react.production.min.js: node_modules/react/umd/react.production.min.js
 	cp $? $@
 
-docs/umd_node_modules/react-dom.production.min.js: node_modules/react-dom/umd/react-dom.production.min.js
+build/umd_node_modules/react-dom.production.min.js: node_modules/react-dom/umd/react-dom.production.min.js
 	cp $? $@
 
-docs/umd_node_modules/typestyle.min.js: node_modules/typestyle/umd/typestyle.min.js
+build/umd_node_modules/typestyle.min.js: node_modules/typestyle/umd/typestyle.min.js
 	cp $? $@
 
 o: open
@@ -64,6 +64,8 @@ e: edit
 edit:
 	code -n .
 
+x:
+
 deploy:
 	@git diff-index --quiet HEAD || \
 		{ echo "\nGit is not clean.\n"; exit 1; };
@@ -71,13 +73,15 @@ deploy:
 	git checkout gh-pages
 	git reset --hard master
 	make build minify
-	git add --force docs
-	git commit docs -m 'Deploy'
-	git push origin gh-pages
+
+	mv build/* .
+	git add .
+	git commit -m "Deploy at `date`"
+	git push --force origin gh-pages
 	git checkout master
 
 minify:
-	@find docs -name bundle.js \
+	@find build/ -name bundle.js \
 	| while read bundle; do \
 		echo "Minifying $$bundle..."; \
 		uglifyjs --compress --mangle -- $$bundle > $$bundle.min \
