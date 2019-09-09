@@ -8,7 +8,8 @@ build: umd_node_modules
 		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
 			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
 		echo "$$module_path -> docs/$$path_name"; \
-		cp docs/index-template.html docs/$$path_name/index.html; \
+		mkdir -p docs/$$path_name; \
+		cp src/page-template.html docs/$$path_name/index.html; \
 		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
 		tsc-bundle $$tsconfig \
 			--outFile docs/$$path_name/bundle.js \
@@ -27,7 +28,7 @@ watch: umd_node_modules
 	@for module_path in $(PAGE_MODULES); do \
 		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
 			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
-		cp docs/index-template.html docs/$$path_name/index.html; \
+		cp src/page-template.html docs/$$path_name/index.html; \
 		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
 		tsc-bundle $$tsconfig \
 			--outFile docs/$$path_name/bundle.js \
@@ -63,9 +64,17 @@ e: edit
 edit:
 	code -n .
 
-deploy: minify
-	git commit docs -m 'Minified bundles'
-	git push
+deploy:
+	@git diff-index --quiet HEAD || \
+		{ echo "\nGit is not clean.\n"; exit 1; };
+
+	git checkout gh-pages
+	git reset --hard master
+	make build minify
+	git add --force docs
+	git commit docs -m 'Deploy'
+	git push origin gh-pages
+	git checkout master
 
 minify:
 	@find docs -name bundle.js \
