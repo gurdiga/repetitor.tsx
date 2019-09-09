@@ -27,6 +27,7 @@ watch: umd_node_modules
 	@for module_path in $(PAGE_MODULES); do \
 		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
 			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
+		cp docs/index-template.html docs/$$path_name/index.html; \
 		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
 		tsc-bundle $$tsconfig \
 			--outFile docs/$$path_name/bundle.js \
@@ -37,21 +38,21 @@ watch: umd_node_modules
 			--watch & \
 	done
 
-umd_node_modules: docs/node_modules \
-	docs/node_modules/react.production.min.js \
-	docs/node_modules/react-dom.production.min.js \
-	docs/node_modules/typestyle.min.js
+umd_node_modules: docs/umd_node_modules \
+	docs/umd_node_modules/react.production.min.js \
+	docs/umd_node_modules/react-dom.production.min.js \
+	docs/umd_node_modules/typestyle.min.js
 
-docs/node_modules:
-	mkdir -p docs/node_modules
+docs/umd_node_modules:
+	mkdir -p docs/umd_node_modules
 
-docs/node_modules/react.production.min.js: node_modules/react/umd/react.production.min.js
+docs/umd_node_modules/react.production.min.js: node_modules/react/umd/react.production.min.js
 	cp $? $@
 
-docs/node_modules/react-dom.production.min.js: node_modules/react-dom/umd/react-dom.production.min.js
+docs/umd_node_modules/react-dom.production.min.js: node_modules/react-dom/umd/react-dom.production.min.js
 	cp $? $@
 
-docs/node_modules/typestyle.min.js: node_modules/typestyle/umd/typestyle.min.js
+docs/umd_node_modules/typestyle.min.js: node_modules/typestyle/umd/typestyle.min.js
 	cp $? $@
 
 o: open
