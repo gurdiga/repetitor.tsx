@@ -1,7 +1,13 @@
 import * as React from "react";
 
-export class HelloWorld extends React.Component<{}, {}> {
-	render() {
-		return <span>Hello World</span>;
-	}
+import * as Styles from "HelloWorld.css";
+
+interface Props {
+  name?: string;
+}
+
+export class Hello extends React.Component<Props, {}> {
+  render() {
+    return <span className={Styles.title}>Hello {this.props.name || "World"}</span>;
+  }
 }
