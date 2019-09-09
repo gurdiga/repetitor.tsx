@@ -1,8 +1,13 @@
 {
-	"typescript.preferences.importModuleSpecifier": "non-relative",
-	"typescript.preferences.quoteStyle": "double",
-	"typescript.tsdk": "./node_modules/typescript/lib",
-	"editor.tabSize": 2,
-	"prettier.bracketSpacing": false,
-	"javascript.preferences.importModuleSpecifier": "non-relative"
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.quoteStyle": "double",
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "editor.tabSize": 2,
+  "prettier.bracketSpacing": false,
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "files.exclude": {
+    ".bash_history": true,
+    ".viminfo": true,
+    ".vimrc": true
+  }
 }
