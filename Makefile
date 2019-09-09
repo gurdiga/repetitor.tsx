@@ -1,6 +1,6 @@
 .ONESHELL:
 
-PAGE_MODULES = $(wildcard src/*/Pages/*Page)
+PAGE_MODULES=`find src/ -type d -name '*Page'`
 
 .PHONY: build
 build: umd_node_modules
@@ -62,3 +62,15 @@ open:
 e: edit
 edit:
 	code -n .
+
+deploy: minify
+	git commit docs -m 'Minified bundles'
+	git push
+
+minify:
+	@find docs -name bundle.js \
+	| while read bundle; do \
+		echo "Minifying $$bundle..."; \
+		uglifyjs --compress --mangle -- $$bundle > $$bundle.min \
+		&& mv $$bundle.min $$bundle; \
+	done
