@@ -1,21 +1,21 @@
 {
-	"name": "react-min",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"dependencies": {},
-	"devDependencies": {
-		"@types/react": "^16.9.2",
-		"@types/react-dom": "^16.9.0",
-		"react": "^16.9.0",
-		"react-dom": "^16.9.0",
-		"typescript": "^3.6.2",
-		"typescript-bundle": "^1.0.16",
-		"typestyle": "^2.0.4",
-		"uglify-js": "^3.6.0"
-	}
+  "name": "repetitor.tsx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Vlad GURDIGA <gurdiga@gmail.com>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "typescript": "^3.6.2",
+    "typescript-bundle": "^1.0.16",
+    "typestyle": "^2.0.4",
+    "uglify-js": "^3.6.0"
+  }
 }
