@@ -9,7 +9,8 @@ build: umd_node_modules
 			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
 		echo "$$module_path -> docs/$$path_name"; \
 		cp docs/index-template.html docs/$$path_name/index.html; \
-		tsc-bundle $$module_path/tsconfig.json \
+		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
+		tsc-bundle $$tsconfig \
 			--outFile docs/$$path_name/bundle.js \
 			--importAs React=react \
 			--importAs ReactDOM=react-dom \
@@ -26,7 +27,8 @@ watch: umd_node_modules
 	@for module_path in $(PAGE_MODULES); do \
 		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
 			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
-		tsc-bundle $$module_path/tsconfig.json \
+		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
+		tsc-bundle $$tsconfig \
 			--outFile docs/$$path_name/bundle.js \
 			--importAs React=react \
 			--importAs ReactDOM=react-dom \
