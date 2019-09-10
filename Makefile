@@ -71,15 +71,17 @@ deploy:
 		{ echo "\nGit is not clean.\n"; exit 1; };
 
 	git checkout gh-pages
-	git reset --hard master
+	git checkout master -- src/ tsconfig.json
 	make build minify
+
+	git reset
+	git clean -fd
 
 	cp -rf build/* .
 	rm -rf build/
 
 	git add .
-	git commit -m "Deploy at `date`"
-	git push --force origin gh-pages
+	git commit -m "Deploy at `date`" && git push --force origin gh-pages || echo "\nNo changes to deploy.\n"
 	git checkout master
 
 minify:
