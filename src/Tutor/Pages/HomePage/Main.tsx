@@ -5,4 +5,6 @@ import {HomePage} from "Tutor/Pages/HomePage/HomePage";
 
 // path name: /
 
+document.title = "Home";
+
 ReactDOM.render(<HomePage />, document.getElementById("root"));
