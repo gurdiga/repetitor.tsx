@@ -74,7 +74,9 @@ deploy:
 	git reset --hard master
 	make build minify
 
-	mv build/* .
+	cp -rf build/* .
+	rm -rf build/
+
 	git add .
 	git commit -m "Deploy at `date`"
 	git push --force origin gh-pages
