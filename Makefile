@@ -65,7 +65,7 @@ build/umd_node_modules/typestyle.min.js: node_modules/typestyle/umd/typestyle.mi
 build/umd_node_modules/csx.min.js: node_modules/csx/umd/csx.min.js
 	cp $? $@
 
-build/umd_node_modules/csstips.min.js: ../../tmp/csstips/umd/csstips.min.js
+build/umd_node_modules/csstips.min.js: node_modules/csstips/umd/csstips.min.js
 	cp $? $@
 
 o: open
