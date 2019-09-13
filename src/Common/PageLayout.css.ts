@@ -1,12 +1,13 @@
 import {style, forceRenderStyles} from "typestyle";
-import {px} from "csx";
-import {vertical, verticallySpaced} from "csstips";
+import {vertical} from "csstips";
 
-import {setupGlobalStyles} from "Common/Global.css";
+import {GlobalCss} from "Common/Global.css";
 
-setupGlobalStyles();
+GlobalCss.setupGlobalStyles();
 forceRenderStyles();
 
-export const Wrapper = style(vertical);
+export namespace PageLayoutCss {
+  export const Wrapper = style(vertical);
 
-export const MainContent = style();
+  export const MainContent = style();
+}
