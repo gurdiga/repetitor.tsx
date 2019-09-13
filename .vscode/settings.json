@@ -4,7 +4,6 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "editor.tabSize": 2,
   "prettier.bracketSpacing": false,
-  "javascript.preferences.importModuleSpecifier": "non-relative",
   "files.exclude": {
     "build": true,
     ".bash_history": true,
