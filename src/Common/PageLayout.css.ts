@@ -1,15 +1,12 @@
 import {style, forceRenderStyles} from "typestyle";
+import {px} from "csx";
+import {vertical, verticallySpaced} from "csstips";
+
 import {setupGlobalStyles} from "Common/Global.css";
-import {em} from "csx";
-import {padding, vertical, verticallySpaced} from "csstips";
 
 setupGlobalStyles();
 forceRenderStyles();
 
-export const FlexChild = style(vertical, verticallySpaced(em(1)), padding(em(10)), {});
-/* Have some basic elements:
+export const Wrapper = style(vertical);
 
-- horizontal/vertical container
-- flexible/conten child
-
-*/
+export const MainContent = style();

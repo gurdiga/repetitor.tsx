@@ -1,4 +1,5 @@
-import {cssRule, cssRaw} from "typestyle";
+import {cssRule} from "typestyle";
+import {normalize, setupPage} from "csstips";
 
 const rootElementSelector = "#root";
 
@@ -17,24 +18,11 @@ const fontFamily = [
 ];
 
 export function setupGlobalStyles() {
-  cssRaw(`
-/**
- * Reset CSS
- */
-html, body {
-  height: 100%;
-  width: 100%;
-  padding: 0px;
-  margin: 0px;
-}
-html {
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-`);
+  // Recommended by TypeStyle guide. https://typestyle.github.io/#/page
+  normalize();
+  setupPage(rootElementSelector);
 
+  // Mine.
   cssRule(rootElementSelector, {
     fontFamily,
   });
