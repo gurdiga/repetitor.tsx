@@ -16,13 +16,15 @@ build: umd_node_modules
 			--importAs React=react \
 			--importAs ReactDOM=react-dom \
 			--importAs typestyle=typestyle \
+			--importAs csx=csx \
+			--importAs csstips=csstips \
 			--exportAs repetitor \
 			|| exit 1; \
 	done
 
 s: server
 server: watch
-	cd docs && ~/src/nginx-server/nginx-server.py
+	cd build/ && ~/src/nginx-server/nginx-server.py
 
 watch: umd_node_modules
 	@for module_path in $(PAGE_MODULES); do \
@@ -35,6 +37,8 @@ watch: umd_node_modules
 			--importAs React=react \
 			--importAs ReactDOM=react-dom \
 			--importAs typestyle=typestyle \
+			--importAs csx=csx \
+			--importAs csstips=csstips \
 			--exportAs repetitor \
 			--watch & \
 	done
@@ -42,7 +46,9 @@ watch: umd_node_modules
 umd_node_modules: build/umd_node_modules \
 	build/umd_node_modules/react.production.min.js \
 	build/umd_node_modules/react-dom.production.min.js \
-	build/umd_node_modules/typestyle.min.js
+	build/umd_node_modules/typestyle.min.js \
+	build/umd_node_modules/csx.min.js \
+	build/umd_node_modules/csstips.min.js
 
 build/umd_node_modules:
 	mkdir -p build/umd_node_modules
@@ -54,6 +60,12 @@ build/umd_node_modules/react-dom.production.min.js: node_modules/react-dom/umd/r
 	cp $? $@
 
 build/umd_node_modules/typestyle.min.js: node_modules/typestyle/umd/typestyle.min.js
+	cp $? $@
+
+build/umd_node_modules/csx.min.js: node_modules/csx/umd/csx.min.js
+	cp $? $@
+
+build/umd_node_modules/csstips.min.js: ../../tmp/csstips/umd/csstips.min.js
 	cp $? $@
 
 o: open
