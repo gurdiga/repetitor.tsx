@@ -1,3 +1,9 @@
 import * as React from "react";
 
-export const HomePage = () => <h1>Home Page</h1>;
+import {PageLayout} from "Common/PageLayout";
+
+export const HomePage = () => (
+  <PageLayout>
+    <h1>Home Page</h1>
+  </PageLayout>
+);
