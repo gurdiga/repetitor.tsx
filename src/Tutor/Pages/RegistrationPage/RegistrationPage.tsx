@@ -1,14 +1,16 @@
 import * as React from "react";
 
+import {PageLayout} from "Common/PageLayout";
+
 export const RegistrationPage = () => {
   React.useEffect(() => {
     document.title = "Înregistrare";
   });
 
   return (
-    <>
-      <h1>RegistrationPage</h1>
+    <PageLayout>
+      <h1>Înregistrare tutore</h1>
       <p>TODO</p>
-    </>
+    </PageLayout>
   );
 };
