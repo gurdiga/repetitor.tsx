@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const PageLayout = (props: Props) => (
-  <div className={classes(PageLayoutCss.MainContent, DEBUG_LAYOUT && UtilsCss.DebugLayout)}>
+  <div className={classes(PageLayoutCss.Wrapper, DEBUG_LAYOUT && UtilsCss.DebugLayout)}>
     <nav>
       <TopNavigation />
     </nav>
