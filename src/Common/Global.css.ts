@@ -1,5 +1,6 @@
 import {cssRule} from "typestyle";
 import {normalize, setupPage} from "csstips";
+import {important} from "csx";
 
 const rootElementSelector = "#root";
 
@@ -26,6 +27,10 @@ export namespace GlobalCss {
     // Mine.
     cssRule(rootElementSelector, {
       fontFamily,
+    });
+
+    cssRule("*", {
+      margin: important(0),
     });
   }
 }
