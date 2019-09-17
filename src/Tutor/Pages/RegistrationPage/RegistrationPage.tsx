@@ -19,6 +19,10 @@ export const RegistrationPage = () => (
           <label htmlFor="password">Parola:</label>
           <input type="password" id="password" />
         </li>
+        <li>
+          <label htmlFor="passwordConfirmation">Confirmarea parolei:</label>
+          <input type="password" id="passwordConfirmation" />
+        </li>
       </ul>
     </form>
   </PageLayout>

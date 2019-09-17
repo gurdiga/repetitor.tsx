@@ -1,11 +1,10 @@
-import {style, forceRenderStyles} from "typestyle";
+import {style} from "typestyle";
 import {vertical, padding, center, horizontal} from "csstips";
 
 import {GlobalCss} from "Common/Global.css";
 import {em} from "csx";
 
 GlobalCss.setupGlobalStyles();
-forceRenderStyles();
 
 export namespace PageLayoutCss {
   export const Wrapper = style(vertical, center, padding(em(0.5), em(1)));

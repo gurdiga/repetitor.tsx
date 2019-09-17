@@ -1,8 +1,6 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-
+import {PageRendering} from "Common/PageRendering";
 import {RegistrationPage} from "Tutor/Pages/RegistrationPage/RegistrationPage";
 
 // path name: inregistrare
 
-ReactDOM.render(<RegistrationPage />, document.getElementById("root"));
+PageRendering.render(RegistrationPage);
