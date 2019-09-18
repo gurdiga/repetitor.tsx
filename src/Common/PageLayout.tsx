@@ -33,5 +33,5 @@ export const PageLayout = (props: Props) => {
 };
 
 const Footer = () => {
-  return <>Footer</>;
+  return <pre>Footer</pre>;
 };

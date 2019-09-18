@@ -1,29 +1,18 @@
 import * as React from "react";
 
 import {PageLayout} from "Common/PageLayout";
-import {RegistrationPageCss} from "Tutor/Pages/RegistrationPage/RegistrationPage.css";
+import {Form} from "Common/Components/Form";
+import {TextField} from "Common/Components/FormFields/TextField";
+import {PasswordField} from "Common/Components/FormFields/PasswordField";
 
 export const RegistrationPage = () => (
   <PageLayout title="Înregistrare tutore">
-    <form className={RegistrationPageCss.Form}>
-      <ul className={RegistrationPageCss.FieldList}>
-        <li>
-          <label htmlFor="fullName">Nume complet:</label>
-          <input type="text" id="fullName" autoFocus />
-        </li>
-        <li>
-          <label htmlFor="email">Adresa de email:</label>
-          <input type="email" id="email" />
-        </li>
-        <li>
-          <label htmlFor="password">Parola:</label>
-          <input type="password" id="password" />
-        </li>
-        <li>
-          <label htmlFor="passwordConfirmation">Confirmarea parolei:</label>
-          <input type="password" id="passwordConfirmation" />
-        </li>
-      </ul>
-    </form>
+    <Form
+      fields={[
+        <TextField id="fullName" label="Nume complet" autoFocus />,
+        <TextField id="email" label="Adresa de email" inputType="email" />,
+        <PasswordField id="password" label="Parola" />,
+      ]}
+    />
   </PageLayout>
 );
