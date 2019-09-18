@@ -24,7 +24,7 @@ build: umd_node_modules
 
 s: server
 server: watch
-	cd build/ && ~/src/nginx-server/nginx-server.py
+	http-server --silent -a 127.0.0.1 -p 8000 ./build
 
 watch: umd_node_modules
 	@for module_path in $(PAGE_MODULES); do \
