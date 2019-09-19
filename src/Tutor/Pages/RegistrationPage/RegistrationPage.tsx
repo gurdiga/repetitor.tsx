@@ -9,7 +9,7 @@ export const RegistrationPage = () => (
   <PageLayout title="Înregistrare tutore">
     <Form
       fields={[
-        <TextField id="fullName" label="Nume complet" autoFocus />,
+        <TextField id="fullName" label="Nume deplin" autoFocus />,
         <TextField id="email" label="Adresa de email" inputType="email" />,
         <PasswordField id="password" label="Parola" />,
       ]}

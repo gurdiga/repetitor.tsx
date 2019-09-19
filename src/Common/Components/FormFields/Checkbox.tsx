@@ -1,16 +1,19 @@
 import * as React from "react";
 import {CheckboxCss} from "Common/Components/FormFields/Checkbox.css";
+import {classes} from "typestyle";
 
-interface Props {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
-  isChecked: boolean;
-  onChange: (newState: boolean) => void;
 }
 
-export const Checkbox = (props: Props) => (
-  <div className={CheckboxCss.Container}>
-    <input id={props.id} type="checkbox" checked={props.isChecked} onChange={e => props.onChange(e.target.checked)} />
-    <label htmlFor={props.id}>{props.label}</label>
-  </div>
-);
+export const Checkbox = (props: Props) => {
+  const {id, label, className, ...rest} = props;
+
+  return (
+    <div className={classes(CheckboxCss.Container, className)}>
+      <input id={id} type="checkbox" {...rest} />
+      <label htmlFor={id}>{label}</label>
+    </div>
+  );
+};

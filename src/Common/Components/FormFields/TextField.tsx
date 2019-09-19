@@ -1,9 +1,8 @@
 import * as React from "react";
 
-interface Props {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   id: string;
-  autoFocus?: boolean;
   inputType?: InputType;
 }
 

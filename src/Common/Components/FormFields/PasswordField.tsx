@@ -10,16 +10,17 @@ interface Props {
 }
 
 export const PasswordField = (props: Props) => {
-  const [isPasswordShown, setIsPasswordShown] = React.useState(true);
+  const [shouldUnmaskPassword, setShouldUnmaskPassword] = React.useState(false);
 
   return (
     <>
-      <TextField id={props.id} label={props.label} inputType={isPasswordShown ? "text" : "password"} />
+      <TextField id={props.id} label={props.label} inputType={shouldUnmaskPassword ? "text" : "password"} />
       <Checkbox
         id={`${props.id}-show`}
-        isChecked={isPasswordShown}
-        label="Afișează parola"
-        onChange={setIsPasswordShown}
+        checked={shouldUnmaskPassword}
+        label="Demascați parola"
+        onChange={e => setShouldUnmaskPassword(e.target.checked)}
+        className={PasswordFieldCss.ShowPasswordCheckbox}
       />
     </>
   );
