@@ -4,6 +4,7 @@ import {PageLayout} from "Common/PageLayout";
 import {Form} from "Common/Components/Form";
 import {TextField} from "Common/Components/FormFields/TextField";
 import {PasswordField} from "Common/Components/FormFields/PasswordField";
+import {SubmitButton} from "Common/Components/SubmitButton";
 
 export const RegistrationPage = () => (
   <PageLayout title="Înregistrare tutore">
@@ -13,6 +14,7 @@ export const RegistrationPage = () => (
         <TextField id="email" label="Adresa de email" inputType="email" />,
         <PasswordField id="password" label="Parola" />,
       ]}
+      actionButtons={[<SubmitButton label="Înregistrează" onClick={() => alert(1)} />]}
     />
   </PageLayout>
 );
