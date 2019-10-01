@@ -30,5 +30,9 @@ export namespace ResetCss {
       listStyleType: "none",
       padding: 0,
     });
+
+    cssRule("button", {
+      cursor: "pointer",
+    });
   }
 }

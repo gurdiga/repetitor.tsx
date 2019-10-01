@@ -15,11 +15,20 @@ export namespace PasswordFieldCss {
   export const EyeButton = style({
     border: "none",
     backgroundColor: "transparent",
-    cursor: "pointer",
     width: eyeSize,
     height: eyeSize,
     padding: 0,
     position: "absolute",
     transform: "translateX(-115%)",
+  });
+
+  export const GenerateButton = style({
+    border: "none",
+    backgroundColor: "transparent",
+    padding: 0,
+    textDecoration: "underline",
+    fontSize: percent(75),
+    float: "right",
+    paddingTop: em(0.5),
   });
 }

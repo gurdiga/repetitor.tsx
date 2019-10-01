@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const Form = (props: Props) => (
-  <form onSubmit={e => e.preventDefault()} className={FormCss.FormContainer}>
+  <form onSubmit={e => e.preventDefault()} className={FormCss.FormContainer} noValidate>
     <ul className={FormCss.FieldListContainer}>
       {props.fields.map((field, i) => (
         <li key={i} className={FormCss.FieldContainer}>

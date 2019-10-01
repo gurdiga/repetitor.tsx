@@ -4,17 +4,34 @@ import {PasswordFieldCss} from "Common/Components/FormFields/PasswordField.css";
 import {FormField} from "Common/Components/FormFields/FormField";
 import {FormValidation} from "Common/FormValidation";
 import {ValidationMessage} from "Common/Components/FormFields/ValidationMessage";
+import {PasswordGenerator} from "Common/PasswordGenerator";
 
 interface Props extends FormField.CommonProps {}
 
 export const PasswordField = (props: Props) => {
-  const {id, label, value, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
+  const {id, label, value: initialValue, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
 
+  const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
 
   const [initialValidationMessage] = FormValidation.validateWithRules(value, validationRules);
   const [validationMessage, setValidationMessage] = React.useState(initialValidationMessage);
-  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationMessage, onValueChange);
+
+  const onInput = FormValidation.buildInputEventHandler(
+    validationRules,
+    setValidationMessage,
+    ([newValue, isValid]) => {
+      setValue(newValue);
+      onValueChange([newValue, isValid]);
+    }
+  );
+
+  const onGenerateButtonClick = () => {
+    const password = PasswordGenerator.newPassword();
+
+    setValue(password);
+    setIsMasked(false);
+  };
 
   return (
     <>
@@ -36,6 +53,9 @@ export const PasswordField = (props: Props) => {
           onClick={() => setIsMasked(!isMasked)}
         >
           {isMasked ? eyeClosed : eyeOpened}
+        </button>
+        <button type="button" className={PasswordFieldCss.GenerateButton} onClick={onGenerateButtonClick}>
+          Generează parolă memorabilă
         </button>
       </span>
       {showValidationMessage && <ValidationMessage text={validationMessage} />}
