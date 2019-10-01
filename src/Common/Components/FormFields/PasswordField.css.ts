@@ -28,7 +28,8 @@ export namespace PasswordFieldCss {
     padding: 0,
     textDecoration: "underline",
     fontSize: percent(75),
-    float: "right",
-    paddingTop: em(0.5),
+    position: "absolute",
+    right: 0,
+    transform: "translateY(-115%)",
   });
 }

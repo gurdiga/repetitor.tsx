@@ -26,10 +26,12 @@ export const PasswordField = (props: Props) => {
     }
   );
 
-  const onGenerateButtonClick = () => {
-    const password = PasswordGenerator.newPassword();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-    setValue(password);
+  const onGenerateButtonClick = () => {
+    inputRef.current && inputRef.current.focus();
+
+    setValue(PasswordGenerator.newPassword());
     setIsMasked(false);
   };
 
@@ -44,7 +46,11 @@ export const PasswordField = (props: Props) => {
           value={value}
           onInput={onInput}
           className={PasswordFieldCss.Field}
+          ref={inputRef}
         />
+        <button type="button" className={PasswordFieldCss.GenerateButton} onClick={onGenerateButtonClick}>
+          Generează una bună
+        </button>
         <button
           type="button"
           className={PasswordFieldCss.EyeButton}
@@ -53,9 +59,6 @@ export const PasswordField = (props: Props) => {
           onClick={() => setIsMasked(!isMasked)}
         >
           {isMasked ? eyeClosed : eyeOpened}
-        </button>
-        <button type="button" className={PasswordFieldCss.GenerateButton} onClick={onGenerateButtonClick}>
-          Generează parolă memorabilă
         </button>
       </span>
       {showValidationMessage && <ValidationMessage text={validationMessage} />}
