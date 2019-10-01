@@ -2,20 +2,24 @@ import {style} from "typestyle";
 import {percent, em} from "csx";
 
 export namespace PasswordFieldCss {
-  export const ShowPasswordCheckbox = style({
-    fontSize: percent(80),
-    paddingLeft: em(0.25),
+  export const FieldContainer = style({
+    position: "relative",
   });
 
-  const eyeSize = em(1.5);
+  export const Field = style({
+    width: percent(100),
+  });
+
+  const eyeSize = em(1.75);
 
   export const EyeButton = style({
-    border: "dashed 1px green",
-    background: "transparent",
+    border: "none",
+    backgroundColor: "transparent",
     cursor: "pointer",
     width: eyeSize,
     height: eyeSize,
     padding: 0,
     position: "absolute",
+    transform: "translateX(-115%)",
   });
 }

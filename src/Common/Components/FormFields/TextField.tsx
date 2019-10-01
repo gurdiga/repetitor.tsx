@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import {TextFieldCss} from "Common/Components/FormFields/TextField.css";
 import {FormValidation} from "Common/FormValidation";
 import {FormField} from "Common/Components/FormFields/FormField";
+import {ValidationMessage} from "Common/Components/FormFields/ValidationMessage";
 
 interface Props extends FormField.CommonProps {
   inputType?: InputType;
@@ -22,9 +22,7 @@ export const TextField = (props: Props) => {
     <>
       <label htmlFor={id}>{label}:</label>
       <input type={inputType || "text"} id={id} autoFocus={!!autoFocus} value={value} onInput={onInput} />
-      {showValidationMessage && validationMessage && (
-        <p className={TextFieldCss.ValidationMessage}>{validationMessage}</p>
-      )}
+      {showValidationMessage && <ValidationMessage text={validationMessage} />}
     </>
   );
 };
