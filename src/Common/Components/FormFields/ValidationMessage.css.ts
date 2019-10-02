@@ -7,7 +7,8 @@ export namespace ValidationMessageCss {
     fontSize: percent(80),
     $nest: {
       "&::before": {
-        content: quote("↑"),
+        content: quote("↑ "),
+        fontWeight: "bold",
       },
     },
   });
