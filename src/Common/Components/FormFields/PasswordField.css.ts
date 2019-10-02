@@ -22,6 +22,12 @@ export namespace PasswordFieldCss {
     padding: 0,
     position: "absolute",
     transform: "translateX(-115%)",
+    transition: "opacity 0.5s 0.25s",
+    $nest: {
+      "&:hover": {
+        opacity: 0.1,
+      },
+    },
   });
 
   export const GenerateButton = style({
