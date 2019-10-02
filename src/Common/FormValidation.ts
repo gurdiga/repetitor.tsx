@@ -29,7 +29,7 @@ export namespace FormValidation {
         validationMessage = message;
         return false;
       } else {
-        validationMessage = message;
+        validationMessage = "";
         return true;
       }
     });
