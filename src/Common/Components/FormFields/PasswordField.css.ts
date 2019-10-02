@@ -1,18 +1,21 @@
 import {style} from "typestyle";
 import {percent, em} from "csx";
 
+import {InputCss} from "Common/Components/FormFields/Input.css";
+
 export namespace PasswordFieldCss {
-  export const FieldContainer = style({
+  export const InputContainer = style({
     position: "relative",
   });
 
-  export const Field = style({
+  export const Input = style(InputCss.InputStyle, {
     width: percent(100),
     fontFamily: "monospace",
-    height: em(2.25),
+    fontSize: em(1.25),
+    fontWeight: "normal",
   });
 
-  const eyeSize = em(1.75);
+  const eyeSize = em(2);
 
   export const EyeButton = style({
     border: "none",

@@ -39,14 +39,14 @@ export const PasswordField = (props: Props) => {
     <>
       <label htmlFor={id}>{label}:</label>
 
-      <span className={PasswordFieldCss.FieldContainer}>
+      <span className={PasswordFieldCss.InputContainer}>
         <input
           type={isMasked ? "password" : "text"}
           id={id}
           autoFocus={!!autoFocus}
           value={value}
           onInput={onInput}
-          className={PasswordFieldCss.Field}
+          className={PasswordFieldCss.Input}
           ref={inputRef}
         />
 
