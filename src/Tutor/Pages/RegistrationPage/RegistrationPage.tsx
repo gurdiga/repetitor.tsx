@@ -35,7 +35,7 @@ export const RegistrationPage = () => {
             label="Nume deplin"
             value={fullName.text}
             onValueChange={validateFullName}
-            validationRules={nameValidationRules}
+            validationRules={validationRules.fullName}
             showValidationMessage={showValidationMessage}
           />,
           <TextField
@@ -44,7 +44,7 @@ export const RegistrationPage = () => {
             value={email.text}
             inputType="email"
             onValueChange={validateEmail}
-            validationRules={emailValidationRules}
+            validationRules={validationRules.email}
             showValidationMessage={showValidationMessage}
           />,
           <PasswordField
@@ -52,7 +52,7 @@ export const RegistrationPage = () => {
             label="Parola"
             value={password.text}
             onValueChange={validatePassword}
-            validationRules={passwordValidationRules}
+            validationRules={validationRules.password}
             showValidationMessage={showValidationMessage}
           />,
         ]}
@@ -67,15 +67,19 @@ const initialFieldValue: FormValidation.ValidatedValue = {
   isValid: false,
 };
 
-const nameValidationRules: FormValidation.ValidationRules = {
-  "Can’t be empty": value => value.trim().length == 0,
-  "Too long": value => value.trim().length > 10,
-};
+type FieldName = "fullName" | "email" | "password";
 
-const emailValidationRules: FormValidation.ValidationRules = {
-  "Can’t be empty": value => value.trim().length == 0,
-};
-
-const passwordValidationRules: FormValidation.ValidationRules = {
-  "Can’t be empty": value => value.trim().length == 0,
+const validationRules: Record<FieldName, FormValidation.ValidationRules> = {
+  fullName: {
+    "Numele lipsește.": text => text.trim().length === 0,
+    "Numele pare să fie prea scurt.": text => text.trim().length < 5,
+    "Numele pare să fie prea lung.": text => text.trim().length > 50,
+  },
+  email: {
+    "Adresa de email lipsește.": text => text.trim().length == 0,
+    "Adresa de pare să fie incorectă.": text => !text.includes("@"),
+  },
+  password: {
+    "Parola lipsește.": text => text.trim().length == 0,
+  },
 };
