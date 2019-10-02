@@ -8,6 +8,8 @@ export namespace PasswordFieldCss {
 
   export const Field = style({
     width: percent(100),
+    fontFamily: "monospace",
+    height: em(2.25),
   });
 
   const eyeSize = em(1.75);
