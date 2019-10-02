@@ -31,13 +31,18 @@ export const PasswordField = (props: Props) => {
   const onGenerateButtonClick = () => {
     inputRef.current && inputRef.current.focus();
 
-    setValue(PasswordGenerator.newPassword());
+    const password = PasswordGenerator.newPassword();
+
+    setValue(password);
+    onValueChange([password, true]);
     setIsMasked(false);
+    setValidationMessage("");
   };
 
   return (
     <>
       <label htmlFor={id}>{label}:</label>
+
       <span className={PasswordFieldCss.FieldContainer}>
         <input
           type={isMasked ? "password" : "text"}
@@ -48,9 +53,16 @@ export const PasswordField = (props: Props) => {
           className={PasswordFieldCss.Field}
           ref={inputRef}
         />
-        <button type="button" className={PasswordFieldCss.GenerateButton} onClick={onGenerateButtonClick}>
+
+        <button
+          type="button"
+          className={PasswordFieldCss.GenerateButton}
+          onClick={onGenerateButtonClick}
+          title={PasswordGenerator.description}
+        >
           Generează una bună
         </button>
+
         <button
           type="button"
           className={PasswordFieldCss.EyeButton}
@@ -61,6 +73,7 @@ export const PasswordField = (props: Props) => {
           {isMasked ? eyeClosedIcon : eyeOpenedIcon}
         </button>
       </span>
+
       {showValidationMessage && <ValidationMessage text={validationMessage} />}
     </>
   );

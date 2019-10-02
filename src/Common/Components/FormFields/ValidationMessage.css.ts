@@ -1,5 +1,5 @@
 import {style} from "typestyle";
-import {percent, px, quote} from "csx";
+import {percent, quote} from "csx";
 
 export namespace ValidationMessageCss {
   export const Text = style({

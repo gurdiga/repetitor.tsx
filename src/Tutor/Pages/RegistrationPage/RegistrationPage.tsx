@@ -16,6 +16,7 @@ export const RegistrationPage = () => {
     setShowValidationMessage(true);
 
     if (fullNameIsValid && emailIsValid && passwordIsValid) {
+      console.log(`sendFieldValues`, {fullName, email, password});
       // sendFieldValues();
     }
   };
@@ -58,14 +59,14 @@ export const RegistrationPage = () => {
 };
 
 const nameValidationRules: FormValidation.ValidationRules = {
-  "Can’t be empty": value => !value,
-  "Too long": value => value.length > 10,
+  "Can’t be empty": value => value.trim().length == 0,
+  "Too long": value => value.trim().length > 10,
 };
 
 const emailValidationRules: FormValidation.ValidationRules = {
-  "Can’t be empty": value => !value,
+  "Can’t be empty": value => value.trim().length == 0,
 };
 
 const passwordValidationRules: FormValidation.ValidationRules = {
-  "Can’t be empty": value => !value,
+  "Can’t be empty": value => value.trim().length == 0,
 };
