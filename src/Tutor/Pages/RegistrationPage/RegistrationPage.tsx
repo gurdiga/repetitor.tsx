@@ -8,15 +8,19 @@ import {SubmitButton} from "Common/Components/SubmitButton";
 import {FormValidation} from "Common/FormValidation";
 
 export const RegistrationPage = () => {
+  const [fullName, validateFullName] = React.useState(initialFieldValue);
+  const [email, validateEmail] = React.useState(initialFieldValue);
+  const [password, validatePassword] = React.useState(initialFieldValue);
+
   const [showValidationMessage, setShowValidationMessage] = React.useState(false);
-  const [[fullName, fullNameIsValid], validateFullName] = React.useState(["", false]);
-  const [[email, emailIsValid], validateEmail] = React.useState(["", false]);
-  const [[password, passwordIsValid], validatePassword] = React.useState(["", false]);
+
   const submitForm = () => {
     setShowValidationMessage(true);
 
-    if (fullNameIsValid && emailIsValid && passwordIsValid) {
-      console.log(`sendFieldValues`, {fullName, email, password});
+    const fields = [fullName, email, password];
+
+    if (fields.every(f => f.isValid)) {
+      console.log(`sendFieldValues`, fields.map(f => f.text));
       // sendFieldValues();
     }
   };
@@ -29,7 +33,7 @@ export const RegistrationPage = () => {
             autoFocus
             id="fullName"
             label="Nume deplin"
-            value={fullName}
+            value={fullName.text}
             onValueChange={validateFullName}
             validationRules={nameValidationRules}
             showValidationMessage={showValidationMessage}
@@ -37,7 +41,7 @@ export const RegistrationPage = () => {
           <TextField
             id="email"
             label="Adresa de email"
-            value={email}
+            value={email.text}
             inputType="email"
             onValueChange={validateEmail}
             validationRules={emailValidationRules}
@@ -46,7 +50,7 @@ export const RegistrationPage = () => {
           <PasswordField
             id="password"
             label="Parola"
-            value={password}
+            value={password.text}
             onValueChange={validatePassword}
             validationRules={passwordValidationRules}
             showValidationMessage={showValidationMessage}
@@ -56,6 +60,11 @@ export const RegistrationPage = () => {
       />
     </PageLayout>
   );
+};
+
+const initialFieldValue: FormValidation.ValidatedValue = {
+  text: "",
+  isValid: false,
 };
 
 const nameValidationRules: FormValidation.ValidationRules = {

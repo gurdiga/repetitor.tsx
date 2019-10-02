@@ -14,27 +14,23 @@ export const PasswordField = (props: Props) => {
   const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
 
-  const [initialValidationMessage] = FormValidation.validateWithRules(value, validationRules);
+  const initialValidationMessage = FormValidation.validateWithRules(value, validationRules).validationMessage;
   const [validationMessage, setValidationMessage] = React.useState(initialValidationMessage);
 
-  const onInput = FormValidation.buildInputEventHandler(
-    validationRules,
-    setValidationMessage,
-    ([newValue, isValid]) => {
-      setValue(newValue);
-      onValueChange([newValue, isValid]);
-    }
-  );
+  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationMessage, ({text, isValid}) => {
+    setValue(text);
+    onValueChange({text, isValid});
+  });
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const onGenerateButtonClick = () => {
     inputRef.current && inputRef.current.focus();
 
-    const password = PasswordGenerator.newPassword();
+    const generatedPassword = PasswordGenerator.newPassword();
 
-    setValue(password);
-    onValueChange([password, true]);
+    setValue(generatedPassword);
+    onValueChange({text: generatedPassword, isValid: true});
     setIsMasked(false);
     setValidationMessage("");
   };

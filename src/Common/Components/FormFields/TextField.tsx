@@ -14,7 +14,7 @@ type InputType = "text" | "email" | "password";
 export const TextField = (props: Props) => {
   const {validationRules, onValueChange, id, autoFocus, inputType, label, showValidationMessage, value} = props;
 
-  const [initialValidationMessage] = FormValidation.validateWithRules(value, validationRules);
+  const initialValidationMessage = FormValidation.validateWithRules(value, validationRules).validationMessage;
   const [validationMessage, setValidationMessage] = React.useState(initialValidationMessage);
   const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationMessage, onValueChange);
 
