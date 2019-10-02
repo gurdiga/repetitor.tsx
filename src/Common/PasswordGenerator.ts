@@ -1,4 +1,9 @@
 export namespace PasswordGenerator {
+  export const description = `Generează o parolă memorabilă formată din:
+  - 3 cuvinte aleatorii
+  - 1 literă aleatorie
+  - 2 cifre aleatorii`;
+
   export function newPassword() {
     return [
       random(subjects),
