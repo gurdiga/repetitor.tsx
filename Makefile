@@ -1,5 +1,7 @@
 .ONESHELL:
 
+default: cloud
+
 PAGE_MODULES=`find src/ -type d -name '*Page'`
 
 .PHONY: build
@@ -103,3 +105,16 @@ minify:
 		uglifyjs --compress --mangle -- $$bundle > $$bundle.min \
 		&& mv $$bundle.min $$bundle; \
 	done
+
+cloud: aws-cloud
+
+aws-cloud.json: src/cloud/aws/formation.ts
+	cloudform $< > $@
+
+aws-cloud: aws-cloud.json
+	aws cloudformation deploy \
+		--profile gurdiga \
+		--stack-name testing \
+		--template-file $< \
+		--parameter-overrides \
+			DeployEnv=stage
