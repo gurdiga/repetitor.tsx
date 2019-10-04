@@ -108,10 +108,10 @@ minify:
 
 cloud: aws-cloud
 
-aws-cloud.json: src/cloud/aws/formation.ts
+aws-cloud-formation-stack.json: src/cloud/aws/cloud-formation/stack.ts
 	cloudform $< > $@
 
-aws-cloud: aws-cloud.json
+aws-cloud: aws-cloud-formation-stack.json
 	aws cloudformation deploy \
 		--profile gurdiga \
 		--stack-name testing \
