@@ -108,13 +108,19 @@ minify:
 
 cloud: aws-cloud
 
-aws-cloud-formation-stack.json: src/cloud/aws/cloud-formation/stack.ts
-	cloudform $< > $@
-
-aws-cloud: aws-cloud-formation-stack.json
+aws-cloud: \
+		aws-cloud-formation-stack.json \
+		test-lambda.zip
 	aws cloudformation deploy \
 		--profile gurdiga \
 		--stack-name testing \
 		--template-file $< \
 		--parameter-overrides \
 			DeployEnv=stage
+
+aws-cloud-formation-stack.json: src/cloud/aws/cloud-formation/stack.ts
+	cloudform $< > $@
+	# TODO: endure the output is not empty. ifne?
+
+test-lambda.zip: src/cloud/aws/lambda/test-lambda
+	zip -q -r $@ $<
