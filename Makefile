@@ -124,3 +124,7 @@ aws-cloud-formation-stack.json: src/cloud/aws/cloud-formation/stack.ts
 
 test-lambda.zip: src/cloud/aws/lambda/test-lambda
 	zip -q -r $@ $<
+
+update:
+	npm update
+	make build && git commit -am 'NPM packages update'
