@@ -1,3 +1,5 @@
 build/
 node_modules/
-aws-cloud-formation-stack.json
+
+src/cloud/aws/cloud-formation/stack.json
+src/cloud/aws/cloud-formation/lambda-stack-packaged.json

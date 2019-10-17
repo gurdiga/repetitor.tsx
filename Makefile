@@ -109,18 +109,30 @@ minify:
 cloud: aws-cloud
 
 aws-cloud: \
-		aws-cloud-formation-stack.json \
+		src/cloud/aws/cloud-formation/stack.json \
 		test-lambda.zip
 	aws cloudformation deploy \
-		--profile gurdiga \
-		--stack-name testing \
+		--profile gurdiga-admin \
+		--stack-name test-stack \
+		--capabilities CAPABILITY_IAM \
 		--template-file $< \
 		--parameter-overrides \
 			DeployEnv=stage
 
-aws-cloud-formation-stack.json: src/cloud/aws/cloud-formation/stack.ts
-	cloudform $< > $@
-	# TODO: endure the output is not empty. ifne?
+src/cloud/aws/cloud-formation/lambda-stack-packaged.json: \
+		src/cloud/aws/cloud-formation/lambda-stack.ts \
+		src/cloud/aws/cloud-formation/lambda.ts
+	cloudform $< > $@ || rm $@
+
+src/cloud/aws/cloud-formation/stack.json: \
+		src/cloud/aws/cloud-formation/stack.ts \
+		src/cloud/aws/cloud-formation/lambda-stack-packaged.json
+	cloudform $< > $@.temp
+	if [ -s $@.temp ]; then \
+		mv $@.temp $@; \
+	else \
+		rm $@.temp; \
+	fi
 
 test-lambda.zip: src/cloud/aws/lambda/test-lambda
 	zip -q -r $@ $<
@@ -128,3 +140,10 @@ test-lambda.zip: src/cloud/aws/lambda/test-lambda
 update:
 	npm update
 	make build && git commit -am 'NPM packages update'
+
+clean: clean-cloud
+
+clean-cloud:
+	rm -fv \
+		src/cloud/aws/cloud-formation/stack.json \
+		src/cloud/aws/cloud-formation/lambda-stack-packaged.json
