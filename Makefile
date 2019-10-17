@@ -106,44 +106,29 @@ minify:
 		&& mv $$bundle.min $$bundle; \
 	done
 
-cloud: aws-cloud
+AWS_STACK_NAME=test-stack
+AWS_LAMBDA_BUCKET=gurdiga-lambda-code
 
-aws-cloud: \
-		src/cloud/aws/cloud-formation/stack.json \
-		test-lambda.zip
+cloud: lambda-deployment-package
 	aws cloudformation deploy \
 		--profile gurdiga-admin \
-		--stack-name test-stack \
+		--stack-name $(AWS_STACK_NAME) \
 		--capabilities CAPABILITY_IAM \
-		--template-file $< \
-		--parameter-overrides \
-			DeployEnv=stage
+		--parameter-overrides LambdaCodeS3Bucket=$(AWS_LAMBDA_BUCKET) DeployEnv=stage \
+		--template-file src/cloud/aws/cloud-formation/stack.yml
 
-src/cloud/aws/cloud-formation/lambda-stack-packaged.json: \
-		src/cloud/aws/cloud-formation/lambda-stack.ts \
-		src/cloud/aws/cloud-formation/lambda.ts
-	cloudform $< > $@ || rm $@
+lambda-deployment-package: src/cloud/aws/lambda/test-lambda.zip
+	aws --profile gurdiga-admin s3 cp src/cloud/aws/lambda/test-lambda.zip s3://gurdiga-lambda-code/test-lambda.zip
 
-src/cloud/aws/cloud-formation/stack.json: \
-		src/cloud/aws/cloud-formation/stack.ts \
-		src/cloud/aws/cloud-formation/lambda-stack-packaged.json
-	cloudform $< > $@.temp
-	if [ -s $@.temp ]; then \
-		mv $@.temp $@; \
-	else \
-		rm $@.temp; \
-	fi
+src/cloud/aws/lambda/test-lambda.zip:
+	# Remove path from the archive? is there a zip arg? maybe just cdgs? Check AWS docs example.
+	zip -r src/cloud/aws/lambda/test-lambda.zip src/cloud/aws/lambda/test-lambda
 
-test-lambda.zip: src/cloud/aws/lambda/test-lambda
-	zip -q -r $@ $<
+cloud-delete:
+	aws cloudformation delete-stack \
+		--profile gurdiga-admin \
+		--stack-name $(AWS_STACK_NAME)
 
 update:
 	npm update
 	make build && git commit -am 'NPM packages update'
-
-clean: clean-cloud
-
-clean-cloud:
-	rm -fv \
-		src/cloud/aws/cloud-formation/stack.json \
-		src/cloud/aws/cloud-formation/lambda-stack-packaged.json
