@@ -107,6 +107,7 @@ minify:
 	done
 
 AWS_STACK_NAME=test-stack
+AWS_LAMBDA_NAME=test-lambda
 AWS_LAMBDA_BUCKET=gurdiga-lambda-code
 
 cloud: lambda-deployment-package
@@ -114,15 +115,31 @@ cloud: lambda-deployment-package
 		--profile gurdiga-admin \
 		--stack-name $(AWS_STACK_NAME) \
 		--capabilities CAPABILITY_IAM \
-		--parameter-overrides LambdaCodeS3Bucket=$(AWS_LAMBDA_BUCKET) DeployEnv=stage \
+		--parameter-overrides \
+			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
+			LambdaCodeS3Bucket=$(AWS_LAMBDA_BUCKET) \
+			DeployEnv=stage \
 		--template-file src/cloud/aws/cloud-formation/stack.yml
 
-lambda-deployment-package: src/cloud/aws/lambda/test-lambda.zip
-	aws --profile gurdiga-admin s3 cp src/cloud/aws/lambda/test-lambda.zip s3://gurdiga-lambda-code/test-lambda.zip
+lambda-deployment-package: src/cloud/aws/lambda/test-lambda.zip.deployed
 
-src/cloud/aws/lambda/test-lambda.zip:
-	# Remove path from the archive? is there a zip arg? maybe just cdgs? Check AWS docs example.
-	zip -r src/cloud/aws/lambda/test-lambda.zip src/cloud/aws/lambda/test-lambda
+src/cloud/aws/lambda/test-lambda.zip.deployed: \
+		src/cloud/aws/lambda/test-lambda.zip.uploaded
+	aws lambda update-function-code \
+		--profile gurdiga-admin \
+		--function-name $(AWS_LAMBDA_NAME) \
+		--zip-file fileb://src/cloud/aws/lambda/test-lambda.zip \
+	&& touch $@
+
+src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.zip
+	aws s3 cp \
+		--profile gurdiga-admin \
+		src/cloud/aws/lambda/test-lambda.zip \
+		s3://gurdiga-lambda-code/test-lambda.zip \
+	&& touch $@
+
+src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
+	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
 
 cloud-delete:
 	aws cloudformation delete-stack \

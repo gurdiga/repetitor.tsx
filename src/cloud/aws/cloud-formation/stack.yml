@@ -9,6 +9,11 @@ Parameters:
       - stage
       - production
 
+  LambdaFunctionName:
+    Description: The name of the Lambda function
+    Type: String
+    MinLength: 1 # TODO: How do I properly declare it required?
+
   LambdaCodeS3Bucket:
     Description: S3 bucket where the Lambda function code is to live
     Type: String
@@ -28,13 +33,15 @@ Resources:
   TestLambdaApiEndpoint:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: testLambdaApiEndpoint
+      Name: test-lambda-api-endpoint
       Description: Just checking
 
   TestLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: testLambda
+      FunctionName:
+        Ref: LambdaFunctionName
+      Description: Just a test Lambda function.
       Handler: index.handler
       Role: arn:aws:iam::750527397320:role/service-role/test-lambda-role-p619ela7
       Runtime: nodejs10.x
