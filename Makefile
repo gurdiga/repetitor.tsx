@@ -109,45 +109,53 @@ minify:
 AWS_STACK_NAME=test-stack
 AWS_LAMBDA_NAME=test-lambda
 AWS_LAMBDA_BUCKET=gurdiga-lambda-code
+AWS_LAMBDA_ZIP_NAME=test-lambda.zip
 
-cloud: lambda-deployment-package
+cloud: \
+		prepare-code-bucket \
+		upload-code \
+		deploy-main-stack
+
+prepare-code-bucket: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml
 	aws cloudformation deploy \
-		--profile gurdiga-admin \
-		--stack-name $(AWS_STACK_NAME) \
-		--capabilities CAPABILITY_IAM \
+		--stack-name prepare-code-bucket \
+		--template-file src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml \
 		--parameter-overrides \
-			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
-			LambdaCodeS3Bucket=$(AWS_LAMBDA_BUCKET) \
-			DeployEnv=stage \
-		--template-file src/cloud/aws/cloud-formation/stack.yml
+			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
+		--no-fail-on-empty-changeset \
+		--profile gurdiga-admin
 
-lambda-deployment-package: src/cloud/aws/lambda/test-lambda.zip.deployed
-
-src/cloud/aws/lambda/test-lambda.zip.deployed: \
-		src/cloud/aws/lambda/test-lambda.zip.uploaded
-	aws lambda update-function-code \
-		--profile gurdiga-admin \
-		--function-name $(AWS_LAMBDA_NAME) \
-		--zip-file fileb://src/cloud/aws/lambda/test-lambda.zip \
-	&& touch $@
+upload-code: src/cloud/aws/lambda/test-lambda.zip.uploaded
 
 src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.zip
 	aws s3 cp \
 		--profile gurdiga-admin \
 		src/cloud/aws/lambda/test-lambda.zip \
-		s3://gurdiga-lambda-code/test-lambda.zip \
+		s3://$(AWS_LAMBDA_BUCKET)/$(AWS_LAMBDA_ZIP_NAME) \
 	&& touch $@
 
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
 	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
 
-cloud-delete:
-	aws cloudformation delete-stack \
+deploy-main-stack:
+	aws cloudformation deploy \
+		--stack-name main-stack \
+		--template-file src/cloud/aws/cloud-formation/02-main-stack.yml \
+		--parameter-overrides \
+			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
+			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
+			LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
+			DeployEnv=test \
+		--capabilities CAPABILITY_IAM \
 		--profile gurdiga-admin \
-		--stack-name $(AWS_STACK_NAME)
+		--no-fail-on-empty-changeset
 
 update:
 	npm update
 	make build && \
 		git add package.json package-lock.json && \
 		git commit -am 'NPM packages update'
+
+clean:
+	rm -v \
+		src/cloud/aws/lambda/test-lambda.zip*

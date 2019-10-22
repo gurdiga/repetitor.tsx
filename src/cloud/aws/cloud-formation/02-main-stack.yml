@@ -1,0 +1,100 @@
+Description: Main stack
+
+Parameters:
+
+  DeployEnv:
+    Description: Deploy environment name; just testing
+    Type: String
+    AllowedValues:
+      - test
+      - stage
+      - production
+
+  LambdaFunctionName:
+    Description: The name of the Lambda function
+    Type: String
+    MinLength: 1 # required
+
+  LambdaCodeS3BucketName:
+    Description: S3 bucket where the Lambda function code is to live
+    Type: String
+    MinLength: 1 # required
+
+Resources:
+
+  TestLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName:
+        Ref: LambdaFunctionName
+      Description: Just a test Lambda function.
+      Handler: index.handler
+      Role:
+        !GetAtt [TestLambdaExecuterRole, Arn]
+      Runtime: nodejs10.x
+      Code:
+        S3Bucket:
+          Ref: LambdaCodeS3BucketName
+        S3Key: test-lambda.zip
+
+  TestLambdaExecuterRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: A role to use with Lambda functions
+      AssumeRolePolicyDocument:
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+  # TestLambdaApi:
+  #   Type: AWS::ApiGateway::RestApi
+  #   Properties:
+  #     Name: test-lambda-api-endpoint
+  #     EndpointConfiguration:
+  #       Types:
+  #         - REGIONAL
+  #     Description: Just checking
+
+  # TestLambdaApiResource:
+  #   Type: AWS::ApiGateway::Resource
+  #   Properties:
+  #     ParentId: !GetAtt
+  #       - TestLambdaApi
+  #       - RootResourceId
+  #     PathPart: '{proxy+}'
+  #     RestApiId: !Ref TestLambdaApi
+
+  # TestLambdaApiMethod1:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     RestApiId: !Ref TestLambdaApi
+  #     ResourceId: !GetAtt
+  #       - TestLambdaApi
+  #       - RootResourceId
+  #     HttpMethod: GET
+  #     AuthorizationType: NONE # NONE | AWS_IAM | CUSTOM ; https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
+
+  # TestLambdaApiDeployment:
+  #   Type: AWS::ApiGateway::Deployment
+  #   Properties:
+  #     StageName: test
+  #     RestApiId: !Ref TestLambdaApi
+
+  # TestLambdaApiStage:
+  #   Type: AWS::ApiGateway::Stage
+  #   Properties:
+  #     StageName: test
+  #     Description: Just checking
+  #     RestApiId: !Ref TestLambdaApi
+  #     DeploymentId: !Ref TestLambdaApiDeployment
+  #     MethodSettings:
+  #       - ResourcePath: /
+  #         HttpMethod: GET
+  #         MetricsEnabled: 'true'
+  #         DataTraceEnabled: 'true'
+  #         LoggingLevel: INFO # OFF, ERROR, and INFO; https://docs.aws.amazon.com/apigateway/api-reference/resource/stage/#loggingLevel
+
+
