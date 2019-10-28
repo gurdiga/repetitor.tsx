@@ -58,24 +58,22 @@ Resources:
           - REGIONAL
       Description: Just checking
 
-  # TestLambdaApiResource:
-  #   Type: AWS::ApiGateway::Resource
-  #   Properties:
-  #     ParentId: !GetAtt
-  #       - TestLambdaApi
-  #       - RootResourceId
-  #     PathPart: '{proxy+}'
-  #     RestApiId: !Ref TestLambdaApi
+  TestLambdaApiProxyResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref TestLambdaApi
+      ParentId: !GetAtt
+        - TestLambdaApi
+        - RootResourceId
+      PathPart: '{proxy+}'
 
-  # TestLambdaApiMethod1:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     RestApiId: !Ref TestLambdaApi
-  #     ResourceId: !GetAtt
-  #       - TestLambdaApi
-  #       - RootResourceId
-  #     HttpMethod: GET
-  #     AuthorizationType: NONE # NONE | AWS_IAM | CUSTOM ; https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
+  TestLambdaApiMethod1:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref TestLambdaApi
+      ResourceId: !Ref TestLambdaApiProxyResource
+      HttpMethod: ANY
+      AuthorizationType: NONE # NONE | AWS_IAM | CUSTOM ; https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
 
   # TestLambdaApiDeployment:
   #   Type: AWS::ApiGateway::Deployment
