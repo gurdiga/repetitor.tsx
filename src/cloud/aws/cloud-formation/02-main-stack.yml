@@ -29,8 +29,7 @@ Resources:
         Ref: LambdaFunctionName
       Description: Just a test Lambda function.
       Handler: index.handler
-      Role:
-        !GetAtt [TestLambdaExecuterRole, Arn]
+      Role: !GetAtt TestLambdaExecuterRole.Arn
       Runtime: nodejs10.x
       Code:
         S3Bucket:
@@ -58,13 +57,17 @@ Resources:
           - REGIONAL
       Description: Just checking
 
+  TestLambdaApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: TestLambdaApiMethod1
+    Properties:
+      RestApiId: !Ref TestLambdaApi
+
   TestLambdaApiProxyResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref TestLambdaApi
-      ParentId: !GetAtt
-        - TestLambdaApi
-        - RootResourceId
+      ParentId: !GetAtt TestLambdaApi.RootResourceId
       PathPart: '{proxy+}'
 
   TestLambdaApiMethod1:
@@ -73,26 +76,26 @@ Resources:
       RestApiId: !Ref TestLambdaApi
       ResourceId: !Ref TestLambdaApiProxyResource
       HttpMethod: ANY
-      AuthorizationType: NONE # NONE | AWS_IAM | CUSTOM ; https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
+      AuthorizationType: NONE # https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
+      Integration:
+        Credentials: !GetAtt TestLambdaExecuterRole.Arn
+        IntegrationHttpMethod: ANY
+        Type: AWS_PROXY # https://docs.aws.amazon.com/apigateway/api-reference/resource/integration/#type
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations"
+          - LambdaArn: !GetAtt TestLambdaFunction.Arn
 
-  # TestLambdaApiDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   Properties:
-  #     StageName: test
-  #     RestApiId: !Ref TestLambdaApi
-
-  # TestLambdaApiStage:
-  #   Type: AWS::ApiGateway::Stage
-  #   Properties:
-  #     StageName: test
-  #     Description: Just checking
-  #     RestApiId: !Ref TestLambdaApi
-  #     DeploymentId: !Ref TestLambdaApiDeployment
-  #     MethodSettings:
-  #       - ResourcePath: /
-  #         HttpMethod: GET
-  #         MetricsEnabled: 'true'
-  #         DataTraceEnabled: 'true'
-  #         LoggingLevel: INFO # OFF, ERROR, and INFO; https://docs.aws.amazon.com/apigateway/api-reference/resource/stage/#loggingLevel
-
-
+  TestLambdaApiStage:
+    DependsOn: TestLambdaApiDeployment
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: test
+      Description: Just checking
+      RestApiId: !Ref TestLambdaApi
+      DeploymentId: !Ref TestLambdaApiDeployment
+      MethodSettings:
+        - ResourcePath: /
+          HttpMethod: GET
+          # MetricsEnabled: 'true'
+          # DataTraceEnabled: 'true'
+          # LoggingLevel: INFO # OFF, ERROR, and INFO; https://docs.aws.amazon.com/apigateway/api-reference/resource/stage/#loggingLevel
