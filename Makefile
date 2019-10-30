@@ -116,17 +116,24 @@ cloud: \
 		upload-code \
 		deploy-main-stack
 
-prepare-code-bucket: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml
+delete-main-stack:
+	aws cloudformation delete-stack \
+		--stack-name main-stack \
+		--profile gurdiga-admin \
+	&& rm src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
+
+prepare-code-bucket: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed
+src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml
 	aws cloudformation deploy \
 		--stack-name prepare-code-bucket \
 		--template-file src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml \
 		--parameter-overrides \
 			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
 		--no-fail-on-empty-changeset \
-		--profile gurdiga-admin
+		--profile gurdiga-admin \
+	&& touch $@
 
 upload-code: src/cloud/aws/lambda/test-lambda.zip.uploaded
-
 src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.zip
 	aws s3 cp \
 		--profile gurdiga-admin \
@@ -137,7 +144,8 @@ src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
 	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
 
-deploy-main-stack:
+deploy-main-stack: validate-main-stack src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
+src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-formation/02-main-stack.yml
 	aws cloudformation deploy \
 		--stack-name main-stack \
 		--template-file src/cloud/aws/cloud-formation/02-main-stack.yml \
@@ -148,7 +156,15 @@ deploy-main-stack:
 			DeployEnv=test \
 		--capabilities CAPABILITY_IAM \
 		--profile gurdiga-admin \
-		--no-fail-on-empty-changeset
+		--no-fail-on-empty-changeset \
+	&& touch $@
+
+validate-main-stack: src/cloud/aws/cloud-formation/02-main-stack.yml.validated
+src/cloud/aws/cloud-formation/02-main-stack.yml.validated: src/cloud/aws/cloud-formation/02-main-stack.yml
+	aws cloudformation validate-template \
+		--template-body file://src/cloud/aws/cloud-formation/02-main-stack.yml \
+		--profile gurdiga-admin \
+	&& touch $@
 
 update:
 	npm update
@@ -158,4 +174,7 @@ update:
 
 clean:
 	rm -v \
-		src/cloud/aws/lambda/test-lambda.zip*
+		src/cloud/aws/lambda/test-lambda.zip* \
+		src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed \
+		src/cloud/aws/cloud-formation/02-main-stack.yml.validated \
+		src/cloud/aws/cloud-formation/02-main-stack.yml.deployed \
