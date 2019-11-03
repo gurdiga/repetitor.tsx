@@ -136,6 +136,15 @@ src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.
 		s3://$(AWS_LAMBDA_BUCKET)/$(AWS_LAMBDA_ZIP_NAME) \
 	&& touch $@
 
+deploy-code: src/cloud/aws/lambda/test-lambda.zip.deployed
+src/cloud/aws/lambda/test-lambda.zip.deployed:
+	aws lambda update-function-code \
+		--function-name $(AWS_LAMBDA_NAME) \
+		--s3-bucket $(AWS_LAMBDA_BUCKET) \
+		--s3-key $(AWS_LAMBDA_ZIP_NAME) \
+		--profile $(AWS_PROFILE_NAME) \
+	&& touch $@
+
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
 	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
 
