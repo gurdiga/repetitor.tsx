@@ -22,6 +22,22 @@ Parameters:
 
 Resources:
 
+  TestLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: The role assumed by the Lambda function to get access to resources that it needs.
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: '/'
+
   TestLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -29,33 +45,40 @@ Resources:
         Ref: LambdaFunctionName
       Description: Just a test Lambda function.
       Handler: index.handler
-      Role: !GetAtt TestLambdaExecuterRole.Arn
-      Runtime: nodejs10.x
+      MemorySize: 256
+      Timeout: 60
+      Role: !GetAtt TestLambdaRole.Arn
+      Runtime: python3.7 # nodejs10.x
       Code:
-        S3Bucket:
-          Ref: LambdaCodeS3BucketName
-        S3Key: test-lambda.zip
+        ZipFile: |
+          def handler(event, context):
+            response = {
+              'isBase64Encoded': False,
+              'statusCode': 200,
+              'headers': {},
+              'multiValueHeaders': {},
+              'body': 'Hello, World!'
+            }
+            return response
+        # S3Bucket:
+        #   Ref: LambdaCodeS3BucketName
+        # S3Key: test-lambda.zip
 
-  TestLambdaExecuterRole:
-    Type: AWS::IAM::Role
+  TestLambdaExecutionPermission:
+    Type: AWS::Lambda::Permission
     Properties:
-      Description: A role to use with Lambda functions
-      AssumeRolePolicyDocument:
-        Statement:
-          -
-            Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt TestLambdaFunction.Arn
+      Principal: apigateway.amazonaws.com
 
   TestLambdaApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: test-lambda-api-endpoint
+      ApiKeySourceType: HEADER
       EndpointConfiguration:
         Types:
-          - REGIONAL
-      Description: Just checking
+          - EDGE
 
   TestLambdaApiDeployment:
     Type: AWS::ApiGateway::Deployment
@@ -68,34 +91,58 @@ Resources:
     Properties:
       RestApiId: !Ref TestLambdaApi
       ParentId: !GetAtt TestLambdaApi.RootResourceId
-      PathPart: '{proxy+}'
+      PathPart: 'lambda'
 
   TestLambdaApiMethod1:
     Type: AWS::ApiGateway::Method
     Properties:
       RestApiId: !Ref TestLambdaApi
       ResourceId: !Ref TestLambdaApiProxyResource
-      HttpMethod: ANY
       AuthorizationType: NONE # https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
+      ApiKeyRequired: false
+      HttpMethod: POST
       Integration:
-        Credentials: !GetAtt TestLambdaExecuterRole.Arn
-        IntegrationHttpMethod: ANY
+        ConnectionType: INTERNET
+        Credentials: !GetAtt TestLambdaExecutionRole.Arn
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_MATCH
         Type: AWS_PROXY # https://docs.aws.amazon.com/apigateway/api-reference/resource/integration/#type
-        Uri: !Sub
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations"
-          - LambdaArn: !GetAtt TestLambdaFunction.Arn
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestLambdaFunction.Arn}/invocations"
+
+  TestLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: ''
+            Effect: 'Allow'
+            Principal:
+              Service:
+                - 'apigateway.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Path: '/'
+      Policies:
+        - PolicyName: LambdaAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action: 'lambda:*'
+                Resource: !GetAtt TestLambdaFunction.Arn
+
+  ApiGatewayModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      ContentType: 'application/json'
+      RestApiId: !Ref TestLambdaApi
+      Schema: {}
 
   TestLambdaApiStage:
     DependsOn: TestLambdaApiDeployment
     Type: AWS::ApiGateway::Stage
     Properties:
-      StageName: test
-      Description: Just checking
       RestApiId: !Ref TestLambdaApi
       DeploymentId: !Ref TestLambdaApiDeployment
-      MethodSettings:
-        - ResourcePath: /
-          HttpMethod: GET
-          # MetricsEnabled: 'true'
-          # DataTraceEnabled: 'true'
-          # LoggingLevel: INFO # OFF, ERROR, and INFO; https://docs.aws.amazon.com/apigateway/api-reference/resource/stage/#loggingLevel
+      StageName: test
