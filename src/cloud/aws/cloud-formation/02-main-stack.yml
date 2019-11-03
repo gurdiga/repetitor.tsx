@@ -1,9 +1,7 @@
 Description: Main stack
 
 Parameters:
-
   DeployEnv:
-    Description: Deploy environment name; just testing
     Type: String
     AllowedValues:
       - test
@@ -11,65 +9,36 @@ Parameters:
       - production
 
   LambdaFunctionName:
-    Description: The name of the Lambda function
     Type: String
     MinLength: 1 # required
 
   LambdaCodeS3BucketName:
-    Description: S3 bucket where the Lambda function code is to live
     Type: String
     MinLength: 1 # required
 
 Resources:
-
   TestLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      Description: The role assumed by the Lambda function to get access to resources that it needs.
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
         Statement:
-          -
-            Effect: Allow
+          - Effect: Allow
+            Action: sts:AssumeRole
             Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: '/'
+              Service: lambda.amazonaws.com
 
   TestLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName:
         Ref: LambdaFunctionName
-      Description: Just a test Lambda function.
       Handler: index.handler
-      MemorySize: 256
-      Timeout: 60
       Role: !GetAtt TestLambdaRole.Arn
       Runtime: nodejs10.x
       Code:
-        # ZipFile: |
-        #   def handler(event, context):
-        #     response = {
-        #       'isBase64Encoded': False,
-        #       'statusCode': 200,
-        #       'headers': {},
-        #       'multiValueHeaders': {},
-        #       'body': 'Hello, World!'
-        #     }
-        #     return response
         S3Bucket:
           Ref: LambdaCodeS3BucketName
         S3Key: test-lambda.zip
-
-  TestLambdaExecutionPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !GetAtt TestLambdaFunction.Arn
-      Principal: apigateway.amazonaws.com
 
   TestLambdaApi:
     Type: AWS::ApiGateway::RestApi
@@ -91,7 +60,7 @@ Resources:
     Properties:
       RestApiId: !Ref TestLambdaApi
       ParentId: !GetAtt TestLambdaApi.RootResourceId
-      PathPart: 'lambda'
+      PathPart: lambda
 
   TestLambdaApiMethod1:
     Type: AWS::ApiGateway::Method
@@ -100,42 +69,35 @@ Resources:
       ResourceId: !Ref TestLambdaApiProxyResource
       AuthorizationType: NONE # https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
       ApiKeyRequired: false
-      HttpMethod: POST
+      HttpMethod: ANY
       Integration:
         ConnectionType: INTERNET
-        Credentials: !GetAtt TestLambdaExecutionRole.Arn
-        IntegrationHttpMethod: POST
-        PassthroughBehavior: WHEN_NO_MATCH
+        Credentials: !GetAtt TestLambdaInvocationRole.Arn
+        IntegrationHttpMethod: ANY
         Type: AWS_PROXY # https://docs.aws.amazon.com/apigateway/api-reference/resource/integration/#type
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestLambdaFunction.Arn}/invocations"
 
-  TestLambdaExecutionRole:
+  TestLambdaInvocationRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
         Statement:
-          - Sid: ''
-            Effect: 'Allow'
+          - Effect: Allow
             Principal:
-              Service:
-                - 'apigateway.amazonaws.com'
-            Action:
-              - 'sts:AssumeRole'
-      Path: '/'
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
       Policies:
         - PolicyName: LambdaAccess
           PolicyDocument:
-            Version: '2012-10-17'
             Statement:
-              - Effect: 'Allow'
-                Action: 'lambda:*'
+              - Effect: Allow
+                Action: lambda:InvokeFunction
                 Resource: !GetAtt TestLambdaFunction.Arn
 
   ApiGatewayModel:
     Type: AWS::ApiGateway::Model
     Properties:
-      ContentType: 'application/json'
+      ContentType: application/json
       RestApiId: !Ref TestLambdaApi
       Schema: {}
 
@@ -146,3 +108,7 @@ Resources:
       RestApiId: !Ref TestLambdaApi
       DeploymentId: !Ref TestLambdaApiDeployment
       StageName: test
+
+Outputs:
+  Api:
+    Value: !Ref TestLambdaApi

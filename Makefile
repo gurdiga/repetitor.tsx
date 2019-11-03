@@ -106,21 +106,16 @@ minify:
 		&& mv $$bundle.min $$bundle; \
 	done
 
-AWS_STACK_NAME=test-stack
+AWS_MAIN_STACK_NAME=main-stack
 AWS_LAMBDA_NAME=test-lambda
 AWS_LAMBDA_BUCKET=gurdiga-lambda-code
 AWS_LAMBDA_ZIP_NAME=test-lambda.zip
+AWS_PROFILE_NAME=gurdiga-admin
 
 cloud: \
 		prepare-code-bucket \
 		upload-code \
 		deploy-main-stack
-
-delete-main-stack:
-	aws cloudformation delete-stack \
-		--stack-name main-stack \
-		--profile gurdiga-admin \
-	&& rm src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
 
 prepare-code-bucket: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed
 src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml
@@ -130,13 +125,13 @@ src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed: src/cloud/aws
 		--parameter-overrides \
 			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
 		--no-fail-on-empty-changeset \
-		--profile gurdiga-admin \
+		--profile $(AWS_PROFILE_NAME) \
 	&& touch $@
 
 upload-code: src/cloud/aws/lambda/test-lambda.zip.uploaded
 src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.zip
 	aws s3 cp \
-		--profile gurdiga-admin \
+		--profile $(AWS_PROFILE_NAME) \
 		src/cloud/aws/lambda/test-lambda.zip \
 		s3://$(AWS_LAMBDA_BUCKET)/$(AWS_LAMBDA_ZIP_NAME) \
 	&& touch $@
@@ -147,7 +142,7 @@ src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lam
 deploy-main-stack: validate-main-stack src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
 src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-formation/02-main-stack.yml
 	aws cloudformation deploy \
-		--stack-name main-stack \
+		--stack-name $(AWS_MAIN_STACK_NAME) \
 		--template-file src/cloud/aws/cloud-formation/02-main-stack.yml \
 		--parameter-overrides \
 			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
@@ -155,7 +150,7 @@ src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-fo
 			LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
 			DeployEnv=test \
 		--capabilities CAPABILITY_IAM \
-		--profile gurdiga-admin \
+		--profile $(AWS_PROFILE_NAME) \
 		--no-fail-on-empty-changeset \
 	&& touch $@
 
@@ -163,8 +158,23 @@ validate-main-stack: src/cloud/aws/cloud-formation/02-main-stack.yml.validated
 src/cloud/aws/cloud-formation/02-main-stack.yml.validated: src/cloud/aws/cloud-formation/02-main-stack.yml
 	aws cloudformation validate-template \
 		--template-body file://src/cloud/aws/cloud-formation/02-main-stack.yml \
-		--profile gurdiga-admin \
+		--profile $(AWS_PROFILE_NAME) \
 	&& touch $@
+
+test-lambda:
+	aws cloudformation describe-stacks \
+		--stack-name $(AWS_MAIN_STACK_NAME) \
+		--profile $(AWS_PROFILE_NAME) \
+		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
+		| xargs -I{} http -v POST https://{}.execute-api.us-east-1.amazonaws.com/test/lambda
+
+t: test-lambda
+
+delete-main-stack:
+	aws cloudformation delete-stack \
+		--stack-name $(AWS_MAIN_STACK_NAME) \
+		--profile $(AWS_PROFILE_NAME) \
+	&& rm -vf src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
 
 update:
 	npm update
