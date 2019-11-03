@@ -48,21 +48,21 @@ Resources:
       MemorySize: 256
       Timeout: 60
       Role: !GetAtt TestLambdaRole.Arn
-      Runtime: python3.7 # nodejs10.x
+      Runtime: nodejs10.x
       Code:
-        ZipFile: |
-          def handler(event, context):
-            response = {
-              'isBase64Encoded': False,
-              'statusCode': 200,
-              'headers': {},
-              'multiValueHeaders': {},
-              'body': 'Hello, World!'
-            }
-            return response
-        # S3Bucket:
-        #   Ref: LambdaCodeS3BucketName
-        # S3Key: test-lambda.zip
+        # ZipFile: |
+        #   def handler(event, context):
+        #     response = {
+        #       'isBase64Encoded': False,
+        #       'statusCode': 200,
+        #       'headers': {},
+        #       'multiValueHeaders': {},
+        #       'body': 'Hello, World!'
+        #     }
+        #     return response
+        S3Bucket:
+          Ref: LambdaCodeS3BucketName
+        S3Key: test-lambda.zip
 
   TestLambdaExecutionPermission:
     Type: AWS::Lambda::Permission
