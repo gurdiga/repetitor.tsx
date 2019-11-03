@@ -16,6 +16,10 @@ Parameters:
     Type: String
     MinLength: 1 # required
 
+  LambdaCodeZipName:
+    Type: String
+    MinLength: 1 # required
+
 Resources:
   TestLambdaRole:
     Type: AWS::IAM::Role
@@ -38,7 +42,8 @@ Resources:
       Code:
         S3Bucket:
           Ref: LambdaCodeS3BucketName
-        S3Key: test-lambda.zip
+        S3Key:
+          Ref: LambdaCodeZipName
 
   TestLambdaApi:
     Type: AWS::ApiGateway::RestApi
@@ -67,14 +72,14 @@ Resources:
     Properties:
       RestApiId: !Ref TestLambdaApi
       ResourceId: !Ref TestLambdaApiProxyResource
-      AuthorizationType: NONE # https://docs.aws.amazon.com/apigateway/api-reference/resource/method/#authorizationType
+      AuthorizationType: NONE
       ApiKeyRequired: false
       HttpMethod: ANY
       Integration:
         ConnectionType: INTERNET
         Credentials: !GetAtt TestLambdaInvocationRole.Arn
         IntegrationHttpMethod: ANY
-        Type: AWS_PROXY # https://docs.aws.amazon.com/apigateway/api-reference/resource/integration/#type
+        Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestLambdaFunction.Arn}/invocations"
 
   TestLambdaInvocationRole:
