@@ -65,7 +65,7 @@ Resources:
     Properties:
       RestApiId: !Ref TestLambdaApi
       ParentId: !GetAtt TestLambdaApi.RootResourceId
-      PathPart: lambda
+      PathPart: '{proxy+}'
 
   TestLambdaApiMethod1:
     Type: AWS::ApiGateway::Method
@@ -73,7 +73,6 @@ Resources:
       RestApiId: !Ref TestLambdaApi
       ResourceId: !Ref TestLambdaApiProxyResource
       AuthorizationType: NONE
-      ApiKeyRequired: false
       HttpMethod: ANY
       Integration:
         ConnectionType: INTERNET
@@ -98,13 +97,6 @@ Resources:
               - Effect: Allow
                 Action: lambda:InvokeFunction
                 Resource: !GetAtt TestLambdaFunction.Arn
-
-  ApiGatewayModel:
-    Type: AWS::ApiGateway::Model
-    Properties:
-      ContentType: application/json
-      RestApiId: !Ref TestLambdaApi
-      Schema: {}
 
   TestLambdaApiStage:
     DependsOn: TestLambdaApiDeployment
