@@ -106,84 +106,91 @@ minify:
 		&& mv $$bundle.min $$bundle; \
 	done
 
+AWS_REGION=us-east-1
 AWS_MAIN_STACK_NAME=main-stack
+AWS_PREP_STACK_NAME=prep-stack
 AWS_LAMBDA_NAME=test-lambda
 AWS_LAMBDA_BUCKET=gurdiga-lambda-code
 AWS_LAMBDA_ZIP_NAME=test-lambda.zip
 AWS_PROFILE_NAME=gurdiga-admin
 
 cloud: \
-		prepare-code-bucket \
-		upload-code \
+		deploy-prep-stack \
+		deploy-code \
 		deploy-main-stack
 
-prepare-code-bucket: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed
-src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed: src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml
-	aws cloudformation deploy \
-		--stack-name prepare-code-bucket \
-		--template-file src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml \
-		--parameter-overrides \
-			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
-		--no-fail-on-empty-changeset \
-		--profile $(AWS_PROFILE_NAME) \
-	&& touch $@
+deploy-prep-stack: \
+		src/cloud/aws/cloud-formation/01-prep-stack.yml.validated \
+		src/cloud/aws/cloud-formation/01-prep-stack.yml.deployed
 
-upload-code: src/cloud/aws/lambda/test-lambda.zip.uploaded
+src/cloud/aws/cloud-formation/01-prep-stack.yml.deployed: src/cloud/aws/cloud-formation/01-prep-stack.yml
+	$(call deploy-stack, $(AWS_PREP_STACK_NAME), $<, \
+		--parameter-overrides \
+			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
+		--capabilities CAPABILITY_IAM \
+	)
+
+src/cloud/aws/cloud-formation/01-prep-stack.yml.validated: src/cloud/aws/cloud-formation/01-prep-stack.yml
+	$(call validate-stack, $<)
+
+deploy-code: \
+	src/cloud/aws/lambda/test-lambda.zip \
+	src/cloud/aws/lambda/test-lambda.zip.uploaded \
+	src/cloud/aws/lambda/test-lambda.zip.deployed
+
 src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.zip
 	aws s3 cp \
 		--profile $(AWS_PROFILE_NAME) \
+		--region $(AWS_REGION) \
 		src/cloud/aws/lambda/test-lambda.zip \
 		s3://$(AWS_LAMBDA_BUCKET)/$(AWS_LAMBDA_ZIP_NAME) \
 	&& touch $@
 
-deploy-code: src/cloud/aws/lambda/test-lambda.zip.deployed
-src/cloud/aws/lambda/test-lambda.zip.deployed:
+src/cloud/aws/lambda/test-lambda.zip.deployed: src/cloud/aws/lambda/test-lambda.zip.uploaded
 	aws lambda update-function-code \
 		--function-name $(AWS_LAMBDA_NAME) \
 		--s3-bucket $(AWS_LAMBDA_BUCKET) \
 		--s3-key $(AWS_LAMBDA_ZIP_NAME) \
 		--profile $(AWS_PROFILE_NAME) \
+		--region $(AWS_REGION) \
 	&& touch $@
 
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
 	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
 
-deploy-main-stack: validate-main-stack src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
-src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-formation/02-main-stack.yml
-	aws cloudformation deploy \
+t: test-lambda
+test-lambda:
+	aws cloudformation describe-stacks \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
-		--template-file src/cloud/aws/cloud-formation/02-main-stack.yml \
+		--profile $(AWS_PROFILE_NAME) \
+		--region $(AWS_REGION) \
+		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
+		| xargs -I{} http -v POST https://{}.execute-api.$(AWS_REGION).amazonaws.com/test/lambda
+
+deploy-main-stack: \
+		src/cloud/aws/cloud-formation/02-main-stack.yml.validated \
+		src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
+
+src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-formation/02-main-stack.yml
+	$(call deploy-stack, $(AWS_MAIN_STACK_NAME), $<, \
 		--parameter-overrides \
 			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
 			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
 			LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
 			DeployEnv=test \
 		--capabilities CAPABILITY_IAM \
-		--profile $(AWS_PROFILE_NAME) \
-		--no-fail-on-empty-changeset \
-	&& touch $@
+	)
 
-validate-main-stack: src/cloud/aws/cloud-formation/02-main-stack.yml.validated
 src/cloud/aws/cloud-formation/02-main-stack.yml.validated: src/cloud/aws/cloud-formation/02-main-stack.yml
-	aws cloudformation validate-template \
-		--template-body file://src/cloud/aws/cloud-formation/02-main-stack.yml \
-		--profile $(AWS_PROFILE_NAME) \
-	&& touch $@
+	$(call validate-stack, $<)
 
-test-lambda:
-	aws cloudformation describe-stacks \
-		--stack-name $(AWS_MAIN_STACK_NAME) \
-		--profile $(AWS_PROFILE_NAME) \
-		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
-		| xargs -I{} http -v POST https://{}.execute-api.us-east-1.amazonaws.com/test/lambda
+delete-cloud: delete-main-stack delete-prep-stack
 
-t: test-lambda
+delete-prep-stack:
+	$(call delete-stack, $(AWS_PREP_STACK_NAME), src/cloud/aws/cloud-formation/01-prep-stack.yml)
 
 delete-main-stack:
-	aws cloudformation delete-stack \
-		--stack-name $(AWS_MAIN_STACK_NAME) \
-		--profile $(AWS_PROFILE_NAME) \
-	&& rm -vf src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
+	$(call delete-stack, $(AWS_MAIN_STACK_NAME), src/cloud/aws/cloud-formation/02-main-stack.yml)
 
 update:
 	npm update
@@ -192,8 +199,44 @@ update:
 		git commit -am 'NPM packages update'
 
 clean:
-	rm -v \
+	rm -vf \
 		src/cloud/aws/lambda/test-lambda.zip* \
-		src/cloud/aws/cloud-formation/01-prepare-code-bucket.yml.deployed \
-		src/cloud/aws/cloud-formation/02-main-stack.yml.validated \
-		src/cloud/aws/cloud-formation/02-main-stack.yml.deployed \
+		src/cloud/aws/cloud-formation/01-prep-stack.yml.* \
+		src/cloud/aws/cloud-formation/02-main-stack.yml.*
+
+define validate-stack
+	$(eval template=$(strip $(1)))
+
+	aws cloudformation validate-template \
+		--template-body file://$(template) \
+		--profile $(AWS_PROFILE_NAME) \
+		--region $(AWS_REGION) \
+	&& touch $(template).validated
+endef
+
+define deploy-stack
+	$(eval stack_name=$(strip $(1)))
+	$(eval template=$(strip $(2)))
+	$(eval args=$(3))
+
+	aws cloudformation deploy \
+		--stack-name $(stack_name) \
+		--template-file $(template) \
+		--capabilities CAPABILITY_IAM \
+		--no-fail-on-empty-changeset \
+		--profile $(AWS_PROFILE_NAME) \
+		--region $(AWS_REGION) \
+		$(args) \
+	&& touch $(template).deployed
+endef
+
+define delete-stack
+	$(eval stack_name=$(strip $(1)))
+	$(eval template=$(strip $(2)))
+
+	aws cloudformation delete-stack \
+		--stack-name $(stack_name) \
+		--profile $(AWS_PROFILE_NAME) \
+		--region $(AWS_REGION) \
+	&& rm -vf $(template).*
+endef
