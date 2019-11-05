@@ -184,6 +184,9 @@ src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-fo
 src/cloud/aws/cloud-formation/02-main-stack.yml.validated: src/cloud/aws/cloud-formation/02-main-stack.yml
 	$(call validate-stack, $<)
 
+validate-main-stack: src/cloud/aws/cloud-formation/02-main-stack.yml.validated
+
+
 delete-cloud: delete-main-stack delete-prep-stack
 
 delete-prep-stack:
