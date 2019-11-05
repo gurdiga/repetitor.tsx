@@ -20,30 +20,40 @@ Parameters:
     Type: String
     MinLength: 1 # required
 
+  # Add params: DBPassword, DBName, DBUser, DBEndpoint, SubnetIds, DBPort
+  # Alternative idea: If I describe the DB resurse in this stack, can I !Ref them instead of passing in params?
+
 Resources:
   TestLambdaRole:
     Type: AWS::IAM::Role
     Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
             Action: sts:AssumeRole
-            Principal:
-              Service: lambda.amazonaws.com
+            Principal: {Service: lambda.amazonaws.com}
 
   TestLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName:
-        Ref: LambdaFunctionName
+      FunctionName: {Ref: LambdaFunctionName}
       Handler: index.handler
       Role: !GetAtt TestLambdaRole.Arn
       Runtime: nodejs10.x
       Code:
-        S3Bucket:
-          Ref: LambdaCodeS3BucketName
-        S3Key:
-          Ref: LambdaCodeZipName
+        S3Bucket: {Ref: LambdaCodeS3BucketName}
+        S3Key: {Ref: LambdaCodeZipName}
+      VpcConfig:
+        SubnetIds: [Ref: SubnetIds]
+        SecurityGroupIds: [Ref SecurityGroupIds]
+      Environment:
+        ENDPOINT: {Ref: DBEndpoint}
+        PORT: {Ref: DBPort}
+        DATABASE: {Ref: DBName}
+        DBUSER: {Ref: DBUser}
+        DBPASSWORD: {Ref: DBPassword}
 
   TestLambdaApi:
     Type: AWS::ApiGateway::RestApi
@@ -51,8 +61,7 @@ Resources:
       Name: test-lambda-api-endpoint
       ApiKeySourceType: HEADER
       EndpointConfiguration:
-        Types:
-          - EDGE
+        Types: [EDGE]
 
   TestLambdaApiDeployment:
     Type: AWS::ApiGateway::Deployment
@@ -65,7 +74,7 @@ Resources:
     Properties:
       RestApiId: !Ref TestLambdaApi
       ParentId: !GetAtt TestLambdaApi.RootResourceId
-      PathPart: '{proxy+}'
+      PathPart: "{proxy+}"
 
   TestLambdaApiMethod1:
     Type: AWS::ApiGateway::Method
@@ -87,8 +96,7 @@ Resources:
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
-            Principal:
-              Service: apigateway.amazonaws.com
+            Principal: {Service: apigateway.amazonaws.com}
             Action: sts:AssumeRole
       Policies:
         - PolicyName: LambdaAccess
