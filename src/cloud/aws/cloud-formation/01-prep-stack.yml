@@ -1,14 +1,12 @@
 Description: Preparatory stack; prerequisites to deploy the main stack.
 
 Parameters:
-
   LambdaCodeS3BucketName:
     Description: S3 bucket where the Lambda function code is to live.
     Type: String
     MinLength: 1 # required
 
 Resources:
-
   TestLambdaS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -17,4 +15,3 @@ Resources:
       VersioningConfiguration:
         Status: Enabled
       AccessControl: PublicRead
-
