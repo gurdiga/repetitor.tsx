@@ -2,7 +2,7 @@ build/
 node_modules/
 
 src/cloud/aws/lambda/test-lambda.zip*
-src/cloud/aws/cloud-formation/02-main-stack.yml.validated
+src/cloud/aws/cloud-formation/01-prep-stack.yml.validated
 src/cloud/aws/cloud-formation/01-prep-stack.yml.deployed
 src/cloud/aws/cloud-formation/02-main-stack.yml.validated
 src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
