@@ -126,7 +126,7 @@ deploy-prep-stack: \
 src/cloud/aws/cloud-formation/01-prep-stack.yml.deployed: src/cloud/aws/cloud-formation/01-prep-stack.yml
 	$(call deploy-stack, $(AWS_PREP_STACK_NAME), $<, \
 		--parameter-overrides \
-			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
+			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
 		--capabilities CAPABILITY_IAM \
 	)
 
