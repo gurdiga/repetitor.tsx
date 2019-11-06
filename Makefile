@@ -107,6 +107,7 @@ minify:
 	done
 
 AWS_REGION=us-east-1
+# AWS_REGION=eu-west-1
 AWS_MAIN_STACK_NAME=main-stack
 AWS_PREP_STACK_NAME=prep-stack
 AWS_LAMBDA_NAME=test-lambda
@@ -115,11 +116,11 @@ AWS_LAMBDA_ZIP_NAME=test-lambda.zip
 AWS_PROFILE_NAME=gurdiga-admin
 
 cloud: \
-		deploy-prep-stack \
+		prep-stack \
 		deploy-code \
-		deploy-main-stack
+		main-stack
 
-deploy-prep-stack: \
+prep-stack: \
 		src/cloud/aws/cloud-formation/01-prep-stack.yml.validated \
 		src/cloud/aws/cloud-formation/01-prep-stack.yml.deployed
 
@@ -167,7 +168,7 @@ test-lambda:
 		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
 		| xargs -I{} http -v POST https://{}.execute-api.$(AWS_REGION).amazonaws.com/test/lambda
 
-deploy-main-stack: \
+main-stack: \
 		src/cloud/aws/cloud-formation/02-main-stack.yml.validated \
 		src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
 
