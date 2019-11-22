@@ -109,33 +109,38 @@ minify:
 	done
 
 cloud: \
-		prep-stack \
-		deploy-code \
-		main-stack
+		prepare-lambda-code \
+		main-stack \
+		deploy-lambda-code
 
-prep-stack: \
-		src/cloud/aws/cloud-formation/01-prep-stack.yml.validated \
-		src/cloud/aws/cloud-formation/01-prep-stack.yml.deployed
+prepare-lambda-code: \
+		src/cloud/aws/lambda/code-bucket.created \
+		src/cloud/aws/lambda/code-bucket.enabled-versioning \
+		src/cloud/aws/lambda/test-lambda.zip \
+		src/cloud/aws/lambda/test-lambda.zip.uploaded
 
-src/cloud/aws/cloud-formation/01-prep-stack.yml.deployed: src/cloud/aws/cloud-formation/01-prep-stack.yml
-	$(call deploy-stack, $(AWS_PREP_STACK_NAME), $<, \
-		--parameter-overrides \
-			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
-		--capabilities CAPABILITY_IAM \
-	)
+src/cloud/aws/lambda/code-bucket.created:
+	aws s3api get-bucket-acl \
+		--bucket $(AWS_LAMBDA_BUCKET) \
+	|| aws s3api create-bucket \
+		--bucket $(AWS_LAMBDA_BUCKET) \
+		--acl public-read \
+		--create-bucket-configuration LocationConstraint=EU \
+	&& touch $@
 
-src/cloud/aws/cloud-formation/01-prep-stack.yml.validated: src/cloud/aws/cloud-formation/01-prep-stack.yml
-	$(call validate-stack, $<)
+src/cloud/aws/lambda/code-bucket.enabled-versioning:
+	aws s3api put-bucket-versioning \
+		--bucket $(AWS_LAMBDA_BUCKET) \
+		--versioning-configuration Status=Enabled \
+	&& touch $@
 
-deploy-code: \
+deploy-lambda-code: \
 	src/cloud/aws/lambda/test-lambda.zip \
 	src/cloud/aws/lambda/test-lambda.zip.uploaded \
 	src/cloud/aws/lambda/test-lambda.zip.deployed
 
 src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.zip
 	aws s3 cp \
-		--profile $(AWS_PROFILE_NAME) \
-		--region $(AWS_REGION) \
 		src/cloud/aws/lambda/test-lambda.zip \
 		s3://$(AWS_LAMBDA_BUCKET)/$(AWS_LAMBDA_ZIP_NAME) \
 	&& touch $@
@@ -145,55 +150,60 @@ src/cloud/aws/lambda/test-lambda.zip.deployed: src/cloud/aws/lambda/test-lambda.
 		--function-name $(AWS_LAMBDA_NAME) \
 		--s3-bucket $(AWS_LAMBDA_BUCKET) \
 		--s3-key $(AWS_LAMBDA_ZIP_NAME) \
-		--profile $(AWS_PROFILE_NAME) \
-		--region $(AWS_REGION) \
 	&& touch $@
 
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
 	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
 
 t: test-lambda
-test-lambda:
+test-lambda: http
 	aws cloudformation describe-stacks \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
-		--profile $(AWS_PROFILE_NAME) \
-		--region $(AWS_REGION) \
 		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
 		| xargs -I{} http -v POST https://{}.execute-api.$(AWS_REGION).amazonaws.com/test/lambda
+
+http: /usr/local/bin/http
+/usr/local/bin/http:
+	@echo The http utility is not found. Maybe brew install httpie?
 
 main-stack: \
 		src/cloud/aws/cloud-formation/02-main-stack.yml.validated \
 		src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
 
 src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-formation/02-main-stack.yml
-	$(call deploy-stack, $(AWS_MAIN_STACK_NAME), $<, \
+	aws cloudformation deploy \
+		--stack-name $(AWS_MAIN_STACK_NAME) \
+		--template-file $< \
+		--no-fail-on-empty-changeset \
 		--parameter-overrides \
 			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
 			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
 			LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
 			DeployEnv=test \
 			SubnetIds=$(SUBNET_IDS) \
+			SecurityGroupIds=$(SECURITY_GROUP_IDS) \
 			DBEndpoint=$(DB_ENDPOINT) \
 			DBPort=$(DB_PORT) \
 			DBName=$(DB_NAME) \
 			DBUser=$(DB_USER) \
 			DBPassword=$(DB_PASSWORD) \
 		--capabilities CAPABILITY_IAM \
-	)
+	&& touch $@
 
 src/cloud/aws/cloud-formation/02-main-stack.yml.validated: src/cloud/aws/cloud-formation/02-main-stack.yml
-	$(call validate-stack, $<)
+	aws cloudformation validate-template \
+		--template-body file://$< \
+	&& touch $<.validated
 
 validate-main-stack: src/cloud/aws/cloud-formation/02-main-stack.yml.validated
 
 
-delete-cloud: delete-main-stack delete-prep-stack
-
-delete-prep-stack:
-	$(call delete-stack, $(AWS_PREP_STACK_NAME), src/cloud/aws/cloud-formation/01-prep-stack.yml)
+delete-cloud: delete-main-stack
 
 delete-main-stack:
-	$(call delete-stack, $(AWS_MAIN_STACK_NAME), src/cloud/aws/cloud-formation/02-main-stack.yml)
+	aws cloudformation delete-stack \
+		--stack-name $(AWS_MAIN_STACK_NAME) \
+	&& rm -vf src/cloud/aws/cloud-formation/02-main-stack.yml.*
 
 update:
 	npm update
@@ -204,41 +214,5 @@ update:
 clean:
 	rm -vf \
 		src/cloud/aws/lambda/test-lambda.zip* \
-		src/cloud/aws/cloud-formation/01-prep-stack.yml.* \
+		src/cloud/aws/lambda/code-bucket.* \
 		src/cloud/aws/cloud-formation/02-main-stack.yml.*
-
-define validate-stack
-	$(eval template=$(strip $(1)))
-
-	aws cloudformation validate-template \
-		--template-body file://$(template) \
-		--profile $(AWS_PROFILE_NAME) \
-		--region $(AWS_REGION) \
-	&& touch $(template).validated
-endef
-
-define deploy-stack
-	$(eval stack_name=$(strip $(1)))
-	$(eval template=$(strip $(2)))
-	$(eval args=$(3))
-
-	aws cloudformation deploy \
-		--stack-name $(stack_name) \
-		--template-file $(template) \
-		--no-fail-on-empty-changeset \
-		--profile $(AWS_PROFILE_NAME) \
-		--region $(AWS_REGION) \
-		$(args) \
-	&& touch $(template).deployed
-endef
-
-define delete-stack
-	$(eval stack_name=$(strip $(1)))
-	$(eval template=$(strip $(2)))
-
-	aws cloudformation delete-stack \
-		--stack-name $(stack_name) \
-		--profile $(AWS_PROFILE_NAME) \
-		--region $(AWS_REGION) \
-	&& rm -vf $(template).*
-endef

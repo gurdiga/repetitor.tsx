@@ -6,6 +6,7 @@ Parameters:
   LambdaCodeS3BucketName: {Type: String, MinLength: 1}
   LambdaCodeZipName: {Type: String, MinLength: 1}
   SubnetIds: {Type: String, MinLength: 1}
+  SecurityGroupIds: {Type: String, MinLength: 1}
   DBEndpoint: {Type: String, MinLength: 1}
   DBPort: {Type: Number}
   DBName: {Type: String, MinLength: 1}
@@ -36,7 +37,7 @@ Resources:
         S3Key: {Ref: LambdaCodeZipName}
       VpcConfig:
         SubnetIds: [Ref: SubnetIds]
-        SecurityGroupIds: [Ref SecurityGroupIds]
+        SecurityGroupIds: [Ref: SecurityGroupIds]
       Environment:
         Variables:
           ENDPOINT: {Ref: DBEndpoint}
