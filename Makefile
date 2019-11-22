@@ -167,10 +167,10 @@ http: /usr/local/bin/http
 	@echo The http utility is not found. Maybe brew install httpie?
 
 main-stack: \
-		src/cloud/aws/cloud-formation/02-main-stack.yml.validated \
-		src/cloud/aws/cloud-formation/02-main-stack.yml.deployed
+		src/cloud/aws/cloud-formation/main-stack.yml.validated \
+		src/cloud/aws/cloud-formation/main-stack.yml.deployed
 
-src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-formation/02-main-stack.yml
+src/cloud/aws/cloud-formation/main-stack.yml.deployed: src/cloud/aws/cloud-formation/main-stack.yml
 	aws cloudformation deploy \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
 		--template-file $< \
@@ -190,12 +190,12 @@ src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-fo
 		--capabilities CAPABILITY_IAM \
 	&& touch $@
 
-src/cloud/aws/cloud-formation/02-main-stack.yml.validated: src/cloud/aws/cloud-formation/02-main-stack.yml
+src/cloud/aws/cloud-formation/main-stack.yml.validated: src/cloud/aws/cloud-formation/main-stack.yml
 	aws cloudformation validate-template \
 		--template-body file://$< \
 	&& touch $<.validated
 
-validate-main-stack: src/cloud/aws/cloud-formation/02-main-stack.yml.validated
+validate-main-stack: src/cloud/aws/cloud-formation/main-stack.yml.validated
 
 
 delete-cloud: delete-main-stack
@@ -203,7 +203,7 @@ delete-cloud: delete-main-stack
 delete-main-stack:
 	aws cloudformation delete-stack \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
-	&& rm -vf src/cloud/aws/cloud-formation/02-main-stack.yml.*
+	&& rm -vf src/cloud/aws/cloud-formation/main-stack.yml.*
 
 update:
 	npm update
@@ -215,4 +215,4 @@ clean:
 	rm -vf \
 		src/cloud/aws/lambda/test-lambda.zip* \
 		src/cloud/aws/lambda/code-bucket.* \
-		src/cloud/aws/cloud-formation/02-main-stack.yml.*
+		src/cloud/aws/cloud-formation/main-stack.yml.*

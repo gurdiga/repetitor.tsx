@@ -3,4 +3,4 @@ node_modules/
 
 src/cloud/aws/lambda/test-lambda.zip*
 src/cloud/aws/lambda/code-bucket.*
-src/cloud/aws/cloud-formation/02-main-stack.yml.*
+src/cloud/aws/cloud-formation/main-stack.yml.*
