@@ -1,3 +1,5 @@
+include .env
+
 .ONESHELL:
 
 default: cloud
@@ -106,15 +108,6 @@ minify:
 		&& mv $$bundle.min $$bundle; \
 	done
 
-AWS_REGION=us-east-1
-# AWS_REGION=eu-west-1
-AWS_MAIN_STACK_NAME=main-stack
-AWS_PREP_STACK_NAME=prep-stack
-AWS_LAMBDA_NAME=test-lambda
-AWS_LAMBDA_BUCKET=gurdiga-lambda-code
-AWS_LAMBDA_ZIP_NAME=test-lambda.zip
-AWS_PROFILE_NAME=gurdiga-admin
-
 cloud: \
 		prep-stack \
 		deploy-code \
@@ -179,6 +172,12 @@ src/cloud/aws/cloud-formation/02-main-stack.yml.deployed: src/cloud/aws/cloud-fo
 			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
 			LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
 			DeployEnv=test \
+			SubnetIds=$(SUBNET_IDS) \
+			DBEndpoint=$(DB_ENDPOINT) \
+			DBPort=$(DB_PORT) \
+			DBName=$(DB_NAME) \
+			DBUser=$(DB_USER) \
+			DBPassword=$(DB_PASSWORD) \
 		--capabilities CAPABILITY_IAM \
 	)
 
@@ -226,7 +225,6 @@ define deploy-stack
 	aws cloudformation deploy \
 		--stack-name $(stack_name) \
 		--template-file $(template) \
-		--capabilities CAPABILITY_IAM \
 		--no-fail-on-empty-changeset \
 		--profile $(AWS_PROFILE_NAME) \
 		--region $(AWS_REGION) \
