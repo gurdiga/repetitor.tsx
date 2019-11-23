@@ -206,10 +206,12 @@ delete-main-stack:
 	&& rm -vf src/cloud/aws/cloud-formation/main-stack.yml.*
 
 update:
-	npm update
-	make build && \
-		git add package.json package-lock.json && \
-		git commit -am 'NPM packages update'
+	npm outdated \
+		&& ( echo "No updates."; exit 1 )
+	npm update \
+		&& make build \
+		&& git add package.json package-lock.json \
+		&& git commit -am 'NPM packages update'
 
 clean:
 	rm -vf \
