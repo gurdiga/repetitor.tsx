@@ -9,7 +9,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@types/react": "^16.9.12",
+    "@types/react": "^16.9.13",
     "@types/react-dom": "^16.9.4",
     "csstips": "^1.2.0",
     "csx": "^10.0.0",
