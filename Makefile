@@ -180,10 +180,6 @@ src/cloud/aws/cloud-formation/main-stack.yml.deployed: src/cloud/aws/cloud-forma
 			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
 			LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
 			DeployEnv=test \
-			SubnetIds=$(SUBNET_IDS) \
-			SecurityGroupIds=$(SECURITY_GROUP_IDS) \
-			DBEndpoint=$(DB_ENDPOINT) \
-			DBPort=$(DB_PORT) \
 			DBName=$(DB_NAME) \
 			DBUser=$(DB_USER) \
 			DBPassword=$$DB_PASSWORD \
