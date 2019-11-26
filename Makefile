@@ -160,7 +160,7 @@ test-lambda: http
 	aws cloudformation describe-stacks \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
 		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
-		| xargs -I{} http -v POST https://{}.execute-api.$(AWS_REGION).amazonaws.com/test/lambda
+		| xargs -I{} http -v POST https://{}.execute-api.$(AWS_DEFAULT_REGION).amazonaws.com/test/lambda
 
 http: /usr/local/bin/http
 /usr/local/bin/http:
