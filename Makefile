@@ -207,8 +207,7 @@ delete-main-stack:
 
 update:
 	npm outdated \
-		&& ( echo "No updates."; exit 1 )
-	npm update \
+	|| npm update \
 		&& make build \
 		&& git add package.json package-lock.json \
 		&& git commit -am 'NPM packages update'
