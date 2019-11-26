@@ -11,9 +11,47 @@ Parameters:
   DBPort: {Type: Number}
   DBName: {Type: String, MinLength: 1}
   DBUser: {Type: String, MinLength: 1}
-  DBPassword: {Type: String, MinLength: 1}
+  DBPassword: {Type: String, MinLength: 1, NoEcho: true}
 
 Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 192.168.0.0/16
+
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: {Ref: VPC}
+      CidrBlock: 192.168.1.0/24
+      AvailabilityZone: !Sub '${AWS::Region}a'
+
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: {Ref: VPC}
+      CidrBlock: 192.168.2.0/24
+      AvailabilityZone: !Sub '${AWS::Region}b'
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: The DBSubnetGroup
+      SubnetIds: [!Ref Subnet1, !Ref Subnet2]
+
+  DB:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Retain
+    Properties:
+      DatabaseName: {Ref: DBName}
+      MasterUsername: {Ref: DBUser}
+      MasterUserPassword: {Ref: DBPassword}
+      Engine: aurora
+      EngineMode: serverless
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      DeletionProtection: true
+      EnableHttpEndpoint: true
+
   TestLambdaRole:
     Type: AWS::IAM::Role
     Properties:
@@ -35,9 +73,6 @@ Resources:
       Code:
         S3Bucket: {Ref: LambdaCodeS3BucketName}
         S3Key: {Ref: LambdaCodeZipName}
-      VpcConfig:
-        SubnetIds: [Ref: SubnetIds]
-        SecurityGroupIds: [Ref: SecurityGroupIds]
       Environment:
         Variables:
           ENDPOINT: {Ref: DBEndpoint}
