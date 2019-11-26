@@ -125,14 +125,14 @@ src/cloud/aws/lambda/code-bucket.created:
 	|| aws s3api create-bucket \
 		--bucket $(AWS_LAMBDA_BUCKET) \
 		--acl public-read \
-		--create-bucket-configuration LocationConstraint=EU \
-	&& touch $@
+		--create-bucket-configuration LocationConstraint=EU
+	touch $@
 
 src/cloud/aws/lambda/code-bucket.enabled-versioning:
 	aws s3api put-bucket-versioning \
 		--bucket $(AWS_LAMBDA_BUCKET) \
-		--versioning-configuration Status=Enabled \
-	&& touch $@
+		--versioning-configuration Status=Enabled
+	touch $@
 
 deploy-lambda-code: \
 	src/cloud/aws/lambda/test-lambda.zip \
@@ -142,15 +142,15 @@ deploy-lambda-code: \
 src/cloud/aws/lambda/test-lambda.zip.uploaded: src/cloud/aws/lambda/test-lambda.zip
 	aws s3 cp \
 		src/cloud/aws/lambda/test-lambda.zip \
-		s3://$(AWS_LAMBDA_BUCKET)/$(AWS_LAMBDA_ZIP_NAME) \
-	&& touch $@
+		s3://$(AWS_LAMBDA_BUCKET)/$(AWS_LAMBDA_ZIP_NAME)
+	touch $@
 
 src/cloud/aws/lambda/test-lambda.zip.deployed: src/cloud/aws/lambda/test-lambda.zip.uploaded
 	aws lambda update-function-code \
 		--function-name $(AWS_LAMBDA_NAME) \
 		--s3-bucket $(AWS_LAMBDA_BUCKET) \
-		--s3-key $(AWS_LAMBDA_ZIP_NAME) \
-	&& touch $@
+		--s3-key $(AWS_LAMBDA_ZIP_NAME)
+	touch $@
 
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
 	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
@@ -186,14 +186,14 @@ src/cloud/aws/cloud-formation/main-stack.yml.deployed: src/cloud/aws/cloud-forma
 			DBPort=$(DB_PORT) \
 			DBName=$(DB_NAME) \
 			DBUser=$(DB_USER) \
-			DBPassword=$(DB_PASSWORD) \
-		--capabilities CAPABILITY_IAM \
-	&& touch $@
+			DBPassword=$$DB_PASSWORD \
+		--capabilities CAPABILITY_IAM
+	touch $@
 
 src/cloud/aws/cloud-formation/main-stack.yml.validated: src/cloud/aws/cloud-formation/main-stack.yml
 	aws cloudformation validate-template \
-		--template-body file://$< \
-	&& touch $<.validated
+		--template-body file://$<
+	touch $<.validated
 
 validate-main-stack: src/cloud/aws/cloud-formation/main-stack.yml.validated
 
