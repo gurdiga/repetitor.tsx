@@ -1,7 +1,7 @@
 Description: Main stack
 
 Parameters:
-  DeployEnv: {Type: String, AllowedValues: ["test", "stage", "production"]}
+  DeployEnv: {Type: String, AllowedValues: [test, stage, production]}
   LambdaFunctionName: {Type: String, MinLength: 1}
   LambdaCodeS3BucketName: {Type: String, MinLength: 1}
   LambdaCodeZipName: {Type: String, MinLength: 1}
@@ -15,22 +15,22 @@ Resources:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
       DBSubnetGroupDescription: The DBSubnetGroup
-      SubnetIds: {Ref: DefaultSubnetIds}
+      SubnetIds: !Ref DefaultSubnetIds
 
   DB:
     Type: AWS::RDS::DBCluster
     DeletionPolicy: Retain
     Properties:
-      DBClusterIdentifier: {Ref: DBName}
-      DatabaseName: {Ref: DBName}
-      MasterUsername: {Ref: DBUser}
-      MasterUserPassword: {Ref: DBPassword}
+      DBClusterIdentifier: !Ref DBName
+      DatabaseName: !Ref DBName
+      MasterUsername: !Ref DBUser
+      MasterUserPassword: !Ref DBPassword
       Engine: aurora
       EngineMode: serverless
       DBSubnetGroupName: !Ref DBSubnetGroup
       DeletionProtection: true
 
-  TestLambdaRole:
+  LambdaRole:
     Type: AWS::IAM::Role
     Properties:
       ManagedPolicyArns:
@@ -41,55 +41,55 @@ Resources:
             Action: sts:AssumeRole
             Principal: {Service: lambda.amazonaws.com}
 
-  TestLambdaFunction:
+  LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: {Ref: LambdaFunctionName}
+      FunctionName: !Ref LambdaFunctionName
       Handler: index.handler
-      Role: !GetAtt TestLambdaRole.Arn
+      Role: !GetAtt LambdaRole.Arn
       Runtime: nodejs10.x
       Code:
-        S3Bucket: {Ref: LambdaCodeS3BucketName}
-        S3Key: {Ref: LambdaCodeZipName}
+        S3Bucket: !Ref LambdaCodeS3BucketName
+        S3Key: !Ref LambdaCodeZipName
       Environment:
         Variables: {}
 
-  TestLambdaApi:
+  LambdaApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: test-lambda-api-endpoint
+      Name: lambda-api-endpoint
       ApiKeySourceType: HEADER
       EndpointConfiguration:
         Types: [EDGE]
 
-  TestLambdaApiDeployment:
+  LambdaApiDeployment:
     Type: AWS::ApiGateway::Deployment
-    DependsOn: TestLambdaApiMethod1
+    DependsOn: LambdaApiMethod1
     Properties:
-      RestApiId: !Ref TestLambdaApi
+      RestApiId: !Ref LambdaApi
 
-  TestLambdaApiProxyResource:
+  LambdaApiProxyResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      RestApiId: !Ref TestLambdaApi
-      ParentId: !GetAtt TestLambdaApi.RootResourceId
+      RestApiId: !Ref LambdaApi
+      ParentId: !GetAtt LambdaApi.RootResourceId
       PathPart: "{proxy+}"
 
-  TestLambdaApiMethod1:
+  LambdaApiMethod1:
     Type: AWS::ApiGateway::Method
     Properties:
-      RestApiId: !Ref TestLambdaApi
-      ResourceId: !Ref TestLambdaApiProxyResource
+      RestApiId: !Ref LambdaApi
+      ResourceId: !Ref LambdaApiProxyResource
       AuthorizationType: NONE
       HttpMethod: ANY
       Integration:
         ConnectionType: INTERNET
-        Credentials: !GetAtt TestLambdaInvocationRole.Arn
+        Credentials: !GetAtt LambdaInvocationRole.Arn
         IntegrationHttpMethod: ANY
         Type: AWS_PROXY
-        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TestLambdaFunction.Arn}/invocations"
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations"
 
-  TestLambdaInvocationRole:
+  LambdaInvocationRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -103,16 +103,16 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: lambda:InvokeFunction
-                Resource: !GetAtt TestLambdaFunction.Arn
+                Resource: !GetAtt LambdaFunction.Arn
 
-  TestLambdaApiStage:
-    DependsOn: TestLambdaApiDeployment
+  LambdaApiStage:
+    DependsOn: LambdaApiDeployment
     Type: AWS::ApiGateway::Stage
     Properties:
-      RestApiId: !Ref TestLambdaApi
-      DeploymentId: !Ref TestLambdaApiDeployment
+      RestApiId: !Ref LambdaApi
+      DeploymentId: !Ref LambdaApiDeployment
       StageName: test
 
 Outputs:
   Api:
-    Value: !Ref TestLambdaApi
+    Value: !Ref LambdaApi

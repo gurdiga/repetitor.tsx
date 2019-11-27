@@ -154,13 +154,12 @@ src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lam
 	cd src/cloud/aws/lambda/test-lambda && zip -r ../test-lambda.zip .
 
 t: test-lambda
-test-lambda: http
+test-lambda: /usr/local/bin/http
 	aws cloudformation describe-stacks \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
 		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
 		| xargs -I{} http -v POST https://{}.execute-api.$(AWS_DEFAULT_REGION).amazonaws.com/test/lambda
 
-http: /usr/local/bin/http
 /usr/local/bin/http:
 	@echo The http utility is not found. Maybe brew install httpie?
 
