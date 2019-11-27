@@ -205,7 +205,8 @@ update:
 	npm outdated \
 		| tail -n +2 \
 		| cut -f1 -d' ' \
-		| xargs -I{} npm install {}@latest
+		| xargs -I{} npm install {}@latest \
+		| ifne -n 'exit 1'
 	make build
 	git add package.json package-lock.json
 	git commit -am 'NPM packages update'
