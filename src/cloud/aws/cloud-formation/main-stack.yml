@@ -46,7 +46,6 @@ Resources:
       EngineMode: serverless
       DBSubnetGroupName: !Ref DBSubnetGroup
       DeletionProtection: true
-      EnableHttpEndpoint: true
 
   TestLambdaRole:
     Type: AWS::IAM::Role
