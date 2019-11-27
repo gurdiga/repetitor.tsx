@@ -203,12 +203,12 @@ delete-main-stack:
 
 update:
 	npm outdated \
-	|| ( \
-		npm update \
-		&& make build \
-		&& git add package.json package-lock.json \
-		&& git commit -am 'NPM packages update' \
-	) \
+		| tail -n +2 \
+		| cut -f1 -d' ' \
+		| xargs -I{} npm install {}@latest
+	make build
+	git add package.json package-lock.json
+	git commit -am 'NPM packages update'
 
 clean:
 	rm -vf \
