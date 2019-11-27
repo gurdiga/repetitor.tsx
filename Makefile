@@ -80,8 +80,6 @@ e: edit
 edit:
 	code -n .
 
-x:
-
 deploy:
 	@git diff-index --quiet HEAD || \
 		{ echo "\nGit is not clean.\n"; exit 1; };
@@ -171,6 +169,7 @@ main-stack: \
 		src/cloud/aws/cloud-formation/main-stack.yml.deployed
 
 src/cloud/aws/cloud-formation/main-stack.yml.deployed: src/cloud/aws/cloud-formation/main-stack.yml
+	DEFAULT_SUBNET_IDS=$$(aws ec2 describe-subnets | jq --raw-output '.Subnets | map(.SubnetId) | join(",")') && \
 	aws cloudformation deploy \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
 		--template-file $< \
@@ -183,6 +182,7 @@ src/cloud/aws/cloud-formation/main-stack.yml.deployed: src/cloud/aws/cloud-forma
 			DBName=$(DB_NAME) \
 			DBUser=$(DB_USER) \
 			DBPassword=$$DB_PASSWORD \
+			DefaultSubnetIds=$$DEFAULT_SUBNET_IDS \
 		--capabilities CAPABILITY_IAM
 	touch $@
 
