@@ -152,14 +152,12 @@ src/cloud/aws/lambda/test-lambda.zip.deployed: src/cloud/aws/lambda/test-lambda.
 
 # TODO: Remake index.js when $(LAMBDA_ZIP)/src/**/*.ts changes.
 
-LAMBDA_ZIP=src/cloud/aws/lambda/test-lambda.zip
-$(LAMBDA_ZIP): SOURCE_DIR=src/cloud/aws/lambda/test-lambda
-$(LAMBDA_ZIP): EXCLUDES=$(shell jq -r '.devDependencies | keys | map("node_modules/\(.)/\\*") | join(" ")' $(SOURCE_DIR)/package.json)
-$(LAMBDA_ZIP): PREREQS=$(shell find $(SOURCE_DIR))
-$(LAMBDA_ZIP): $(PREREQS)
+src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
 	rm -fv $@
-	cd src/cloud/aws/lambda/test-lambda \
-		&& zip -r ../test-lambda.zip index.js node_modules -x $(EXCLUDES)
+	cd src/cloud/aws/lambda/test-lambda; \
+		EXCLUDES=$$(jq -r '.devDependencies | keys | map("node_modules/\(.)/*") | join(" ")' package.json); \
+		set -o noglob; \
+		zip -r ../test-lambda.zip index.js node_modules -x $${EXCLUDES?}
 
 t: test-lambda
 test-lambda: /usr/local/bin/http
