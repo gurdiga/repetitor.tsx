@@ -23,6 +23,6 @@
     "typescript": "^3.7.2",
     "typescript-bundle": "^1.0.16",
     "typestyle": "^2.0.4",
-    "uglify-js": "^3.7.0"
+    "uglify-js": "^3.7.1"
   }
 }
