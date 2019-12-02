@@ -150,14 +150,8 @@ src/cloud/aws/lambda/test-lambda.zip.deployed: src/cloud/aws/lambda/test-lambda.
 		--s3-key $(AWS_LAMBDA_ZIP_NAME)
 	touch $@
 
-# TODO: Remake index.js when $(LAMBDA_ZIP)/src/**/*.ts changes.
-
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
-	rm -fv $@
-	cd src/cloud/aws/lambda/test-lambda; \
-		EXCLUDES=$$(jq -r '.devDependencies | keys | map("node_modules/\(.)/*") | join(" ")' package.json); \
-		set -o noglob; \
-		zip -r ../test-lambda.zip index.js node_modules -x $${EXCLUDES?}
+	cd src/cloud/aws/lambda/test-lambda && make zip
 
 t: test-lambda
 test-lambda: /usr/local/bin/http
