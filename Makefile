@@ -154,11 +154,14 @@ src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lam
 	cd src/cloud/aws/lambda/test-lambda && make zip
 
 t: test-lambda
-test-lambda: /usr/local/bin/http
+test-lambda: /usr/local/bin/http src/cloud/aws/cloud-formation/main-stack.yml.id
+	AWS_STACK_ID=$$(< src/cloud/aws/cloud-formation/main-stack.yml.id) \
+		&& http -v POST https://$${AWS_STACK_ID}.execute-api.$(AWS_DEFAULT_REGION).amazonaws.com/test/lambda
+
+src/cloud/aws/cloud-formation/main-stack.yml.id: src/cloud/aws/lambda/test-lambda.zip.deployed
 	aws cloudformation describe-stacks \
 		--stack-name $(AWS_MAIN_STACK_NAME) \
-		| jq '.Stacks[0].Outputs[0].OutputValue' -r \
-		| xargs -I{} http -v POST https://{}.execute-api.$(AWS_DEFAULT_REGION).amazonaws.com/test/lambda
+		| jq '.Stacks[0].Outputs[0].OutputValue' -r > $@
 
 /usr/local/bin/http:
 	@echo The http utility is not found. Maybe brew install httpie?
@@ -191,7 +194,6 @@ src/cloud/aws/cloud-formation/main-stack.yml.validated: src/cloud/aws/cloud-form
 	touch $<.validated
 
 validate-main-stack: src/cloud/aws/cloud-formation/main-stack.yml.validated
-
 
 delete-cloud: delete-main-stack
 
