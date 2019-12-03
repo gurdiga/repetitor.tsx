@@ -5,9 +5,12 @@
   "editor.tabSize": 2,
   "prettier.bracketSpacing": false,
   "files.exclude": {
-    "build": true,
     ".bash_history": true,
     ".viminfo": true,
-    ".vimrc": true
+    ".vimrc": true,
+    "build": true
+  },
+  "search.exclude": {
+    "**/node_modules/**/*": true
   }
 }
