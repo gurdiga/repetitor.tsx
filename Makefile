@@ -2,7 +2,7 @@ include .env
 
 .ONESHELL:
 
-default: deploy-lambda-code test-lambda
+default: cloud deploy-lambda-code test-lambda
 
 PAGE_MODULES=`find src/ -type d -name '*Page'`
 
