@@ -52,7 +52,8 @@ Resources:
         S3Bucket: !Ref LambdaCodeS3BucketName
         S3Key: !Ref LambdaCodeZipName
       Environment:
-        Variables: {}
+        Variables:
+          APP_DB_HOST: !GetAtt DB.Endpoint.Address
 
   LambdaApi:
     Type: AWS::ApiGateway::RestApi
