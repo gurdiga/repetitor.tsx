@@ -147,7 +147,8 @@ src/cloud/aws/lambda/test-lambda.zip.deployed: src/cloud/aws/lambda/test-lambda.
 	aws lambda update-function-code \
 		--function-name $(AWS_LAMBDA_NAME) \
 		--s3-bucket $(AWS_LAMBDA_BUCKET) \
-		--s3-key $(AWS_LAMBDA_ZIP_NAME)
+		--s3-key $(AWS_LAMBDA_ZIP_NAME) \
+		> /dev/null
 	touch $@
 
 src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lambda)
@@ -171,26 +172,37 @@ main-stack: \
 		src/cloud/aws/cloud-formation/main-stack.yml.deployed
 
 src/cloud/aws/cloud-formation/main-stack.yml.deployed: src/cloud/aws/cloud-formation/main-stack.yml
-	DEFAULT_SUBNET_IDS=$$(aws ec2 describe-subnets | jq --raw-output '.Subnets | map(.SubnetId) | join(",")') && \
-	aws cloudformation deploy \
-		--stack-name $(AWS_MAIN_STACK_NAME) \
-		--template-file $< \
-		--no-fail-on-empty-changeset \
-		--parameter-overrides \
-			LambdaFunctionName=$(AWS_LAMBDA_NAME) \
-			LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
-			LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
-			DeployEnv=test \
-			DBName=$(DB_NAME) \
-			DBUser=$(DB_USER) \
-			DBPassword=$$DB_PASSWORD \
-			DefaultSubnetIds=$$DEFAULT_SUBNET_IDS \
-		--capabilities CAPABILITY_IAM
-	touch $@
+	if \
+		DEFAULT_SUBNET_IDS=$$(aws ec2 describe-subnets | jq --raw-output '.Subnets | map(.SubnetId) | join(",")') && \
+		DEFAULT_SECURITY_GROUP_IDS=$$(aws ec2 describe-security-groups --filters Name=description,Values="default VPC security group" | jq --raw-output '.SecurityGroups[].GroupId') && \
+		aws cloudformation deploy \
+			--stack-name $(AWS_MAIN_STACK_NAME) \
+			--template-file $< \
+			--no-fail-on-empty-changeset \
+			--parameter-overrides \
+				LambdaFunctionName=$(AWS_LAMBDA_NAME) \
+				LambdaCodeS3BucketName=$(AWS_LAMBDA_BUCKET) \
+				LambdaCodeZipName=$(AWS_LAMBDA_ZIP_NAME) \
+				DeployEnv=test \
+				DBName=$(DB_NAME) \
+				DBUser=$(DB_USER) \
+				DBPassword=$$DB_PASSWORD \
+				DefaultSubnetIds=$$DEFAULT_SUBNET_IDS \
+				DefaultSecurityGroupIds=$$DEFAULT_SECURITY_GROUP_IDS \
+			--capabilities CAPABILITY_IAM; \
+	then \
+		touch $@; \
+	else \
+		aws cloudformation describe-stack-events \
+			--stack-name main-stack \
+			| jq -r '.StackEvents[] | select(.ResourceStatusReason) | "\(.LogicalResourceId):\t\(.ResourceStatusReason)"'; \
+		exit 1; \
+	fi
 
 src/cloud/aws/cloud-formation/main-stack.yml.validated: src/cloud/aws/cloud-formation/main-stack.yml
 	aws cloudformation validate-template \
-		--template-body file://$<
+		--template-body file://$< \
+		> /dev/null
 	touch $<.validated
 
 validate-main-stack: src/cloud/aws/cloud-formation/main-stack.yml.validated
