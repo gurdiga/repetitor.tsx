@@ -35,6 +35,7 @@ Resources:
     Properties:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -51,6 +52,7 @@ Resources:
       Code:
         S3Bucket: !Ref LambdaCodeS3BucketName
         S3Key: !Ref LambdaCodeZipName
+      TracingConfig: {Mode: Active}
       Environment:
         Variables:
           APP_DB_HOST: !GetAtt DB.Endpoint.Address
