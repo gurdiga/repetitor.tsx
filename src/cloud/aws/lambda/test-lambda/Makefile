@@ -1,5 +1,5 @@
 index.js: node_modules $(shell find src/ node_modules/)
-	tsc
+	tsc --skipLibCheck
 
 zip: ../test-lambda.zip
 ../test-lambda.zip: \
