@@ -9,6 +9,7 @@ Parameters:
   DBUser: {Type: String, MinLength: 1}
   DBPassword: {Type: String, MinLength: 1, NoEcho: true}
   DefaultSubnetIds: {Type: "List<AWS::EC2::Subnet::Id>"}
+  DefaultSecurityGroupIds: {Type: "List<AWS::EC2::SecurityGroup::Id>"}
 
 Resources:
   DBSubnetGroup:
@@ -53,6 +54,9 @@ Resources:
         S3Bucket: !Ref LambdaCodeS3BucketName
         S3Key: !Ref LambdaCodeZipName
       TracingConfig: {Mode: Active}
+      VpcConfig:
+        SecurityGroupIds: !Ref DefaultSecurityGroupIds
+        SubnetIds: !Ref DefaultSubnetIds
       Environment:
         Variables:
           APP_DB_HOST: !GetAtt DB.Endpoint.Address
