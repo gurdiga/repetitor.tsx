@@ -60,6 +60,9 @@ Resources:
       Environment:
         Variables:
           APP_DB_HOST: !GetAtt DB.Endpoint.Address
+          APP_DB_NAME: !Ref DBName
+          APP_DB_USER: !Ref DBUser
+          APP_DB_PASSWORD: !Ref DBPassword
 
   LambdaApi:
     Type: AWS::ApiGateway::RestApi
