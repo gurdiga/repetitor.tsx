@@ -157,7 +157,24 @@ src/cloud/aws/lambda/test-lambda.zip: $(shell find src/cloud/aws/lambda/test-lam
 t: test-lambda
 test-lambda: /usr/local/bin/http src/cloud/aws/cloud-formation/main-stack.yml.id
 	AWS_STACK_ID=$$(< src/cloud/aws/cloud-formation/main-stack.yml.id) \
-		&& http -v POST https://$${AWS_STACK_ID}.execute-api.$(AWS_DEFAULT_REGION).amazonaws.com/test/lambda
+		&& http --check-status -v POST https://$${AWS_STACK_ID}.execute-api.$(AWS_DEFAULT_REGION).amazonaws.com/test/lambda \
+	|| make get-las-lambda-log
+
+get-las-lambda-log:
+	@LAST_LOG_STREAM_NAME=$$( \
+		aws logs describe-log-streams \
+			--log-group-name /aws/lambda/test-lambda \
+			--descending \
+			--order-by LastEventTime\
+			--page-size 1 \
+			--max-items 1 \
+			| jq '.logStreams[].logStreamName' -r \
+	) && \
+	aws logs get-log-events \
+		--log-group-name /aws/lambda/test-lambda \
+		--log-stream-name $$LAST_LOG_STREAM_NAME \
+		| jq -r '.events[].message' \
+		| sed 's/\r/\n/g'
 
 src/cloud/aws/cloud-formation/main-stack.yml.id: src/cloud/aws/lambda/test-lambda.zip.deployed
 	aws cloudformation describe-stacks \
