@@ -53,6 +53,7 @@ Resources:
       Code:
         S3Bucket: !Ref LambdaCodeS3BucketName
         S3Key: !Ref LambdaCodeZipName
+      Timeout: 30 # seconds
       TracingConfig: {Mode: Active}
       VpcConfig:
         SecurityGroupIds: !Ref DefaultSecurityGroupIds
