@@ -71,7 +71,7 @@ Resources:
       Name: lambda-api-endpoint
       ApiKeySourceType: HEADER
       EndpointConfiguration:
-        Types: [EDGE]
+        Types: [REGIONAL]
 
   LambdaApiDeployment:
     Type: AWS::ApiGateway::Deployment
