@@ -158,7 +158,7 @@ t: test-lambda
 test-lambda: /usr/local/bin/http src/cloud/aws/cloud-formation/main-stack.yml.id
 	AWS_STACK_ID=$$(< src/cloud/aws/cloud-formation/main-stack.yml.id) \
 		&& time http --check-status -v POST https://$${AWS_STACK_ID}.execute-api.$(AWS_DEFAULT_REGION).amazonaws.com/test/lambda \
-	|| make get-las-lambda-log
+		|| make get-las-lambda-log
 
 get-las-lambda-log:
 	@LAST_LOG_STREAM_NAME=$$( \
