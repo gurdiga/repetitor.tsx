@@ -10,8 +10,9 @@ zip: ../test-lambda.zip
 	zip --filesync $@ -r $^
 	@du --apparent-size --human-readable $@
 
-node_modules:
+node_modules: package.json
 	npm install
+	touch node_modules
 
 clean:
 	rm -f index.js
