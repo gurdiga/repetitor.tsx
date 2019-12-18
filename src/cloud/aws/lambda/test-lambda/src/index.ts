@@ -1,42 +1,32 @@
-import {Handler, APIGatewayProxyEvent, APIGatewayProxyResult} from "aws-lambda";
-import * as MySQL from "mysql";
-
-let connection: MySQL.Connection;
+import {Handler, APIGatewayProxyEvent, APIGatewayProxyResult, Context} from "aws-lambda";
+import {Backend} from "App/Backend";
 
 const handler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event, context) => {
-  return new Promise<APIGatewayProxyResult>((resolve, reject) => {
-    if (!connection) {
-      console.time("MySQL connection");
+  const httpMethod = event.httpMethod.toUpperCase();
+  const action = event.path;
+  const params = event.multiValueQueryStringParameters!;
 
-      connection = MySQL.createConnection({
-        host: process.env.APP_DB_HOST,
-        user: process.env.APP_DB_USER,
-        password: process.env.APP_DB_PASSWORD,
-        database: process.env.APP_DB_NAME,
-      });
-
-      connection.connect();
-      console.timeEnd("MySQL connection");
-    }
-
-    console.time("MySQL query");
-    connection.query({sql: "SELECT 1 + 1 AS solution", values: [], timeout: 20000}, function(error, results, fields) {
-      console.timeEnd("MySQL query");
-
-      if (error) {
-        console.error(error);
-        reject(error);
-        return;
-      }
-
-      resolve({
-        statusCode: 200,
-        body: JSON.stringify({APP_RESULT: results[0].solution}),
-      });
+  return Backend.executeAction({httpMethod, action, params})
+    .then(result => ({
+      statusCode: 200,
+      body: JSON.stringify(result),
+    }))
+    .catch(e => {
+      throw e;
     });
-  }).catch(e => {
-    throw e;
-  });
 };
 
 exports.handler = handler;
+
+// This is to be able to run it locally with Node.
+if (require.main === module) {
+  const event = {
+    httpMethod: "GET",
+    path: "/",
+    multiValueQueryStringParameters: null,
+  };
+  const context = {};
+  const callback = () => null;
+
+  handler((event as any) as APIGatewayProxyEvent, (context as any) as Context, callback);
+}
