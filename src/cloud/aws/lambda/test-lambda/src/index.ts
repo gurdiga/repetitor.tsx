@@ -6,14 +6,19 @@ const handler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (eve
   const action = event.path;
   const params = event.multiValueQueryStringParameters!;
 
-  return Backend.executeAction({httpMethod, action, params})
-    .then(result => ({
+  try {
+    return await Backend.executeAction({httpMethod, action, params}).then(result => ({
       statusCode: 200,
       body: JSON.stringify(result),
-    }))
-    .catch(e => {
-      throw e;
-    });
+    }));
+  } catch (e) {
+    console.error(e);
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({error: e.message}),
+    };
+  }
 };
 
 exports.handler = handler;
