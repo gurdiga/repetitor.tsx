@@ -3,11 +3,11 @@ import {Backend} from "App/Backend";
 
 const handler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event, context) => {
   const httpMethod = event.httpMethod.toUpperCase();
-  const action = event.path;
+  const actionName = event.path; // TODO: Use a param instead.
   const params = event.multiValueQueryStringParameters!;
 
   try {
-    return await Backend.executeAction({httpMethod, action, params}).then(result => ({
+    return await Backend.handleActionRequest({httpMethod, actionName, params}).then(result => ({
       statusCode: 200,
       body: JSON.stringify(result),
     }));
