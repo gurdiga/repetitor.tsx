@@ -18,3 +18,6 @@ node_modules: package.json
 clean:
 	rm -f index.js
 	rm -rf ./node_modules/
+
+run: index.js
+	. ~/.nvm/nvm.sh && nvm run index.js
