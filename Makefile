@@ -246,3 +246,6 @@ clean:
 		src/cloud/aws/lambda/test-lambda.zip* \
 		src/cloud/aws/lambda/code-bucket.* \
 		src/cloud/aws/cloud-formation/main-stack.yml.*
+
+backend:
+	cd src/cloud/aws/lambda/test-lambda && make run
