@@ -19,11 +19,22 @@ clean:
 	rm -f index.js
 	rm -rf ./node_modules/ ./App/
 
-run: index.js
-	. ~/.nvm/nvm.sh && nvm run index.js
-
 .nvmrc: ../../cloud-formation/main-stack.yml
 	# take the version number out of something like "nodejs10.x"
 	yq read $< Resources.LambdaFunction.Properties.Runtime \
 		| grep -oP '\d+' \
 		> .nvmrc
+
+run: index.js
+	. ~/.nvm/nvm.sh && nvm run index.js <<< '$(PLACEHOLDER_EVENT)'
+
+define PLACEHOLDER_EVENT
+{ \
+	"httpMethod": "POST", \
+	"path": "/", \
+	"queryStringParameters": { \
+		"actionName": "registerUser" \
+	}, \
+	"multiValueQueryStringParameters": null \
+}
+endef

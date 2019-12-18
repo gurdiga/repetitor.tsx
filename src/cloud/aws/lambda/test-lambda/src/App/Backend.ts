@@ -40,8 +40,8 @@ export namespace Backend {
     return executeAction(action);
   }
 
-  function getActionForRequest(actionRequest: ActionRequest): ActionDefinition {
-    const actionKey = `${actionRequest.httpMethod} ${actionRequest.actionName}`;
+  function getActionForRequest({httpMethod, actionName}: ActionRequest): ActionDefinition {
+    const actionKey = `${httpMethod.toUpperCase()} ${actionName}`;
     const action = ActionRegistry[actionKey];
 
     if (!action) {

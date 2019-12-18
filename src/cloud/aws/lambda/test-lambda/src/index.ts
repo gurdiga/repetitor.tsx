@@ -2,11 +2,11 @@ import {Handler, APIGatewayProxyEvent, APIGatewayProxyResult, Context} from "aws
 import {Backend} from "App/Backend";
 
 const handler: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = async (event, context) => {
-  const httpMethod = event.httpMethod.toUpperCase();
-  const actionName = event.path; // TODO: Use a param instead.
-  const params = event.multiValueQueryStringParameters!;
-
   try {
+    const httpMethod = event.httpMethod;
+    const actionName = event.queryStringParameters?.["actionName"] || "MISSING_ACTION_NAME";
+    const params = event.multiValueQueryStringParameters || {};
+
     return await Backend.handleActionRequest({httpMethod, actionName, params}).then(result => ({
       statusCode: 200,
       body: JSON.stringify(result),
@@ -25,13 +25,14 @@ exports.handler = handler;
 
 // This is to be able to run it locally with Node.
 if (require.main === module) {
-  const event = {
-    httpMethod: "GET",
-    path: "/",
-    multiValueQueryStringParameters: null,
-  };
-  const context = {};
+  const stdin = require("fs")
+    .readFileSync(0)
+    .toString();
+  const stdinJson = JSON.parse(stdin);
+
+  const event = (stdinJson as any) as APIGatewayProxyEvent;
+  const context = ({} as any) as Context;
   const callback = () => null;
 
-  handler((event as any) as APIGatewayProxyEvent, (context as any) as Context, callback);
+  (handler(event, context, callback) as Promise<any>).then(console.log);
 }
