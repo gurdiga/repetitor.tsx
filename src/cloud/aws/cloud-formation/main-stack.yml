@@ -64,6 +64,7 @@ Resources:
           APP_DB_NAME: !Ref DBName
           APP_DB_USER: !Ref DBUser
           APP_DB_PASSWORD: !Ref DBPassword
+          NODE_PATH: ./ # So that Node is able to find modules; related to baseUrl in tsconfig.
 
   LambdaApi:
     Type: AWS::ApiGateway::RestApi
