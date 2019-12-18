@@ -1,4 +1,4 @@
-index.js: node_modules $(shell find src/ node_modules/)
+index.js: node_modules package.json tsconfig.json $(shell find src)
 	tsc --skipLibCheck
 
 zip: ../test-lambda.zip
