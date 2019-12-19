@@ -1,3 +1,4 @@
+import * as assert from "assert";
 import {Handler, APIGatewayProxyEvent, APIGatewayProxyResult, Context} from "aws-lambda";
 import {Backend} from "App/Backend";
 
@@ -27,10 +28,7 @@ exports.handler = handler;
 if (require.main === module) {
   const cliArgument = process.argv[2];
 
-  if (!cliArgument) {
-    console.error("Please pass the event JSON as the first argument.");
-    process.exit(1);
-  }
+  assert(!!cliArgument, "Please pass the event JSON as the first argument.");
 
   const eventJson = JSON.parse(cliArgument);
   const event = (eventJson as any) as APIGatewayProxyEvent;

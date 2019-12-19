@@ -1,3 +1,4 @@
+import * as assert from "assert";
 import * as MySQL from "mysql";
 import {ApplicationError} from "App/ApplicationError";
 
@@ -20,13 +21,13 @@ export namespace Backend {
   }
 
   interface ActionDefinition {
-    paramValidation: (params: ActionRequest["params"]) => void; // Throws unless params are valid
+    assertValidParams: (params: ActionRequest["params"]) => void; // Throws unless params are valid
     action: () => Data;
   }
 
   const ActionRegistry: {[actionKey: string]: ActionDefinition} = {
     "POST RegisterUser": {
-      paramValidation: params => {
+      assertValidParams: params => {
         throw new ApplicationError("paramValidation for POST RegisterUser is not yet implemented");
       },
       action: () => ({
@@ -38,6 +39,8 @@ export namespace Backend {
   export function handleActionRequest(actionRequest: ActionRequest): Promise<Data> {
     const action = getActionForRequest(actionRequest);
 
+    action.assertValidParams(actionRequest.params);
+
     return executeAction(action);
   }
 
@@ -45,9 +48,7 @@ export namespace Backend {
     const actionKey = `${httpMethod.toUpperCase()} ${actionName}`;
     const action = ActionRegistry[actionKey];
 
-    if (!action) {
-      throw new ApplicationError(`Could not find action for request: ${actionKey}`);
-    }
+    assert(!!action, `Could not find action for request: ${actionKey}`);
 
     return action;
   }
@@ -59,6 +60,8 @@ export namespace Backend {
   }
 
   function runQuery(query: ParametrizedQuery): Promise<Data> {
+    assertEnvVars(["APP_DB_HOST", "APP_DB_USER", "APP_DB_PASSWORD", "APP_DB_NAME"]);
+
     return new Promise<Data>((resolve, reject) => {
       if (!connection) {
         console.time("MySQL connection");
@@ -87,5 +90,11 @@ export namespace Backend {
         resolve({rows: results[0]});
       });
     });
+  }
+
+  function assertEnvVars(varNames: string[]) {
+    const missingVars = varNames.filter(name => !process.env[name]).join(", ");
+
+    assert(missingVars.length === 0, `Env vars are missing: ${missingVars}`);
   }
 }
