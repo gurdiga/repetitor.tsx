@@ -25,12 +25,15 @@ exports.handler = handler;
 
 // This is to be able to run it locally with Node.
 if (require.main === module) {
-  const stdin = require("fs")
-    .readFileSync(0)
-    .toString();
-  const stdinJson = JSON.parse(stdin);
+  const cliArgument = process.argv[2];
 
-  const event = (stdinJson as any) as APIGatewayProxyEvent;
+  if (!cliArgument) {
+    console.error("Please pass the event JSON as the first argument.");
+    process.exit(1);
+  }
+
+  const eventJson = JSON.parse(cliArgument);
+  const event = (eventJson as any) as APIGatewayProxyEvent;
   const context = ({} as any) as Context;
   const callback = () => null;
 

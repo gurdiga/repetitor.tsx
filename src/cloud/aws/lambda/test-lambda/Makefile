@@ -26,7 +26,7 @@ clean:
 		> .nvmrc
 
 run: index.js
-	. ~/.nvm/nvm.sh && nvm run index.js <<< '$(PLACEHOLDER_EVENT)'
+	. ~/.nvm/nvm.sh && nvm run index.js '$(PLACEHOLDER_EVENT)'
 
 define PLACEHOLDER_EVENT
 { \
