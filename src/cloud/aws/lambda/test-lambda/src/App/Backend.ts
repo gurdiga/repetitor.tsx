@@ -34,6 +34,10 @@ export namespace Backend {
         rows: ["TODO"],
       }),
     },
+    "GET testEvent": {
+      assertValidParams: params => null,
+      action: () => ({rows: ["OK"]}),
+    },
   };
 
   export function handleActionRequest(actionRequest: ActionRequest): Promise<Data> {
@@ -54,6 +58,11 @@ export namespace Backend {
   }
 
   function executeAction(action: ActionDefinition): Promise<Data> {
+    if (action) {
+      // TODO: Implement
+      return Promise.resolve({rows: []});
+    }
+
     const query = {} as ParametrizedQuery;
 
     return runQuery(query);

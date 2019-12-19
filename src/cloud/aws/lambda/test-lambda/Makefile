@@ -1,3 +1,8 @@
+include .env
+
+NVM_NODE_BINARY=$(shell ls -1d /Users/vlad/.nvm/versions/node/v$$(<.nvmrc)*/bin/node | sort --version-sort | tail -1)
+
+build: index.js
 index.js: node_modules package.json tsconfig.json $(shell find src)
 	tsc --skipLibCheck
 
@@ -26,7 +31,7 @@ clean:
 		> .nvmrc
 
 run: index.js
-	. ~/.nvm/nvm.sh && nvm run index.js '$(PLACEHOLDER_EVENT)'
+	$(NVM_NODE_BINARY) index.js '$(PLACEHOLDER_EVENT)'
 
 define PLACEHOLDER_EVENT
 { \
@@ -34,6 +39,28 @@ define PLACEHOLDER_EVENT
 	"path": "/", \
 	"queryStringParameters": { \
 		"actionName": "registerUser" \
+	}, \
+	"multiValueQueryStringParameters": null \
+}
+endef
+
+update:
+	npm outdated \
+		| tail -n +2 \
+		| cut -f1 -d' ' \
+		| xargs -I{} npm install {}@latest \
+		| ifne -n 'exit 1'
+	make test
+
+test: build
+	$(NVM_NODE_BINARY) index.js '$(TEST_EVENT)'
+
+define TEST_EVENT
+{ \
+	"httpMethod": "GET", \
+	"path": "/", \
+	"queryStringParameters": { \
+		"actionName": "testEvent" \
 	}, \
 	"multiValueQueryStringParameters": null \
 }
