@@ -241,6 +241,17 @@ update:
 	git add package.json package-lock.json
 	git commit -am 'NPM packages update'
 
+outdated:
+	find . \
+		! -path '*/node_modules/*' \
+		-name package.json \
+		| xargs dirname \
+		| while read dir; do \
+				echo "Checking for outdated packages in $$dir">>/dev/stderr; \
+				cd $$dir; \
+				npm outdated; \
+			done
+
 clean:
 	rm -vf \
 		src/cloud/aws/lambda/test-lambda.zip* \
@@ -249,3 +260,4 @@ clean:
 
 backend:
 	cd src/cloud/aws/lambda/test-lambda && make run
+
