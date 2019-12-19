@@ -1,4 +1,5 @@
 import * as MySQL from "mysql";
+import {ApplicationError} from "App/ApplicationError";
 
 export namespace Backend {
   interface Data {
@@ -26,7 +27,7 @@ export namespace Backend {
   const ActionRegistry: {[actionKey: string]: ActionDefinition} = {
     "POST RegisterUser": {
       paramValidation: params => {
-        throw new Error("paramValidation for POST RegisterUser is not yet implemented");
+        throw new ApplicationError("paramValidation for POST RegisterUser is not yet implemented");
       },
       action: () => ({
         rows: ["TODO"],
@@ -45,7 +46,7 @@ export namespace Backend {
     const action = ActionRegistry[actionKey];
 
     if (!action) {
-      throw new Error(`Could not find action for request: ${actionKey}`);
+      throw new ApplicationError(`Could not find action for request: ${actionKey}`);
     }
 
     return action;
