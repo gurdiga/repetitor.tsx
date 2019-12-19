@@ -13,7 +13,8 @@ zip: ../test-lambda.zip
 			| tail --lines=+2 \
 			| xargs realpath --relative-to=`pwd` \
 	) && \
-	zip $@ -r index.js App $$PROD_DEPENDENCIES
+	zip $@ -r $$PROD_DEPENDENCIES
+	cd build && zip ../$@ -r *
 	@du --apparent-size --human-readable $@
 
 node_modules: .nvmrc package.json
