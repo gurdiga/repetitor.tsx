@@ -34,7 +34,7 @@ export namespace Backend {
         rows: ["TODO"],
       }),
     },
-    "GET testEvent": {
+    "GET testAction": {
       assertValidParams: params => null,
       action: () => ({rows: ["OK"]}),
     },

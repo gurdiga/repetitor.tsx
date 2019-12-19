@@ -60,7 +60,7 @@ define TEST_EVENT
 	"httpMethod": "GET", \
 	"path": "/", \
 	"queryStringParameters": { \
-		"actionName": "testEvent" \
+		"actionName": "testAction" \
 	}, \
 	"multiValueQueryStringParameters": null \
 }
