@@ -67,3 +67,30 @@ define TEST_EVENT
 	"multiValueQueryStringParameters": null \
 }
 endef
+
+
+init-db: .db.version-check .db.create-user .db.create-schema
+
+.db.create-schema:
+	@echo TODO: .db.create-schema
+
+.db.create-user:
+	mysql -e "CREATE USER $(APP_DB_USER)@$(APP_DB_HOST)"
+	touch $@
+
+.db.version-check: .db.required-version .db.actual-version
+	diff $^
+	touch $@
+
+.db.actual-version:
+	mysql -e 'show variables like "version"\G' \
+		| tail -1 \
+		| awk '{print $$2}' \
+		| grep -oP '^\d+\.\d+' \
+		> $@
+
+.db.required-version: ../../cloud-formation/main-stack.yml
+	# take the version number out of something like "5.6.10a"
+	yq read $< Resources.DB.Properties.EngineVersion \
+		| grep -oP '^\d+\.\d+' \
+		> $@
