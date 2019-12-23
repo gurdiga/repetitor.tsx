@@ -20,7 +20,7 @@ zip: ../test-lambda.zip
 
 node_modules: .nvmrc package.json
 	npm install
-	touch node_modules
+	touch $@
 
 clean:
 	rm -f index.js
