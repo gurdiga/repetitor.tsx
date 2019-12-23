@@ -5,6 +5,7 @@ NVM_NODE_BINARY=$(shell ls -1d /Users/vlad/.nvm/versions/node/v$$(<.nvmrc)*/bin/
 build: index.js
 index.js: node_modules package.json tsconfig.json $(shell find src)
 	tsc --skipLibCheck
+	touch $@
 
 zip: ../test-lambda.zip
 ../test-lambda.zip: .nvmrc package.json tsconfig.json index.js
