@@ -22,7 +22,7 @@ export namespace Backend {
 
   interface ActionDefinition {
     assertValidParams: (params: ActionRequest["params"]) => void; // Throws unless params are valid
-    action: () => Data;
+    execute: () => Promise<Data>;
   }
 
   const ActionRegistry: {[actionKey: string]: ActionDefinition} = {
@@ -30,13 +30,15 @@ export namespace Backend {
       assertValidParams: params => {
         throw new ApplicationError("paramValidation for POST RegisterUser is not yet implemented");
       },
-      action: () => ({
-        rows: ["TODO"],
-      }),
+      execute: () => Promise.resolve({rows: ["TODO"]}),
     },
     "GET testAction": {
       assertValidParams: params => null,
-      action: () => ({rows: ["OK"]}),
+      execute: () =>
+        runQuery({
+          sql: "SELECT 1 + 1",
+          params: [],
+        }),
     },
   };
 
@@ -45,7 +47,7 @@ export namespace Backend {
 
     action.assertValidParams(actionRequest.params);
 
-    return executeAction(action);
+    return action.execute();
   }
 
   function getActionForRequest({httpMethod, actionName}: ActionRequest): ActionDefinition {
@@ -55,17 +57,6 @@ export namespace Backend {
     assert(!!action, `Could not find action for request: ${actionKey}`);
 
     return action;
-  }
-
-  function executeAction(action: ActionDefinition): Promise<Data> {
-    if (action) {
-      // TODO: Implement
-      return Promise.resolve({rows: []});
-    }
-
-    const query = {} as ParametrizedQuery;
-
-    return runQuery(query);
   }
 
   function runQuery(query: ParametrizedQuery): Promise<Data> {
