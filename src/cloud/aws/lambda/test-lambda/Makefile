@@ -55,7 +55,7 @@ update:
 	make test
 
 test: build
-	$(NVM_NODE_BINARY) index.js '$(TEST_EVENT)'
+	$(NVM_NODE_BINARY) build/index.js '$(TEST_EVENT)'
 
 define TEST_EVENT
 { \
