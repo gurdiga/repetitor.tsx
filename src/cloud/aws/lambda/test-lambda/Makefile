@@ -32,19 +32,7 @@ clean:
 		| grep -oP '\d+' \
 		> .nvmrc
 
-run: index.js
-	$(NVM_NODE_BINARY) index.js '$(PLACEHOLDER_EVENT)'
-
-define PLACEHOLDER_EVENT
-{ \
-	"httpMethod": "POST", \
-	"path": "/", \
-	"queryStringParameters": { \
-		"actionName": "registerUser" \
-	}, \
-	"multiValueQueryStringParameters": null \
-}
-endef
+run: init-db test
 
 update:
 	npm outdated \
