@@ -2,7 +2,7 @@ include .env
 
 .ONESHELL:
 
-default: cloud deploy-lambda-code test-lambda
+default: backend
 
 PAGE_MODULES=`find src/ -type d -name '*Page'`
 
@@ -261,5 +261,4 @@ clean:
 		src/cloud/aws/cloud-formation/main-stack.yml.*
 
 backend:
-	cd src/cloud/aws/lambda/test-lambda && make run
-
+	cd src/backend && make run
