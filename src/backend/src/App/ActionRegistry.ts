@@ -1,4 +1,3 @@
-import {ApplicationError} from "App/ApplicationError";
 import {runQuery} from "App/DB";
 import {Data} from "App/Backend";
 
@@ -15,7 +14,7 @@ export interface ActionDefinition {
 export const ActionRegistry: {[actionKey: string]: ActionDefinition} = {
   RegisterUser: {
     assertValidParams: params => {
-      throw new ApplicationError("Param validation for RegisterUser is not yet implemented");
+      throw new Error("Param validation for RegisterUser is not yet implemented");
     },
     execute: () => Promise.resolve({rows: ["TODO"]}),
   },
