@@ -28,6 +28,7 @@ Resources:
       MasterUserPassword: !Ref DBPassword
       Engine: aurora
       EngineMode: serverless
+      EngineVersion: 5.6.10a
       DBSubnetGroupName: !Ref DBSubnetGroup
       DeletionProtection: true
 
@@ -95,7 +96,6 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: ANY
       Integration:
-        ConnectionType: INTERNET
         Credentials: !GetAtt LambdaInvocationRole.Arn
         IntegrationHttpMethod: ANY
         Type: AWS_PROXY

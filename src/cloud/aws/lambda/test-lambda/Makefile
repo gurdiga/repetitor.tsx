@@ -2,13 +2,12 @@ include .env
 
 NVM_NODE_BINARY=$(shell ls -1d /Users/vlad/.nvm/versions/node/v$$(<.nvmrc)*/bin/node | sort --version-sort | tail -1)
 
-build: index.js
-index.js: node_modules package.json tsconfig.json $(shell find src)
+build/index.js: node_modules package.json tsconfig.json $(shell find src)
 	tsc --skipLibCheck
 	touch $@
 
 zip: ../test-lambda.zip
-../test-lambda.zip: .nvmrc package.json tsconfig.json index.js
+../test-lambda.zip: .nvmrc package.json tsconfig.json build/index.js
 	PROD_DEPENDENCIES=$$( \
 		npm ls --parseable --only=production \
 			| tail --lines=+2 \
@@ -23,7 +22,7 @@ node_modules: .nvmrc package.json
 	touch $@
 
 clean:
-	rm -f index.js
+	rm -f build/index.js
 	rm -rf ./node_modules/ ./App/
 
 .nvmrc: ../../cloud-formation/main-stack.yml
@@ -42,8 +41,8 @@ update:
 		| ifne -n 'exit 1'
 	make test
 
-test: build
-	$(NVM_NODE_BINARY) build/index.js '$(TEST_EVENT)'
+test: build/index.js
+	$(NVM_NODE_BINARY) $< '$(TEST_EVENT)'
 
 define TEST_EVENT
 { \
