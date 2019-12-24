@@ -244,7 +244,7 @@ update:
 	git commit -am 'NPM packages update'
 
 outdated:
-	find . \
+	@find . \
 		! -path '*/node_modules/*' \
 		-name package.json \
 		| xargs dirname \
