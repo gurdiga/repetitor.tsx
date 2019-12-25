@@ -1,10 +1,9 @@
 .ONESHELL:
-NVM_NODE_BINARY=$(shell ls -1d /Users/vlad/.nvm/versions/node/$$(<.nvmrc)*/bin/node | sort --version-sort | tail -1)
 
 default: build/index.js
 
 start: build/index.js
-	@$(NVM_NODE_BINARY) $< 2>&1 > .log &
+	@node $< 2>&1 > .log &
 	@echo $$! > .pid
 	@disown
 
@@ -26,6 +25,6 @@ node_modules: .nvmrc package.json
 clean:
 	rm -rf build/* node_modules/
 
-poke:
+run:
 	curl "localhost:$$BACKEND_HTTP_PORT?actionName=TestAction"
 	@echo "\n"
