@@ -1,5 +1,15 @@
-import {runQuery} from "App/DB";
 import {Data} from "App/Backend";
+import {TestAction} from "App/Actions/TestAction";
+import {RegisterUser} from "App/Actions/RegisterUser";
+
+export const ActionRegistry: ActionRegistry = {
+  RegisterUser,
+  TestAction,
+};
+
+interface ActionRegistry {
+  [actionKey: string]: ActionDefinition;
+}
 
 export interface ActionRequest {
   actionName: string;
@@ -10,20 +20,3 @@ export interface ActionDefinition {
   assertValidParams: (params: ActionRequest["actionParams"]) => void; // Throws unless params are valid
   execute: () => Promise<Data>;
 }
-
-export const ActionRegistry: {[actionKey: string]: ActionDefinition} = {
-  RegisterUser: {
-    assertValidParams: params => {
-      throw new Error("Param validation for RegisterUser is not yet implemented");
-    },
-    execute: () => Promise.resolve({rows: ["TODO"]}),
-  },
-  TestAction: {
-    assertValidParams: params => null,
-    execute: () =>
-      runQuery({
-        sql: "SELECT 1 + 1",
-        params: [],
-      }),
-  },
-};
