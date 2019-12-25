@@ -1,5 +1,3 @@
-include .env
-
 .ONESHELL:
 
 default: backend
