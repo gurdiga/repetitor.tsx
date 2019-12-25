@@ -1,5 +1,3 @@
-include .env
-
 .ONESHELL:
 NVM_NODE_BINARY=$(shell ls -1d /Users/vlad/.nvm/versions/node/$$(<.nvmrc)*/bin/node | sort --version-sort | tail -1)
 
@@ -29,4 +27,5 @@ clean:
 	rm -rf build/* node_modules/
 
 poke:
-	curl "localhost:$$BACKEND_HTTP_PORT?actionName=testAction"
+	curl "localhost:$$BACKEND_HTTP_PORT?actionName=TestAction"
+	@echo "\n"
