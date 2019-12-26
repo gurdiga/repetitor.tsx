@@ -1,7 +1,3 @@
-include .env
-
-NVM_NODE_BINARY=$(shell ls -1d /Users/vlad/.nvm/versions/node/v$$(<.nvmrc)*/bin/node | sort --version-sort | tail -1)
-
 build/index.js: node_modules package.json tsconfig.json $(shell find src)
 	tsc --skipLibCheck
 	touch $@
