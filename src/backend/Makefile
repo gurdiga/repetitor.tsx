@@ -16,6 +16,8 @@ build/index.js: node_modules package.json tsconfig.json $(shell find src)
 	tsc --skipLibCheck
 	@touch $@
 
+build/cli.js: build/index.js
+
 install: node_modules
 
 node_modules: .nvmrc package.json
@@ -25,6 +27,11 @@ node_modules: .nvmrc package.json
 clean:
 	rm -rf build/* node_modules/
 
-run:
-	curl "localhost:$$BACKEND_HTTP_PORT?actionName=TestAction"
-	@echo "\n"
+run: build/cli.js
+	node build/cli.js '$(SAMPLE_REQUEST)'
+
+define SAMPLE_REQUEST
+{ \
+	"actionName": "TestAction" \
+}
+endef
