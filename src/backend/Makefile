@@ -36,7 +36,13 @@ define SAMPLE_REQUEST
 }
 endef
 
-db-init: .db.version-check
+db-init: .db.version-check .db.create-user
+
+.db.create-user:
+	@set -e
+	mysql --user=$(APP_DB_USER) --execute="exit" \
+		|| mysql --user=root --execute="CREATE USER $(APP_DB_USER)@$(APP_DB_HOST)"
+	@touch $@
 
 .db.version-check: .mysql-version .db.actual-version
 	@diff $^
