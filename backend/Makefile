@@ -1,6 +1,11 @@
 .ONESHELL:
 
-default: build/index.js
+default: test
+
+test: build/index.js
+	@set -e
+	source .env.test
+	mocha	--reporter dot build/**/*test.js
 
 start: build/index.js
 	@node $< 2>&1 > .log &

@@ -1,3 +1,4 @@
 .pid
 .log
 db/migrations/*.sql.migrated
+.env.test
