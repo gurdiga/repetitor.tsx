@@ -1,5 +1,6 @@
 import * as assert from "assert";
-import {ActionRegistry, ActionRequest, ActionDefinition} from "App/ActionRegistry";
+import {ActionRequest, ActionDefinition} from "App/ActionDefinition";
+import {ActionRegistry} from "App/ActionRegistry";
 
 export interface Data {
   rows: any[];
@@ -10,7 +11,7 @@ export function handleActionRequest(actionRequest: ActionRequest): Promise<Data>
 
   action.assertValidParams(actionRequest.actionParams);
 
-  return action.execute();
+  return action.execute(actionRequest.actionParams);
 }
 
 function getActionForRequest({actionName}: ActionRequest): ActionDefinition {

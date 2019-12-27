@@ -1,11 +1,15 @@
 import {Data} from "App/Backend";
 
+interface ActionParams {
+  [name: string]: string[];
+}
+
 export interface ActionRequest {
   actionName: string;
-  actionParams: {[name: string]: string[]};
+  actionParams: ActionParams;
 }
 
 export interface ActionDefinition {
-  assertValidParams: (params: ActionRequest["actionParams"]) => void; // Throws unless params are valid
-  execute: () => Promise<Data>;
+  assertValidParams: (params: ActionParams) => void; // Throws unless params are valid
+  execute: (params: ActionParams) => Promise<Data>;
 }
