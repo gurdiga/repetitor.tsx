@@ -54,14 +54,27 @@ endef
 MIGRATIONS_DIR=db/migrations
 MIGRATIONS=$(shell ls -1 $(MIGRATIONS_DIR)/*.sql | sed 's/$$/.migrated/')
 
+# Needs the dev and test databases to exist, and the user to be granted the permissions.
 migrate: $(MIGRATIONS)
 
 $(MIGRATIONS_DIR)/%.sql.migrated: $(MIGRATIONS_DIR)/%.sql
-	@mysql \
+	@set -e
+
+	source .env
+	mysql \
 		--user=$(APP_DB_USER) \
 		$(if $(APP_DB_PASSWORD),--password=$$APP_DB_PASSWORD) \
 		--database=$(APP_DB_NAME) \
 		--host=$(APP_DB_HOST) \
 		< $<
+
+	source .env.test
+	mysql \
+		--user=$(APP_DB_USER) \
+		$(if $(APP_DB_PASSWORD),--password=$$APP_DB_PASSWORD) \
+		--database=$(APP_DB_NAME) \
+		--host=$(APP_DB_HOST) \
+		< $<
+
 	touch $@
 	echo $<
