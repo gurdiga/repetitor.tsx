@@ -1,5 +1,5 @@
-import {ActionDefinition} from "App/ActionRegistry";
 import {runQuery} from "App/DB";
+import {ActionDefinition} from "App/ActionDefinition";
 
 export const TestAction: ActionDefinition = {
   assertValidParams: params => null,

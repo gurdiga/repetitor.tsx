@@ -1,4 +1,4 @@
-import {ActionDefinition} from "App/ActionRegistry";
+import {ActionDefinition} from "App/ActionDefinition";
 
 export const RegisterUser: ActionDefinition = {
   assertValidParams: params => {
