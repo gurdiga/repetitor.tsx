@@ -1,6 +1,8 @@
 .ONESHELL:
 
-default: test
+default: c
+
+c: build/index.js
 
 test: build/index.js
 	@set -e
