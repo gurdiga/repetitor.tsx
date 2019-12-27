@@ -8,6 +8,12 @@ assert(!!cliArgument, "Please pass in actionName and actionParams as JSON as the
 const request = JSON.parse(cliArgument);
 const {actionName, actionParams = {}} = request;
 
-handleActionRequest({actionName, actionParams}).then(result => {
-  console.log(result);
-});
+handleActionRequest({actionName, actionParams})
+  .then(result => {
+    console.log(result);
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error(error);
+    process.exit(1);
+  });
