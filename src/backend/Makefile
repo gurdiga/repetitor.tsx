@@ -36,22 +36,17 @@ define SAMPLE_REQUEST
 }
 endef
 
-db-init: .db.version-check .db.create-user
+MIGRATIONS_DIR=db/migrations
+MIGRATIONS=$(shell ls -1 $(MIGRATIONS_DIR)/*.sql | sed 's/$$/.migrated/')
 
-.db.create-user:
-	@set -e
-	mysql --user=$(APP_DB_USER) --execute="exit" \
-		|| mysql --user=root --execute="CREATE USER $(APP_DB_USER)@$(APP_DB_HOST)"
-	@touch $@
+migrate: $(MIGRATIONS)
 
-.db.version-check: .mysql-version .db.actual-version
-	@diff $^
-	@touch $@
-
-.db.actual-version:
-	@# Extract the version number from something like this:
-	@# "mysql  Ver 14.14 Distrib 5.6.43, for osx10.14 (x86_64) using  EditLine wrapper"
-	@mysql --version \
-		| awk '{ print $$5 }' \
-		| tr -d ',' \
-		> $@
+$(MIGRATIONS_DIR)/%.sql.migrated: $(MIGRATIONS_DIR)/%.sql
+	@mysql \
+		--user=$(APP_DB_USER) \
+		$(if $(APP_DB_PASSWORD),--password=$$APP_DB_PASSWORD) \
+		--database=$(APP_DB_NAME) \
+		--host=$(APP_DB_HOST) \
+		< $<
+	touch $@
+	echo $<
