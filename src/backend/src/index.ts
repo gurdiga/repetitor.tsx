@@ -1,20 +1,19 @@
 import * as express from "express";
 import {handleActionRequest} from "App/Backend";
 
-const app = express();
+express()
+  .use(express.json())
+  .post("/", async (req, res) => {
+    const {actionName, actionParams = {}} = req.body;
 
-app.get("/", async (req, res) => {
-  const {actionName, actionParams = {}} = req.query;
+    res.type("json");
 
-  res.type("json");
-
-  try {
-    await handleActionRequest({actionName, actionParams}).then(result => {
-      res.send(JSON.stringify(result));
-    });
-  } catch (e) {
-    res.status(500).send(JSON.stringify({error: e.message}));
-  }
-});
-
-app.listen(process.env.BACKEND_HTTP_PORT);
+    try {
+      await handleActionRequest({actionName, actionParams}).then(result => {
+        res.send(JSON.stringify(result));
+      });
+    } catch (e) {
+      res.status(500).send(JSON.stringify({error: e.message}));
+    }
+  })
+  .listen(process.env.BACKEND_HTTP_PORT);
