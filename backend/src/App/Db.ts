@@ -14,8 +14,6 @@ export function runQuery(query: ParametrizedQuery): Promise<Data> {
 
   return new Promise<Data>((resolve, reject) => {
     if (!connection) {
-      console.time("MySQL connection");
-
       connection = MySQL.createConnection({
         host: process.env.APP_DB_HOST,
         user: process.env.APP_DB_USER,
@@ -24,13 +22,9 @@ export function runQuery(query: ParametrizedQuery): Promise<Data> {
       });
 
       connection.connect();
-      console.timeEnd("MySQL connection");
     }
 
-    console.time("MySQL query");
     connection.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, results, fields) {
-      console.timeEnd("MySQL query");
-
       if (error) {
         console.error(error);
         reject(error);
