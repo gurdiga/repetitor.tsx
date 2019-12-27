@@ -32,6 +32,14 @@ clean:
 run: build/cli.js
 	node build/cli.js '$(SAMPLE_REQUEST)'
 
+run-http:
+	@curl \
+		--header "Content-Type: application/json" \
+		--request POST \
+		--data '$(SAMPLE_REQUEST)' \
+		localhost:$$BACKEND_HTTP_PORT
+	echo ""
+
 define SAMPLE_REQUEST
 { \
 	"actionName": "TestAction" \
