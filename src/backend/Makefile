@@ -4,8 +4,8 @@ default: build/index.js
 
 start: build/index.js
 	@node $< 2>&1 > .log &
-	@echo $$! > .pid
-	@disown
+	echo $$! > .pid
+	disown
 
 stop: .pid
 	@kill $$(<$<) && rm $<
@@ -13,16 +13,18 @@ stop: .pid
 restart: stop start
 
 build/index.js: node_modules package.json tsconfig.json $(shell find src)
+	@set -e
 	tsc --skipLibCheck
-	@touch $@
+	touch $@
 
 build/cli.js: build/index.js
 
 install: node_modules
 
 node_modules: .nvmrc package.json
+	@set -e
 	npm install
-	@touch $@
+	touch $@
 
 clean:
 	rm -rf build/* node_modules/ .db.*
