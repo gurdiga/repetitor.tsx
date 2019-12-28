@@ -1,8 +1,6 @@
 .ONESHELL:
 
-default: c
-
-c: build/index.js
+default: build/index.js
 
 test: build/index.js
 	@set -e
@@ -62,21 +60,20 @@ migrate: $(MIGRATIONS)
 $(MIGRATIONS_DIR)/%.sql.migrated: $(MIGRATIONS_DIR)/%.sql
 	@set -e
 
-	source .env
-	mysql \
-		--user=$(APP_DB_USER) \
-		$(if $(APP_DB_PASSWORD),--password=$$APP_DB_PASSWORD) \
-		--database=$(APP_DB_NAME) \
-		--host=$(APP_DB_HOST) \
-		< $<
+	function runQueryWithEnv() {
+		local env_file=$$1
 
-	source .env.test
-	mysql \
-		--user=$(APP_DB_USER) \
-		$(if $(APP_DB_PASSWORD),--password=$$APP_DB_PASSWORD) \
-		--database=$(APP_DB_NAME) \
-		--host=$(APP_DB_HOST) \
-		< $<
+		source $$env_file
+		mysql \
+			--user=$$APP_DB_USER \
+			$$([ $$APP_DB_PASSWORD ] && echo "\--password=$$APP_DB_PASSWORD" || echo "") \
+			--database=$$APP_DB_NAME \
+			--host=$$APP_DB_HOST \
+			< $<
+	}
+
+	runQueryWithEnv .env
+	runQueryWithEnv .env.test
 
 	touch $@
 	echo $<
