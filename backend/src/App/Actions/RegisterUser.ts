@@ -15,17 +15,19 @@ export const RegisterUser: ActionDefinition<Params> = {
     assert(email, "Email is required");
     assert(password, "Password is required");
   },
-  execute: params => {
+  execute: async params => {
     const {password, email} = params;
     const {salt, passwordHash} = getStorablePassword(password);
 
-    return runQuery({
-      sql: `
-        INSERT INTO users(email, password_hash, password_salt)
-        VALUES(?, ?, ?)
-      `,
-      params: [email, passwordHash, salt],
-    }).catch(e => {
+    try {
+      return await runQuery({
+        sql: `
+          INSERT INTO users(email, password_hash, password_salt)
+          VALUES(?, ?, ?)
+        `,
+        params: [email, passwordHash, salt],
+      });
+    } catch (e) {
       switch (e.code) {
         case "ER_DUP_ENTRY":
           return Promise.reject(new Error("Există deja un cont cu acest email"));
@@ -33,7 +35,7 @@ export const RegisterUser: ActionDefinition<Params> = {
           console.error(e);
           return Promise.reject(new Error("Eroare de bază de date"));
       }
-    });
+    }
   },
 };
 
