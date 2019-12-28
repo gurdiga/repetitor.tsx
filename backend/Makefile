@@ -38,6 +38,11 @@ run: build/cli.js
 	node build/cli.js '$(SAMPLE_REQUEST)'
 
 run-action: build/cli.js
+	@if [ -z '$(ACTION)' ]; then
+		echo '$@ requires the request JSON into the ACTION argument.\n'
+		exit 1
+	fi
+
 	node build/cli.js '$(ACTION)'
 
 run-action-http: build/cli.js
