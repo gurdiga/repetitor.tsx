@@ -32,24 +32,40 @@ describe("RegisterUser", () => {
   describe("execute", () => {
     const params = {email: "some@email.com", password: "secret"};
 
-    before(() => RegisterUser.execute(params));
+    context("happy path", () => {
+      before(() => RegisterUser.execute(params));
 
-    after(() => runQuery({sql: "DELETE FROM users", params: []}));
+      after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
-    it("adds the appropriate record to the users table", async () => {
-      const {rows} = await runQuery({sql: "SELECT * FROM users", params: []});
-      const row = rows[0];
+      it("adds the appropriate row to the users table", async () => {
+        const {rows} = await runQuery({sql: "SELECT * FROM users", params: []});
+        const row = rows[0];
 
-      if (!row) {
-        expect(row).to.exist;
-        return;
-      }
+        if (!row) {
+          expect(row).to.exist;
+          return;
+        }
 
-      expect(row.email, "Row is expected to have the email").to.exist;
-      expect(row.password_salt, "Row is expected to have the stored password salt").to.exist;
+        expect(row.email, "Row is expected to have the email").to.exist;
+        expect(row.password_salt, "Row is expected to have the stored password salt").to.exist;
 
-      const passwordHash = hashString(params.password, row.password_salt as string);
-      expect(row.password_hash, "Row is expected to have the hashed password").to.equal(passwordHash);
+        const passwordHash = hashString(params.password, row.password_salt as string);
+        expect(row.password_hash, "Row is expected to have the hashed password").to.equal(passwordHash);
+      });
+    });
+
+    context("when there is already a user like that", () => {
+      before(() => RegisterUser.execute(params));
+      after(() => runQuery({sql: "DELETE FROM users", params: []}));
+
+      it("trows with an appropriate error message", async () => {
+        try {
+          await RegisterUser.execute(params);
+          expect.fail("This should hvae failed");
+        } catch (e) {
+          expect(e.message).to.equal("Există deja un cont cu acest email");
+        }
+      });
     });
   });
 });

@@ -25,6 +25,14 @@ export const RegisterUser: ActionDefinition<Params> = {
         VALUES(?, ?, ?)
       `,
       params: [email, passwordHash, salt],
+    }).catch(e => {
+      switch (e.code) {
+        case "ER_DUP_ENTRY":
+          return Promise.reject(new Error("Există deja un cont cu acest email"));
+        default:
+          console.error(e);
+          return Promise.reject(new Error("Eroare de bază de date"));
+      }
     });
   },
 };
