@@ -80,3 +80,10 @@ $(MIGRATIONS_DIR)/%.sql.migrated: $(MIGRATIONS_DIR)/%.sql
 
 	touch $@
 	echo $<
+
+migration: # Create a new migration file
+	@TIMESTAMP=$$(date '+%Y%m%d%H%M%S')
+	FILE_NAME=$${TIMESTAMP}_$${NAME:-migration}.sql
+	FILE_PATH=db/migrations/$$FILE_NAME
+	touch $$FILE_PATH
+	echo $$FILE_PATH
