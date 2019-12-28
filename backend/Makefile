@@ -40,6 +40,14 @@ run: build/cli.js
 run-action: build/cli.js
 	node build/cli.js '$(ACTION)'
 
+run-action-http: build/cli.js
+	@curl \
+		--header "Content-Type: application/json" \
+		--request POST \
+		--data '$(ACTION)' \
+		localhost:$$BACKEND_HTTP_PORT
+	echo ""
+
 run-http:
 	@curl \
 		--header "Content-Type: application/json" \
