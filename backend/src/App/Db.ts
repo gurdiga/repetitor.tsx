@@ -27,14 +27,15 @@ export function runQuery(query: ParametrizedQuery): Promise<Data> {
       connection.connect();
     }
 
-    connection.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, results, fields) {
+    connection.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, rows, fields) {
       if (error) {
         console.error(error);
         reject(error);
-        return;
+      } else {
+        resolve({rows});
       }
 
-      resolve({rows: results[0]});
+      connection.end();
     });
   });
 }
