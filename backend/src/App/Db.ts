@@ -2,7 +2,7 @@ import * as MySQL from "mysql";
 import {Data} from "App/Backend";
 import {assertEnvVars} from "App/Utils";
 
-let connection: MySQL.Connection;
+export let connection: MySQL.Connection;
 
 interface ParametrizedQuery {
   sql: string;
@@ -13,7 +13,7 @@ export function runQuery(query: ParametrizedQuery): Promise<Data> {
   assertEnvVars(["APP_DB_HOST", "APP_DB_USER", "APP_DB_PASSWORD", "APP_DB_NAME"]);
 
   return new Promise<Data>((resolve, reject) => {
-    if (!connection) {
+    if (!connection || connection.state !== "connected") {
       connection = MySQL.createConnection({
         host: process.env.APP_DB_HOST,
         user: process.env.APP_DB_USER,
