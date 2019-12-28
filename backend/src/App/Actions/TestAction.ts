@@ -1,9 +1,11 @@
 import {runQuery} from "App/DB";
-import {ActionDefinition} from "App/ActionDefinition";
+import {ActionDefinition, ActionParams} from "App/ActionDefinition";
 
-export const TestAction: ActionDefinition = {
+interface Params extends ActionParams {}
+
+export const TestAction: ActionDefinition<Params> = {
   assertValidParams: params => null,
-  execute: () =>
+  execute: params =>
     runQuery({
       sql: "SELECT 1 + 1",
       params: [],

@@ -14,7 +14,7 @@ export function handleActionRequest(actionRequest: ActionRequest): Promise<Data>
   return action.execute(actionRequest.actionParams);
 }
 
-function getActionForRequest({actionName}: ActionRequest): ActionDefinition {
+function getActionForRequest({actionName}: ActionRequest): ActionDefinition<any> {
   const action = ActionRegistry[actionName];
 
   assert(!!action, `Could not find action for request: ${actionName}`);

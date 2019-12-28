@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD password_salt VARCHAR(100) NOT NULL;

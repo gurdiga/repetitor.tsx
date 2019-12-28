@@ -37,6 +37,9 @@ clean:
 run: build/cli.js
 	node build/cli.js '$(SAMPLE_REQUEST)'
 
+run-action: build/cli.js
+	node build/cli.js '$(ACTION)'
+
 run-http:
 	@curl \
 		--header "Content-Type: application/json" \

@@ -6,7 +6,7 @@ import {RegisterUser} from "App/Actions/RegisterUser";
 describe("RegisterUser", () => {
   describe("assertValidParams", () => {
     it("works", () => {
-      const params = {};
+      const params = {email: "some@email.com", password: "secret"};
 
       expect(() => {
         RegisterUser.assertValidParams(params);
