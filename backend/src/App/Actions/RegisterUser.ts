@@ -34,7 +34,7 @@ interface StorablePassword {
   passwordHash: string;
 }
 
-function getStorablePassword(password: string): StorablePassword {
+export function getStorablePassword(password: string): StorablePassword {
   const salt = genRandomString(100);
   const passwordHash = hashString(password, salt);
 
