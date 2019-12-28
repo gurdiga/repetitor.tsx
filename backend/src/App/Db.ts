@@ -1,8 +1,11 @@
 import * as MySQL from "mysql";
-import {Data} from "App/Backend";
 import {assertEnvVars} from "App/Utils";
 
 export let connection: MySQL.Connection;
+
+export interface Data {
+  rows: any[];
+}
 
 interface ParametrizedQuery {
   sql: string;

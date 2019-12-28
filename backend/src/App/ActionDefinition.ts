@@ -1,4 +1,4 @@
-import {Data} from "App/Backend";
+import {Data} from "App/Db";
 
 export interface ActionParams {
   [paramName: string]: string[] | string;

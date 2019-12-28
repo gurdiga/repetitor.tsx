@@ -1,10 +1,7 @@
 import * as assert from "assert";
 import {ActionRequest, ActionDefinition} from "App/ActionDefinition";
 import {ActionRegistry} from "App/ActionRegistry";
-
-export interface Data {
-  rows: any[];
-}
+import {Data} from "App/DB";
 
 export function handleActionRequest(actionRequest: ActionRequest): Promise<Data> {
   const action = getActionForRequest(actionRequest);
