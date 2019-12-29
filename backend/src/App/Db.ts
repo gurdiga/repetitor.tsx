@@ -5,7 +5,7 @@ interface DataRow {
   [fieldName: string]: any;
 }
 
-export interface Data {
+export interface Result {
   rows: DataRow[];
 }
 
@@ -25,8 +25,8 @@ export const connectionPool = mysql.createPool({
   database: process.env.APP_DB_NAME,
 });
 
-export function runQuery(query: ParametrizedQuery): Promise<Data> {
-  return new Promise<Data>((resolve, reject) => {
+export function runQuery(query: ParametrizedQuery): Promise<Result> {
+  return new Promise<Result>((resolve, reject) => {
     connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, rows, fields) {
       if (error) {
         reject(error);
