@@ -8,12 +8,8 @@ express()
 
     res.type("json");
 
-    handleActionRequest({actionName, actionParams})
-      .then(result => {
-        res.send(JSON.stringify(result));
-      })
-      .catch(e => {
-        res.status(500).send(JSON.stringify({error: e.message}));
-      });
+    handleActionRequest(actionName, actionParams)
+      .then(result => res.send(JSON.stringify(result)))
+      .catch(error => res.status(500).send(JSON.stringify({error: error.message})));
   })
   .listen(process.env.BACKEND_HTTP_PORT);
