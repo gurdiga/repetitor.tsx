@@ -33,8 +33,11 @@ node_modules: .nvmrc package.json
 	npm install
 	touch $@
 
+uninstall:
+	rm -rf node_modules
+
 clean:
-	rm -rf build/* node_modules/
+	rm -rf build/*
 
 run: build/cli.js
 	node build/cli.js '$(SAMPLE_REQUEST)'
