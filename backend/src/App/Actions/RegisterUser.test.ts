@@ -1,16 +1,20 @@
 import "mocha";
-import {expect} from "chai";
+import {expect, use} from "chai";
+use(require("chai-as-promised"));
+
 import {RegisterUser} from "App/Actions/RegisterUser";
 import {runQuery} from "App/DB";
 import {hashString} from "App/Utils/StringUtils";
 
-describe("RegisterUser", () => {
-  describe("assertValidParams", () => {
+describe("registerUser", () => {
+  describe("parameter validation", () => {
     context("when both are present", () => {
+      after(() => runQuery({sql: "DELETE FROM users", params: []}));
+
       it("does not throw", () => {
         const params = {email: "some@email.com", password: "secret"};
 
-        expect(() => RegisterUser.assertValidParams(params)).not.to.throw;
+        expect(RegisterUser(params)).to.be.fulfilled;
       });
     });
 
@@ -18,23 +22,22 @@ describe("RegisterUser", () => {
       it("throws with the appropriate error message", () => {
         const params = {email: "", password: "secret"};
 
-        expect(() => RegisterUser.assertValidParams(params)).to.throw(/Email is required/);
+        expect(RegisterUser(params)).to.be.rejectedWith("Email is required");
       });
 
-      it("throws with the appropriate error message", () => {
+      it("throws with the appropriate error message", async () => {
         const params = {email: "some@email.com", password: ""};
 
-        expect(() => RegisterUser.assertValidParams(params)).to.throw(/Password is required/);
+        expect(RegisterUser(params)).to.be.rejectedWith("Password is required");
       });
     });
   });
 
-  describe("execute", () => {
+  describe("behavior", () => {
     const params = {email: "some@email.com", password: "secret"};
 
     context("happy path", () => {
-      before(() => RegisterUser.execute(params));
-
+      before(() => RegisterUser(params));
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("adds the appropriate row to the users table", async () => {
@@ -55,16 +58,11 @@ describe("RegisterUser", () => {
     });
 
     context("when there is already a user like that", () => {
-      before(() => RegisterUser.execute(params));
+      before(() => RegisterUser(params));
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
-      it("trows with an appropriate error message", async () => {
-        try {
-          await RegisterUser.execute(params);
-          expect.fail("This should hvae failed");
-        } catch (e) {
-          expect(e.message).to.equal("Există deja un cont cu acest email");
-        }
+      it("trows with an appropriate error message", () => {
+        expect(RegisterUser(params)).to.be.rejectedWith("Există deja un cont cu acest email");
       });
     });
   });

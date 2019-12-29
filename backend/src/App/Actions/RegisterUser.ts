@@ -1,43 +1,38 @@
 import * as assert from "assert";
-import {ActionDefinition, ActionParams} from "App/ActionDefinition";
 import {genRandomString, hashString} from "App/Utils/StringUtils";
 import {runQuery} from "App/DB";
 
-interface Params extends ActionParams {
+interface Params {
   email: string;
   password: string;
 }
 
-export const RegisterUser: ActionDefinition<Params> = {
-  assertValidParams: params => {
-    const {email, password} = params;
+export async function RegisterUser(params: Params): Promise<void> {
+  const {email, password} = params;
 
-    assert(email, "Email is required");
-    assert(password, "Password is required");
-  },
-  execute: async params => {
-    const {password, email} = params;
-    const {salt, passwordHash} = getStorablePassword(password);
+  assert(email, "Email is required");
+  assert(password, "Password is required");
 
-    try {
-      return await runQuery({
-        sql: `
+  const {salt, passwordHash} = getStorablePassword(password);
+
+  try {
+    await runQuery({
+      sql: `
           INSERT INTO users(email, password_hash, password_salt)
           VALUES(?, ?, ?)
         `,
-        params: [email, passwordHash, salt],
-      });
-    } catch (e) {
-      switch (e.code) {
-        case "ER_DUP_ENTRY":
-          return Promise.reject(new Error("Există deja un cont cu acest email"));
-        default:
-          console.error(e);
-          return Promise.reject(new Error("Eroare de bază de date"));
-      }
+      params: [email, passwordHash, salt],
+    });
+  } catch (e) {
+    switch (e.code) {
+      case "ER_DUP_ENTRY":
+        return Promise.reject(new Error("Există deja un cont cu acest email"));
+      default:
+        console.error(e);
+        return Promise.reject(new Error("Eroare de bază de date"));
     }
-  },
-};
+  }
+}
 
 interface StorablePassword {
   salt: string;

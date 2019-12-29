@@ -1,13 +1,16 @@
 import {runQuery} from "App/DB";
-import {ActionDefinition, ActionParams} from "App/ActionDefinition";
 
-interface Params extends ActionParams {}
+interface Response {
+  sum: number;
+}
 
-export const TestAction: ActionDefinition<Params> = {
-  assertValidParams: params => null,
-  execute: params =>
-    runQuery({
-      sql: "SELECT 1 + 1",
-      params: [],
-    }),
-};
+export async function TestAction(): Promise<Response> {
+  const result = await runQuery({
+    sql: "SELECT 1 + 1 AS sum",
+    params: [],
+  });
+
+  const {sum} = result.rows[0];
+
+  return {sum};
+}

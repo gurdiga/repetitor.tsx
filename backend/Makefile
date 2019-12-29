@@ -7,7 +7,7 @@ c: build/index.js
 test: build/index.js
 	@set -e
 	source .env.test
-	mocha	--reporter dot build/**/*test.js
+	mocha	--reporter dot --file build/App/Utils/TestsHelpers.js build/**/*.test.js
 
 start: build/index.js
 	@node $< 2>&1 > .log &
