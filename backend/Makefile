@@ -17,6 +17,10 @@ start: build/index.js
 stop: .pid
 	@kill $$(<$<) && rm $<
 
+.pid:
+	@echo "No .pid file. Probably not running.\n"
+	exit 1
+
 restart: stop start
 
 build/index.js: node_modules package.json tsconfig.json $(shell find src)
