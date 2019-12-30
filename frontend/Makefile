@@ -1,5 +1,6 @@
 .ONESHELL:
 
+c: build
 default: build
 
 PAGE_MODULES=`find src/ -type d -name '*Page'`
