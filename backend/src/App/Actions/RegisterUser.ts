@@ -7,7 +7,11 @@ interface Params {
   password: string;
 }
 
-export async function RegisterUser(params: Params): Promise<void> {
+interface Response {
+  success: true;
+}
+
+export async function RegisterUser(params: Params): Promise<Response> {
   const {email, password} = params;
 
   assert(email, "Email is required");
@@ -23,6 +27,8 @@ export async function RegisterUser(params: Params): Promise<void> {
         `,
       params: [email, passwordHash, salt],
     });
+
+    return Promise.resolve({success: true});
   } catch (e) {
     switch (e.code) {
       case "ER_DUP_ENTRY":
