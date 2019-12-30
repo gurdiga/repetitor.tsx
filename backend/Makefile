@@ -55,7 +55,8 @@ run-action: build/cli.js
 	node build/cli.js '$(ACTION)'
 
 run-action-http: build/cli.js
-	@curl \
+	@#  -vvv --trace-ascii -
+	curl \
 		--header "Content-Type: application/json" \
 		--request POST \
 		--data '$(ACTION)' \
