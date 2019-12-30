@@ -17,11 +17,17 @@ export const RegistrationPage = () => {
   const submitForm = () => {
     setShowValidationMessage(true);
 
-    const fields = [fullName, email, password];
+    const fields = {fullName, email, password};
+    const allFiledsAreValid = Object.values(fields).every(f => f.isValid);
 
-    if (fields.every(f => f.isValid)) {
-      console.log(`sendFieldValues`, fields.map(f => f.text));
-      // sendFieldValues();
+    if (allFiledsAreValid) {
+      const fieldValues: {[fieldName: string]: string} = {};
+
+      Object.entries(fields).forEach(([fieldName, {text}]) => {
+        fieldValues[fieldName] = text;
+      });
+
+      sendFieldValues(fieldValues);
     }
   };
 
@@ -83,3 +89,28 @@ const validationRules: Record<FieldName, FormValidation.ValidationRules> = {
     "Parola lipsește.": text => text.trim().length == 0,
   },
 };
+
+async function sendFieldValues(fieldValues: {[fieldName: string]: string}): Promise<any> {
+  console.log(fieldValues);
+
+  return await postData("http://localhost:8084", fieldValues).then(data => {
+    console.log(data);
+  });
+}
+
+async function postData(url: string, data: any): Promise<any> {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      actionName: "RegisterUser",
+      actionParams: data,
+    }),
+    redirect: "error",
+    cache: "no-store",
+  });
+
+  return await response.json();
+}
