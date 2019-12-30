@@ -21,6 +21,9 @@ stop: .pid
 	@echo "No .pid file. Probably not running.\n"
 	exit 1
 
+status: .pid
+	@echo "Running as process $$(<$<) on port $$BACKEND_HTTP_PORT."
+
 restart: stop start
 
 build/index.js: node_modules package.json tsconfig.json $(shell find src)
