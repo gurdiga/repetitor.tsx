@@ -10,6 +10,9 @@
     ".vimrc": true,
     "build": true
   },
+  "files.associations": {
+    "*.tsconfig.json": "jsonc"
+  },
   "search.exclude": {
     "**/node_modules/**/*": true
   }
