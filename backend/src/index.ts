@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as morgan from "morgan";
 import * as cors from "cors";
+import * as assert from "assert";
 
 import {handleActionRequest} from "App/Backend";
 
@@ -14,6 +15,8 @@ express()
     console.log({actionName, actionParams});
 
     try {
+      assert(!!actionName, "actionName is required");
+
       const result = await handleActionRequest(actionName, actionParams);
 
       res.json(result);
