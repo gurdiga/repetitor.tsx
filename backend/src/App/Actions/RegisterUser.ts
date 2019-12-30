@@ -32,10 +32,10 @@ export async function RegisterUser(params: Params): Promise<Response> {
   } catch (e) {
     switch (e.code) {
       case "ER_DUP_ENTRY":
-        return Promise.reject(new Error("Există deja un cont cu acest email"));
+        return Promise.reject(new Error("EMAIL_TAKEN"));
       default:
         console.error(e);
-        return Promise.reject(new Error("Eroare de bază de date"));
+        return Promise.reject(new Error("DB_ERROR"));
     }
   }
 }
