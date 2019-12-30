@@ -1,10 +1,14 @@
 import * as express from "express";
+import * as morgan from "morgan";
 import {handleActionRequest} from "App/Backend";
 
 express()
   .use(express.json())
+  .use(morgan("tiny"))
   .post("/", async (req, res) => {
     const {actionName, actionParams = {}} = req.body;
+
+    console.log({actionName, actionParams});
 
     try {
       const result = await handleActionRequest(actionName, actionParams);
