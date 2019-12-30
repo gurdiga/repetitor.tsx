@@ -27,7 +27,7 @@ export const connectionPool = mysql.createPool({
 
 export function runQuery(query: ParametrizedQuery): Promise<Result> {
   return new Promise<Result>((resolve, reject) => {
-    connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, rows, fields) {
+    connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, rows, _fields) {
       if (error) {
         reject(error);
       } else {
