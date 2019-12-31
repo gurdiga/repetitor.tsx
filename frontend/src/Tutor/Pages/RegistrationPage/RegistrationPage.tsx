@@ -6,6 +6,7 @@ import {TextField} from "Common/Components/FormFields/TextField";
 import {PasswordField} from "Common/Components/FormFields/PasswordField";
 import {SubmitButton} from "Common/Components/SubmitButton";
 import {FormValidation} from "Common/FormValidation";
+import {postAction, ServerResponse, ServerResponseType} from "Common/Actions";
 
 export const RegistrationPage = () => {
   const [fullName, validateFullName] = React.useState(initialFieldValue);
@@ -13,23 +14,7 @@ export const RegistrationPage = () => {
   const [password, validatePassword] = React.useState(initialFieldValue);
 
   const [showValidationMessage, setShowValidationMessage] = React.useState(false);
-
-  const submitForm = () => {
-    setShowValidationMessage(true);
-
-    const fields = {fullName, email, password};
-    const allFiledsAreValid = Object.values(fields).every(f => f.isValid);
-
-    if (allFiledsAreValid) {
-      const fieldValues: {[fieldName: string]: string} = {};
-
-      Object.entries(fields).forEach(([fieldName, {text}]) => {
-        fieldValues[fieldName] = text;
-      });
-
-      sendFieldValues(fieldValues);
-    }
-  };
+  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
     <PageLayout title="Înregistrare tutore">
@@ -62,11 +47,64 @@ export const RegistrationPage = () => {
             showValidationMessage={showValidationMessage}
           />,
         ]}
-        actionButtons={[<SubmitButton label="Înregistrează" onClick={submitForm} />]}
+        actionButtons={[
+          <SubmitButton
+            label="Înregistrează"
+            onClick={() => {
+              setShowValidationMessage(true);
+              submitForm("RegisterUser", {fullName, email, password});
+            }}
+          />,
+        ]}
       />
+      {serverResponse.shouldShow && (
+        <p className={`server-response-${serverResponse.responseType}`}>{serverResponse.responseText}</p>
+      )}
     </PageLayout>
   );
+
+  async function submitForm(
+    actionName: ActionName,
+    fields: Record<FieldName, FormValidation.ValidatedValue>
+  ): Promise<void> {
+    const anyInvalidField = Object.values(fields).some(f => !f.isValid);
+
+    if (anyInvalidField) {
+      return;
+    }
+
+    const fieldValues: {[fieldName: string]: string} = {};
+
+    Object.entries(fields).forEach(([fieldName, {text}]) => {
+      fieldValues[fieldName] = text;
+    });
+
+    const response = await postAction(actionName, fieldValues);
+    const [responseType, responseText]: [ServerResponseType, string] =
+      "error" in response ? ["error", getErrorMessageByErrorResponseCode(response.error)] : ["success", "Înregistrat."];
+
+    setServerResponse({
+      responseType,
+      responseText,
+      shouldShow: true,
+    });
+  }
 };
+
+const placeholderServerResponse: ServerResponse = {
+  responseType: "notAskedYet",
+  responseText: "",
+  shouldShow: false,
+};
+
+function getErrorMessageByErrorResponseCode(code: RegisterUserResponseCode): string {
+  switch (code) {
+    case "EMAIL_TAKEN":
+      return "Există deja un utilizator cu acest email";
+    case "DB_ERROR":
+      return "Eroare de bază de date.";
+  }
+}
 
 const initialFieldValue: FormValidation.ValidatedValue = {
   text: "",
@@ -89,28 +127,3 @@ const validationRules: Record<FieldName, FormValidation.ValidationRules> = {
     "Parola lipsește.": text => text.trim().length == 0,
   },
 };
-
-async function sendFieldValues(fieldValues: {[fieldName: string]: string}): Promise<any> {
-  console.log(fieldValues);
-
-  return await postData("http://localhost:8084", fieldValues).then(data => {
-    console.log(data);
-  });
-}
-
-async function postData(url: string, data: any): Promise<any> {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      actionName: "RegisterUser",
-      actionParams: data,
-    }),
-    redirect: "error",
-    cache: "no-store",
-  });
-
-  return await response.json();
-}

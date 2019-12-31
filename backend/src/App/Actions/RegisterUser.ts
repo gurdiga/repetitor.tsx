@@ -32,10 +32,10 @@ export async function RegisterUser(params: Params): Promise<Response> {
   } catch (e) {
     switch (e.code) {
       case "ER_DUP_ENTRY":
-        return Promise.reject(new Error("EMAIL_TAKEN"));
+        return Promise.reject(new Error("EMAIL_TAKEN" as RegisterUserResponseCode));
       default:
         console.error(e);
-        return Promise.reject(new Error("DB_ERROR"));
+        return Promise.reject(new Error("DB_ERROR" as RegisterUserResponseCode));
     }
   }
 }

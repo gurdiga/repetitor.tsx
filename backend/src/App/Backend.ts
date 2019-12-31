@@ -4,13 +4,13 @@ import {Result} from "App/DB";
 import {TestAction} from "App/Actions/TestAction";
 import {RegisterUser} from "App/Actions/RegisterUser";
 
-const ActionRegistry: {[actionName: string]: HandlerFunction} = {
+const ActionRegistry: Record<ActionName, HandlerFunction> = {
   RegisterUser,
   TestAction,
 };
 
 export function handleActionRequest(actionName: string, actionParams: any): Promise<Result> {
-  const actionHandler = ActionRegistry[actionName];
+  const actionHandler = ActionRegistry[actionName as ActionName];
 
   assert(!!actionHandler, `Could not find action handler for: ${actionName}`);
 
