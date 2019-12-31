@@ -1,4 +1,5 @@
 import {connectionPool, runQuery} from "App/DB";
+import {expect} from "chai";
 
 after(async () => {
   await truncateAllTables();
@@ -19,4 +20,25 @@ async function truncateAllTables(): Promise<void> {
     });
 
   await Promise.all(operations);
+}
+
+export interface AssertionParams {
+  promise: Promise<any>;
+  expectedErrorMessage: string;
+}
+
+export async function assertRejectedPromise(params: AssertionParams): Promise<void> {
+  const {promise, expectedErrorMessage} = params;
+  let coughtException = false;
+
+  try {
+    await promise;
+  } catch (error) {
+    coughtException = true;
+    expect(error.message).to.equal(expectedErrorMessage);
+  }
+
+  if (!coughtException) {
+    expect.fail(`Promise NOT rejected with "${expectedErrorMessage}"`);
+  }
 }

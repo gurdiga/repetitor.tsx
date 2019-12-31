@@ -5,6 +5,7 @@ import {runQuery} from "App/DB";
 interface Params {
   email: string;
   password: string;
+  fullName: string;
 }
 
 interface Response {
@@ -12,30 +13,31 @@ interface Response {
 }
 
 export async function RegisterUser(params: Params): Promise<Response> {
-  const {email, password} = params;
+  const {email, password, fullName} = params;
 
   assert(email, "Email is required");
   assert(password, "Password is required");
+  assert(fullName, "Full name is required");
 
   const {salt, passwordHash} = getStorablePassword(password);
 
   try {
     await runQuery({
       sql: `
-          INSERT INTO users(email, password_hash, password_salt)
+          INSERT INTO users(email, password_hash, password_salt, full_name)
           VALUES(?, ?, ?)
         `,
-      params: [email, passwordHash, salt],
+      params: [email, passwordHash, salt, fullName],
     });
 
     return Promise.resolve({success: true});
   } catch (e) {
     switch (e.code) {
       case "ER_DUP_ENTRY":
-        return Promise.reject(new Error("EMAIL_TAKEN" as RegisterUserResponseCode));
+        return Promise.reject(new Error("EMAIL_TAKEN"));
       default:
         console.error(e);
-        return Promise.reject(new Error("DB_ERROR" as RegisterUserResponseCode));
+        return Promise.reject(new Error("DB_ERROR"));
     }
   }
 }

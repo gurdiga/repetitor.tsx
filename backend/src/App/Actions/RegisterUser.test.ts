@@ -12,7 +12,7 @@ describe("registerUser", () => {
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("does not throw", () => {
-        const params = {email: "some@email.com", password: "secret"};
+        const params = {email: "some@email.com", password: "secret", fullName: "John DOE"};
 
         expect(RegisterUser(params)).to.be.fulfilled;
       });
@@ -20,13 +20,13 @@ describe("registerUser", () => {
 
     context("when either of the email or password is missing", () => {
       it("throws with the appropriate error message", () => {
-        const params = {email: "", password: "secret"};
+        const params = {email: "", password: "secret", fullName: "John DOE"};
 
         expect(RegisterUser(params)).to.be.rejectedWith("Email is required");
       });
 
       it("throws with the appropriate error message", async () => {
-        const params = {email: "some@email.com", password: ""};
+        const params = {email: "some@email.com", password: "", fullName: "John DOE"};
 
         expect(RegisterUser(params)).to.be.rejectedWith("Password is required");
       });
@@ -34,7 +34,7 @@ describe("registerUser", () => {
   });
 
   describe("behavior", () => {
-    const params = {email: "some@email.com", password: "secret"};
+    const params = {email: "some@email.com", password: "secret", fullName: "John DOE"};
 
     context("happy path", () => {
       before(() => RegisterUser(params));

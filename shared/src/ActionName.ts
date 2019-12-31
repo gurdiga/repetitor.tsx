@@ -1,1 +1,0 @@
-type ActionName = "RegisterUser" | "TestAction";
