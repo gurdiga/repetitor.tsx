@@ -1,8 +1,9 @@
 import * as assert from "assert";
 
-import {Result} from "App/DB";
-import {TestAction} from "App/Actions/TestAction";
-import {RegisterUser} from "App/Actions/RegisterUser";
+import {Result} from "./Db";
+import {RegisterUser} from "./Actions/RegisterUser";
+import {TestAction} from "./Actions/TestAction";
+import {ActionName} from "../../../shared/src/ActionRegistry";
 
 const ActionRegistry: Record<ActionName, HandlerFunction> = {
   RegisterUser,

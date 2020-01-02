@@ -1,10 +1,11 @@
 import "mocha";
 import {expect, use} from "chai";
-use(require("chai-as-promised"));
 
-import {RegisterUser} from "App/Actions/RegisterUser";
-import {runQuery} from "App/DB";
-import {hashString} from "App/Utils/StringUtils";
+import {runQuery} from "../Db";
+import {RegisterUser} from "./RegisterUser";
+import {hashString} from "../Utils/StringUtils";
+
+use(require("chai-as-promised"));
 
 describe("registerUser", () => {
   describe("parameter validation", () => {

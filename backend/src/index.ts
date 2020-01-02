@@ -3,7 +3,7 @@ import * as morgan from "morgan";
 import * as cors from "cors";
 import * as assert from "assert";
 
-import {handleActionRequest} from "App/Backend";
+import {handleActionRequest} from "./App/Backend";
 
 express()
   .use(morgan("tiny"))

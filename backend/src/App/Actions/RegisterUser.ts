@@ -1,6 +1,6 @@
 import * as assert from "assert";
-import {genRandomString, hashString} from "App/Utils/StringUtils";
-import {runQuery} from "App/DB";
+import {runQuery} from "../Db";
+import {genRandomString, hashString} from "../Utils/StringUtils";
 
 interface Params {
   email: string;

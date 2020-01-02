@@ -1,5 +1,0 @@
-{
-  "extends": "../../../../tsconfig.json",
-  "include": ["../../../../../shared/src/**/*.ts"],
-  "files": ["Main.tsx"]
-}

@@ -1,4 +1,4 @@
-import {runQuery} from "App/DB";
+import {runQuery} from "../Db";
 
 interface Response {
   sum: number;

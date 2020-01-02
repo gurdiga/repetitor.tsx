@@ -1,5 +1,5 @@
-import {connectionPool, runQuery} from "App/DB";
 import {expect} from "chai";
+import {connectionPool, runQuery} from "../Db";
 
 after(async () => {
   await truncateAllTables();
