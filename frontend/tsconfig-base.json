@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig-base.json",
-  "compilerOptions": {
-    "module": "amd",
-    "target": "es5" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */,
-    "lib": ["dom", "es2015", "es2017"] /* Specify library files to be included in the compilation:  */,
-    "jsx": "react" /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
-  }
-}
