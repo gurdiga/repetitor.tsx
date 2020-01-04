@@ -1,53 +1,37 @@
 .ONESHELL:
 
-c: build
 default: build
 
-PAGE_MODULES=`find src/ -type d -name '*Page'`
-
 .PHONY: build
+c: build
 build: umd_node_modules
-	@for module_path in $(PAGE_MODULES); do \
-		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
-			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
-		echo "$$module_path -> build/$$path_name"; \
-		mkdir -p build/$$path_name; \
-		cp src/page-template.html build/$$path_name/index.html; \
-		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
-		tsc-bundle $$tsconfig \
-			--outFile build/$$path_name/bundle.js \
-			--importAs React=react \
-			--importAs ReactDOM=react-dom \
-			--importAs typestyle=typestyle \
-			--importAs csx=csx \
-			--importAs csstips=csstips \
-			--exportAs repetitor \
-			|| exit 1; \
-	done
+	@set -e
+	for page_module_path in pages/*/src/Main.tsx; do
+		page_path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$page_module_path` || \
+			{ echo "\nModule $$page_module_path does not have a path name.\n"; exit 1; }
 
-start: server
-s: server
-server: watch
-	http-server --silent -a 127.0.0.1 -p 8000 ./build
+		page_module_path_no_extension=$${page_module_path/.tsx}
+		page_base_dir=$${page_module_path/\/src\/Main.tsx}
 
-watch: umd_node_modules
-	@for module_path in $(PAGE_MODULES); do \
-		path_name=`grep -Po '(?<=// path name: )([a-z]+|/)' $$module_path/Main.tsx` || \
-			{ echo "\nModule $$module_path does not have a path name.\n"; exit 1; }; \
-		cp src/page-template.html build/$$path_name/index.html; \
-		tsconfig=$$module_path/`basename $$module_path`.tsconfig.json; \
-		tsc-bundle $$tsconfig \
-			--outFile build/$$path_name/bundle.js \
-			--importAs React=react \
-			--importAs ReactDOM=react-dom \
-			--importAs typestyle=typestyle \
-			--importAs csx=csx \
-			--importAs csstips=csstips \
-			--exportAs repetitor \
-			--watch & \
+		dest_dir=$$(
+			if [ $$page_path_name == "/" ]; then
+				echo "build"
+			else
+				echo "build/$$page_path_name"
+			fi
+		)
+
+		mkdir -p $$dest_dir
+
+		if [ $$dest_dir/bundle.min.js -ot $$page_base_dir/build/bundle.js ]; then
+			uglifyjs < $$page_base_dir/build/bundle.js > $$dest_dir/bundle.min.js
+		fi
+
+		sed "s|MAIN_MODULE_PATH|frontend/$$page_module_path_no_extension|" index.html > $$dest_dir/index.html
 	done
 
 umd_node_modules: build/umd_node_modules \
+	build/umd_node_modules/require.min.js \
 	build/umd_node_modules/react.production.min.js \
 	build/umd_node_modules/react-dom.production.min.js \
 	build/umd_node_modules/typestyle.min.js \
@@ -55,7 +39,7 @@ umd_node_modules: build/umd_node_modules \
 	build/umd_node_modules/csstips.min.js
 
 build/umd_node_modules:
-	mkdir -p build/umd_node_modules
+	@mkdir -p build/umd_node_modules
 
 build/umd_node_modules/react.production.min.js: node_modules/react/umd/react.production.min.js
 build/umd_node_modules/react-dom.production.min.js: node_modules/react-dom/umd/react-dom.production.min.js
@@ -64,7 +48,10 @@ build/umd_node_modules/csx.min.js: node_modules/csx/umd/csx.min.js
 build/umd_node_modules/csstips.min.js: node_modules/csstips/umd/csstips.min.js
 
 build/umd_node_modules/%:
-	cp $? $@
+	@cp $? $@
+
+build/umd_node_modules/require.min.js: node_modules/requirejs/require.js
+	@uglifyjs < $? > $@
 
 o: open
 open:
@@ -73,25 +60,6 @@ open:
 e: edit
 edit:
 	code -n .
-
-deploy:
-	@set -e
-	git diff-index --quiet HEAD || \
-		{ echo "\nGit is not clean.\n"; exit 1; };
-
-	git checkout gh-pages
-	git checkout master -- src/ tsconfig.json
-	make build minify
-
-	git reset
-	git clean -fd
-
-	cp -rf build/* .
-	rm -rf build/
-
-	git add .
-	git commit -m "Deploy at `date`" && git push --force origin gh-pages || echo "\nNo changes to deploy.\n"
-	git checkout master
 
 minify:
 	@set -e
@@ -129,3 +97,23 @@ clean:
 
 node_modules/%:
 	npm install
+
+start: server
+s: server
+server:
+	@set -e
+	http-server --silent -a 127.0.0.1 -p 8000 ./build 2>&1 > .log &
+	echo $$! > .pid
+	disown
+
+stop: .pid
+	@kill `cat .pid` && rm .pid
+
+.pid:
+	@echo "No .pid file. Probably not running.\n"
+	exit 1
+
+status: .pid
+	@echo "Running as process `cat .pid` on port $$BACKEND_HTTP_PORT."
+
+restart: stop start
