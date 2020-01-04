@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx", "../../shared/src/**/*.ts", "../../shared/src/**/*.tsx"],
+  "include": ["src/", "../../shared/src/"],
   "files": ["src/Main.tsx"],
   "compilerOptions": {
     "outFile": "build/bundle.js"

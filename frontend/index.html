@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8" />
-  <title>Testing proje references</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <title>Loading…</title>
 </head>
 <body>
   <div id="root"></div>
-  <script src="require.js"></script>
+  <script src="/umd_node_modules/require.js"></script>
   <script>
     requirejs.config({
-      // baseUrl: "lib",
       paths: {
-        react: "build/umd_node_modules/react.production.min",
-        "react-dom": "build/umd_node_modules/react-dom.production.min",
-        typestyle: "build/umd_node_modules/typestyle.min",
-        csx: "build/umd_node_modules/csx.min",
-        csstips: "build/umd_node_modules/csstips.min",
+        react: "/umd_node_modules/react.production.min",
+        "react-dom": "/umd_node_modules/react-dom.production.min",
+        typestyle: "/umd_node_modules/typestyle.min",
+        csx: "/umd_node_modules/csx.min",
+        csstips: "/umd_node_modules/csstips.min",
       },
     });
-    requirejs(["build/inregistrare"], function() {
-      requirejs(["frontend/pages/inregistrare/src/Main"]);
+
+    requirejs(["bundle"], function() {
+      requirejs(["MAIN"]);
     });
   </script>
 </body>
