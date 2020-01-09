@@ -1,6 +1,7 @@
 import * as React from "react";
-import {FormField} from "./FormField";
+import {validateWithRules} from "../../../../../shared/src/Validation";
 import {FormValidation} from "../../FormValidation";
+import {FormField} from "./FormField";
 import {TextFieldCss} from "./TextField.css";
 import {ValidationMessage} from "./ValidationMessage";
 
@@ -14,7 +15,7 @@ type InputType = "text" | "email";
 export const TextField = (props: Props) => {
   const {validationRules, onValueChange, id, autoFocus, inputType, label, showValidationMessage, value} = props;
 
-  const initialValidationMessage = FormValidation.validateWithRules(value, validationRules).validationMessage;
+  const initialValidationMessage = validateWithRules(value, validationRules).validationMessage;
   const [validationMessage, setValidationMessage] = React.useState(initialValidationMessage);
   const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationMessage, onValueChange);
 

@@ -1,12 +1,12 @@
 import * as React from "react";
-import {ServerResponse, postAction, ResponseState} from "../../../shared/src/ActionHandling";
-import {PageLayout} from "../../../shared/src/PageLayout";
-import {Form} from "../../../shared/src/Components/Form";
-import {TextField} from "../../../shared/src/Components/FormFields/TextField";
-import {PasswordField} from "../../../shared/src/Components/FormFields/PasswordField";
-import {SubmitButton} from "../../../shared/src/Components/SubmitButton";
-import {FormValidation} from "../../../shared/src/FormValidation";
 import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
+import {ValidatedValue, ValidationRules} from "../../../../shared/src/Validation";
+import {postAction, ResponseState, ServerResponse} from "../../../shared/src/ActionHandling";
+import {Form} from "../../../shared/src/Components/Form";
+import {PasswordField} from "../../../shared/src/Components/FormFields/PasswordField";
+import {TextField} from "../../../shared/src/Components/FormFields/TextField";
+import {SubmitButton} from "../../../shared/src/Components/SubmitButton";
+import {PageLayout} from "../../../shared/src/PageLayout";
 
 export const RegistrationPage = () => {
   const [fullName, validateFullName] = React.useState(initialFieldValue);
@@ -63,7 +63,7 @@ export const RegistrationPage = () => {
     </PageLayout>
   );
 
-  async function submitForm(fields: Record<FieldName, FormValidation.ValidatedValue>): Promise<void> {
+  async function submitForm(fields: Record<FieldName, ValidatedValue>): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
     if (anyInvalidField) {
@@ -95,27 +95,14 @@ const placeholderServerResponse: ServerResponse = {
   shouldShow: false,
 };
 
-const initialFieldValue: FormValidation.ValidatedValue = {
+const initialFieldValue: ValidatedValue = {
   text: "",
   isValid: false,
 };
 
 type FieldName = keyof ActionDirectory["RegisterUser"]["Params"];
 
-const validationRules: Record<FieldName, FormValidation.ValidationRules> = {
-  fullName: {
-    "Numele lipsește.": (text: string) => text.trim().length === 0,
-    "Numele pare să fie prea scurt.": (text: string) => text.trim().length < 5,
-    "Numele pare să fie prea lung.": (text: string) => text.trim().length > 50,
-  },
-  email: {
-    "Adresa de email lipsește.": (text: string) => text.trim().length == 0,
-    "Adresa de pare să fie incorectă.": (text: string) => !text.includes("@"),
-  },
-  password: {
-    "Parola lipsește.": (text: string) => text.trim().length == 0,
-  },
-};
+const validationRules = ValidationRules["RegisterUser"];
 
 const errorMessages = {
   EMAIL_REQUIRED: "Prezența adresei de email este obligatorie",

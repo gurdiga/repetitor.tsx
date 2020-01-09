@@ -10,7 +10,6 @@ const log = debug("app:RegisterUser");
 
 export async function RegisterUser(params: Params): Promise<Response> {
   const {email, password, fullName} = params;
-  const {salt, passwordHash} = getStorablePassword(password);
 
   if (!email) {
     return {error: "EMAIL_REQUIRED"};
@@ -19,6 +18,8 @@ export async function RegisterUser(params: Params): Promise<Response> {
   } else if (!fullName) {
     return {error: "FULL_NAME_REQUIRED"};
   } else {
+    const {salt, passwordHash} = getStorablePassword(password);
+
     try {
       await runQuery({
         sql: `

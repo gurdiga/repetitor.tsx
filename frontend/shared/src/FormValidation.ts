@@ -1,12 +1,9 @@
+import {validateWithRules, ValidatedValue} from "../../../shared/src/Validation";
+
 export namespace FormValidation {
   export type PredicateFn = (value: string) => boolean;
   export type ValidationRules = {[message: string]: PredicateFn};
   export type ValueChangeHandler = (value: ValidatedValue) => void;
-
-  export interface ValidatedValue {
-    text: string;
-    isValid: boolean;
-  }
 
   export function buildInputEventHandler<T extends HTMLInputElement>(
     validationRules: ValidationRules,
@@ -20,25 +17,5 @@ export namespace FormValidation {
       setValidationMessage(validationMessage);
       onValueChange({text, isValid});
     };
-  }
-
-  interface ValidationResult {
-    validationMessage: string;
-    isValid: boolean;
-  }
-
-  export function validateWithRules(text: string, validationRules: ValidationRules): ValidationResult {
-    let validationMessage = "";
-    let isValid = Object.entries(validationRules).every(([message, predicate]) => {
-      if (predicate(text)) {
-        validationMessage = message;
-        return false;
-      } else {
-        validationMessage = "";
-        return true;
-      }
-    });
-
-    return {validationMessage, isValid};
   }
 }

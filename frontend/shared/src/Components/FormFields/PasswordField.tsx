@@ -1,7 +1,8 @@
 import * as React from "react";
-import {FormField} from "./FormField";
+import {validateWithRules} from "../../../../../shared/src/Validation";
 import {FormValidation} from "../../FormValidation";
 import {PasswordGenerator} from "../../PasswordGenerator";
+import {FormField} from "./FormField";
 import {PasswordFieldCss} from "./PasswordField.css";
 import {ValidationMessage} from "./ValidationMessage";
 
@@ -13,7 +14,7 @@ export const PasswordField = (props: Props) => {
   const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
 
-  const initialValidationMessage = FormValidation.validateWithRules(value, validationRules).validationMessage;
+  const initialValidationMessage = validateWithRules(value, validationRules).validationMessage;
   const [validationMessage, setValidationMessage] = React.useState(initialValidationMessage);
 
   const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationMessage, ({text, isValid}) => {
