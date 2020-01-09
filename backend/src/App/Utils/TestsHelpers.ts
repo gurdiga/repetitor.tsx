@@ -1,6 +1,10 @@
 import {expect} from "chai";
 import {connectionPool, runQuery} from "../Db";
 
+process.on("unhandledRejection", e => {
+  throw e;
+});
+
 after(async () => {
   await truncateAllTables();
 
