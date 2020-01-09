@@ -4,11 +4,22 @@
   "description": "This is going to be an online system for tutors.",
   "main": "index.js",
   "devDependencies": {
+    "nodemon": "^2.0.2",
     "typescript": "^3.7.4",
     "ts-node": "^8.5.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "backend/src",
+      "backend/tsconfig.json",
+      "backend/package.json"
+    ],
+    "ignore": [
+      "*.test.ts"
+    ]
   },
   "repository": {
     "type": "git",
