@@ -12,24 +12,24 @@ describe("registerUser", () => {
     context("when both are present", () => {
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
-      it("does not throw", () => {
+      it("does not throw", async () => {
         const params = {email: "some@email.com", password: "secret", fullName: "John DOE"};
 
-        expect(RegisterUser(params)).to.be.fulfilled;
+        await expect(RegisterUser(params)).to.be.fulfilled;
       });
     });
 
     context("when either of the email or password is missing", () => {
-      it("throws with the appropriate error message", () => {
+      it("throws with the appropriate error message", async () => {
         const params = {email: "", password: "secret", fullName: "John DOE"};
 
-        expect(RegisterUser(params)).to.be.rejectedWith("Email is required");
+        await expect(RegisterUser(params)).to.be.rejectedWith("Email is required");
       });
 
       it("throws with the appropriate error message", async () => {
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
 
-        expect(RegisterUser(params)).to.be.rejectedWith("Password is required");
+        await expect(RegisterUser(params)).to.be.rejectedWith("Password is required");
       });
     });
   });
@@ -62,8 +62,8 @@ describe("registerUser", () => {
       before(() => RegisterUser(params));
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
-      it("trows with an appropriate error message", () => {
-        expect(RegisterUser(params)).to.be.rejectedWith("Există deja un cont cu acest email");
+      it("trows with an appropriate error message", async () => {
+        await expect(RegisterUser(params)).to.be.rejectedWith("EMAIL_TAKEN");
       });
     });
   });

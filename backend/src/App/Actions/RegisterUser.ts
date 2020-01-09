@@ -25,7 +25,7 @@ export async function RegisterUser(params: Params): Promise<Response> {
     await runQuery({
       sql: `
           INSERT INTO users(email, password_hash, password_salt, full_name)
-          VALUES(?, ?, ?)
+          VALUES(?, ?, ?, ?)
         `,
       params: [email, passwordHash, salt, fullName],
     });
