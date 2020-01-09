@@ -1,20 +1,26 @@
-import assert from "assert";
-import {Result} from "./Db";
 import {RegisterUser} from "./Actions/RegisterUser";
 import {TestAction} from "./Actions/TestAction";
-import {ActionName} from "../../../shared/src/ActionRegistry";
 
-const ActionRegistry: Record<ActionName, HandlerFunction> = {
-  RegisterUser,
-  TestAction,
-};
+const actionList = [RegisterUser, TestAction];
 
-export function handleActionRequest(actionName: string, actionParams: any): Promise<Result> {
-  const actionHandler = ActionRegistry[actionName as ActionName];
+export async function handleActionRequest(actionName: string, actionParams: any): Promise<any> {
+  if (!actionName) {
+    throw new Error(`The "actionName" param is required`);
+  }
 
-  assert(!!actionHandler, `Could not find action handler for: ${actionName}`);
+  const actionHandler = actionList.find(f => f.name === actionName);
 
-  return actionHandler(actionParams);
+  if (!actionHandler) {
+    throw new Error(`Could not find action handler for: "${actionName}"`);
+  }
+
+  const result = await actionHandler(actionParams);
+
+  if ("error" in result) {
+    // I don’t throw from action handlers because I want to typecheck possible
+    // failure cases so that I can properly handle each of them on the frontend.
+    throw new Error(result.error);
+  }
+
+  return result;
 }
-
-type HandlerFunction = (params: any) => any;

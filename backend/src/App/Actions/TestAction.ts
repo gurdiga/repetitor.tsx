@@ -1,10 +1,10 @@
 import {runQuery} from "../Db";
+import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
 
-interface Response {
-  sum: number;
-}
+type Params = ActionDirectory["TestAction"]["Params"];
+type Response = ActionDirectory["TestAction"]["Response"];
 
-export async function TestAction(): Promise<Response> {
+export async function TestAction(_params: Params): Promise<Response> {
   const result = await runQuery({
     sql: "SELECT 1 + 1 AS sum",
     params: [],
@@ -12,5 +12,5 @@ export async function TestAction(): Promise<Response> {
 
   const {sum} = result.rows[0];
 
-  return {sum};
+  return {rows: [{sum}]};
 }

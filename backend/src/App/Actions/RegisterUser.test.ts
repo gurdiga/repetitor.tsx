@@ -1,4 +1,4 @@
-import "mocha";
+import "mocha"; // TODO: try removing this?
 import {expect, use} from "chai";
 
 import {runQuery} from "../Db";
@@ -9,27 +9,17 @@ use(require("chai-as-promised"));
 
 describe("registerUser", () => {
   describe("parameter validation", () => {
-    context("when both are present", () => {
-      after(() => runQuery({sql: "DELETE FROM users", params: []}));
-
-      it("does not throw", async () => {
-        const params = {email: "some@email.com", password: "secret", fullName: "John DOE"};
-
-        await expect(RegisterUser(params)).to.be.fulfilled;
-      });
-    });
-
     context("when either of the email or password is missing", () => {
       it("throws with the appropriate error message", async () => {
         const params = {email: "", password: "secret", fullName: "John DOE"};
 
-        await expect(RegisterUser(params)).to.be.rejectedWith("Email is required");
+        await expect(RegisterUser(params)).to.eventually.deep.equal({error: "EMAIL_REQUIRED"});
       });
 
       it("throws with the appropriate error message", async () => {
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
 
-        await expect(RegisterUser(params)).to.be.rejectedWith("Password is required");
+        await expect(RegisterUser(params)).to.eventually.deep.equal({error: "PASSWORD_REQUIRED"});
       });
     });
   });
@@ -63,7 +53,7 @@ describe("registerUser", () => {
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("trows with an appropriate error message", async () => {
-        await expect(RegisterUser(params)).to.be.rejectedWith("EMAIL_TAKEN");
+        await expect(RegisterUser(params)).to.eventually.deep.equal({error: "EMAIL_TAKEN"});
       });
     });
   });

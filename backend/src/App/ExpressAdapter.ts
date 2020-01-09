@@ -14,23 +14,22 @@ const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 type HttpRequest = Pick<express.Request, "path" | "body">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send">;
 
-const log = debug(`app:${__filename}`);
+const log = debug(`app:ExpressAdapter`);
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
   const {actionName, actionParams = {}} = req.body;
 
-  log({actionName, actionParams});
-
   try {
-    assert(!!actionName, "actionName is required");
-
     const result = await handleActionRequest(actionName, actionParams);
 
     res.json(result);
     log(`Handled action ${actionName}`);
   } catch (error) {
     log(`Failed to handle action ${actionName}: ${error}`);
-    res.status(500).json({error: error.message});
+
+    const errorMessage = error instanceof Error ? error.message : error || "Error with no message";
+
+    res.status(500).json({error: errorMessage});
   }
 }
 

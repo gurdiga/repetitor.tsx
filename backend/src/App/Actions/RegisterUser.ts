@@ -1,43 +1,42 @@
-import assert from "assert";
+import debug from "debug";
 import {runQuery} from "../Db";
 import {genRandomString, hashString} from "../Utils/StringUtils";
+import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
 
-interface Params {
-  email: string;
-  password: string;
-  fullName: string;
-}
+type Params = ActionDirectory["RegisterUser"]["Params"];
+type Response = ActionDirectory["RegisterUser"]["Response"];
 
-interface Response {
-  success: true;
-}
+const log = debug("app:RegisterUser");
 
 export async function RegisterUser(params: Params): Promise<Response> {
   const {email, password, fullName} = params;
-
-  assert(email, "Email is required");
-  assert(password, "Password is required");
-  assert(fullName, "Full name is required");
-
   const {salt, passwordHash} = getStorablePassword(password);
 
-  try {
-    await runQuery({
-      sql: `
-          INSERT INTO users(email, password_hash, password_salt, full_name)
-          VALUES(?, ?, ?, ?)
-        `,
-      params: [email, passwordHash, salt, fullName],
-    });
+  if (!email) {
+    return {error: "EMAIL_REQUIRED"};
+  } else if (!password) {
+    return {error: "PASSWORD_REQUIRED"};
+  } else if (!fullName) {
+    return {error: "FULL_NAME_REQUIRED"};
+  } else {
+    try {
+      await runQuery({
+        sql: `
+            INSERT INTO users(email, password_hash, password_salt, full_name)
+            VALUES(?, ?, ?, ?)
+          `,
+        params: [email, passwordHash, salt, fullName],
+      });
 
-    return Promise.resolve({success: true});
-  } catch (e) {
-    switch (e.code) {
-      case "ER_DUP_ENTRY":
-        return Promise.reject(new Error("EMAIL_TAKEN"));
-      default:
-        console.error(e);
-        return Promise.reject(new Error("DB_ERROR"));
+      return {success: true};
+    } catch (error) {
+      switch (error.code) {
+        case "ER_DUP_ENTRY":
+          return {error: "EMAIL_TAKEN"};
+        default:
+          log({error});
+          return {error: "DB_ERROR"};
+      }
     }
   }
 }

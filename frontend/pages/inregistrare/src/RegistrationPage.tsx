@@ -1,11 +1,12 @@
 import * as React from "react";
-import {ServerResponse, ActionName, postAction, ServerResponseType} from "../../../shared/src/Actions";
+import {ServerResponse, postAction, ResponseState} from "../../../shared/src/ActionHandling";
 import {PageLayout} from "../../../shared/src/PageLayout";
 import {Form} from "../../../shared/src/Components/Form";
 import {TextField} from "../../../shared/src/Components/FormFields/TextField";
 import {PasswordField} from "../../../shared/src/Components/FormFields/PasswordField";
 import {SubmitButton} from "../../../shared/src/Components/SubmitButton";
 import {FormValidation} from "../../../shared/src/FormValidation";
+import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
 
 export const RegistrationPage = () => {
   const [fullName, validateFullName] = React.useState(initialFieldValue);
@@ -51,39 +52,37 @@ export const RegistrationPage = () => {
             label="Înregistrează"
             onClick={() => {
               setShowValidationMessage(true);
-              submitForm("RegisterUser", {fullName, email, password});
+              submitForm({fullName, email, password});
             }}
           />,
         ]}
       />
       {serverResponse.shouldShow && (
-        <p className={`server-response-${serverResponse.responseType}`}>{serverResponse.responseText}</p>
+        <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
       )}
     </PageLayout>
   );
 
-  async function submitForm(
-    actionName: ActionName,
-    fields: Record<FieldName, FormValidation.ValidatedValue>
-  ): Promise<void> {
+  async function submitForm(fields: Record<FieldName, FormValidation.ValidatedValue>): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
     if (anyInvalidField) {
       return;
     }
 
-    const fieldValues: {[fieldName: string]: string} = {};
-
-    Object.entries(fields).forEach(([fieldName, {text}]) => {
-      fieldValues[fieldName] = text;
+    const response = await postAction("RegisterUser", {
+      fullName: fields.fullName.text,
+      email: fields.email.text,
+      password: fields.password.text,
     });
 
-    const response = await postAction(actionName, fieldValues);
-    const [responseType, responseText]: [ServerResponseType, string] =
-      "error" in response ? ["error", getErrorMessageByErrorResponseCode(response.error)] : ["success", "Înregistrat."];
+    const [responseState, responseText] =
+      "error" in response
+        ? [ResponseState.ReceivedError, errorMessages[response.error]]
+        : [ResponseState.ReceivedSuccess, "Înregistrat."];
 
     setServerResponse({
-      responseType,
+      responseState,
       responseText,
       shouldShow: true,
     });
@@ -91,28 +90,17 @@ export const RegistrationPage = () => {
 };
 
 const placeholderServerResponse: ServerResponse = {
-  responseType: "notAskedYet",
+  responseState: ResponseState.NotAskedYet,
   responseText: "",
   shouldShow: false,
 };
-
-type RegisterUserResponseCode = "EMAIL_TAKEN" | "DB_ERROR";
-
-function getErrorMessageByErrorResponseCode(code: RegisterUserResponseCode): string {
-  switch (code) {
-    case "EMAIL_TAKEN":
-      return "Există deja un utilizator cu acest email";
-    case "DB_ERROR":
-      return "Eroare de bază de date.";
-  }
-}
 
 const initialFieldValue: FormValidation.ValidatedValue = {
   text: "",
   isValid: false,
 };
 
-type FieldName = "fullName" | "email" | "password";
+type FieldName = keyof ActionDirectory["RegisterUser"]["Params"];
 
 const validationRules: Record<FieldName, FormValidation.ValidationRules> = {
   fullName: {
@@ -127,4 +115,12 @@ const validationRules: Record<FieldName, FormValidation.ValidationRules> = {
   password: {
     "Parola lipsește.": (text: string) => text.trim().length == 0,
   },
+};
+
+const errorMessages = {
+  EMAIL_REQUIRED: "Prezența adresei de email este obligatorie",
+  PASSWORD_REQUIRED: "Prezența parolei este obligatorie",
+  FULL_NAME_REQUIRED: "Prezența numelui este obligatorie",
+  EMAIL_TAKEN: "Există deja un utilizator cu acest email",
+  DB_ERROR: "Eroare de bază de date",
 };
