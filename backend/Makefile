@@ -2,8 +2,12 @@
 
 test:
 	@set -e
-	source .env.test
-	mocha	-r ts-node/register --reporter dot --file src/App/Utils/TestsHelpers.ts src/**/*.test.ts
+	source ../.env.test
+	DEBUG=app:none mocha \
+		--require ts-node/register \
+		--reporter dot \
+		--file src/App/Utils/TestsHelpers.ts \
+		src/**/*.test.ts
 
 CLI=build/backend/src/cli.js
 

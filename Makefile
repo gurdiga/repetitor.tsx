@@ -1,6 +1,14 @@
 .ONESHELL:
 
-default: build
+default: test
+
+test: backend-test frontend-test
+
+backend-test: install
+	@( cd backend && make test )
+
+frontend-test: install
+	@( cd frontend && make test )
 
 c: build
 .PHONY: build
