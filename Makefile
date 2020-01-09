@@ -71,4 +71,4 @@ node_modules backend/node_modules frontend/node_modules:
 
 clean:
 	tsc --build --clean
-	rm -rf build frontend/pages/*/build
+	rm -rf build shared/build backend/build frontend/build frontend/pages/*/build frontend/shared/build
