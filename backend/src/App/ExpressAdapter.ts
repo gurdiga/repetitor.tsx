@@ -14,8 +14,7 @@ const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 type HttpRequest = Pick<express.Request, "path" | "body">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send">;
 
-const fileName = path.basename(__filename);
-const log = debug(`app:${fileName}`);
+const log = debug(`app:${__filename}`);
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
   const {actionName, actionParams = {}} = req.body;
