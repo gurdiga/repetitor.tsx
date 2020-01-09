@@ -1,27 +1,18 @@
-import * as express from "express";
-import * as morgan from "morgan";
-import * as cors from "cors";
-import * as assert from "assert";
-
-import {handleActionRequest} from "./App/Backend";
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import * as ExpressAdapter from "./App/ExpressAdapter";
 
 express()
   .use(morgan("tiny"))
   .use(express.json())
   .use(cors())
-  .post("/", async (req, res) => {
-    const {actionName, actionParams = {}} = req.body;
-
-    console.log({actionName, actionParams});
-
-    try {
-      assert(!!actionName, "actionName is required");
-
-      const result = await handleActionRequest(actionName, actionParams);
-
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({error: error.message});
-    }
+  .get("/umd_node_modules/:vendorModuleFileName", (req, res) => {
+    ExpressAdapter.sendVendorModule(req.params.vendorModuleFileName, res);
   })
-  .listen(process.env.BACKEND_HTTP_PORT);
+  .get(["/bundle.js", "/:pagePathName/bundle.js"], (req, res) => {
+    ExpressAdapter.sendPageBundle(req.params.pagePathName, res);
+  })
+  .get("*", ExpressAdapter.sendPageHtml)
+  .post("/", ExpressAdapter.handlePost)
+  .listen(ExpressAdapter.HttpPort);

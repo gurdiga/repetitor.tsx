@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "assert";
 
 export function assertEnvVars(varNames: string[]) {
   const missingVars = varNames.filter(name => !(name in process.env)).join(", ");

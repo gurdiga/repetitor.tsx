@@ -1,63 +1,26 @@
 .ONESHELL:
 
-default: c
-
-c: build/index.js
-
-test: build/index.js
+test:
 	@set -e
 	source .env.test
-	mocha	--reporter dot --file build/App/Utils/TestsHelpers.js build/**/*.test.js
+	mocha	-r ts-node/register --reporter dot --file src/App/Utils/TestsHelpers.ts src/**/*.test.ts
 
-start: build/index.js
-	@node $< 2>&1 > .log &
-	echo $$! > .pid
-	disown
+CLI=build/backend/src/cli.js
 
-stop: .pid
-	@kill $$(<$<) && rm $<
+# TODO: switch to ts-node
+run: build
+	node $(CLI) '$(SAMPLE_REQUEST)'
 
-.pid:
-	@echo "No .pid file. Probably not running.\n"
-	exit 1
-
-status: .pid
-	@echo "Running as process $$(<$<) on port $$BACKEND_HTTP_PORT."
-
-restart: stop start
-
-build/index.js: node_modules package.json tsconfig.json $(shell find src)
-	@set -e
-	tsc --skipLibCheck
-	touch $@
-
-build/cli.js: build/index.js
-
-install: node_modules
-
-node_modules: .nvmrc package.json
-	@set -e
-	npm install
-	touch $@
-
-uninstall:
-	rm -rf node_modules
-
-clean:
-	rm -rf build/*
-
-run: build/cli.js
-	node build/cli.js '$(SAMPLE_REQUEST)'
-
-run-action: build/cli.js
+# TODO: switch to ts-node
+run-action: build
 	@if [ -z '$(ACTION)' ]; then
 		echo '$@ requires the request JSON into the ACTION argument.\n'
 		exit 1
 	fi
 
-	node build/cli.js '$(ACTION)'
+	node $(CLI) '$(ACTION)'
 
-run-action-http: build/cli.js
+run-action-http: $(CLI)
 	@#  -vvv --trace-ascii -
 	curl \
 		--header "Content-Type: application/json" \

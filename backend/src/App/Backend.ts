@@ -1,5 +1,4 @@
-import * as assert from "assert";
-
+import assert from "assert";
 import {Result} from "./Db";
 import {RegisterUser} from "./Actions/RegisterUser";
 import {TestAction} from "./Actions/TestAction";

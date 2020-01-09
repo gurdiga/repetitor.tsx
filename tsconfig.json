@@ -6,6 +6,7 @@
     "rootDir": "./",
     "module": "commonjs",
     "moduleResolution": "node",
+    "esModuleInterop": true, // This allows for `import fs from "fs"` instead of `import * as fs from "fs"`
 
     /* Strict Type-Checking Options */
     "strict": true /* Enable all strict type-checking options. */,

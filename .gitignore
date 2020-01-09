@@ -2,3 +2,5 @@ build/
 node_modules/
 .pid
 .log
+backend/db/migrations/*.sql.migrated
+.env.test

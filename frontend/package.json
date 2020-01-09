@@ -16,11 +16,9 @@
     "@types/react-dom": "^16.9.4",
     "csstips": "^1.2.0",
     "csx": "^10.0.0",
-    "http-server": "^0.12.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "requirejs": "^2.3.6",
-    "typestyle": "^2.0.4",
-    "uglify-js": "^3.7.2"
+    "typestyle": "^2.0.4"
   }
 }

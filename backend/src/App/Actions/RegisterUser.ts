@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "assert";
 import {runQuery} from "../Db";
 import {genRandomString, hashString} from "../Utils/StringUtils";
 
