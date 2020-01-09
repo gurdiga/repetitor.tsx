@@ -1,4 +1,5 @@
-import * as mysql from "mysql";
+import mysql from "mysql";
+import debug from "debug";
 import {assertEnvVars} from "./Utils";
 
 interface DataRow {
@@ -26,6 +27,10 @@ export const connectionPool = mysql.createPool({
 });
 
 export function runQuery(query: ParametrizedQuery): Promise<Result> {
+  const log = debug(`app:runQuery`);
+
+  log({query});
+
   return new Promise<Result>((resolve, reject) => {
     connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, rows, _fields) {
       if (error) {
