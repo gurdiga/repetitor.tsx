@@ -15,6 +15,9 @@ c: build
 build: install
 	tsc --build -v
 
+watch: install
+	tsc --build -v -w
+
 start: install
 	@set -e
 	nodemon \
