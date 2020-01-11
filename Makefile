@@ -70,7 +70,7 @@ node_modules backend/node_modules frontend/node_modules:
 	touch $@
 
 clean:
-	rm -rf shared/build backend/build frontend/pages/*/build frontend/shared/build
+	rm -rf shared/build backend/build frontend/pages/*/build frontend/shared/build dist/*
 
 pre-install: node
 
@@ -101,3 +101,16 @@ service:
 		-e "s|^EnvironmentFile=$$|EnvironmentFile=$$PWD/.env.production|" \
 		backend/systemd.service | \
 	sudo tee /etc/systemd/user/express.service
+
+ARCHIVE=dist/archive-$(TAG).tgz
+.PHONY: dist
+dist: $(ARCHIVE)
+$(ARCHIVE):
+	@set -e
+	function throw { echo "$${1:-throwing with no message?}\n"; return 1; }
+	test -n "$$TAG" || throw "TAG env var is not set"
+	mkdir -p dist
+	git archive \
+		--format tgz \
+		--output=$(ARCHIVE) \
+		$(TAG)
