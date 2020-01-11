@@ -1,10 +1,12 @@
 import * as cors from "cors";
+import * as compression from "compression";
 import * as express from "express";
 import * as morgan from "morgan";
 import {handlePost, HttpPort, sendPageBundle, sendPageHtml, sendVendorModule} from "./App/ExpressAdapter";
 
 express()
   .use(morgan("tiny"))
+  .use(compression())
   .use(express.json())
   .use(cors())
   .get("/umd_node_modules/:vendorModuleFileName", (req, res) => {
