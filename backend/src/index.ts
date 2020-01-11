@@ -3,7 +3,14 @@ import * as compression from "compression";
 import * as express from "express";
 import * as morgan from "morgan";
 import * as helmet from "helmet";
-import {handlePost, HttpPort, sendPageBundle, sendPageHtml, sendVendorModule} from "./App/ExpressAdapter";
+import {
+  handlePost,
+  HttpPort,
+  sendPageBundle,
+  sendPageHtml,
+  sendVendorModule,
+  sendSecurityTxt,
+} from "./App/ExpressAdapter";
 
 express()
   .use(helmet())
@@ -11,6 +18,7 @@ express()
   .use(compression())
   .use(express.json())
   .use(cors())
+  .get("/.well-known/security.txt", sendSecurityTxt)
   .get("/umd_node_modules/:vendorModuleFileName", (req, res) => {
     sendVendorModule(req.params.vendorModuleFileName, res);
   })

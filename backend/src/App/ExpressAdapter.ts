@@ -83,6 +83,10 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   }
 }
 
+export function sendSecurityTxt(req: HttpRequest, res: HttpResponse): void {
+  res.sendFile(path.normalize(`${__dirname}/../../../security.txt`));
+}
+
 function getPagePathNames(pagesRoot: string): string[] {
   return fs
     .readdirSync(pagesRoot, {withFileTypes: true})
