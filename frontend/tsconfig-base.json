@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig-base.json",
+  "compilerOptions": {
+    "module": "amd",
+    "target": "es5",
+    "lib": ["dom", "es2015", "es2017"],
+    "jsx": "react"
+  }
+}

@@ -1,11 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": [
-    "src/",
-    "../../shared/src/" /* code shared between pages */,
-    "../../../shared/src/" /* code shared between backend and frontend */
-  ],
+  "extends": "../../tsconfig-base.json",
+  "references": [{"path": "../../shared"}],
   "files": ["src/Main.tsx"],
+  "include": ["src"],
   "compilerOptions": {
     "outFile": "build/bundle.js"
   }
