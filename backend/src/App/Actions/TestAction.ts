@@ -1,5 +1,5 @@
-import {runQuery} from "../Db";
 import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
+import {runQuery} from "../Db";
 
 type Params = ActionDirectory["TestAction"]["Params"];
 type Response = ActionDirectory["TestAction"]["Response"];

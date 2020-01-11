@@ -1,9 +1,7 @@
-import "mocha"; // TODO: try removing this?
 import {expect, use} from "chai";
-
 import {runQuery} from "../Db";
-import {RegisterUser} from "./RegisterUser";
 import {hashString} from "../Utils/StringUtils";
+import {RegisterUser} from "./RegisterUser";
 
 use(require("chai-as-promised"));
 

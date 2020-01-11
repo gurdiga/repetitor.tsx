@@ -1,7 +1,7 @@
 import debug from "debug";
+import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
 import {runQuery} from "../Db";
 import {genRandomString, hashString} from "../Utils/StringUtils";
-import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
 
 type Params = ActionDirectory["RegisterUser"]["Params"];
 type Response = ActionDirectory["RegisterUser"]["Response"];
