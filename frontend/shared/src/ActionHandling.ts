@@ -1,4 +1,4 @@
-import {ActionName, ActionDirectory} from "../../../shared/src/ActionDirectory";
+import {ActionDirectory, ActionName} from "shared/ActionDirectory";
 
 export interface ServerResponse {
   responseState: ResponseState;

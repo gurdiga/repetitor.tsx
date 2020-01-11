@@ -7,6 +7,12 @@
     "../../../shared/src" /* shared between frontend and backend */
   ],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["src/*"],
+      "shared/*": ["../../../shared/src/*"],
+      "frontend/shared/*": ["../../shared/src/*"]
+    },
     "outFile": "build/bundle.js"
   }
 }

@@ -1,4 +1,4 @@
-import {FormValidation} from "../../FormValidation";
+import {FormValidation} from "frontend/shared/FormValidation";
 
 export namespace FormField {
   export interface CommonProps extends React.InputHTMLAttributes<HTMLInputElement> {

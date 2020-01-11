@@ -1,6 +1,5 @@
 import * as React from "react";
-
-import {FormCss} from "./Form.css";
+import {FormCss} from "frontend/shared/Components/Form.css";
 
 interface Props {
   fields: JSX.Element[];

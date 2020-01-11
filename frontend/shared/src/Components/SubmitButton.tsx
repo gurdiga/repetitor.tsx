@@ -1,6 +1,6 @@
+import {SubmitButtonCss} from "frontend/shared/Components/SubmitButton.css";
 import * as React from "react";
 import {classes} from "typestyle";
-import {SubmitButtonCss} from "./SubmitButton.css";
 
 interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   label: string;

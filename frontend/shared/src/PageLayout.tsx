@@ -1,8 +1,8 @@
+import {PageLayoutCss} from "frontend/shared/PageLayout.css";
+import {TopNavigation} from "frontend/shared/TopNavigation";
+import {UtilsCss} from "frontend/shared/Utils.css";
 import * as React from "react";
 import {classes} from "typestyle";
-import {PageLayoutCss} from "./PageLayout.css";
-import {UtilsCss} from "./Utils.css";
-import {TopNavigation} from "./TopNavigation";
 
 const DEBUG_LAYOUT = false;
 

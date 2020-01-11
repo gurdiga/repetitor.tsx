@@ -1,4 +1,4 @@
-import {validateWithRules, ValidatedValue} from "../../../shared/src/Validation";
+import {validateWithRules, ValidatedValue} from "shared/Validation";
 
 export namespace FormValidation {
   export type PredicateFn = (value: string) => boolean;

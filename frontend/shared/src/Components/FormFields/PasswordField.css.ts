@@ -1,6 +1,6 @@
+import {em, percent} from "csx";
+import {InputCss} from "frontend/shared/Components/FormFields/Input.css";
 import {style} from "typestyle";
-import {percent, em} from "csx";
-import {InputCss} from "./Input.css";
 
 export namespace PasswordFieldCss {
   export const InputContainer = style({

@@ -1,6 +1,6 @@
 import * as React from "react";
 import {classes} from "typestyle";
-import {CheckboxCss} from "./Checkbox.css";
+import {CheckboxCss} from "frontend/shared/Components/FormFields/Checkbox.css";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;

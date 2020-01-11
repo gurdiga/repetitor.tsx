@@ -1,10 +1,10 @@
+import {FormField} from "frontend/shared/Components/FormFields/FormField";
+import {PasswordFieldCss} from "frontend/shared/Components/FormFields/PasswordField.css";
+import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
+import {FormValidation} from "frontend/shared/FormValidation";
+import {PasswordGenerator} from "frontend/shared/PasswordGenerator";
 import * as React from "react";
-import {validateWithRules} from "../../../../../shared/src/Validation";
-import {FormValidation} from "../../FormValidation";
-import {PasswordGenerator} from "../../PasswordGenerator";
-import {FormField} from "./FormField";
-import {PasswordFieldCss} from "./PasswordField.css";
-import {ValidationMessage} from "./ValidationMessage";
+import {validateWithRules} from "shared/Validation";
 
 interface Props extends FormField.CommonProps {}
 

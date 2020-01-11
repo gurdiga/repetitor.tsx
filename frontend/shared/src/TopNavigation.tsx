@@ -1,5 +1,5 @@
+import {TopNavigationCss} from "frontend/shared/TopNavigation.css";
 import * as React from "react";
-import {TopNavigationCss} from "./TopNavigation.css";
 
 export const TopNavigation = () => (
   <ul className={TopNavigationCss.LinkList}>
