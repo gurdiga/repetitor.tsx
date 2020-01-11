@@ -1,4 +1,4 @@
-import {RegistrationPage} from "./RegistrationPage";
-import {PageRendering} from "../../../shared/src/PageRendering";
+import {PageRendering} from "frontend/shared/PageRendering";
+import {RegistrationPage} from "RegistrationPage";
 
 PageRendering.render(RegistrationPage);

@@ -1,12 +1,12 @@
+import {postAction, ResponseState, ServerResponse} from "frontend/shared/ActionHandling";
+import {Form} from "frontend/shared/Components/Form";
+import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
+import {TextField} from "frontend/shared/Components/FormFields/TextField";
+import {SubmitButton} from "frontend/shared/Components/SubmitButton";
+import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
-import {ValidatedValue, ValidationRules} from "../../../../shared/src/Validation";
-import {postAction, ResponseState, ServerResponse} from "../../../shared/src/ActionHandling";
-import {Form} from "../../../shared/src/Components/Form";
-import {PasswordField} from "../../../shared/src/Components/FormFields/PasswordField";
-import {TextField} from "../../../shared/src/Components/FormFields/TextField";
-import {SubmitButton} from "../../../shared/src/Components/SubmitButton";
-import {PageLayout} from "../../../shared/src/PageLayout";
+import {ActionDirectory} from "shared/ActionDirectory";
+import {ValidatedValue, ValidationRules} from "shared/Validation";
 
 export const RegistrationPage = () => {
   const [fullName, validateFullName] = React.useState(initialFieldValue);

@@ -3,6 +3,10 @@
   "include": ["src"],
   "compilerOptions": {
     "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "shared/*": ["src/*"]
+    },
     "lib": ["dom", "es2017"]
   }
 }

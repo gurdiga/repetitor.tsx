@@ -1,4 +1,4 @@
-import {HomePage} from "./HomePage";
-import {PageRendering} from "../../../shared/src/PageRendering";
+import {PageRendering} from "frontend/shared/PageRendering";
+import {HomePage} from "HomePage";
 
 PageRendering.render(HomePage);

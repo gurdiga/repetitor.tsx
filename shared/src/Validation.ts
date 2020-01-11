@@ -1,4 +1,4 @@
-import {ActionName, ActionDirectory} from "./ActionDirectory";
+import {ActionName, ActionDirectory} from "shared/ActionDirectory";
 
 type PredicateFn = (value: string) => boolean;
 type ValidationRules = {[message: string]: PredicateFn};
