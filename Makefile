@@ -5,10 +5,10 @@ default: test
 test: backend-test frontend-test
 
 backend-test: install
-	@( cd backend && make test )
+	@cd backend && make test
 
 frontend-test: install
-	@( cd frontend && make test )
+	@cd frontend && make test
 
 c: build
 .PHONY: build
@@ -27,7 +27,7 @@ start: install
 		--watch backend/tsconfig.json \
 		--watch backend/package.json \
 		--watch shared/tsconfig.json \
-		--exec 'node_modules/.bin/ts-node backend/src/index.ts'
+		--exec 'DEBUG=app:* node_modules/.bin/ts-node backend/src/index.ts'
 
 e: edit
 edit:
