@@ -1,5 +1,4 @@
 import * as assert from "assert";
-import debug from "debug";
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
@@ -15,8 +14,6 @@ const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 type HttpRequest = Pick<express.Request, "path" | "body">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send">;
 
-const log = debug(`app:ExpressAdapter`);
-
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
   const {actionName, actionParams = {}} = req.body;
 
@@ -24,10 +21,7 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
     const result = await handleActionRequest(actionName, actionParams);
 
     res.json(result);
-    log(`Handled action ${actionName}`);
   } catch (error) {
-    log(`Failed to handle action ${actionName}: ${error}`);
-
     const errorMessage = error instanceof Error ? error.message : error || "Error with no message";
 
     res.status(500).json({error: errorMessage});
@@ -49,7 +43,6 @@ export function sendVendorModule(vendorModuleFileName: string, res: HttpResponse
 
   if (vendorModuleFilePath) {
     res.sendFile(vendorModuleFilePath);
-    log(`Sent vendor module: ${vendorModuleFileName}`);
   } else {
     res.sendStatus(404);
   }
@@ -67,7 +60,6 @@ export function sendPageBundle(pagePathName: string | undefined, res: HttpRespon
 
   if (PagePathNames.includes(pagePathName)) {
     res.sendFile(pageBundleFilePath);
-    log(`Sent page bundle: ${pageBundleFilePath}`);
   } else {
     res.sendStatus(404);
   }
@@ -86,7 +78,6 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const html = htmlTemplate.replace("MAIN_MODULE_PATH", requireModulePath);
 
     res.send(html);
-    log(`Sent page HTML for ${pagePathName}`);
   } else {
     res.sendStatus(404);
   }
