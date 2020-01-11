@@ -1,0 +1,25 @@
+[Unit]
+Description=Awesome Express App
+
+[Service]
+Type=simple
+ExecStart=
+WorkingDirectory=
+EnvironmentFile=
+
+User=
+Group=
+
+# Allow many incoming connections
+LimitNOFILE=infinity
+
+# Allow core dumps for debugging
+LimitCORE=infinity
+
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
