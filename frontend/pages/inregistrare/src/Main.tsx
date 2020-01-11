@@ -1,6 +1,4 @@
-import {PageRendering} from "../../../shared/src/PageRendering";
 import {RegistrationPage} from "./RegistrationPage";
-
-// path name: inregistrare
+import {PageRendering} from "../../../shared/src/PageRendering";
 
 PageRendering.render(RegistrationPage);

@@ -1,7 +1,6 @@
 {
   "extends": "../tsconfig-base.json",
-  "references": [{"path": "../../shared"}],
-  "include": ["src", "../../shared/src"],
+  "include": ["src", "../../shared/src" /* shared between frontend and backend */],
   "compilerOptions": {
     "outDir": "build"
   }

@@ -1,8 +1,8 @@
-import assert from "assert";
+import * as assert from "assert";
 import debug from "debug";
-import express from "express";
-import fs from "fs";
-import path from "path";
+import * as express from "express";
+import * as fs from "fs";
+import * as path from "path";
 import {handleActionRequest} from "./Backend";
 import {assertEnvVars} from "./Utils";
 

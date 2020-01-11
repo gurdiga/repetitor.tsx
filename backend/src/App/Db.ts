@@ -1,5 +1,5 @@
-import mysql from "mysql";
-import debug from "debug";
+import * as mysql from "mysql";
+import * as debug from "debug";
 import {assertEnvVars} from "./Utils";
 
 interface DataRow {

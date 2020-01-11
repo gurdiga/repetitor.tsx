@@ -1,4 +1,5 @@
 import * as React from "react";
+import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
 import {ValidatedValue, ValidationRules} from "../../../../shared/src/Validation";
 import {postAction, ResponseState, ServerResponse} from "../../../shared/src/ActionHandling";
 import {Form} from "../../../shared/src/Components/Form";
@@ -6,7 +7,6 @@ import {PasswordField} from "../../../shared/src/Components/FormFields/PasswordF
 import {TextField} from "../../../shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "../../../shared/src/Components/SubmitButton";
 import {PageLayout} from "../../../shared/src/PageLayout";
-import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
 
 export const RegistrationPage = () => {
   const [fullName, validateFullName] = React.useState(initialFieldValue);
