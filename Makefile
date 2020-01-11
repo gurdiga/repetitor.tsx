@@ -59,7 +59,7 @@ outdated:
 			npm outdated; \
 		done
 
-install: pre-install node_modules frontend/node_modules backend/node_modules
+install: ~/.nvm $(NODE_BINARY_PATH) node_modules frontend/node_modules backend/node_modules
 
 node_modules: package.json
 backend/node_modules: backend/package.json
@@ -72,10 +72,9 @@ node_modules backend/node_modules frontend/node_modules:
 clean:
 	rm -rf shared/build backend/build frontend/pages/*/build frontend/shared/build dist/*
 
-pre-install: node
 
 NODE_BINARY_PATH=$(shell echo "~/.nvm/versions/node/`cat .nvmrc`/bin/node")
-node: ~/.nvm $(NODE_BINARY_PATH)
+$(NODE_BINARY_PATH):
 	source ~/.nvm/nvm.sh && \
 	nvm install
 
@@ -114,3 +113,5 @@ $(ARCHIVE):
 		--format tgz \
 		--output=$(ARCHIVE) \
 		$(TAG)
+
+pre-commit: build
