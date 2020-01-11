@@ -83,7 +83,7 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   }
 }
 
-export function sendSecurityTxt(req: HttpRequest, res: HttpResponse): void {
+export function sendSecurityTxt(_req: HttpRequest, res: HttpResponse): void {
   res.sendFile(path.normalize(`${__dirname}/../../../security.txt`));
 }
 
