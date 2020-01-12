@@ -2,4 +2,3 @@ build/
 node_modules/
 backend/db/migrations/*.sql.migrated
 .env.test
-dist/

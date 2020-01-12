@@ -3,12 +3,9 @@ Description=Awesome Express App
 
 [Service]
 Type=simple
-ExecStart=
-WorkingDirectory=
-EnvironmentFile=
-
-User=
-Group=
+Environment=HOME=/root
+WorkingDirectory=/var/www/repetitor
+ExecStart=/usr/bin/make start
 
 # Allow many incoming connections
 LimitNOFILE=infinity

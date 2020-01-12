@@ -1,26 +1,28 @@
 .ONESHELL:
+SHELL=bash
 
 default: test
 
 test: backend-test frontend-test
 
-backend-test: install
+backend-test: node_modules
 	@cd backend && make test
 
-frontend-test: install
+frontend-test: node_modules
 	@cd frontend && make test
 
 c: build
 .PHONY: build
-build: install
-	tsc --build -v
+build: node_modules
+	~/.nvm/nvm-exec node_modules/.bin/tsc --build -v
 
-watch: install
-	tsc --build -v -w
+watch: node_modules
+	~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w
 
-start: install
+start: build
 	@set -e
-	nodemon \
+	source .env
+	~/.nvm/nvm-exec node_modules/.bin/nodemon \
 		--watch backend/src \
 		--watch shared/src \
 		--ext ts \
@@ -39,10 +41,10 @@ open:
 update:
 	@set -e
 	npm outdated \
-		| tail -n +2 \
-		| cut -f1 -d' ' \
-		| xargs -I{} npm install {}@latest \
-		| ifne -n 'exit 1'
+	| tail -n +2 \
+	| cut -f1 -d' ' \
+	| xargs -I{} ~/.nvm/nvm-exec npm install {}@latest \
+	| ifne -n 'exit 1'
 	make build
 	git add package.json package-lock.json
 	git commit -am 'NPM packages update'
@@ -56,62 +58,46 @@ outdated:
 	| while read dir; do \
 			echo "Checking for outdated packages in $$dir">>/dev/stderr; \
 			cd $$dir; \
-			npm outdated; \
+			~/.nvm/nvm-exec npm outdated; \
 		done
 
-install: ~/.nvm $(NODE_BINARY_PATH) node_modules frontend/node_modules backend/node_modules
-
-node_modules: package.json
+node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules backend/node_modules
 backend/node_modules: backend/package.json
 frontend/node_modules: frontend/package.json
 node_modules backend/node_modules frontend/node_modules:
-	@set -e
-	( cd `dirname $@`; npm install )
+	@set -ex
+	( cd $(@D) && ~/.nvm/nvm-exec npm install )
 	touch $@
 
 clean:
-	rm -rf shared/build backend/build frontend/pages/*/build frontend/shared/build dist/*
+	rm -rf shared/build backend/build frontend/pages/*/build frontend/shared/build
 
+uninstall: clean
+	rm -rf {.,backend,frontend}/node_modules
 
 NODE_BINARY_PATH=$(shell echo "~/.nvm/versions/node/`cat .nvmrc`/bin/node")
 $(NODE_BINARY_PATH):
-	source ~/.nvm/nvm.sh && \
-	nvm install
+	~/.nvm/nvm-exec nvm install
 
 ~/.nvm:
 	@echo "Install nvm from here: https://github.com/nvm-sh/nvm"
+	exit 1
 
 service:
-	@set -e
-	function throw { echo "$${1:-throwing with no message?}\n"; return 1; }
-	START_COMMAND="make start"
-	test -d /etc/systemd/user/ 			|| throw "/etc/systemd/user/ does not exist"
-	test -f backend/systemd.service || throw "backend/systemd.service does not exist"
-	test -f .env.production 				|| throw ".env.production does not exist"
-	test -n "$$PWD" 								|| throw "PWD env var is not set"
-	test -n "$$START_COMMAND" 			|| throw "START_COMMAND env var is not set"
-	test -n "$$SERVICE_USER" 				|| throw "SERVICE_USER env var is not set"
-	test -n "$$SERVICE_GROUP" 			|| throw "SERVICE_GROUP env var is not set"
-	sed \
-		-e "s|^ExecStart=$$|ExecStart=make start|" \
-		-e "s|^WorkingDirectory=$$|WorkingDirectory=$$PWD|" \
-		-e "s|^User=$$|User=$$SERVICE_USER|" \
-		-e "s|^Group=$$|Group=$$SERVICE_GROUP|" \
-		-e "s|^EnvironmentFile=$$|EnvironmentFile=$$PWD/.env.production|" \
-		backend/systemd.service | \
-	sudo tee /etc/systemd/user/express.service
+	@echo -e "Here are the instructions to set up a Systemd service:\n\
+	- tweak backend/repetitor.service\n\
+	- copy it to /etc/systemd/user/\n\
+	- run systemctl enable /etc/systemd/user/repetitor.service\n\
+	- run systemctl start repetitor\n\
+	- run systemctl status repetitor\n\
+	"
 
-ARCHIVE=dist/archive-$(TAG).tgz
-.PHONY: dist
-dist: $(ARCHIVE)
-$(ARCHIVE):
+deploy:
 	@set -e
-	function throw { echo "$${1:-throwing with no message?}\n"; return 1; }
-	test -n "$$TAG" || throw "TAG env var is not set"
-	mkdir -p dist
+	test -n "$$TAG" || { echo "TAG env var is not set\n"; exit 1; }
 	git archive \
 		--format tgz \
-		--output=$(ARCHIVE) \
-		$(TAG)
+		$(TAG) \
+	| ssh root@forum.homeschooling.md "cd /var/www/repetitor && tar fxz -"
 
 pre-commit: build
