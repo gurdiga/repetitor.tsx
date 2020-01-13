@@ -1,9 +1,10 @@
 .ONESHELL:
+SHELL=bash
 
 test:
 	@set -e
 	source ../.env.test
-	DEBUG=app:none mocha \
+	~/.nvm/nvm-exec DEBUG=app:none node_modules/.bin/mocha \
 		--require ts-node/register \
 		--reporter dot \
 		--file src/App/Utils/TestsHelpers.ts \
