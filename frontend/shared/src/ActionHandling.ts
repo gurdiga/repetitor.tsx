@@ -1,4 +1,4 @@
-import {ActionDirectory, ActionName} from "shared/ActionDirectory";
+import {ActionRegistry, ActionName} from "shared/ActionRegistry";
 
 export interface ServerResponse {
   responseState: ResponseState;
@@ -14,8 +14,8 @@ export enum ResponseState {
 
 export async function postAction<A extends ActionName>(
   actionName: A,
-  actionParams: ActionDirectory[A]["Params"]
-): Promise<ActionDirectory[A]["Response"]> {
+  actionParams: ActionRegistry[A]["Params"]
+): Promise<ActionRegistry[A]["Response"]> {
   const response = await fetch("/", {
     method: "POST",
     headers: {

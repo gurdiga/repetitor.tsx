@@ -52,7 +52,7 @@ const PagePathNames = getPagePathNames(PagesRoot);
 
 export function sendPageBundle(pagePathName: string | undefined, res: HttpResponse): void {
   // Home page’s bundle
-  if (!pagePathName) {
+  if (pagePathName === undefined) {
     pagePathName = "home";
   }
 

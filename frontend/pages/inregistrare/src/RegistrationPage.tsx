@@ -5,15 +5,15 @@ import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ActionDirectory} from "shared/ActionDirectory";
+import {ActionRegistry} from "shared/ActionRegistry";
 import {ValidatedValue, ValidationRules} from "shared/Validation";
 
 export const RegistrationPage = () => {
-  const [fullName, validateFullName] = React.useState(initialFieldValue);
-  const [email, validateEmail] = React.useState(initialFieldValue);
-  const [password, validatePassword] = React.useState(initialFieldValue);
+  const [fullName, updateFullName] = React.useState(initialFieldValue);
+  const [email, updateEmail] = React.useState(initialFieldValue);
+  const [password, updatePassword] = React.useState(initialFieldValue);
 
-  const [showValidationMessage, setShowValidationMessage] = React.useState(false);
+  const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
@@ -25,33 +25,33 @@ export const RegistrationPage = () => {
             id="fullName"
             label="Nume deplin"
             value={fullName.text}
-            onValueChange={validateFullName}
+            onValueChange={updateFullName}
             validationRules={validationRules.fullName}
-            showValidationMessage={showValidationMessage}
+            showValidationMessage={shouldShowValidationMessage}
           />,
           <TextField
             id="email"
             label="Adresa de email"
             value={email.text}
             inputType="email"
-            onValueChange={validateEmail}
+            onValueChange={updateEmail}
             validationRules={validationRules.email}
-            showValidationMessage={showValidationMessage}
+            showValidationMessage={shouldShowValidationMessage}
           />,
           <PasswordField
             id="password"
             label="Parola"
             value={password.text}
-            onValueChange={validatePassword}
+            onValueChange={updatePassword}
             validationRules={validationRules.password}
-            showValidationMessage={showValidationMessage}
+            showValidationMessage={shouldShowValidationMessage}
           />,
         ]}
         actionButtons={[
           <SubmitButton
             label="Înregistrează"
             onClick={() => {
-              setShowValidationMessage(true);
+              toggleValidationMessage(true);
               submitForm({fullName, email, password});
             }}
           />,
@@ -100,7 +100,7 @@ const initialFieldValue: ValidatedValue = {
   isValid: false,
 };
 
-type FieldName = keyof ActionDirectory["RegisterUser"]["Params"];
+type FieldName = keyof ActionRegistry["RegisterUser"]["Params"];
 
 const validationRules = ValidationRules["RegisterUser"];
 

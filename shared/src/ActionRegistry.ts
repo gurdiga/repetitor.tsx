@@ -1,6 +1,6 @@
-export type ActionName = keyof ActionDirectory;
+export type ActionName = keyof ActionRegistry;
 
-export interface ActionDirectory {
+export interface ActionRegistry {
   TestAction: TestAction;
   RegisterUser: RegisterUser;
 }

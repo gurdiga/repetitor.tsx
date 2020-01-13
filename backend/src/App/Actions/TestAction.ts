@@ -1,8 +1,8 @@
-import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
+import {ActionRegistry} from "../../../../shared/src/ActionRegistry";
 import {runQuery} from "../Db";
 
-type Params = ActionDirectory["TestAction"]["Params"];
-type Response = ActionDirectory["TestAction"]["Response"];
+type Params = ActionRegistry["TestAction"]["Params"];
+type Response = ActionRegistry["TestAction"]["Response"];
 
 export async function TestAction(_params: Params): Promise<Response> {
   const result = await runQuery({

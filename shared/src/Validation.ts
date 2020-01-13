@@ -1,4 +1,4 @@
-import {ActionName, ActionDirectory} from "shared/ActionDirectory";
+import {ActionName, ActionRegistry} from "shared/ActionRegistry";
 
 type PredicateFn = (value: string) => boolean;
 type ValidationRules = {[message: string]: PredicateFn};
@@ -17,10 +17,10 @@ export const ValidationRules: Record<ActionName, Record<string, ValidationRules>
     password: {
       "Parola lipsește.": (text: string) => text.trim().length == 0,
     },
-  } as Record<keyof ActionDirectory["RegisterUser"]["Params"], ValidationRules>,
+  } as Record<keyof ActionRegistry["RegisterUser"]["Params"], ValidationRules>,
   TestAction: {
     none: {},
-  } as Record<keyof ActionDirectory["TestAction"]["Params"], ValidationRules>,
+  } as Record<keyof ActionRegistry["TestAction"]["Params"], ValidationRules>,
 };
 
 export interface ValidatedValue {

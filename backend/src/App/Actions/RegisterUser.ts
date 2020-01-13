@@ -1,10 +1,10 @@
 import debug from "debug";
-import {ActionDirectory} from "../../../../shared/src/ActionDirectory";
+import {ActionRegistry} from "../../../../shared/src/ActionRegistry";
 import {runQuery} from "../Db";
 import {genRandomString, hashString} from "../Utils/StringUtils";
 
-type Params = ActionDirectory["RegisterUser"]["Params"];
-type Response = ActionDirectory["RegisterUser"]["Response"];
+type Params = ActionRegistry["RegisterUser"]["Params"];
+type Response = ActionRegistry["RegisterUser"]["Response"];
 
 const log = debug("app:RegisterUser");
 
