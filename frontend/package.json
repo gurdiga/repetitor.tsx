@@ -1,15 +1,8 @@
 {
   "name": "repetitor.tsx",
-  "version": "1.0.0",
-  "description": "description",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
   "author": "Vlad GURDIGA <gurdiga@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:gurdiga/repetitor.tsx.git"
-  },
+  "description": "none",
+  "repository": "none",
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^16.9.17",
