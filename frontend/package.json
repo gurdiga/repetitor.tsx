@@ -12,10 +12,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/react": "^16.9.16",
+    "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "csstips": "^1.2.0",
-    "csx": "^10.0.0",
+    "csx": "^10.0.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "requirejs": "^2.3.6",
