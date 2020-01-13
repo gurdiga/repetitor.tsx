@@ -4,7 +4,7 @@ SHELL=bash
 test:
 	@set -e
 	source ../.env.test
-	~/.nvm/nvm-exec DEBUG=app:none node_modules/.bin/mocha \
+	DEBUG=app:none ~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--reporter dot \
 		--file src/App/Utils/TestsHelpers.ts \
