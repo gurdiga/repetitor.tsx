@@ -40,14 +40,23 @@ open:
 
 update:
 	@set -e
-	npm outdated \
-	| tail -n +2 \
-	| cut -f1 -d' ' \
-	| xargs -I{} ~/.nvm/nvm-exec npm install {}@latest \
-	| ifne -n 'exit 1'
-	make build
-	git add package.json package-lock.json
-	git commit -am 'NPM packages update'
+	find . \
+		! -path '*/node_modules/*' \
+		-name package.json \
+	| xargs dirname \
+	| while read dir; do ( \
+		cd $$dir; \
+		~/.nvm/nvm-exec npm outdated \
+		| tail -n +2 \
+		| cut -f1 -d' ' \
+		| xargs -I{} ~/.nvm/nvm-exec npm install {}@latest; \
+	) done
+	make clean build test
+	echo -e "
+		Maybe do this:\n
+		git add package.json package-lock.json
+		git commit -am 'NPM packages update'
+	"
 
 outdated:
 	@set -e
@@ -84,12 +93,13 @@ $(NODE_BINARY_PATH):
 	exit 1
 
 service:
-	@echo -e "Here are the instructions to set up a Systemd service:\n\
-	- tweak backend/repetitor.service\n\
-	- copy it to /etc/systemd/user/\n\
-	- run systemctl enable /etc/systemd/user/repetitor.service\n\
-	- run systemctl start repetitor\n\
-	- run systemctl status repetitor\n\
+	@echo -e "
+		Here are the instructions to set up a Systemd service:\n
+		* tweak backend/repetitor.service
+		* copy it to /etc/systemd/user/
+		* run systemctl enable /etc/systemd/user/repetitor.service
+		* run systemctl start repetitor
+		* run systemctl status repetitor
 	"
 
 deploy:
