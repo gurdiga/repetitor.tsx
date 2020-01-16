@@ -79,7 +79,7 @@ node_modules backend/node_modules frontend/node_modules:
 	touch $@
 
 clean:
-	rm -rf shared/build backend/build frontend/pages/*/build frontend/shared/build
+	tsc --build --clean
 
 uninstall: clean
 	rm -rf {.,backend,frontend}/node_modules
