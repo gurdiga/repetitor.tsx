@@ -1,7 +1,9 @@
 import {expect} from "chai";
 import {shallow, ShallowWrapper} from "enzyme";
 import {Form} from "frontend/shared/Components/Form";
+import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
+import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import {describe, it} from "mocha";
 import * as React from "react";
@@ -25,21 +27,37 @@ describe("<RegistrationPage/>", () => {
   it("renders a form with the appropriate fields", () => {
     const form = wrapper.find(Form);
     const {fields} = form.props();
+    const validationRules = ValidationRules["RegisterUser"];
 
-    assertField<typeof TextField>("numele deplin", fields[0], {
+    assertProps<typeof TextField>("numele deplin", fields[0], {
       label: "Nume deplin",
       autoFocus: true,
-      validationRules: ValidationRules["RegisterUser"].fullName,
+      validationRules: validationRules.fullName,
     });
 
-    assertField<typeof TextField>("adresa de email", fields[1], {
+    assertProps<typeof TextField>("adresa de email", fields[1], {
       label: "Adresa de email",
       inputType: "email",
-      validationRules: ValidationRules["RegisterUser"].email,
+      validationRules: validationRules.email,
+    });
+
+    assertProps<typeof PasswordField>("parola", fields[2], {
+      label: "Parola",
+      validationRules: validationRules.password,
     });
   });
 
-  function assertField<C extends typeof TextField>(
+  it("renders the appropriate action buttons", () => {
+    const form = wrapper.find(Form);
+    const {actionButtons} = form.props();
+    const submitButton = actionButtons[0];
+
+    assertProps<typeof SubmitButton>("parola", submitButton, {
+      label: "Înregistrează",
+    });
+  });
+
+  function assertProps<C extends (...props: any[]) => JSX.Element>(
     fieldDescription: string,
     field: JSX.Element,
     props: Partial<React.ComponentProps<C>>
