@@ -25,5 +25,8 @@
     "ts-node": "^8.6.2",
     "tsconfig-paths": "^3.9.0",
     "typestyle": "^2.0.4"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.2"
   }
 }
