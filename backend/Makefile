@@ -7,7 +7,7 @@ test:
 	DEBUG=app:none ~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--reporter dot \
-		--file src/App/Utils/TestsHelpers.ts \
+		--file src/App/Utils/TestHelpers.ts \
 		src/**/*.test.ts
 
 CLI=build/backend/src/cli.js

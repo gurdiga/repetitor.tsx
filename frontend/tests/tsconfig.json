@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig-base.json",
+  "include": [
+    "src",
+    "../../shared/src" /* shared between frontend and backend */,
+    "../shared/src" /* shared between pages */,
+    "../pages/home/src",
+    "../pages/inregistrare/src"
+  ],
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["../pages/inregistrare/src/*", "../pages/home/src/*"],
+      "shared/*": ["../../shared/src/*"],
+      "frontend/shared/*": ["../shared/src/*"]
+    }
+  }
+}
