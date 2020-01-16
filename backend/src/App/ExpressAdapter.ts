@@ -12,7 +12,7 @@ const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 
 type HttpRequest = Pick<express.Request, "path" | "body">;
-type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send">;
+type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
   const {actionName, actionParams = {}} = req.body;
@@ -84,7 +84,10 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
 }
 
 export function sendSecurityTxt(_req: HttpRequest, res: HttpResponse): void {
-  res.sendFile(path.normalize(`${__dirname}/../../../security.txt`));
+  res.set({"Content-Type": "text/plain"}).send(
+    `# If you found any security issue, please let me know.
+Contact: mailto:gurdiga@gmail.com`
+  );
 }
 
 function getPagePathNames(pagesRoot: string): string[] {
