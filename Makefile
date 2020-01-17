@@ -1,6 +1,8 @@
 .ONESHELL:
 SHELL=bash
 
+include .env
+
 default: test
 
 test: backend-test frontend-test
