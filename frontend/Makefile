@@ -4,7 +4,7 @@ SHELL=bash
 default: test
 
 test:
-	@DEBUG=* TS_NODE_PROJECT=tests/tsconfig.json ~/.nvm/nvm-exec node_modules/.bin/mocha \
+	@TS_NODE_PROJECT=tests/tsconfig.json ~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
 		--reporter dot \
