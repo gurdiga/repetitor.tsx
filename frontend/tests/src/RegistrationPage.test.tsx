@@ -1,5 +1,6 @@
 import {expect} from "chai";
 import {shallow, ShallowWrapper} from "enzyme";
+import * as ActionHandling from "frontend/shared/ActionHandling";
 import {Form} from "frontend/shared/Components/Form";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
@@ -9,6 +10,7 @@ import {describe, it} from "mocha";
 import * as React from "react";
 import {RegistrationPage} from "RegistrationPage";
 import {ValidationRules} from "shared/Validation";
+import {stub} from "sinon";
 
 describe("<RegistrationPage/>", () => {
   let wrapper: ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
@@ -54,6 +56,22 @@ describe("<RegistrationPage/>", () => {
 
     assertProps<typeof SubmitButton>("parola", submitButton, {
       label: "Înregistrează",
+    });
+  });
+
+  context("behavior", () => {
+    const postActionStub = stub(ActionHandling, "postAction");
+
+    afterEach(() => {
+      postActionStub.restore();
+    });
+
+    it("submits the field values to the backend", () => {
+      const form = wrapper.find(Form);
+      const submitButton = form.props().actionButtons[0];
+
+      // TODO: submitButton click somehow and then
+      // assert ActionHandling.postAction was called with the appropriate args.
     });
   });
 
