@@ -2,11 +2,11 @@ import {FormCss} from "frontend/shared/Components/Form.css";
 import * as React from "react";
 
 interface Props {
-  fields: JSX.Element[];
-  actionButtons: JSX.Element[];
+  fields: React.ReactElement[];
+  actionButtons: React.ReactElement[];
 }
 
-export const Form = (props: Props) => (
+export const Form: React.FunctionComponent<Props> = props => (
   <form onSubmit={e => e.preventDefault()} className={FormCss.FormContainer} noValidate>
     <ul className={FormCss.FieldListContainer}>
       {props.fields.map((field, i) => (

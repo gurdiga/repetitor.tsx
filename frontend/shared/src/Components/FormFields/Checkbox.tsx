@@ -1,13 +1,13 @@
+import {CheckboxCss} from "frontend/shared/Components/FormFields/Checkbox.css";
 import * as React from "react";
 import {classes} from "typestyle";
-import {CheckboxCss} from "frontend/shared/Components/FormFields/Checkbox.css";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
 }
 
-export const Checkbox = (props: Props) => {
+export const Checkbox: React.FunctionComponent<Props> = props => {
   const {id, label, className, ...rest} = props;
 
   return (

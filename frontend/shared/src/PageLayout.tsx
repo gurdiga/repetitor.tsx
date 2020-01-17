@@ -12,7 +12,7 @@ interface Props {
   footerContent?: React.ReactNode;
 }
 
-export const PageLayout = (props: Props) => {
+export const PageLayout: React.FunctionComponent<Props> = props => {
   React.useEffect(() => {
     document.title = props.title;
   });

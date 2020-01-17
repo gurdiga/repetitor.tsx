@@ -5,7 +5,7 @@ interface Props {
   text: string;
 }
 
-export const ValidationMessage = (props: Props) => {
+export const ValidationMessage: React.FunctionComponent<Props> = props => {
   const {text} = props;
 
   if (!text) {

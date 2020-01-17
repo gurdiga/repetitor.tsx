@@ -8,7 +8,7 @@ import {validateWithRules} from "shared/Validation";
 
 interface Props extends FormField.CommonProps {}
 
-export const PasswordField = (props: Props) => {
+export const PasswordField: React.FunctionComponent<Props> = props => {
   const {id, label, value: initialValue, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
 
   const [value, setValue] = React.useState(initialValue);

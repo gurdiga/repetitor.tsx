@@ -4,9 +4,10 @@ import {classes} from "typestyle";
 
 interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   label: string;
+  onClick: () => void;
 }
 
-export const SubmitButton = (props: Props) => {
+export const SubmitButton: React.FunctionComponent<Props> = props => {
   const {label, className, ...rest} = props;
 
   return (

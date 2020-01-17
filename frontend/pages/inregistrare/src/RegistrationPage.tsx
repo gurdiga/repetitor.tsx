@@ -8,7 +8,7 @@ import * as React from "react";
 import {ActionRegistry} from "shared/ActionRegistry";
 import {ValidatedValue, ValidationRules} from "shared/Validation";
 
-export const RegistrationPage = () => {
+export const RegistrationPage: React.FunctionComponent<{}> = () => {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
   const [email, updateEmail] = React.useState(initialFieldValue);
   const [password, updatePassword] = React.useState(initialFieldValue);
