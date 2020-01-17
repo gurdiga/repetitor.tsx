@@ -11,6 +11,7 @@ import * as React from "react";
 import {RegistrationPage} from "RegistrationPage";
 import {ValidationRules} from "shared/Validation";
 import {stub} from "sinon";
+import {Stub} from "TestHelpers";
 
 describe("<RegistrationPage/>", () => {
   let wrapper: ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
@@ -50,9 +51,7 @@ describe("<RegistrationPage/>", () => {
   });
 
   it("renders the appropriate action buttons", () => {
-    const form = wrapper.find(Form);
-    const {actionButtons} = form.props();
-    const submitButton = actionButtons[0];
+    const submitButton = getSubmitButton(wrapper);
 
     assertProps<typeof SubmitButton>("parola", submitButton, {
       label: "Înregistrează",
@@ -60,7 +59,12 @@ describe("<RegistrationPage/>", () => {
   });
 
   context("behavior", () => {
-    const postActionStub = stub(ActionHandling, "postAction");
+    let postActionStub: Stub<typeof ActionHandling.postAction>;
+
+    beforeEach(() => {
+      // TODO: implement the unhappy path test too.
+      postActionStub = stub(ActionHandling, "postAction").resolves({success: true});
+    });
 
     afterEach(() => {
       postActionStub.restore();
@@ -68,22 +72,45 @@ describe("<RegistrationPage/>", () => {
 
     it("submits the field values to the backend", () => {
       const form = wrapper.find(Form);
-      const submitButton = form.props().actionButtons[0];
+      const {fields} = form.props();
 
-      // TODO: submitButton click somehow and then
-      // assert ActionHandling.postAction was called with the appropriate args.
+      (fields[0] as Comp<typeof TextField>).props.onValueChange({
+        text: "full name",
+        isValid: true,
+      });
+
+      (fields[1] as Comp<typeof TextField>).props.onValueChange({
+        text: "email@example.com",
+        isValid: true,
+      });
+
+      (fields[2] as Comp<typeof PasswordField>).props.onValueChange({
+        text: "password",
+        isValid: true,
+      });
+
+      getSubmitButton(wrapper).props.onClick();
+      expect(ActionHandling.postAction).to.have.been.called;
     });
   });
 
-  function assertProps<C extends (...props: any[]) => JSX.Element>(
-    fieldDescription: string,
+  type Comp<T extends React.FunctionComponent<any>> = React.ReactElement<React.ComponentProps<T>>;
+
+  function getSubmitButton(
+    wrapper: ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>
+  ): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
+    return wrapper.find(Form).props().actionButtons[0];
+  }
+
+  function assertProps<C extends React.FunctionComponent<any>>(
+    subject: string,
     field: JSX.Element,
     props: Partial<React.ComponentProps<C>>
   ): void {
     for (const propName in props) {
       expect(
         field.props[propName],
-        `The field “${fieldDescription}” is expected to have prop “${propName}” of “${props[propName]}”`
+        `The field “${subject}” is expected to have prop “${propName}” of “${props[propName]}”`
       ).to.equal(props[propName]);
     }
   }

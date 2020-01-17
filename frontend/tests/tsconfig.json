@@ -12,7 +12,7 @@
     "outDir": "build",
     "baseUrl": ".",
     "paths": {
-      "*": ["../pages/inregistrare/src/*", "../pages/home/src/*"],
+      "*": ["src/*", "../pages/inregistrare/src/*", "../pages/home/src/*"],
       "shared/*": ["../../shared/src/*"],
       "frontend/shared/*": ["../shared/src/*"]
     }
