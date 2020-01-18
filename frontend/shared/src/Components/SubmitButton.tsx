@@ -4,7 +4,7 @@ import {classes} from "typestyle";
 
 interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   label: string;
-  onClick: () => void;
+  onClick: () => Promise<void>;
 }
 
 export function SubmitButton(props: Props) {

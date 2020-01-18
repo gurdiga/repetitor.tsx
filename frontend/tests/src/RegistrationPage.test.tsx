@@ -14,7 +14,9 @@ import {stub} from "sinon";
 import {Stub} from "TestHelpers";
 
 describe("<RegistrationPage/>", () => {
-  let wrapper: ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
+  type Wrapper = ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
+
+  let wrapper: Wrapper;
 
   before(() => {
     wrapper = shallow(<RegistrationPage />);
@@ -23,7 +25,6 @@ describe("<RegistrationPage/>", () => {
   it("renders the page layout with the appropriate title", () => {
     const layout = wrapper.find(PageLayout);
 
-    expect(layout).to.exist;
     expect(layout.prop("title")).to.equal("Înregistrare tutore");
   });
 
@@ -58,7 +59,7 @@ describe("<RegistrationPage/>", () => {
     });
   });
 
-  context("behavior", () => {
+  context("form submission", () => {
     let postActionStub: Stub<typeof ActionHandling.postAction>;
 
     beforeEach(() => {
@@ -70,48 +71,123 @@ describe("<RegistrationPage/>", () => {
       postActionStub.restore();
     });
 
-    it("submits the field values to the backend", () => {
-      const form = wrapper.find(Form);
-      const {fields} = form.props();
+    context("when fields are properly filled in", () => {
+      beforeEach(async () => {
+        const form = wrapper.find(Form);
+        const {fields} = form.props();
 
-      (fields[0] as Comp<typeof TextField>).props.onValueChange({
-        text: "full name",
-        isValid: true,
+        const fullNameField: Comp<typeof TextField> = fields[0];
+        const emailField: Comp<typeof TextField> = fields[1];
+        const passwordField: Comp<typeof PasswordField> = fields[2];
+
+        fullNameField.props.onValueChange({
+          text: "full name",
+          isValid: true,
+        });
+
+        emailField.props.onValueChange({
+          text: "email@example.com",
+          isValid: true,
+        });
+
+        passwordField.props.onValueChange({
+          text: "password",
+          isValid: true,
+        });
+
+        await getSubmitButton(wrapper).props.onClick();
       });
 
-      (fields[1] as Comp<typeof TextField>).props.onValueChange({
-        text: "email@example.com",
-        isValid: true,
+      it("submits the field values to the backend", () => {
+        expect(ActionHandling.postAction).to.have.been.called;
+        expect(wrapper.find(".server-response-received-success"), "success message").to.exist;
+      });
+    });
+
+    context("when some of the fields aren’t properly filled in", () => {
+      beforeEach(async () => {
+        const form = wrapper.find(Form);
+        const {fields} = form.props();
+
+        const fullNameField: Comp<typeof TextField> = fields[0];
+        const emailField: Comp<typeof TextField> = fields[1];
+        const passwordField: Comp<typeof PasswordField> = fields[2];
+
+        fullNameField.props.onValueChange({
+          text: "full name",
+          isValid: true,
+        });
+
+        emailField.props.onValueChange({
+          text: "email@example.com",
+          isValid: true,
+        });
+
+        passwordField.props.onValueChange({
+          text: "", // <---- Do not fill in the password
+          isValid: false,
+        });
+
+        await getSubmitButton(wrapper).props.onClick();
       });
 
-      (fields[2] as Comp<typeof PasswordField>).props.onValueChange({
-        text: "password",
-        isValid: true,
+      it("does not submit the form", () => {
+        expect(ActionHandling.postAction).not.to.have.been.called;
+      });
+    });
+
+    context("when the backedn responds with an error", () => {
+      beforeEach(async () => {
+        const form = wrapper.find(Form);
+        const {fields} = form.props();
+
+        const fullNameField: Comp<typeof TextField> = fields[0];
+        const emailField: Comp<typeof TextField> = fields[1];
+        const passwordField: Comp<typeof PasswordField> = fields[2];
+
+        fullNameField.props.onValueChange({
+          text: "full name",
+          isValid: true,
+        });
+
+        emailField.props.onValueChange({
+          text: "email@example.com",
+          isValid: true,
+        });
+
+        passwordField.props.onValueChange({
+          text: "password",
+          isValid: true,
+        });
+
+        postActionStub.restore();
+        postActionStub = stub(ActionHandling, "postAction").resolves({error: "PASSWORD_REQUIRED"});
+        await getSubmitButton(wrapper).props.onClick();
       });
 
-      getSubmitButton(wrapper).props.onClick();
-      expect(ActionHandling.postAction).to.have.been.called;
+      it("submits the form and displays the error message", () => {
+        expect(ActionHandling.postAction).to.have.been.called;
+        expect(wrapper.find(".server-response-received-error")).to.exist;
+      });
     });
   });
 
-  type Comp<T extends React.FunctionComponent<any>> = React.ReactElement<React.ComponentProps<T>>;
+  type Comp<C extends React.FunctionComponent<any>> = React.ReactElement<React.ComponentProps<C>>;
 
-  function getSubmitButton(
-    wrapper: ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>
-  ): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
+  function getSubmitButton(wrapper: Wrapper): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
     return wrapper.find(Form).props().actionButtons[0];
   }
 
   function assertProps<C extends React.FunctionComponent<any>>(
     subject: string,
     field: JSX.Element,
-    props: Partial<React.ComponentProps<C>>
+    expectedProps: Partial<React.ComponentProps<C>>
   ): void {
-    for (const propName in props) {
+    for (const propName in expectedProps) {
       expect(
         field.props[propName],
-        `The field “${subject}” is expected to have prop “${propName}” of “${props[propName]}”`
-      ).to.equal(props[propName]);
+        `“${subject}” is expected to have prop “${propName}” of “${expectedProps[propName]}”`
+      ).to.equal(expectedProps[propName]);
     }
   }
 });

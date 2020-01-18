@@ -1,4 +1,4 @@
-import {ActionRegistry, ActionName} from "shared/ActionRegistry";
+import {ActionName, ActionRegistry} from "shared/ActionRegistry";
 
 export interface ServerResponse {
   responseState: ResponseState;
@@ -7,7 +7,7 @@ export interface ServerResponse {
 }
 
 export enum ResponseState {
-  NotAskedYet = "not-asked-yet",
+  NotYetSent = "not-yet-sent",
   ReceivedSuccess = "received-success",
   ReceivedError = "received-error",
 }

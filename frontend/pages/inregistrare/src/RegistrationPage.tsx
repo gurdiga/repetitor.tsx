@@ -50,9 +50,9 @@ export function RegistrationPage() {
         actionButtons={[
           <SubmitButton
             label="Înregistrează"
-            onClick={() => {
+            onClick={async () => {
               toggleValidationMessage(true);
-              submitForm({fullName, email, password});
+              await submitForm({fullName, email, password});
             }}
           />,
         ]}
@@ -90,7 +90,7 @@ export function RegistrationPage() {
 }
 
 const placeholderServerResponse: ServerResponse = {
-  responseState: ResponseState.NotAskedYet,
+  responseState: ResponseState.NotYetSent,
   responseText: "",
   shouldShow: false,
 };

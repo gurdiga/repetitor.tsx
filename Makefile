@@ -3,15 +3,22 @@ SHELL=bash
 
 include .env
 
-default: test
+default: test-frontend
 
-test: backend-test frontend-test
+test: test-backend test-frontend
 
-backend-test: node_modules
+test-backend: node_modules
 	@cd backend && make test
 
-frontend-test: node_modules
-	@cd frontend && make test
+test-frontend: node_modules
+	@TS_NODE_PROJECT=frontend/tests/tsconfig.json \
+	TS_NODE_TRANSPILE_ONLY=true \
+	~/.nvm/nvm-exec frontend/node_modules/.bin/mocha \
+		--require ts-node/register \
+		--require tsconfig-paths/register \
+		--reporter dot \
+		--file frontend/tests/src/TestHelpers.ts \
+		frontend/tests/**/*.test.ts? \
 
 c: build
 .PHONY: build
