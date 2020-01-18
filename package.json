@@ -5,8 +5,8 @@
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.2",
-    "ts-node": "^8.6.1",
-    "typescript": "^3.7.4"
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   },
   "repository": {
     "type": "git",

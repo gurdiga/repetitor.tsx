@@ -15,7 +15,7 @@
     "@types/mocha": "^5.2.7",
     "@types/morgan": "^1.7.37",
     "@types/mysql": "^2.15.8",
-    "@types/node": "^13.1.6",
+    "@types/node": "^13.1.8",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "compression": "^1.7.4",
