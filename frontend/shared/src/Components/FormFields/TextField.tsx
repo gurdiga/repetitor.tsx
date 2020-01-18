@@ -12,7 +12,7 @@ interface Props extends FormField.CommonProps {
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types
 type InputType = "text" | "email";
 
-export const TextField: React.FunctionComponent<Props> = props => {
+export function TextField(props: Props) {
   const {validationRules, onValueChange, id, autoFocus, inputType, label, showValidationMessage, value} = props;
 
   const initialValidationMessage = validateWithRules(value, validationRules).validationMessage;
@@ -33,4 +33,4 @@ export const TextField: React.FunctionComponent<Props> = props => {
       {showValidationMessage && <ValidationMessage text={validationMessage} />}
     </>
   );
-};
+}

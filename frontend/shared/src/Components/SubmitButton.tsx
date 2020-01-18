@@ -7,7 +7,7 @@ interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLB
   onClick: () => void;
 }
 
-export const SubmitButton: React.FunctionComponent<Props> = props => {
+export function SubmitButton(props: Props) {
   const {label, className, ...rest} = props;
 
   return (
@@ -15,4 +15,4 @@ export const SubmitButton: React.FunctionComponent<Props> = props => {
       {props.label}
     </button>
   );
-};
+}

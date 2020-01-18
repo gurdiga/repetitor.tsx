@@ -8,7 +8,7 @@ import {validateWithRules} from "shared/Validation";
 
 interface Props extends FormField.CommonProps {}
 
-export const PasswordField: React.FunctionComponent<Props> = props => {
+export function PasswordField(props: Props) {
   const {id, label, value: initialValue, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
 
   const [value, setValue] = React.useState(initialValue);
@@ -73,7 +73,7 @@ export const PasswordField: React.FunctionComponent<Props> = props => {
       {showValidationMessage && <ValidationMessage text={validationMessage} />}
     </>
   );
-};
+}
 
 // https://thenounproject.com/term/eye/140036/
 const eyeOpenedIcon = (

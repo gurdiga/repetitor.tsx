@@ -7,7 +7,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-export const Checkbox: React.FunctionComponent<Props> = props => {
+export function Checkbox(props: Props) {
   const {id, label, className, ...rest} = props;
 
   return (
@@ -16,4 +16,4 @@ export const Checkbox: React.FunctionComponent<Props> = props => {
       <label htmlFor={id}>{label}</label>
     </div>
   );
-};
+}

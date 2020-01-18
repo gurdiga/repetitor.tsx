@@ -8,7 +8,7 @@ import * as React from "react";
 import {ActionRegistry} from "shared/ActionRegistry";
 import {ValidatedValue, ValidationRules} from "shared/Validation";
 
-export const RegistrationPage: React.FunctionComponent<{}> = () => {
+export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
   const [email, updateEmail] = React.useState(initialFieldValue);
   const [password, updatePassword] = React.useState(initialFieldValue);
@@ -87,7 +87,7 @@ export const RegistrationPage: React.FunctionComponent<{}> = () => {
       shouldShow: true,
     });
   }
-};
+}
 
 const placeholderServerResponse: ServerResponse = {
   responseState: ResponseState.NotAskedYet,

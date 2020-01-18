@@ -12,7 +12,7 @@ interface Props {
   footerContent?: React.ReactNode;
 }
 
-export const PageLayout: React.FunctionComponent<Props> = props => {
+export function PageLayout(props: Props) {
   React.useEffect(() => {
     document.title = props.title;
   });
@@ -29,7 +29,7 @@ export const PageLayout: React.FunctionComponent<Props> = props => {
       <footer className={PageLayoutCss.FooterWrapper}>{props.footerContent || <Footer />}</footer>
     </div>
   );
-};
+}
 
 const Footer = () => {
   return <pre>Footer</pre>;
