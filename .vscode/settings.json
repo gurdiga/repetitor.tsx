@@ -12,8 +12,5 @@
   },
   "search.exclude": {
     "**/node_modules/**/*": true
-  },
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
   }
 }
