@@ -1,9 +1,13 @@
 {
   "extends": "../tsconfig-base.json",
-  "include": ["src"],
+  "include": ["src", "../shared/src"],
   "references": [{"path": "../shared"}],
   "compilerOptions": {
     "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "shared/*": ["../shared/src/*"]
+    },
     "target": "es2018",
     "lib": ["dom", "es2018"]
   }
