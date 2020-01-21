@@ -17,7 +17,7 @@ describe("registerUser", () => {
       it("throws with the appropriate error message", async () => {
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
 
-        await expect(RegisterUser(params)).to.eventually.deep.equal({error: "PASSWORD_REQUIRED"});
+        await expect(RegisterUser(params)).to.eventually.deep.equal({passwordError: true, error: "REQUIRED"});
       });
     });
   });

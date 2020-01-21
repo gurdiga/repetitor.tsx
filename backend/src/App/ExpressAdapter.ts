@@ -15,7 +15,7 @@ type HttpRequest = Pick<express.Request, "path" | "body">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
-  const {actionName, actionParams = {}} = req.body;
+  const {actionName, actionParams} = req.body;
 
   try {
     const result = await handleActionRequest(actionName, actionParams);

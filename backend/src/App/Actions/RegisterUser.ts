@@ -14,9 +14,9 @@ export async function RegisterUser(params: Params): Promise<Response> {
   if (!email) {
     return {emailError: true, error: "REQUIRED"};
   } else if (!password) {
-    return {error: "PASSWORD_REQUIRED"};
+    return {passwordError: true, error: "REQUIRED"};
   } else if (!fullName) {
-    return {error: "FULL_NAME_REQUIRED"};
+    return {fullNameError: true, error: "REQUIRED"};
   } else {
     const {salt, passwordHash} = getStorablePassword(password);
 
@@ -36,7 +36,7 @@ export async function RegisterUser(params: Params): Promise<Response> {
           return {emailError: true, error: "TAKEN"};
         default:
           log({error});
-          return {error: "DB_ERROR"};
+          return {dbError: true, error: "ERROR"};
       }
     }
   }

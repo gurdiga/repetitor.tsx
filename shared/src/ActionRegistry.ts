@@ -22,15 +22,27 @@ interface RegisterUser extends Action {
     fullName: string;
   };
 
-  Response:
-    | {
-        success: true;
-      }
-    | {
-        emailError: true;
-        error: "REQUIRED" | "TAKEN" | "INVALID";
-      }
-    | {
-        error: "PASSWORD_REQUIRED" | "FULL_NAME_REQUIRED" | "DB_ERROR";
-      };
+  Response: SuccessResponse | EmailErrorResponse | FullNameErrorResponse | PasswordErrorResponse | DbErrorResponse;
 }
+
+type SuccessResponse = {success: true};
+
+type EmailErrorResponse = {
+  emailError: true;
+  error: "REQUIRED" | "TAKEN" | "INVALID";
+};
+
+type FullNameErrorResponse = {
+  fullNameError: true;
+  error: "REQUIRED";
+};
+
+type PasswordErrorResponse = {
+  passwordError: true;
+  error: "REQUIRED";
+};
+
+type DbErrorResponse = {
+  dbError: true;
+  error: "ERROR";
+};

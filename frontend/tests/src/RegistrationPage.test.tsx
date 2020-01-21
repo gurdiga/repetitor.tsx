@@ -161,7 +161,7 @@ describe("<RegistrationPage/>", () => {
         });
 
         postActionStub.restore();
-        postActionStub = stub(ActionHandling, "postAction").resolves({error: "PASSWORD_REQUIRED"});
+        postActionStub = stub(ActionHandling, "postAction").resolves({passwordError: true, error: "REQUIRED"});
         await getSubmitButton(wrapper).props.onClick();
       });
 

@@ -77,11 +77,15 @@ export function RegistrationPage() {
     });
 
     const [responseState, responseText] =
-      "error" in response
-        ? "emailError" in response
-          ? [ResponseState.ReceivedSuccess, emailErrorMessages[response.error]]
-          : [ResponseState.ReceivedError, errorMessages[response.error]]
-        : [ResponseState.ReceivedSuccess, "Înregistrat."];
+      "emailError" in response
+        ? [ResponseState.ReceivedError, emailErrorMessages[response.error]]
+        : "fullNameError" in response
+        ? [ResponseState.ReceivedError, fullNameErrorMessages[response.error]]
+        : "passwordError" in response
+        ? [ResponseState.ReceivedError, passwordErrorMessages[response.error]]
+        : "dbError" in response
+        ? [ResponseState.ReceivedError, dbErrorMessages[response.error]]
+        : [ResponseState.ReceivedSuccess, "Înregistrat."]; // success
 
     setServerResponse({
       responseState,
@@ -106,14 +110,20 @@ type FieldName = keyof ActionRegistry["RegisterUser"]["Params"];
 
 const validationRules = ValidationRules["RegisterUser"];
 
-const errorMessages = {
-  PASSWORD_REQUIRED: "Prezența parolei este obligatorie",
-  FULL_NAME_REQUIRED: "Prezența numelui este obligatorie",
-  DB_ERROR: "Eroare de bază de date",
-};
-
 const emailErrorMessages = {
   REQUIRED: "Adresa de email lipsește",
   INVALID: "Adresa de email este invalidă",
   TAKEN: "Existe deja un cont cu această adresă de email",
+};
+
+const fullNameErrorMessages = {
+  REQUIRED: "Prezența numelui este obligatorie",
+};
+
+const passwordErrorMessages = {
+  REQUIRED: "Prezența numelui este obligatorie",
+};
+
+const dbErrorMessages = {
+  ERROR: "Prezența numelui este obligatorie",
 };
