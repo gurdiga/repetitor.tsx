@@ -27,6 +27,10 @@ interface RegisterUser extends Action {
         success: true;
       }
     | {
-        error: "EMAIL_REQUIRED" | "PASSWORD_REQUIRED" | "FULL_NAME_REQUIRED" | "EMAIL_TAKEN" | "DB_ERROR";
+        emailError: true;
+        error: "REQUIRED" | "TAKEN" | "INVALID";
+      }
+    | {
+        error: "PASSWORD_REQUIRED" | "FULL_NAME_REQUIRED" | "DB_ERROR";
       };
 }

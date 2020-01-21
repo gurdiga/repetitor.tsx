@@ -11,7 +11,7 @@ describe("registerUser", () => {
       it("throws with the appropriate error message", async () => {
         const params = {email: "", password: "secret", fullName: "John DOE"};
 
-        await expect(RegisterUser(params)).to.eventually.deep.equal({error: "EMAIL_REQUIRED"});
+        await expect(RegisterUser(params)).to.eventually.deep.equal({emailError: true, error: "REQUIRED"});
       });
 
       it("throws with the appropriate error message", async () => {
@@ -51,7 +51,7 @@ describe("registerUser", () => {
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("trows with an appropriate error message", async () => {
-        await expect(RegisterUser(params)).to.eventually.deep.equal({error: "EMAIL_TAKEN"});
+        await expect(RegisterUser(params)).to.eventually.deep.equal({emailError: true, error: "TAKEN"});
       });
     });
   });

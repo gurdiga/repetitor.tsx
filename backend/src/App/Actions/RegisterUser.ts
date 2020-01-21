@@ -12,7 +12,7 @@ export async function RegisterUser(params: Params): Promise<Response> {
   const {email, password, fullName} = params;
 
   if (!email) {
-    return {error: "EMAIL_REQUIRED"};
+    return {emailError: true, error: "REQUIRED"};
   } else if (!password) {
     return {error: "PASSWORD_REQUIRED"};
   } else if (!fullName) {
@@ -33,7 +33,7 @@ export async function RegisterUser(params: Params): Promise<Response> {
     } catch (error) {
       switch (error.code) {
         case "ER_DUP_ENTRY":
-          return {error: "EMAIL_TAKEN"};
+          return {emailError: true, error: "TAKEN"};
         default:
           log({error});
           return {error: "DB_ERROR"};

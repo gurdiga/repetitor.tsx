@@ -78,7 +78,9 @@ export function RegistrationPage() {
 
     const [responseState, responseText] =
       "error" in response
-        ? [ResponseState.ReceivedError, errorMessages[response.error]]
+        ? "emailError" in response
+          ? [ResponseState.ReceivedSuccess, emailErrorMessages[response.error]]
+          : [ResponseState.ReceivedError, errorMessages[response.error]]
         : [ResponseState.ReceivedSuccess, "Înregistrat."];
 
     setServerResponse({
@@ -105,9 +107,13 @@ type FieldName = keyof ActionRegistry["RegisterUser"]["Params"];
 const validationRules = ValidationRules["RegisterUser"];
 
 const errorMessages = {
-  EMAIL_REQUIRED: "Prezența adresei de email este obligatorie",
   PASSWORD_REQUIRED: "Prezența parolei este obligatorie",
   FULL_NAME_REQUIRED: "Prezența numelui este obligatorie",
-  EMAIL_TAKEN: "Există deja un utilizator cu acest email",
   DB_ERROR: "Eroare de bază de date",
+};
+
+const emailErrorMessages = {
+  REQUIRED: "Adresa de email lipsește",
+  INVALID: "Adresa de email este invalidă",
+  TAKEN: "Existe deja un cont cu această adresă de email",
 };
