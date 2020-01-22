@@ -22,19 +22,19 @@ interface RegisterUser extends Action {
     fullName: string;
   };
 
-  Response: SuccessResponse | EmailErrorResponse | FullNameErrorResponse | PasswordErrorResponse | DbErrorResponse;
+  Response: SuccessResponse | FullNameErrorResponse | EmailErrorResponse | PasswordErrorResponse | DbErrorResponse;
 }
 
 type SuccessResponse = {success: true};
 
+export type FullNameErrorResponse = {
+  fullNameError: true;
+  error: "REQUIRED";
+};
+
 type EmailErrorResponse = {
   emailError: true;
   error: "REQUIRED" | "TAKEN" | "INVALID";
-};
-
-type FullNameErrorResponse = {
-  fullNameError: true;
-  error: "REQUIRED";
 };
 
 type PasswordErrorResponse = {

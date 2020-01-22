@@ -3,12 +3,12 @@ SHELL=bash
 
 include .env
 
-default: test-frontend
+default: build test
 
 test: test-backend test-frontend
 
 test-backend: node_modules
-	@cd backend && make test
+	@cd backend && make --no-print-directory test
 
 test-frontend: node_modules
 	@TS_NODE_PROJECT=frontend/tests/tsconfig.json \
@@ -26,7 +26,7 @@ c: build
 build: node_modules
 	~/.nvm/nvm-exec \
 	command time \
-	node_modules/.bin/tsc --build -v
+	node_modules/.bin/tsc --build
 
 watch: node_modules
 	~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w
