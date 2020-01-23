@@ -33,7 +33,7 @@ export async function RegisterUser(params: Params): Promise<Response> {
     } catch (error) {
       switch (error.code) {
         case "ER_DUP_ENTRY":
-          return {emailError: true, error: "TAKEN"};
+          return {modelError: true, error: "EMAIL_TAKEN"};
         default:
           log({error});
           return {dbError: true, error: "ERROR"};

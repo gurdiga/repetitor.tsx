@@ -10,14 +10,15 @@ interface Props extends FormField.CommonProps {}
 
 export function PasswordField(props: Props) {
   const {id, label, value: initialValue, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
+  const {validationMessages} = props;
 
   const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
 
-  const initialValidationMessage = validateWithRules(value, validationRules).validationMessage;
-  const [validationMessage, setValidationMessage] = React.useState(initialValidationMessage);
+  const initialValidationErrorCode = validateWithRules(value, validationRules).validationErrorCode;
+  const [validationErrorCode, setValidationErrorCode] = React.useState(initialValidationErrorCode);
 
-  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationMessage, ({text, isValid}) => {
+  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationErrorCode, ({text, isValid}) => {
     setValue(text);
     onValueChange({text, isValid});
   });
@@ -32,7 +33,7 @@ export function PasswordField(props: Props) {
     setValue(generatedPassword);
     onValueChange({text: generatedPassword, isValid: true});
     setIsMasked(false);
-    setValidationMessage("");
+    setValidationErrorCode("");
   };
 
   return (
@@ -70,7 +71,7 @@ export function PasswordField(props: Props) {
         </button>
       </span>
 
-      {showValidationMessage && <ValidationMessage text={validationMessage} />}
+      {showValidationMessage && <ValidationMessage text={validationMessages[validationErrorCode]} />}
     </>
   );
 }

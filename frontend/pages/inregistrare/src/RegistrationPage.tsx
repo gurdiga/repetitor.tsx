@@ -5,7 +5,14 @@ import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ActionRegistry} from "shared/ActionRegistry";
+import {
+  ActionRegistry,
+  FullNameValidationErrorCode,
+  EmailValidationErrorCode,
+  PasswordValidationErrorCode,
+  DbValidationErrorCode,
+  ModelValidationErrorCode,
+} from "shared/ActionRegistry";
 import {ValidatedValue, ValidationRules} from "shared/Validation";
 
 export function RegistrationPage() {
@@ -28,6 +35,7 @@ export function RegistrationPage() {
             onValueChange={updateFullName}
             validationRules={validationRules.fullName}
             showValidationMessage={shouldShowValidationMessage}
+            validationMessages={fullNameErrorMessages}
           />,
           <TextField
             id="email"
@@ -37,6 +45,7 @@ export function RegistrationPage() {
             onValueChange={updateEmail}
             validationRules={validationRules.email}
             showValidationMessage={shouldShowValidationMessage}
+            validationMessages={emailErrorMessages}
           />,
           <PasswordField
             id="password"
@@ -45,6 +54,7 @@ export function RegistrationPage() {
             onValueChange={updatePassword}
             validationRules={validationRules.password}
             showValidationMessage={shouldShowValidationMessage}
+            validationMessages={passwordErrorMessages}
           />,
         ]}
         actionButtons={[
@@ -76,6 +86,8 @@ export function RegistrationPage() {
       password: fields.password.text,
     });
 
+    // TODO: When I add a new `somethingError` this still compiles. Find a way
+    // to type-check.
     const [responseState, responseText] =
       "emailError" in response
         ? [ResponseState.ReceivedError, emailErrorMessages[response.error]]
@@ -83,6 +95,8 @@ export function RegistrationPage() {
         ? [ResponseState.ReceivedError, fullNameErrorMessages[response.error]]
         : "passwordError" in response
         ? [ResponseState.ReceivedError, passwordErrorMessages[response.error]]
+        : "modelError" in response
+        ? [ResponseState.ReceivedError, modelErrorMessages[response.error]]
         : "dbError" in response
         ? [ResponseState.ReceivedError, dbErrorMessages[response.error]]
         : [ResponseState.ReceivedSuccess, "Înregistrat."]; // success
@@ -110,20 +124,25 @@ type FieldName = keyof ActionRegistry["RegisterUser"]["Params"];
 
 const validationRules = ValidationRules["RegisterUser"];
 
-const emailErrorMessages = {
+const fullNameErrorMessages: Record<FullNameValidationErrorCode, string> = {
+  REQUIRED: "Numele deplin lipsește",
+  TOO_SHORT: "Numele este prea scurt",
+  TOO_LONG: "Numele este prea lung",
+};
+
+const emailErrorMessages: Record<EmailValidationErrorCode, string> = {
   REQUIRED: "Adresa de email lipsește",
-  INVALID: "Adresa de email este invalidă",
-  TAKEN: "Existe deja un cont cu această adresă de email",
+  INCORRECT: "Adresa de email este invalidă",
 };
 
-const fullNameErrorMessages = {
-  REQUIRED: "Prezența numelui este obligatorie",
+const passwordErrorMessages: Record<PasswordValidationErrorCode, string> = {
+  REQUIRED: "Parola lipsește",
 };
 
-const passwordErrorMessages = {
-  REQUIRED: "Prezența numelui este obligatorie",
+const dbErrorMessages: Record<DbValidationErrorCode, string> = {
+  ERROR: "Eroare neprevăzută de bază de date",
 };
 
-const dbErrorMessages = {
-  ERROR: "Prezența numelui este obligatorie",
+const modelErrorMessages: Record<ModelValidationErrorCode, string> = {
+  EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
 };

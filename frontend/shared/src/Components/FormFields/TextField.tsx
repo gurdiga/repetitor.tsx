@@ -14,10 +14,11 @@ type InputType = "text" | "email";
 
 export function TextField(props: Props) {
   const {validationRules, onValueChange, id, autoFocus, inputType, label, showValidationMessage, value} = props;
+  const {validationMessages} = props;
 
-  const initialValidationMessage = validateWithRules(value, validationRules).validationMessage;
-  const [validationMessage, setValidationMessage] = React.useState(initialValidationMessage);
-  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationMessage, onValueChange);
+  const initialValidationErrorCode = validateWithRules(value, validationRules).validationErrorCode;
+  const [validationErrorCode, setValidationErrorCode] = React.useState(initialValidationErrorCode);
+  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationErrorCode, onValueChange);
 
   return (
     <>
@@ -30,7 +31,7 @@ export function TextField(props: Props) {
         onInput={onInput}
         className={TextFieldCss.Input}
       />
-      {showValidationMessage && <ValidationMessage text={validationMessage} />}
+      {showValidationMessage && <ValidationMessage text={validationMessages[validationErrorCode]} />}
     </>
   );
 }

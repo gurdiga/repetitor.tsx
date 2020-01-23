@@ -22,27 +22,44 @@ interface RegisterUser extends Action {
     fullName: string;
   };
 
-  Response: SuccessResponse | FullNameErrorResponse | EmailErrorResponse | PasswordErrorResponse | DbErrorResponse;
+  Response: SuccessResponse | PropErrorResponse | ModelErrorResponse | DbErrorResponse;
 }
+
+type PropErrorResponse = FullNameErrorResponse | EmailErrorResponse | PasswordErrorResponse;
 
 type SuccessResponse = {success: true};
 
-export type FullNameErrorResponse = {
+type FullNameErrorResponse = {
   fullNameError: true;
-  error: "REQUIRED";
+  error: FullNameValidationErrorCode;
 };
+
+export type FullNameValidationErrorCode = "REQUIRED" | "TOO_SHORT" | "TOO_LONG";
 
 type EmailErrorResponse = {
   emailError: true;
-  error: "REQUIRED" | "TAKEN" | "INVALID";
+  error: EmailValidationErrorCode;
 };
+
+export type EmailValidationErrorCode = "REQUIRED" | "INCORRECT";
 
 type PasswordErrorResponse = {
   passwordError: true;
-  error: "REQUIRED";
+  error: PasswordValidationErrorCode;
 };
+
+export type PasswordValidationErrorCode = "REQUIRED";
 
 type DbErrorResponse = {
   dbError: true;
-  error: "ERROR";
+  error: DbValidationErrorCode;
 };
+
+export type DbValidationErrorCode = "ERROR";
+
+type ModelErrorResponse = {
+  modelError: true;
+  error: ModelValidationErrorCode;
+};
+
+export type ModelValidationErrorCode = "EMAIL_TAKEN";

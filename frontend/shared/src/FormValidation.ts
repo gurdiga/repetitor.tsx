@@ -7,14 +7,14 @@ export namespace FormValidation {
 
   export function buildInputEventHandler<T extends HTMLInputElement>(
     validationRules: ValidationRules,
-    setValidationMessage: (message: string) => void,
+    setErrorCode: (message: string) => void,
     onValueChange: ValueChangeHandler
   ): (event: React.ChangeEvent<T>) => void {
     return event => {
       const text = event.target.value;
-      const {validationMessage, isValid} = validateWithRules(text, validationRules);
+      const {validationErrorCode: errorCode, isValid} = validateWithRules(text, validationRules);
 
-      setValidationMessage(validationMessage);
+      setErrorCode(errorCode);
       onValueChange({text, isValid});
     };
   }

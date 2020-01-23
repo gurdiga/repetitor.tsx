@@ -8,5 +8,6 @@ export namespace FormField {
     validationRules: FormValidation.ValidationRules;
     onValueChange: FormValidation.ValueChangeHandler;
     showValidationMessage: boolean;
+    validationMessages: Record<string, string>;
   }
 }
