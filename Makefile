@@ -122,4 +122,4 @@ deploy:
 		$(TAG) \
 	| ssh root@forum.homeschooling.md "cd /var/www/repetitor && tar fxz -"
 
-pre-commit: build
+pre-commit: build test
