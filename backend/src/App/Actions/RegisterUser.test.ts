@@ -51,7 +51,7 @@ describe("registerUser", () => {
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("trows with an appropriate error message", async () => {
-        await expect(RegisterUser(params)).to.eventually.deep.equal({emailError: true, error: "TAKEN"});
+        await expect(RegisterUser(params)).to.eventually.deep.equal({modelError: true, error: "EMAIL_TAKEN"});
       });
     });
   });
