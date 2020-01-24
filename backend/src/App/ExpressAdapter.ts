@@ -2,8 +2,8 @@ import * as assert from "assert";
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import {handleActionRequest} from "./Backend";
-import {assertEnvVars} from "./Utils";
+import {handleActionRequest} from "App/Backend";
+import {assertEnvVars} from "App/Utils";
 
 export const HttpPort = getPortNumber();
 

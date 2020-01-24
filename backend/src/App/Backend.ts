@@ -1,5 +1,5 @@
-import {RegisterUser} from "./Actions/RegisterUser";
-import {TestAction} from "./Actions/TestAction";
+import {RegisterUser} from "App/Actions/RegisterUser";
+import {TestAction} from "App/Actions/TestAction";
 
 const actionList = [RegisterUser, TestAction];
 

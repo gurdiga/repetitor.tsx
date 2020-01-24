@@ -10,7 +10,7 @@ import {
   sendPageHtml,
   sendVendorModule,
   sendSecurityTxt,
-} from "./App/ExpressAdapter";
+} from "App/ExpressAdapter";
 
 express()
   .use(helmet())

@@ -1,5 +1,5 @@
-import {ActionRegistry} from "../../../../shared/src/ActionRegistry";
-import {runQuery} from "../Db";
+import {ActionRegistry} from "shared/ActionRegistry";
+import {runQuery} from "App/Db";
 
 type Params = ActionRegistry["TestAction"]["Params"];
 type Response = ActionRegistry["TestAction"]["Response"];

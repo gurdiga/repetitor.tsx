@@ -1,7 +1,7 @@
 import {expect, use} from "chai";
-import {runQuery} from "../Db";
-import {hashString} from "../Utils/StringUtils";
-import {RegisterUser} from "./RegisterUser";
+import {RegisterUser} from "App/Actions/RegisterUser";
+import {runQuery} from "App/Db";
+import {hashString} from "App/Utils/StringUtils";
 
 use(require("chai-as-promised"));
 

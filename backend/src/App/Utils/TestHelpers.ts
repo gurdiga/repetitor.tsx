@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {connectionPool, runQuery} from "../Db";
+import {connectionPool, runQuery} from "App/Db";
 
 process.on("unhandledRejection", e => {
   throw e;

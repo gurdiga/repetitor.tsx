@@ -1,7 +1,7 @@
 import debug from "debug";
-import {ActionRegistry} from "../../../../shared/src/ActionRegistry";
-import {runQuery} from "../Db";
-import {genRandomString, hashString} from "../Utils/StringUtils";
+import {ActionRegistry} from "shared/ActionRegistry";
+import {runQuery} from "App/Db";
+import {genRandomString, hashString} from "App/Utils/StringUtils";
 
 type Params = ActionRegistry["RegisterUser"]["Params"];
 type Response = ActionRegistry["RegisterUser"]["Response"];
