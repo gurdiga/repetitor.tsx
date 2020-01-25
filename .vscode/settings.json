@@ -7,10 +7,9 @@
   "files.exclude": {
     ".bash_history": true,
     ".viminfo": true,
-    ".vimrc": true,
-    "build": true
+    ".vimrc": true
   },
   "search.exclude": {
-    "**/node_modules/**/*": true
+    "**/build": true
   }
 }

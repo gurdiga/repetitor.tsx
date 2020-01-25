@@ -1,5 +1,6 @@
-# This is a Systemd “Unit file” to create the system service.
-# https://freedesktop.org/wiki/Software/systemd/
+# This is a Systemd[1] “Unit file” to create the system service.
+#
+# [1] https://freedesktop.org/wiki/Software/systemd/
 
 [Unit]
 Description=Repetitor
