@@ -6,13 +6,14 @@ import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
 import {ActionRegistry} from "shared/ActionRegistry";
-import {ValidatedValue, ValidationRules} from "shared/Validation";
+import {ValidatedValue} from "shared/Validation";
 import {
   FullNameValidationErrorCode,
   EmailValidationErrorCode,
   PasswordValidationErrorCode,
   DbValidationErrorCode,
   ModelValidationErrorCode,
+  UserValidationRules,
 } from "shared/Domain/User";
 
 export function RegistrationPage() {
@@ -139,7 +140,7 @@ const initialFieldValue: ValidatedValue = {
 
 type FieldName = keyof ActionRegistry["RegisterUser"]["Params"];
 
-const validationRules = ValidationRules["RegisterUser"];
+const validationRules = UserValidationRules;
 
 const fullNameErrorMessages: Record<FullNameValidationErrorCode, string> = {
   REQUIRED: "Numele deplin lipsește",

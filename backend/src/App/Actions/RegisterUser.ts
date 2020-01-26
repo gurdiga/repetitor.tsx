@@ -2,6 +2,7 @@ import debug from "debug";
 import {ActionRegistry} from "../../../../shared/src/ActionRegistry";
 import {runQuery} from "../Db";
 import {genRandomString, hashString} from "../Utils/StringUtils";
+// import {validateWithRules, ValidationRules} from "shared/Validation";
 
 type Params = ActionRegistry["RegisterUser"]["Params"];
 type Response = ActionRegistry["RegisterUser"]["Response"];
@@ -9,7 +10,13 @@ type Response = ActionRegistry["RegisterUser"]["Response"];
 const log = debug("app:RegisterUser");
 
 export async function RegisterUser(params: Params): Promise<Response> {
-  const {email, password, fullName} = params;
+  const {fullName, email, password} = params;
+
+  // const {validationErrorCode, isValid} = validateWithRules(fullName, ValidationRules["RegisterUser"].fullName);
+
+  // if (!isValid) {
+  //   return {kind: "FullNameError", errorCode: validationErrorCode};
+  // }
 
   if (!email) {
     return {kind: "EmailError", errorCode: "REQUIRED"};

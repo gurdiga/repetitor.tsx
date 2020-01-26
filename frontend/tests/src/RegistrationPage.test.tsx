@@ -9,9 +9,9 @@ import {PageLayout} from "frontend/shared/PageLayout";
 import {describe, it} from "mocha";
 import * as React from "react";
 import {RegistrationPage} from "RegistrationPage";
-import {ValidationRules} from "shared/Validation";
 import {stub} from "sinon";
 import {Stub} from "TestHelpers";
+import {UserValidationRules} from "shared/Domain/User";
 
 describe("<RegistrationPage/>", () => {
   type Wrapper = ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
@@ -31,23 +31,22 @@ describe("<RegistrationPage/>", () => {
   it("renders a form with the appropriate fields", () => {
     const form = wrapper.find(Form);
     const {fields} = form.props();
-    const validationRules = ValidationRules["RegisterUser"];
 
     assertProps<typeof TextField>("numele deplin", fields[0], {
       label: "Nume deplin",
       autoFocus: true,
-      validationRules: validationRules.fullName,
+      validationRules: UserValidationRules.fullName,
     });
 
     assertProps<typeof TextField>("adresa de email", fields[1], {
       label: "Adresa de email",
       inputType: "email",
-      validationRules: validationRules.email,
+      validationRules: UserValidationRules.email,
     });
 
     assertProps<typeof PasswordField>("parola", fields[2], {
       label: "Parola",
-      validationRules: validationRules.password,
+      validationRules: UserValidationRules.password,
     });
   });
 
