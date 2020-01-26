@@ -80,17 +80,17 @@ describe("<RegistrationPage/>", () => {
         const passwordField: Comp<typeof PasswordField> = fields[2];
 
         fullNameField.props.onValueChange({
-          text: "full name",
+          value: "full name",
           isValid: true,
         });
 
         emailField.props.onValueChange({
-          text: "email@example.com",
+          value: "email@example.com",
           isValid: true,
         });
 
         passwordField.props.onValueChange({
-          text: "password",
+          value: "password",
           isValid: true,
         });
 
@@ -113,17 +113,17 @@ describe("<RegistrationPage/>", () => {
         const passwordField: Comp<typeof PasswordField> = fields[2];
 
         fullNameField.props.onValueChange({
-          text: "full name",
+          value: "full name",
           isValid: true,
         });
 
         emailField.props.onValueChange({
-          text: "email@example.com",
+          value: "email@example.com",
           isValid: true,
         });
 
         passwordField.props.onValueChange({
-          text: "", // <---- Do not fill in the password
+          value: "", // <---- Do not fill in the password
           isValid: false,
         });
 
@@ -145,17 +145,17 @@ describe("<RegistrationPage/>", () => {
         const passwordField: Comp<typeof PasswordField> = fields[2];
 
         fullNameField.props.onValueChange({
-          text: "full name",
+          value: "full name",
           isValid: true,
         });
 
         emailField.props.onValueChange({
-          text: "email@example.com",
+          value: "email@example.com",
           isValid: true,
         });
 
         passwordField.props.onValueChange({
-          text: "password",
+          value: "password",
           isValid: true,
         });
 

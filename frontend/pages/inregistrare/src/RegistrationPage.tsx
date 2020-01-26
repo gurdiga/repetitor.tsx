@@ -32,7 +32,7 @@ export function RegistrationPage() {
             autoFocus
             id="fullName"
             label="Nume deplin"
-            value={fullName.text}
+            value={fullName.value}
             onValueChange={updateFullName}
             validationRules={validationRules.fullName}
             showValidationMessage={shouldShowValidationMessage}
@@ -41,7 +41,7 @@ export function RegistrationPage() {
           <TextField
             id="email"
             label="Adresa de email"
-            value={email.text}
+            value={email.value}
             inputType="email"
             onValueChange={updateEmail}
             validationRules={validationRules.email}
@@ -51,7 +51,7 @@ export function RegistrationPage() {
           <PasswordField
             id="password"
             label="Parola"
-            value={password.text}
+            value={password.value}
             onValueChange={updatePassword}
             validationRules={validationRules.password}
             showValidationMessage={shouldShowValidationMessage}
@@ -74,7 +74,7 @@ export function RegistrationPage() {
     </PageLayout>
   );
 
-  async function submitForm(fields: Record<FieldName, ValidatedValue>): Promise<void> {
+  async function submitForm(fields: Record<FieldName, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
     if (anyInvalidField) {
@@ -82,9 +82,9 @@ export function RegistrationPage() {
     }
 
     const response = await postAction("RegisterUser", {
-      fullName: fields.fullName.text,
-      email: fields.email.text,
-      password: fields.password.text,
+      fullName: fields.fullName.value,
+      email: fields.email.value,
+      password: fields.password.value,
     });
 
     let responseState: ResponseState;
@@ -133,8 +133,8 @@ const placeholderServerResponse: ServerResponse = {
   shouldShow: false,
 };
 
-const initialFieldValue: ValidatedValue = {
-  text: "",
+const initialFieldValue: ValidatedValue<string> = {
+  value: "",
   isValid: false,
 };
 

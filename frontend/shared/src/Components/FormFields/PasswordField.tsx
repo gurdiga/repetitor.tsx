@@ -18,9 +18,9 @@ export function PasswordField(props: Props) {
   const initialValidationErrorCode = validateWithRules(value, validationRules).validationErrorCode;
   const [validationErrorCode, setValidationErrorCode] = React.useState(initialValidationErrorCode);
 
-  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationErrorCode, ({text, isValid}) => {
-    setValue(text);
-    onValueChange({text, isValid});
+  const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationErrorCode, ({value, isValid}) => {
+    setValue(value);
+    onValueChange({value, isValid});
   });
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -31,7 +31,7 @@ export function PasswordField(props: Props) {
     const generatedPassword = PasswordGenerator.newPassword();
 
     setValue(generatedPassword);
-    onValueChange({text: generatedPassword, isValid: true});
+    onValueChange({value: generatedPassword, isValid: true});
     setIsMasked(false);
     setValidationErrorCode("");
   };

@@ -1,6 +1,6 @@
+import {assertPresent, makeAssertLengthBetween, ensureValid} from "shared/Utils/Assertions";
 import {RegistrationFormDTO} from "shared/Scenarios/UserRegistration";
-import {assertPresent, ensureValid, makeAssertLengthBetween, ValidationError} from "shared/Utils/Assertions";
-import {PredicateFn} from "shared/Validation";
+import {PredicateFn, UserValue} from "shared/Validation";
 
 export interface User {
   fullName: string;
@@ -73,19 +73,23 @@ export function makeUserFromRegistrationFormDTO(registrationFormDTO: Registratio
 }
 
 const fullNameVR: Record<FullNameValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: string) => text.trim().length > 0,
-  TOO_SHORT: (text: string) => text.trim().length >= 5,
-  TOO_LONG: (text: string) => text.trim().length <= 50,
+  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
+  TOO_SHORT: (text: UserValue) => !!text && text.trim().length >= 5,
+  TOO_LONG: (text: UserValue) => !!text && text.trim().length <= 50,
 };
 
 const emailVR: Record<EmailValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: string) => text.trim().length > 0,
-  INCORRECT: (text: string) => {
+  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
+  INCORRECT: (text: UserValue) => {
     // TODO: extract function syntacticallyCorrectEmail
+    if (!text) {
+      return false;
+    }
+
     text = text.trim();
 
     const keyCharacters = [".", "@"];
-    const containsKeyCharacters = keyCharacters.every(c => text.includes(c));
+    const containsKeyCharacters = keyCharacters.every(c => !!text && text.includes(c));
 
     if (!containsKeyCharacters) {
       return false;
@@ -112,7 +116,7 @@ const emailVR: Record<EmailValidationErrorCode, PredicateFn> = {
 };
 
 const passwordVR: Record<PasswordValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: string) => text.trim().length > 0,
+  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
 };
 
 export const UserValidationRules = {

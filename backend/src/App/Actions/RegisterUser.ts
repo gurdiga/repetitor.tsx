@@ -1,50 +1,56 @@
 import debug from "debug";
-import {ActionRegistry} from "../../../../shared/src/ActionRegistry";
-import {runQuery} from "../Db";
-import {genRandomString, hashString} from "../Utils/StringUtils";
-// import {validateWithRules, ValidationRules} from "shared/Validation";
+import {ActionRegistry} from "shared/ActionRegistry";
+import {RegistrationFormDTO} from "shared/Scenarios/UserRegistration";
+import {validateWithRules} from "shared/Validation";
+import {UserValidationRules} from "shared/Domain/User";
+import {runQuery} from "src/App/Db";
+import {genRandomString, hashString} from "src/App/Utils/StringUtils";
 
 type Params = ActionRegistry["RegisterUser"]["Params"];
 type Response = ActionRegistry["RegisterUser"]["Response"];
 
 const log = debug("app:RegisterUser");
 
-export async function RegisterUser(params: Params): Promise<Response> {
+export async function RegisterUser(params: RegistrationFormDTO): Promise<Response> {
   const {fullName, email, password} = params;
 
-  // const {validationErrorCode, isValid} = validateWithRules(fullName, ValidationRules["RegisterUser"].fullName);
+  let fullNameValidationResult = validateWithRules(fullName, UserValidationRules.fullName);
 
-  // if (!isValid) {
-  //   return {kind: "FullNameError", errorCode: validationErrorCode};
-  // }
+  if (!fullNameValidationResult.isValid) {
+    return {kind: "FullNameError", errorCode: fullNameValidationResult.validationErrorCode};
+  }
 
-  if (!email) {
-    return {kind: "EmailError", errorCode: "REQUIRED"};
-  } else if (!password) {
-    return {kind: "PasswordError", errorCode: "REQUIRED"};
-  } else if (!fullName) {
-    return {kind: "FullNameError", errorCode: "REQUIRED"};
-  } else {
-    const {salt, passwordHash} = getStorablePassword(password);
+  const emailValidationResult = validateWithRules(email, UserValidationRules.email);
 
-    try {
-      await runQuery({
-        sql: `
+  if (!emailValidationResult.isValid) {
+    return {kind: "EmailError", errorCode: emailValidationResult.validationErrorCode};
+  }
+
+  const passwordValidationResult = validateWithRules(password, UserValidationRules.password);
+
+  if (!passwordValidationResult.isValid) {
+    return {kind: "PasswordError", errorCode: passwordValidationResult.validationErrorCode};
+  }
+
+  const {salt, passwordHash} = getStorablePassword(password as string); // TODO: Change the ValidationResult type to prevent this.
+
+  try {
+    await runQuery({
+      sql: `
             INSERT INTO users(email, password_hash, password_salt, full_name)
             VALUES(?, ?, ?, ?)
           `,
-        params: [email, passwordHash, salt, fullName],
-      });
+      params: [email, passwordHash, salt, fullName],
+    });
 
-      return {kind: "Success"};
-    } catch (error) {
-      switch (error.code) {
-        case "ER_DUP_ENTRY":
-          return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
-        default:
-          log({error});
-          return {kind: "DbError", errorCode: "ERROR"};
-      }
+    return {kind: "Success"};
+  } catch (error) {
+    switch (error.code) {
+      case "ER_DUP_ENTRY":
+        return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
+      default:
+        log({error});
+        return {kind: "DbError", errorCode: "ERROR"};
     }
   }
 }
