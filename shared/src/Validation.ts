@@ -33,7 +33,7 @@ const emailVR: Record<EmailValidationErrorCode, PredicateFn> = {
     }
 
     const domainLevels = domain.split(/\./).reverse();
-    const doDomainPartsLookReasonable = /[a-z]{2+}/i.test(domainLevels[0]) && domainLevels.every(l => l.length >= 1);
+    const doDomainPartsLookReasonable = /[a-z]{2,}/i.test(domainLevels[0]) && domainLevels.every(l => l.length >= 1);
 
     if (!doDomainPartsLookReasonable) {
       return false;
