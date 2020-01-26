@@ -9,7 +9,7 @@ export interface ActionRegistry {
 
 interface Action {
   Params: object;
-  Response: {rows: any[]} | {success: true} | {error: string};
+  Response: {rows: any[]} | {kind: "Success"} | {errorCode: string};
 }
 
 interface TestAction extends Action {

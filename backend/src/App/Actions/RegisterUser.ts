@@ -12,11 +12,11 @@ export async function RegisterUser(params: Params): Promise<Response> {
   const {email, password, fullName} = params;
 
   if (!email) {
-    return {emailError: true, error: "REQUIRED"};
+    return {kind: "EmailError", errorCode: "REQUIRED"};
   } else if (!password) {
-    return {passwordError: true, error: "REQUIRED"};
+    return {kind: "PasswordError", errorCode: "REQUIRED"};
   } else if (!fullName) {
-    return {fullNameError: true, error: "REQUIRED"};
+    return {kind: "FullNameError", errorCode: "REQUIRED"};
   } else {
     const {salt, passwordHash} = getStorablePassword(password);
 
@@ -29,14 +29,14 @@ export async function RegisterUser(params: Params): Promise<Response> {
         params: [email, passwordHash, salt, fullName],
       });
 
-      return {success: true};
+      return {kind: "Success"};
     } catch (error) {
       switch (error.code) {
         case "ER_DUP_ENTRY":
-          return {modelError: true, error: "EMAIL_TAKEN"};
+          return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
         default:
           log({error});
-          return {dbError: true, error: "ERROR"};
+          return {kind: "DbError", errorCode: "ERROR"};
       }
     }
   }

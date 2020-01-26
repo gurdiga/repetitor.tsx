@@ -15,46 +15,48 @@ export type UserResult = Success | PropError | ModelError | DbError | Unexpected
 
 type PropError = FullNameError | EmailError | PasswordError;
 
-type Success = {success: true};
+type Success = {
+  kind: "Success";
+};
 
 type FullNameError = {
-  fullNameError: true;
-  error: FullNameValidationErrorCode;
+  kind: "FullNameError";
+  errorCode: FullNameValidationErrorCode;
 };
 
 export type FullNameValidationErrorCode = "REQUIRED" | "TOO_SHORT" | "TOO_LONG";
 
 type EmailError = {
-  emailError: true;
-  error: EmailValidationErrorCode;
+  kind: "EmailError";
+  errorCode: EmailValidationErrorCode;
 };
 
 export type EmailValidationErrorCode = "REQUIRED" | "INCORRECT";
 
 type PasswordError = {
-  passwordError: true;
-  error: PasswordValidationErrorCode;
+  kind: "PasswordError";
+  errorCode: PasswordValidationErrorCode;
 };
 
 export type PasswordValidationErrorCode = "REQUIRED";
 
 type DbError = {
-  dbError: true;
-  error: DbValidationErrorCode;
+  kind: "DbError";
+  errorCode: DbValidationErrorCode;
 };
 
 export type DbValidationErrorCode = "ERROR";
 
 type ModelError = {
-  modelError: true;
-  error: ModelValidationErrorCode;
+  kind: "ModelError";
+  errorCode: ModelValidationErrorCode;
 };
 
 export type ModelValidationErrorCode = "EMAIL_TAKEN";
 
 type UnexpectedError = {
-  unexpectedError: true;
-  error: string;
+  kind: "UnexpectedError";
+  errorCode: string;
 };
 
 export function makeUserFromRegistrationFormDTO(registrationFormDTO: RegistrationFormDTO): User {

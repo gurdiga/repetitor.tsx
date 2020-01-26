@@ -64,7 +64,7 @@ describe("<RegistrationPage/>", () => {
 
     beforeEach(() => {
       // TODO: implement the unhappy path test too.
-      postActionStub = stub(ActionHandling, "postAction").resolves({success: true});
+      postActionStub = stub(ActionHandling, "postAction").resolves({kind: "Success"});
     });
 
     afterEach(() => {
@@ -161,7 +161,7 @@ describe("<RegistrationPage/>", () => {
         });
 
         postActionStub.restore();
-        postActionStub = stub(ActionHandling, "postAction").resolves({passwordError: true, error: "REQUIRED"});
+        postActionStub = stub(ActionHandling, "postAction").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
         await getSubmitButton(wrapper).props.onClick();
       });
 

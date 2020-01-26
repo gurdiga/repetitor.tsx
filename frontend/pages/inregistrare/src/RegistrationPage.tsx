@@ -86,20 +86,37 @@ export function RegistrationPage() {
       password: fields.password.text,
     });
 
-    // TODO: When I add a new `somethingError` this still compiles. Find a way
-    // to type-check.
-    const [responseState, responseText] =
-      "emailError" in response
-        ? [ResponseState.ReceivedError, emailErrorMessages[response.error]]
-        : "fullNameError" in response
-        ? [ResponseState.ReceivedError, fullNameErrorMessages[response.error]]
-        : "passwordError" in response
-        ? [ResponseState.ReceivedError, passwordErrorMessages[response.error]]
-        : "modelError" in response
-        ? [ResponseState.ReceivedError, modelErrorMessages[response.error]]
-        : "dbError" in response
-        ? [ResponseState.ReceivedError, dbErrorMessages[response.error]]
-        : [ResponseState.ReceivedSuccess, "Înregistrat."]; // success
+    let responseState: ResponseState;
+    let responseText: string;
+
+    switch (response.kind) {
+      case "Success":
+        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Înregistrat."];
+        break;
+      case "FullNameError":
+        [responseState, responseText] = [ResponseState.ReceivedError, fullNameErrorMessages[response.errorCode]];
+        break;
+      case "EmailError":
+        [responseState, responseText] = [ResponseState.ReceivedError, emailErrorMessages[response.errorCode]];
+        break;
+      case "PasswordError":
+        [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
+        break;
+      case "DbError":
+        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        break;
+      case "DbError":
+        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        break;
+      case "ModelError":
+        [responseState, responseText] = [ResponseState.ReceivedError, modelErrorMessages[response.errorCode]];
+        break;
+      case "UnexpectedError":
+        [responseState, responseText] = [ResponseState.ReceivedError, response.errorCode];
+        break;
+      default:
+        assertNever(response);
+    }
 
     setServerResponse({
       responseState,
@@ -146,3 +163,7 @@ const dbErrorMessages: Record<DbValidationErrorCode, string> = {
 const modelErrorMessages: Record<ModelValidationErrorCode, string> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
 };
+
+function assertNever(x: never): never {
+  throw new Error("Unexpected object: " + x);
+}
