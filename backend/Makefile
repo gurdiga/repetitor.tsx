@@ -6,7 +6,6 @@ test:
 	source ../.env.test
 	DEBUG=app:none ~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
-		--require tsconfig-paths/register \
 		--reporter dot \
 		--file src/App/Utils/TestHelpers.ts \
 		src/**/*.test.ts

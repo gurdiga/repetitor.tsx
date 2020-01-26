@@ -1,6 +1,6 @@
 import {User} from "shared/Domain/User";
-import {getStorablePassword} from "App/Actions/RegisterUser";
-import {runQuery} from "App/Db";
+import {getStorablePassword} from "src/App/Actions/RegisterUser";
+import {runQuery} from "src/App/Db";
 
 export async function createUser(user: User): Promise<void> {
   const {email, password, fullName} = user;
