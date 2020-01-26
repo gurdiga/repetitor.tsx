@@ -1,14 +1,16 @@
+export class ValidationError extends Error {
+  constructor(public message: string, public props: any = {}) {
+    super(message);
+  }
+}
+
 export interface AdditionalErrorProps {
   propertyName?: string;
 }
 
 export function assert(value: boolean, errorMessage: string, additionalErrorProps: AdditionalErrorProps = {}): void {
   if (!value) {
-    const error = new Error(errorMessage);
-
-    (error as any).props = additionalErrorProps;
-
-    throw error;
+    throw new ValidationError(errorMessage, additionalErrorProps);
   }
 }
 
@@ -25,7 +27,7 @@ export function makeAssertMinLength(minLength: number) {
 }
 
 export function assertMaxLength(maxLength: number, value?: string, additionalErrorProps: AdditionalErrorProps = {}) {
-  assert(!!value && value.trim().length >= maxLength, "TOO_LONG", additionalErrorProps);
+  assert(!!value && value.trim().length <= maxLength, "TOO_LONG", additionalErrorProps);
 }
 
 export function makeAssertMaxLength(minLength: number) {

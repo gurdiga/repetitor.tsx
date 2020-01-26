@@ -5,15 +5,15 @@ import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
+import {ActionRegistry} from "shared/ActionRegistry";
+import {ValidatedValue, ValidationRules} from "shared/Validation";
 import {
-  ActionRegistry,
   FullNameValidationErrorCode,
   EmailValidationErrorCode,
   PasswordValidationErrorCode,
   DbValidationErrorCode,
   ModelValidationErrorCode,
-} from "shared/ActionRegistry";
-import {ValidatedValue, ValidationRules} from "shared/Validation";
+} from "shared/Domain/User";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);

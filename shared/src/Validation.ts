@@ -1,10 +1,5 @@
-import {
-  ActionName,
-  ActionRegistry,
-  FullNameValidationErrorCode,
-  EmailValidationErrorCode,
-  PasswordValidationErrorCode,
-} from "shared/ActionRegistry";
+import {ActionName, ActionRegistry} from "shared/ActionRegistry";
+import {FullNameValidationErrorCode, EmailValidationErrorCode, PasswordValidationErrorCode} from "shared/Domain/User";
 
 type PredicateFn = (value: string) => boolean;
 type ValidationRules = {[message: string]: PredicateFn};
