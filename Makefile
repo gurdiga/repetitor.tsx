@@ -40,7 +40,14 @@ start: build
 		--watch backend/tsconfig.json \
 		--watch backend/package.json \
 		--watch shared/tsconfig.json \
-		--exec 'DEBUG=app:* node_modules/.bin/ts-node backend/src/index.ts'
+		--exec '\
+			DEBUG=app:* \
+			TS_NODE_PROJECT=backend/tsconfig.json \
+			node \
+				--require ts-node/register \
+				--require tsconfig-paths/register \
+				backend/src/index.ts \
+		'
 
 e: edit
 edit:
