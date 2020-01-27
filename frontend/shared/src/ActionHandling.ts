@@ -12,22 +12,34 @@ export enum ResponseState {
   ReceivedError = "received-error",
 }
 
+export interface NetworkError {
+  kind: "NetworkError";
+  error: string;
+}
+
 export async function postAction<A extends ActionName>(
   actionName: A,
   actionParams: ActionRegistry[A]["Params"]
-): Promise<ActionRegistry[A]["Response"]> {
-  const response = await fetch("/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      actionName,
-      actionParams,
-    }),
-    redirect: "error",
-    cache: "no-store",
-  });
+): Promise<ActionRegistry[A]["Response"] | NetworkError> {
+  try {
+    const response = await fetch("/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        actionName,
+        actionParams,
+      }),
+      redirect: "error",
+      cache: "no-store",
+    });
 
-  return await response.json();
+    return await response.json();
+  } catch (e) {
+    return {
+      kind: "NetworkError",
+      error: e.message,
+    };
+  }
 }

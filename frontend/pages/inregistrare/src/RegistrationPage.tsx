@@ -115,6 +115,9 @@ export function RegistrationPage() {
       case "UnexpectedError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.errorCode];
         break;
+      case "NetworkError":
+        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        break;
       default:
         assertNever(response);
     }
