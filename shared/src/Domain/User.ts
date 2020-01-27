@@ -1,4 +1,4 @@
-import {assertPresent, makeAssertLengthBetween, ensureValid} from "shared/Utils/Assertions";
+import {assertPresent, makeAssertLengthBetween} from "shared/Utils/Assertions";
 import {RegistrationFormDTO} from "shared/Scenarios/UserRegistration";
 import {PredicateFn, UserValue, validateWithRules} from "shared/Validation";
 

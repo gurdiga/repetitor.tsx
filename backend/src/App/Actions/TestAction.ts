@@ -1,10 +1,7 @@
-import {ActionRegistry} from "../../../../shared/src/ActionRegistry";
 import {runQuery} from "../Db";
+import {TestActionParams, TestActionResponse} from "shared/Scenarios/TestAction";
 
-type Params = ActionRegistry["TestAction"]["Params"];
-type Response = ActionRegistry["TestAction"]["Response"];
-
-export async function TestAction(_params: Params): Promise<Response> {
+export async function TestAction(_params: TestActionParams): Promise<TestActionResponse> {
   const result = await runQuery({
     sql: "SELECT 1 + 1 AS sum",
     params: [],

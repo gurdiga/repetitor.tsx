@@ -35,7 +35,16 @@ export async function postAction<A extends ActionName>(
       cache: "no-store",
     });
 
-    return await response.json();
+    const json = await response.json();
+
+    if (response.status === 200) {
+      return json;
+    } else {
+      return {
+        kind: "NetworkError", // TODO: Maybe introduce ServerError?
+        error: "error" in json ? json.error : json,
+      };
+    }
   } catch (e) {
     return {
       kind: "NetworkError",

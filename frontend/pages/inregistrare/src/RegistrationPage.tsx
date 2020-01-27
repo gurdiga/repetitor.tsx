@@ -5,7 +5,6 @@ import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ActionRegistry} from "shared/ActionRegistry";
 import {ValidatedValue} from "shared/Validation";
 import {
   FullNameValidationErrorCode,
@@ -14,7 +13,9 @@ import {
   DbValidationErrorCode,
   ModelValidationErrorCode,
   UserValidationRules,
+  User,
 } from "shared/Domain/User";
+import {assertNever} from "shared/Utils/Language";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
@@ -141,7 +142,7 @@ const initialFieldValue: ValidatedValue<string> = {
   isValid: false,
 };
 
-type FieldName = keyof ActionRegistry["RegisterUser"]["Params"];
+type FieldName = keyof Omit<User, "kind">;
 
 const validationRules = UserValidationRules;
 
@@ -167,7 +168,3 @@ const dbErrorMessages: Record<DbValidationErrorCode, string> = {
 const modelErrorMessages: Record<ModelValidationErrorCode, string> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
 };
-
-function assertNever(x: never): never {
-  throw new Error("Unexpected object: " + x);
-}

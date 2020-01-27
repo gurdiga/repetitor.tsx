@@ -7,7 +7,6 @@ export interface ValidatedValue<V extends UserValue = UserValue> {
   isValid: boolean;
 }
 
-// TODO: Maybe reimplement as a “tagged union”? https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
 type ValidationResult<C, V> =
   | {
       kind: "Valid";
