@@ -1,11 +1,11 @@
-import {postAction, ResponseState, ServerResponse} from "frontend/shared/ActionHandling";
+import {runScenario, ResponseState, ServerResponse} from "frontend/shared/ActionHandling";
 import {Form} from "frontend/shared/Components/Form";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ValidatedValue} from "shared/Validation";
+import {ValidatedValue} from "shared/Utils/Validation";
 import {
   FullNameValidationErrorCode,
   EmailValidationErrorCode,
@@ -82,7 +82,7 @@ export function RegistrationPage() {
       return;
     }
 
-    const response = await postAction("RegisterUser", {
+    const response = await runScenario("UserRegistration", {
       fullName: fields.fullName.value,
       email: fields.email.value,
       password: fields.password.value,
@@ -116,7 +116,7 @@ export function RegistrationPage() {
       case "UnexpectedError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.errorCode];
         break;
-      case "NetworkError":
+      case "TransportError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.error];
         break;
       default:

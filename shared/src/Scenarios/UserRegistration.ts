@@ -1,8 +1,8 @@
 import {UserResult} from "shared/Domain/User";
 
-export type UserRegistrationScenarioHandler = (params: RegistrationFormDTO) => Promise<UserResult>;
+export type UserRegistrationHandler = (params: UserRegistrationDTO) => Promise<UserResult>;
 
-export interface RegistrationFormDTO {
+export interface UserRegistrationDTO {
   fullName?: string;
   email?: string;
   password?: string;

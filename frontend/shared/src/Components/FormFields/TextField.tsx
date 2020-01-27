@@ -3,7 +3,7 @@ import {TextFieldCss} from "frontend/shared/Components/FormFields/TextField.css"
 import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
 import {FormValidation} from "frontend/shared/FormValidation";
 import * as React from "react";
-import {getValidationErrorCode} from "shared/Validation";
+import {getValidationErrorCode} from "shared/Utils/Validation";
 
 interface Props extends FormField.CommonProps {
   inputType?: InputType;

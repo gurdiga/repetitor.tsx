@@ -10,7 +10,7 @@ test:
 		--require ts-node/register \
 		--require tsconfig-paths/register \
 		--reporter dot \
-		--file src/App/Utils/TestHelpers.ts \
+		--file src/Utils/TestHelpers.ts \
 		src/**/*.test.ts
 
 CLI=build/backend/src/cli.js
@@ -47,7 +47,7 @@ run-http:
 
 define SAMPLE_REQUEST
 { \
-	"actionName": "TestAction" \
+	"scenarioName": "TestAction" \
 }
 endef
 

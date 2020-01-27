@@ -1,7 +1,7 @@
 import {expect, use} from "chai";
-import {runQuery} from "../Db";
+import {runQuery} from "../Utils/Db";
 import {hashString} from "../Utils/StringUtils";
-import {RegisterUser} from "./RegisterUser";
+import {UserRegistration} from "./UserRegistration";
 
 use(require("chai-as-promised"));
 
@@ -11,13 +11,13 @@ describe("registerUser", () => {
       it("throws with the appropriate error message", async () => {
         const params = {email: "", password: "secret", fullName: "John DOE"};
 
-        await expect(RegisterUser(params)).to.eventually.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
+        await expect(UserRegistration(params)).to.eventually.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
       });
 
       it("throws with the appropriate error message", async () => {
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
 
-        await expect(RegisterUser(params)).to.eventually.deep.equal({kind: "PasswordError", errorCode: "REQUIRED"});
+        await expect(UserRegistration(params)).to.eventually.deep.equal({kind: "PasswordError", errorCode: "REQUIRED"});
       });
     });
   });
@@ -26,7 +26,7 @@ describe("registerUser", () => {
     const params = {email: "some@email.com", password: "secret", fullName: "John DOE"};
 
     context("happy path", () => {
-      before(() => RegisterUser(params));
+      before(() => UserRegistration(params));
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("adds the appropriate row to the users table", async () => {
@@ -47,11 +47,11 @@ describe("registerUser", () => {
     });
 
     context("when there is already a user like that", () => {
-      before(() => RegisterUser(params));
+      before(() => UserRegistration(params));
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("trows with an appropriate error message", async () => {
-        await expect(RegisterUser(params)).to.eventually.deep.equal({kind: "ModelError", errorCode: "EMAIL_TAKEN"});
+        await expect(UserRegistration(params)).to.eventually.deep.equal({kind: "ModelError", errorCode: "EMAIL_TAKEN"});
       });
     });
   });

@@ -1,10 +1,9 @@
-import {handleActionRequest} from "./App/Backend";
-import {connectionPool as DbConnectionPool} from "./App/Db";
+import {runScenario} from "./Utils/Backend";
+import {connectionPool as DbConnectionPool} from "./Utils/Db";
 
-const request = JSON.parse(process.argv[2]);
-const {actionName, actionParams = {}} = request;
+const {scenarioioName, dto} = JSON.parse(process.argv[2]);
 
-handleActionRequest(actionName, actionParams)
+runScenario(scenarioioName, dto)
   .then(console.log)
   .catch(console.error)
   .finally(DbConnectionPool.end);

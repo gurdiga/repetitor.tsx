@@ -59,11 +59,11 @@ describe("<RegistrationPage/>", () => {
   });
 
   context("form submission", () => {
-    let postActionStub: Stub<typeof ActionHandling.postAction>;
+    let postActionStub: Stub<typeof ActionHandling.runScenario>;
 
     beforeEach(() => {
       // TODO: implement the unhappy path test too.
-      postActionStub = stub(ActionHandling, "postAction").resolves({kind: "Success"});
+      postActionStub = stub(ActionHandling, "runScenario").resolves({kind: "Success"});
     });
 
     afterEach(() => {
@@ -98,7 +98,7 @@ describe("<RegistrationPage/>", () => {
       });
 
       it("submits the field values to the backend", () => {
-        expect(ActionHandling.postAction).to.have.been.called;
+        expect(ActionHandling.runScenario).to.have.been.called;
         expect(wrapper.find(".server-response-received-success"), "success message").to.exist;
       });
     });
@@ -131,7 +131,7 @@ describe("<RegistrationPage/>", () => {
       });
 
       it("does not submit the form", () => {
-        expect(ActionHandling.postAction).not.to.have.been.called;
+        expect(ActionHandling.runScenario).not.to.have.been.called;
       });
     });
 
@@ -160,12 +160,12 @@ describe("<RegistrationPage/>", () => {
         });
 
         postActionStub.restore();
-        postActionStub = stub(ActionHandling, "postAction").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
+        postActionStub = stub(ActionHandling, "runScenario").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
         await getSubmitButton(wrapper).props.onClick();
       });
 
       it("submits the form and displays the error message", () => {
-        expect(ActionHandling.postAction).to.have.been.called;
+        expect(ActionHandling.runScenario).to.have.been.called;
         expect(wrapper.find(".server-response-received-error")).to.exist;
       });
     });

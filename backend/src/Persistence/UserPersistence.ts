@@ -1,4 +1,4 @@
-import {runQuery} from "src/App/Db";
+import {runQuery} from "src/Utils/Db";
 import {Success, ModelError, DbError} from "shared/Domain/User";
 import {log} from "console";
 

@@ -1,6 +1,6 @@
 import {assertPresent, makeAssertLengthBetween} from "shared/Utils/Assertions";
-import {RegistrationFormDTO} from "shared/Scenarios/UserRegistration";
-import {PredicateFn, UserValue, validateWithRules} from "shared/Validation";
+import {UserRegistrationDTO} from "shared/Scenarios/UserRegistration";
+import {PredicateFn, UserValue, validateWithRules} from "shared/Utils/Validation";
 
 export interface User {
   kind: "User";
@@ -62,7 +62,7 @@ type UnexpectedError = {
 };
 
 export function makeUserFromRegistrationFormDTO(
-  registrationFormDTO: RegistrationFormDTO
+  registrationFormDTO: UserRegistrationDTO
 ): User | PropError | ModelError {
   let fullNameValidationResult = validateWithRules(registrationFormDTO.fullName, UserValidationRules.fullName);
 

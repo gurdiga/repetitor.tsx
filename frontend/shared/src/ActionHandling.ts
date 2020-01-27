@@ -1,4 +1,4 @@
-import {ActionName, ActionRegistry} from "shared/ActionRegistry";
+import {ScenarioName, ScenarioRegistry} from "shared/ScenarioRegistry";
 
 export interface ServerResponse {
   responseState: ResponseState;
@@ -12,15 +12,15 @@ export enum ResponseState {
   ReceivedError = "received-error",
 }
 
-export interface NetworkError {
-  kind: "NetworkError";
+export interface TransportError {
+  kind: "TransportError";
   error: string;
 }
 
-export async function postAction<A extends ActionName>(
-  actionName: A,
-  actionParams: ActionRegistry[A]["Params"]
-): Promise<ActionRegistry[A]["Response"] | NetworkError> {
+export async function runScenario<SN extends ScenarioName, S extends ScenarioRegistry[SN]>(
+  scenarioName: SN,
+  dto: S["DTO"]
+): Promise<S["Response"] | TransportError> {
   try {
     const response = await fetch("/", {
       method: "POST",
@@ -28,26 +28,31 @@ export async function postAction<A extends ActionName>(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        actionName,
-        actionParams,
+        scenarioName,
+        dto,
       }),
       redirect: "error",
       cache: "no-store",
     });
 
-    const json = await response.json();
-
     if (response.status === 200) {
-      return json;
+      try {
+        return await response.json();
+      } catch (e) {
+        return {
+          kind: "TransportError",
+          error: "Could not parse the respons JSON",
+        };
+      }
     } else {
       return {
-        kind: "NetworkError", // TODO: Maybe introduce ServerError?
-        error: "error" in json ? json.error : json,
+        kind: "TransportError",
+        error: response.statusText,
       };
     }
   } catch (e) {
     return {
-      kind: "NetworkError",
+      kind: "TransportError",
       error: e.message,
     };
   }

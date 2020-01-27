@@ -2,12 +2,12 @@ import * as assert from "assert";
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import {handleActionRequest} from "./Backend";
-import {assertEnvVars} from "./Utils";
+import {runScenario} from "./Utils/Backend";
+import {assertEnvVars} from "./Utils/Env";
 
 export const HttpPort = getPortNumber();
 
-const AppRoot = path.join(__dirname, "../../..");
+const AppRoot = path.join(__dirname, "../..");
 const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 
@@ -15,10 +15,10 @@ type HttpRequest = Pick<express.Request, "path" | "body">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
-  const {actionName, actionParams} = req.body;
+  const {scenarioName, dto} = req.body;
 
   try {
-    const result = await handleActionRequest(actionName, actionParams);
+    const result = await runScenario(scenarioName, dto);
 
     res.json(result);
   } catch (error) {

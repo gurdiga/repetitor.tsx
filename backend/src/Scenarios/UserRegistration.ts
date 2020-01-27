@@ -1,12 +1,12 @@
 import debug from "debug";
-import {genRandomString, hashString} from "src/App/Utils/StringUtils";
-import {createUser} from "src/Persistence/UserPersistence";
+import {genRandomString, hashString} from "../Utils/StringUtils";
+import {createUser} from "../Persistence/UserPersistence";
 import {makeUserFromRegistrationFormDTO} from "shared/Domain/User";
-import {UserRegistrationScenarioHandler} from "shared/Scenarios/UserRegistration";
+import {UserRegistrationHandler} from "shared/Scenarios/UserRegistration";
 
 const log = debug("app:RegisterUser");
 
-export const RegisterUser: UserRegistrationScenarioHandler = async params => {
+export const UserRegistration: UserRegistrationHandler = async params => {
   const result = makeUserFromRegistrationFormDTO(params);
 
   log({params, result});

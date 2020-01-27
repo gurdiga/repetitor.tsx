@@ -4,7 +4,7 @@ import {ValidationMessage} from "frontend/shared/Components/FormFields/Validatio
 import {FormValidation} from "frontend/shared/FormValidation";
 import {PasswordGenerator} from "frontend/shared/PasswordGenerator";
 import * as React from "react";
-import {getValidationErrorCode} from "shared/Validation";
+import {getValidationErrorCode} from "shared/Utils/Validation";
 
 interface Props extends FormField.CommonProps {}
 
