@@ -5,15 +5,20 @@ export namespace FormValidation {
 
   export function buildInputEventHandler<T extends HTMLInputElement, VR extends ValidationRules>(
     validationRules: VR,
-    setValidationErrorCode: (message: keyof VR) => void,
+    setValidationErrorCode: (message: keyof VR | null) => void,
     onValueChange: ValueChangeHandler
   ): (event: React.ChangeEvent<T>) => void {
     return event => {
       const {value} = event.target;
-      const {validationErrorCode, isValid} = validateWithRules(value, validationRules);
+      const result = validateWithRules(value, validationRules);
 
-      setValidationErrorCode(validationErrorCode);
-      onValueChange({value, isValid});
+      if (result.kind === "Invalid") {
+        setValidationErrorCode(result.validationErrorCode);
+        onValueChange({value, isValid: false});
+      } else {
+        setValidationErrorCode(null);
+        onValueChange({value, isValid: true});
+      }
     };
   }
 }

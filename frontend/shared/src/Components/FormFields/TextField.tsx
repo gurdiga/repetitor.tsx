@@ -3,7 +3,7 @@ import {TextFieldCss} from "frontend/shared/Components/FormFields/TextField.css"
 import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
 import {FormValidation} from "frontend/shared/FormValidation";
 import * as React from "react";
-import {validateWithRules} from "shared/Validation";
+import {getValidationErrorCode} from "shared/Validation";
 
 interface Props extends FormField.CommonProps {
   inputType?: InputType;
@@ -16,7 +16,7 @@ export function TextField(props: Props) {
   const {validationRules, onValueChange, id, autoFocus, inputType, label, showValidationMessage, value} = props;
   const {validationMessages} = props;
 
-  const initialValidationErrorCode = validateWithRules(value, validationRules).validationErrorCode;
+  const initialValidationErrorCode = getValidationErrorCode(value, validationRules);
   const [validationErrorCode, setValidationErrorCode] = React.useState(initialValidationErrorCode);
   const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationErrorCode, onValueChange);
 
@@ -31,7 +31,9 @@ export function TextField(props: Props) {
         onInput={onInput}
         className={TextFieldCss.Input}
       />
-      {showValidationMessage && <ValidationMessage text={validationMessages[validationErrorCode]} />}
+      {showValidationMessage && validationErrorCode && (
+        <ValidationMessage text={validationMessages[validationErrorCode]} />
+      )}
     </>
   );
 }

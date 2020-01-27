@@ -16,23 +16,23 @@ export async function RegisterUser(params: RegistrationFormDTO): Promise<Respons
 
   let fullNameValidationResult = validateWithRules(fullName, UserValidationRules.fullName);
 
-  if (!fullNameValidationResult.isValid) {
+  if (fullNameValidationResult.kind === "Invalid") {
     return {kind: "FullNameError", errorCode: fullNameValidationResult.validationErrorCode};
   }
 
   const emailValidationResult = validateWithRules(email, UserValidationRules.email);
 
-  if (!emailValidationResult.isValid) {
+  if (emailValidationResult.kind === "Invalid") {
     return {kind: "EmailError", errorCode: emailValidationResult.validationErrorCode};
   }
 
   const passwordValidationResult = validateWithRules(password, UserValidationRules.password);
 
-  if (!passwordValidationResult.isValid) {
+  if (passwordValidationResult.kind === "Invalid") {
     return {kind: "PasswordError", errorCode: passwordValidationResult.validationErrorCode};
   }
 
-  const {salt, passwordHash} = getStorablePassword(password as string); // TODO: Change the ValidationResult type to prevent this.
+  const {salt, passwordHash} = getStorablePassword(passwordValidationResult.value); // TODO: Change the ValidationResult type to prevent this.
 
   try {
     await runQuery({

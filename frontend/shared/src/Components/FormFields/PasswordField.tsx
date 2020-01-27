@@ -4,7 +4,7 @@ import {ValidationMessage} from "frontend/shared/Components/FormFields/Validatio
 import {FormValidation} from "frontend/shared/FormValidation";
 import {PasswordGenerator} from "frontend/shared/PasswordGenerator";
 import * as React from "react";
-import {validateWithRules} from "shared/Validation";
+import {getValidationErrorCode} from "shared/Validation";
 
 interface Props extends FormField.CommonProps {}
 
@@ -15,7 +15,7 @@ export function PasswordField(props: Props) {
   const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
 
-  const initialValidationErrorCode = validateWithRules(value, validationRules).validationErrorCode;
+  const initialValidationErrorCode = getValidationErrorCode(value, validationRules);
   const [validationErrorCode, setValidationErrorCode] = React.useState(initialValidationErrorCode);
 
   const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationErrorCode, ({value, isValid}) => {
@@ -71,7 +71,9 @@ export function PasswordField(props: Props) {
         </button>
       </span>
 
-      {showValidationMessage && <ValidationMessage text={validationMessages[validationErrorCode]} />}
+      {showValidationMessage && validationErrorCode && (
+        <ValidationMessage text={validationMessages[validationErrorCode]} />
+      )}
     </>
   );
 }
