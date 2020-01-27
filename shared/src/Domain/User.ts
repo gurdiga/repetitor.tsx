@@ -17,7 +17,7 @@ export type UserResult = Success | PropError | ModelError | DbError | Unexpected
 
 type PropError = FullNameError | EmailError | PasswordError;
 
-type Success = {
+export type Success = {
   kind: "Success";
 };
 
@@ -42,14 +42,14 @@ type PasswordError = {
 
 export type PasswordValidationErrorCode = "REQUIRED";
 
-type DbError = {
+export type DbError = {
   kind: "DbError";
   errorCode: DbValidationErrorCode;
 };
 
 export type DbValidationErrorCode = "ERROR";
 
-type ModelError = {
+export type ModelError = {
   kind: "ModelError";
   errorCode: ModelValidationErrorCode;
 };
