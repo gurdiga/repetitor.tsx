@@ -1,4 +1,3 @@
-import {assertPresent, makeAssertLengthBetween} from "shared/Utils/Assertions";
 import {UserRegistrationDTO} from "shared/Scenarios/UserRegistration";
 import {PredicateFn, UserValue, validateWithRules} from "shared/Utils/Validation";
 
@@ -8,10 +7,6 @@ export interface User {
   email: string;
   password: string;
 }
-
-export const userFullNameAssertions = [assertPresent, makeAssertLengthBetween(5, 50)];
-export const userEmailAssertions = [assertPresent, makeAssertLengthBetween(6, 50)];
-export const userPasswordAssertions = [assertPresent, makeAssertLengthBetween(0, 100)];
 
 export type UserResult = Success | PropError | ModelError | DbError | UnexpectedError;
 
