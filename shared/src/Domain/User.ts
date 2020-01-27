@@ -1,8 +1,9 @@
 import {assertPresent, makeAssertLengthBetween, ensureValid} from "shared/Utils/Assertions";
 import {RegistrationFormDTO} from "shared/Scenarios/UserRegistration";
-import {PredicateFn, UserValue} from "shared/Validation";
+import {PredicateFn, UserValue, validateWithRules} from "shared/Validation";
 
 export interface User {
+  kind: "User";
   fullName: string;
   email: string;
   password: string;
@@ -60,15 +61,32 @@ type UnexpectedError = {
   errorCode: string;
 };
 
-export function makeUserFromRegistrationFormDTO(registrationFormDTO: RegistrationFormDTO): User {
-  const fullName = ensureValid<string>(registrationFormDTO.fullName, "fullName", userFullNameAssertions);
-  const email = ensureValid<string>(registrationFormDTO.email, "email", userEmailAssertions);
-  const password = ensureValid<string>(registrationFormDTO.password, "password", userPasswordAssertions);
+export function makeUserFromRegistrationFormDTO(
+  registrationFormDTO: RegistrationFormDTO
+): User | PropError | ModelError {
+  let fullNameValidationResult = validateWithRules(registrationFormDTO.fullName, UserValidationRules.fullName);
+
+  if (fullNameValidationResult.kind === "Invalid") {
+    return {kind: "FullNameError", errorCode: fullNameValidationResult.validationErrorCode};
+  }
+
+  const emailValidationResult = validateWithRules(registrationFormDTO.email, UserValidationRules.email);
+
+  if (emailValidationResult.kind === "Invalid") {
+    return {kind: "EmailError", errorCode: emailValidationResult.validationErrorCode};
+  }
+
+  const passwordValidationResult = validateWithRules(registrationFormDTO.password, UserValidationRules.password);
+
+  if (passwordValidationResult.kind === "Invalid") {
+    return {kind: "PasswordError", errorCode: passwordValidationResult.validationErrorCode};
+  }
 
   return {
-    fullName,
-    email,
-    password,
+    kind: "User",
+    fullName: fullNameValidationResult.value,
+    email: emailValidationResult.value,
+    password: passwordValidationResult.value,
   };
 }
 
