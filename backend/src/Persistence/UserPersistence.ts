@@ -1,13 +1,14 @@
-import {runQuery} from "src/Utils/Db";
-import {Success, ModelError, DbError} from "shared/Domain/User";
+import {runQuery} from "Utils/Db";
+import {Success, UserModelError} from "shared/Model/User";
 import {log} from "console";
+import {DbError} from "shared/Model/Errors";
 
 export async function createUser(
   fullName: string,
   email: string,
   passwordHash: string,
   salt: string
-): Promise<Success | ModelError | DbError> {
+): Promise<Success | UserModelError | DbError> {
   try {
     await runQuery({
       sql: `

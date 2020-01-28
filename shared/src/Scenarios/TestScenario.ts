@@ -1,2 +1,2 @@
-export type TestScenarioParams = {};
-export type TestScenarioResponse = {rows: [{sum: number}]};
+export type TestScenarioDTO = {};
+export type TestScenarioResult = {rows: [{sum: number}]};

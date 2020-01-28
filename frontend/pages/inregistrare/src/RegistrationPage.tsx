@@ -1,4 +1,4 @@
-import {runScenario, ResponseState, ServerResponse} from "frontend/shared/ActionHandling";
+import {runScenario, ResponseState, ServerResponse} from "frontend/shared/ScenarioRunner";
 import {Form} from "frontend/shared/Components/Form";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
@@ -10,12 +10,12 @@ import {
   FullNameValidationErrorCode,
   EmailValidationErrorCode,
   PasswordValidationErrorCode,
-  DbValidationErrorCode,
-  ModelValidationErrorCode,
+  UserModelValidationErrorCode,
   UserValidationRules,
   User,
-} from "shared/Domain/User";
+} from "shared/Model/User";
 import {assertNever} from "shared/Utils/Language";
+import {DbErrorCode} from "shared/Model/Errors";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
@@ -161,10 +161,10 @@ const passwordErrorMessages: Record<PasswordValidationErrorCode, string> = {
   REQUIRED: "Parola lipsește",
 };
 
-const dbErrorMessages: Record<DbValidationErrorCode, string> = {
+const dbErrorMessages: Record<DbErrorCode, string> = {
   ERROR: "Eroare neprevăzută de bază de date",
 };
 
-const modelErrorMessages: Record<ModelValidationErrorCode, string> = {
+const modelErrorMessages: Record<UserModelValidationErrorCode, string> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
 };

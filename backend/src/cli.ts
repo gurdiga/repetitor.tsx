@@ -1,5 +1,5 @@
-import {runScenario} from "./Utils/Backend";
-import {connectionPool as DbConnectionPool} from "./Utils/Db";
+import {runScenario} from "Utils/ScenarioRunner";
+import {connectionPool as DbConnectionPool} from "Utils/Db";
 
 const {scenarioioName, dto} = JSON.parse(process.argv[2]);
 

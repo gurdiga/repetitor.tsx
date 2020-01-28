@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {shallow, ShallowWrapper} from "enzyme";
-import * as ActionHandling from "frontend/shared/ActionHandling";
+import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
 import {Form} from "frontend/shared/Components/Form";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
@@ -11,7 +11,7 @@ import * as React from "react";
 import {RegistrationPage} from "RegistrationPage";
 import {stub} from "sinon";
 import {Stub} from "TestHelpers";
-import {UserValidationRules} from "shared/Domain/User";
+import {UserValidationRules} from "shared/Model/User";
 
 describe("<RegistrationPage/>", () => {
   type Wrapper = ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
@@ -59,11 +59,11 @@ describe("<RegistrationPage/>", () => {
   });
 
   context("form submission", () => {
-    let postActionStub: Stub<typeof ActionHandling.runScenario>;
+    let postActionStub: Stub<typeof ScenarioRunner.runScenario>;
 
     beforeEach(() => {
       // TODO: implement the unhappy path test too.
-      postActionStub = stub(ActionHandling, "runScenario").resolves({kind: "Success"});
+      postActionStub = stub(ScenarioRunner, "runScenario").resolves({kind: "Success"});
     });
 
     afterEach(() => {
@@ -98,7 +98,7 @@ describe("<RegistrationPage/>", () => {
       });
 
       it("submits the field values to the backend", () => {
-        expect(ActionHandling.runScenario).to.have.been.called;
+        expect(ScenarioRunner.runScenario).to.have.been.called;
         expect(wrapper.find(".server-response-received-success"), "success message").to.exist;
       });
     });
@@ -131,7 +131,7 @@ describe("<RegistrationPage/>", () => {
       });
 
       it("does not submit the form", () => {
-        expect(ActionHandling.runScenario).not.to.have.been.called;
+        expect(ScenarioRunner.runScenario).not.to.have.been.called;
       });
     });
 
@@ -160,12 +160,12 @@ describe("<RegistrationPage/>", () => {
         });
 
         postActionStub.restore();
-        postActionStub = stub(ActionHandling, "runScenario").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
+        postActionStub = stub(ScenarioRunner, "runScenario").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
         await getSubmitButton(wrapper).props.onClick();
       });
 
       it("submits the form and displays the error message", () => {
-        expect(ActionHandling.runScenario).to.have.been.called;
+        expect(ScenarioRunner.runScenario).to.have.been.called;
         expect(wrapper.find(".server-response-received-error")).to.exist;
       });
     });

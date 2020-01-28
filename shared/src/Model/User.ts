@@ -8,9 +8,7 @@ export interface User {
   password: string;
 }
 
-export type UserResult = Success | PropError | ModelError | DbError | UnexpectedError;
-
-type PropError = FullNameError | EmailError | PasswordError;
+export type UserPropError = FullNameError | EmailError | PasswordError;
 
 export type Success = {
   kind: "Success";
@@ -37,28 +35,16 @@ type PasswordError = {
 
 export type PasswordValidationErrorCode = "REQUIRED";
 
-export type DbError = {
-  kind: "DbError";
-  errorCode: DbValidationErrorCode;
-};
-
-export type DbValidationErrorCode = "ERROR";
-
-export type ModelError = {
+export type UserModelError = {
   kind: "ModelError";
-  errorCode: ModelValidationErrorCode;
+  errorCode: UserModelValidationErrorCode;
 };
 
-export type ModelValidationErrorCode = "EMAIL_TAKEN";
-
-type UnexpectedError = {
-  kind: "UnexpectedError";
-  errorCode: string;
-};
+export type UserModelValidationErrorCode = "EMAIL_TAKEN";
 
 export function makeUserFromRegistrationFormDTO(
   registrationFormDTO: UserRegistrationDTO
-): User | PropError | ModelError {
+): User | UserPropError | UserModelError {
   let fullNameValidationResult = validateWithRules(registrationFormDTO.fullName, UserValidationRules.fullName);
 
   if (fullNameValidationResult.kind === "Invalid") {

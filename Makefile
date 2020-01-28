@@ -3,7 +3,7 @@ SHELL=bash
 
 include .env
 
-default: build test
+default: clean build test
 
 test: test-backend test-frontend
 

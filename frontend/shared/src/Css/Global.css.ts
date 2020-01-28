@@ -1,5 +1,5 @@
 import {normalize, setupPage} from "csstips";
-import {ResetCss} from "frontend/shared/Reset.css";
+import {ResetCss} from "frontend/shared/Css/Reset.css";
 
 const rootElementSelector = "#root";
 

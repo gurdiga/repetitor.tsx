@@ -1,6 +1,6 @@
 import * as debug from "debug";
 import * as mysql from "mysql";
-import {assertEnvVars} from "./Env";
+import {assertEnvVars} from "Utils/Env";
 
 interface DataRow {
   [fieldName: string]: any;

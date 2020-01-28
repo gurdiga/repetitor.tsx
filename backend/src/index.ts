@@ -3,7 +3,14 @@ import * as compression from "compression";
 import * as express from "express";
 import * as morgan from "morgan";
 import * as helmet from "helmet";
-import {handlePost, HttpPort, sendPageBundle, sendPageHtml, sendVendorModule, sendSecurityTxt} from "./ExpressAdapter";
+import {
+  handlePost,
+  HttpPort,
+  sendPageBundle,
+  sendPageHtml,
+  sendVendorModule,
+  sendSecurityTxt,
+} from "Utils/ExpressAdapter";
 
 express()
   .use(helmet())

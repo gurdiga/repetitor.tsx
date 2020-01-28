@@ -1,6 +1,6 @@
 import {center, horizontal, padding, vertical} from "csstips";
 import {em} from "csx";
-import {GlobalCss} from "frontend/shared/Global.css";
+import {GlobalCss} from "frontend/shared/Css/Global.css";
 import {style} from "typestyle";
 
 GlobalCss.setupGlobalStyles();

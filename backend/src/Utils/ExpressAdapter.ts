@@ -2,12 +2,12 @@ import * as assert from "assert";
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import {runScenario} from "./Utils/Backend";
-import {assertEnvVars} from "./Utils/Env";
+import {runScenario} from "Utils/ScenarioRunner";
+import {assertEnvVars} from "Utils/Env";
 
 export const HttpPort = getPortNumber();
 
-const AppRoot = path.join(__dirname, "../..");
+const AppRoot = path.join(__dirname, "../../..");
 const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 

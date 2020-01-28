@@ -1,11 +1,11 @@
 import {expect, use} from "chai";
-import {runQuery} from "../Utils/Db";
-import {hashString} from "../Utils/StringUtils";
-import {UserRegistration} from "./UserRegistration";
+import {runQuery} from "Utils/Db";
+import {hashString} from "Utils/StringUtils";
+import {UserRegistration} from "ScenarioHandlers/UserRegistration";
 
 use(require("chai-as-promised"));
 
-describe("registerUser", () => {
+describe("UserRegistration", () => {
   describe("parameter validation", () => {
     context("when either of the email or password is missing", () => {
       it("throws with the appropriate error message", async () => {

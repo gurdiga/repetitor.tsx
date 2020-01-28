@@ -1,26 +1,9 @@
 import {ScenarioName, ScenarioRegistry} from "shared/ScenarioRegistry";
 
-export interface ServerResponse {
-  responseState: ResponseState;
-  responseText: string;
-  shouldShow: boolean;
-}
-
-export enum ResponseState {
-  NotYetSent = "not-yet-sent",
-  ReceivedSuccess = "received-success",
-  ReceivedError = "received-error",
-}
-
-export interface TransportError {
-  kind: "TransportError";
-  error: string;
-}
-
 export async function runScenario<SN extends ScenarioName, S extends ScenarioRegistry[SN]>(
   scenarioName: SN,
   dto: S["DTO"]
-): Promise<S["Response"] | TransportError> {
+): Promise<S["Result"] | TransportError> {
   try {
     const response = await fetch("/", {
       method: "POST",
@@ -56,4 +39,21 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
       error: e.message,
     };
   }
+}
+
+export interface ServerResponse {
+  responseState: ResponseState;
+  responseText: string;
+  shouldShow: boolean;
+}
+
+export enum ResponseState {
+  NotYetSent = "not-yet-sent",
+  ReceivedSuccess = "received-success",
+  ReceivedError = "received-error",
+}
+
+export interface TransportError {
+  kind: "TransportError";
+  error: string;
 }

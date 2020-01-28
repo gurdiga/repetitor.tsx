@@ -1,15 +1,17 @@
 import debug from "debug";
 import {genRandomString, hashString} from "../Utils/StringUtils";
 import {createUser} from "../Persistence/UserPersistence";
-import {makeUserFromRegistrationFormDTO} from "shared/Domain/User";
-import {UserRegistrationHandler} from "shared/Scenarios/UserRegistration";
+import {makeUserFromRegistrationFormDTO} from "shared/Model/User";
+import {ScenarioRegistry} from "shared/ScenarioRegistry";
 
-const log = debug("app:RegisterUser");
+const log = debug("app:UserRegistration");
 
-export const UserRegistration: UserRegistrationHandler = async params => {
-  const result = makeUserFromRegistrationFormDTO(params);
+type Scenario = ScenarioRegistry["UserRegistration"];
 
-  log({params, result});
+export async function UserRegistration(dto: Scenario["DTO"]): Promise<Scenario["Result"]> {
+  const result = makeUserFromRegistrationFormDTO(dto);
+
+  log({dto, result});
 
   if (result.kind !== "User") {
     return result;
@@ -19,14 +21,14 @@ export const UserRegistration: UserRegistrationHandler = async params => {
   const {salt, passwordHash} = getStorablePassword(password);
 
   return createUser(fullName, email, passwordHash, salt);
-};
+}
 
 interface StorablePassword {
   salt: string;
   passwordHash: string;
 }
 
-export function getStorablePassword(password: string): StorablePassword {
+function getStorablePassword(password: string): StorablePassword {
   const salt = genRandomString(100);
   const passwordHash = hashString(password, salt);
 
