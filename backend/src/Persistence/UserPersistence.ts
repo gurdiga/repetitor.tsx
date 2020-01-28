@@ -1,7 +1,7 @@
 import {runQuery} from "Utils/Db";
-import {Success, UserModelError} from "shared/Model/User";
+import {UserModelError} from "shared/Model/User";
 import {log} from "console";
-import {DbError} from "shared/Model/Errors";
+import {Success, DbError} from "shared/Model/Utils";
 
 export async function createUser(
   fullName: string,

@@ -1,5 +1,5 @@
-import {Success, UserModelError, UserPropError} from "shared/Model/User";
-import {DbError, UnexpectedError} from "shared/Model/Errors";
+import {Success, DbError, UnexpectedError} from "shared/Model/Utils";
+import {UserPropError, UserModelError} from "shared/Model/User";
 
 export interface UserRegistrationDTO {
   fullName?: string;

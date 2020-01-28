@@ -15,7 +15,7 @@ import {
   User,
 } from "shared/Model/User";
 import {assertNever} from "shared/Utils/Language";
-import {DbErrorCode} from "shared/Model/Errors";
+import {DbErrorCode} from "shared/Model/Utils";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);

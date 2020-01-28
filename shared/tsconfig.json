@@ -7,6 +7,6 @@
     "paths": {
       "shared/*": ["src/*"]
     },
-    "lib": ["dom", "es2017"]
+    "lib": ["dom", "es2019"]
   }
 }

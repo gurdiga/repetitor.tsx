@@ -1,5 +1,6 @@
 import {UserRegistrationDTO} from "shared/Scenarios/UserRegistration";
 import {PredicateFn, UserValue, validateWithRules} from "shared/Utils/Validation";
+import {DataProps} from "shared/Model/Utils";
 
 export interface User {
   kind: "User";
@@ -8,11 +9,9 @@ export interface User {
   password: string;
 }
 
-export type UserPropError = FullNameError | EmailError | PasswordError;
+type UserPropName = keyof DataProps<User>;
 
-export type Success = {
-  kind: "Success";
-};
+export type UserPropError = FullNameError | EmailError | PasswordError;
 
 type FullNameError = {
   kind: "FullNameError";
@@ -80,7 +79,7 @@ const fullNameVR: Record<FullNameValidationErrorCode, PredicateFn> = {
 const emailVR: Record<EmailValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
   INCORRECT: (text: UserValue) => {
-    // TODO: extract function syntacticallyCorrectEmail
+    // TODO: extract function isSyntacticallyCorrectEmail
     if (!text) {
       return false;
     }
@@ -118,7 +117,7 @@ const passwordVR: Record<PasswordValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
 };
 
-export const UserValidationRules = {
+export const UserValidationRules: Record<UserPropName, Record<any, PredicateFn>> = {
   fullName: fullNameVR,
   email: emailVR,
   password: passwordVR,
