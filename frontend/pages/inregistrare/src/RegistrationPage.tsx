@@ -5,7 +5,7 @@ import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ValidatedValue, PredicateFn, UserValue} from "shared/Utils/Validation";
+import {ValidatedValue, UserValue, ValidationRules} from "shared/Utils/Validation";
 import {
   FullNameValidationErrorCode,
   EmailValidationErrorCode,
@@ -17,7 +17,6 @@ import {
 import {assertNever} from "shared/Utils/Language";
 import {DbErrorCode} from "shared/Model/Utils";
 import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
-import {userLicenceAggreementCheckboxValidationRules} from "shared/Scenarios/UserRegistration";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
@@ -65,9 +64,9 @@ export function RegistrationPage() {
             id="userLicenceAgreement"
             value={hasAcceptUserLicenceAgreement.value}
             onValueChange={acceptUserLicenceAgreement}
-            validationRules={userLicenceAggreementCheckboxValidationRules}
+            validationRules={ulaValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={passwordErrorMessages}
+            validationMessages={ulaErrorMessages}
             label={
               <>
                 Sunt de acord cu <a href="/conditii">condițiile de utilizare</a>
@@ -188,4 +187,16 @@ const dbErrorMessages: Record<DbErrorCode, string> = {
 
 const modelErrorMessages: Record<UserModelValidationErrorCode, string> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
+};
+
+// This is not included in UserValidationRules because it’s only used on the
+// front-end.
+type RequireAcceptance = "REQUIRE_ACCEPTANCE";
+
+export const ulaValidationRules: ValidationRules<RequireAcceptance> = {
+  REQUIRE_ACCEPTANCE: (value: UserValue) => value === "on",
+};
+
+const ulaErrorMessages: Record<RequireAcceptance, string> = {
+  REQUIRE_ACCEPTANCE: "Este necesar să acceptați condițiile de utilizare",
 };

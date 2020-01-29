@@ -8,12 +8,11 @@ import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import {describe, it} from "mocha";
 import * as React from "react";
-import {RegistrationPage} from "RegistrationPage";
+import {RegistrationPage, ulaValidationRules} from "RegistrationPage";
 import {stub} from "sinon";
 import {Stub} from "TestHelpers";
 import {UserValidationRules} from "shared/Model/User";
 import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
-import {userLicenceAggreementCheckboxValidationRules} from "shared/Scenarios/UserRegistration";
 
 describe("<RegistrationPage/>", () => {
   type Wrapper = ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
@@ -50,7 +49,7 @@ describe("<RegistrationPage/>", () => {
 
     assertProps<typeof Checkbox>("condițiile de utilizare", fields[3], {
       value: "off",
-      validationRules: userLicenceAggreementCheckboxValidationRules,
+      validationRules: ulaValidationRules,
     });
   });
 
