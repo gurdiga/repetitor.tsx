@@ -19,12 +19,14 @@ export function Checkbox(props: Props) {
   const onInput = FormValidation.buildInputEventHandler(validationRules, setValidationErrorCode, onValueChange);
 
   return (
-    <div className={classes(CheckboxCss.Container, className)}>
-      <input id={id} type="checkbox" onInput={onInput} checked={value === "on"} />
-      <label htmlFor={id}>{label}</label>
+    <>
+      <div className={classes(CheckboxCss.Container, className)}>
+        <input id={id} type="checkbox" onInput={onInput} checked={value === "on"} />
+        <label htmlFor={id}>{label}</label>
+      </div>
       {showValidationMessage && validationErrorCode && (
         <ValidationMessage text={validationMessages[validationErrorCode]} />
       )}
-    </div>
+    </>
   );
 }
