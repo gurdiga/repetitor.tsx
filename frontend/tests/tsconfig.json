@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig-base.json",
   "references": [{"path": "../../shared"}, {"path": "../shared"}],
-  "include": ["src", "../pages/home/src", "../pages/inregistrare/src"],
+  "include": ["src", "../shared/src", "../pages/home/src", "../pages/inregistrare/src"],
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "build",
