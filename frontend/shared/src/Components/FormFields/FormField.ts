@@ -4,7 +4,7 @@ import {ValidationRules} from "shared/Utils/Validation";
 export namespace FormField {
   export interface CommonProps extends React.InputHTMLAttributes<HTMLInputElement> {
     id: string;
-    label: string;
+    label: string | React.ReactElement;
     value: string;
     validationRules: ValidationRules;
     onValueChange: FormValidation.ValueChangeHandler;

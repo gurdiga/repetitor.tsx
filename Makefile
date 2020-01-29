@@ -3,7 +3,7 @@ SHELL=bash
 
 include .env
 
-default: clean build test
+default: test-frontend
 
 test: test-backend test-frontend
 
@@ -19,7 +19,7 @@ test-frontend: node_modules
 		--require tsconfig-paths/register \
 		--reporter dot \
 		--file frontend/tests/src/TestHelpers.ts \
-		frontend/tests/**/*.test.ts? \
+		frontend/tests/**/*.ts?
 
 c: build
 .PHONY: build

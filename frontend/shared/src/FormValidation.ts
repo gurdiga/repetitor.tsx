@@ -9,7 +9,12 @@ export namespace FormValidation {
     onValueChange: ValueChangeHandler
   ): (event: React.ChangeEvent<T>) => void {
     return event => {
-      const {value} = event.target;
+      let {value, type, checked} = event.target;
+
+      if (type === "checkbox") {
+        value = checked ? "off" : "on";
+      }
+
       const result = validateWithRules(value, validationRules);
 
       if (result.kind === "Invalid") {

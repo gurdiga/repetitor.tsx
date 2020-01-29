@@ -12,6 +12,8 @@ import {RegistrationPage} from "RegistrationPage";
 import {stub} from "sinon";
 import {Stub} from "TestHelpers";
 import {UserValidationRules} from "shared/Model/User";
+import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
+import {userLicenceAggreementCheckboxValidationRules} from "shared/Scenarios/UserRegistration";
 
 describe("<RegistrationPage/>", () => {
   type Wrapper = ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
@@ -33,20 +35,22 @@ describe("<RegistrationPage/>", () => {
     const {fields} = form.props();
 
     assertProps<typeof TextField>("numele deplin", fields[0], {
-      label: "Nume deplin",
       autoFocus: true,
       validationRules: UserValidationRules.fullName,
     });
 
     assertProps<typeof TextField>("adresa de email", fields[1], {
-      label: "Adresa de email",
       inputType: "email",
       validationRules: UserValidationRules.email,
     });
 
     assertProps<typeof PasswordField>("parola", fields[2], {
-      label: "Parola",
       validationRules: UserValidationRules.password,
+    });
+
+    assertProps<typeof Checkbox>("condițiile de utilizare", fields[3], {
+      value: "off",
+      validationRules: userLicenceAggreementCheckboxValidationRules,
     });
   });
 
@@ -78,6 +82,7 @@ describe("<RegistrationPage/>", () => {
         const fullNameField: Comp<typeof TextField> = fields[0];
         const emailField: Comp<typeof TextField> = fields[1];
         const passwordField: Comp<typeof PasswordField> = fields[2];
+        const userLicenceAgreementCheckbox: Comp<typeof Checkbox> = fields[3];
 
         fullNameField.props.onValueChange({
           value: "full name",
@@ -91,6 +96,11 @@ describe("<RegistrationPage/>", () => {
 
         passwordField.props.onValueChange({
           value: "password",
+          isValid: true,
+        });
+
+        userLicenceAgreementCheckbox.props.onValueChange({
+          value: "on",
           isValid: true,
         });
 
@@ -111,6 +121,7 @@ describe("<RegistrationPage/>", () => {
         const fullNameField: Comp<typeof TextField> = fields[0];
         const emailField: Comp<typeof TextField> = fields[1];
         const passwordField: Comp<typeof PasswordField> = fields[2];
+        const userLicenceAgreementCheckbox: Comp<typeof Checkbox> = fields[3];
 
         fullNameField.props.onValueChange({
           value: "full name",
@@ -127,6 +138,11 @@ describe("<RegistrationPage/>", () => {
           isValid: false,
         });
 
+        userLicenceAgreementCheckbox.props.onValueChange({
+          value: "on",
+          isValid: true,
+        });
+
         await getSubmitButton(wrapper).props.onClick();
       });
 
@@ -135,7 +151,7 @@ describe("<RegistrationPage/>", () => {
       });
     });
 
-    context("when the backedn responds with an error", () => {
+    context("when the backend responds with an error", () => {
       beforeEach(async () => {
         const form = wrapper.find(Form);
         const {fields} = form.props();

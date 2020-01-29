@@ -5,7 +5,7 @@ import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ValidatedValue} from "shared/Utils/Validation";
+import {ValidatedValue, PredicateFn, UserValue} from "shared/Utils/Validation";
 import {
   FullNameValidationErrorCode,
   EmailValidationErrorCode,
@@ -16,11 +16,14 @@ import {
 } from "shared/Model/User";
 import {assertNever} from "shared/Utils/Language";
 import {DbErrorCode} from "shared/Model/Utils";
+import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
+import {userLicenceAggreementCheckboxValidationRules} from "shared/Scenarios/UserRegistration";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
   const [email, updateEmail] = React.useState(initialFieldValue);
   const [password, updatePassword] = React.useState(initialFieldValue);
+  const [hasAcceptUserLicenceAgreement, acceptUserLicenceAgreement] = React.useState(userLicenceAgreementInitialValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
@@ -57,6 +60,19 @@ export function RegistrationPage() {
             validationRules={validationRules.password}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={passwordErrorMessages}
+          />,
+          <Checkbox
+            id="userLicenceAgreement"
+            value={hasAcceptUserLicenceAgreement.value}
+            onValueChange={acceptUserLicenceAgreement}
+            validationRules={userLicenceAggreementCheckboxValidationRules}
+            showValidationMessage={shouldShowValidationMessage}
+            validationMessages={passwordErrorMessages}
+            label={
+              <>
+                Sunt de acord cu <a href="/conditii">condițiile de utilizare</a>
+              </>
+            }
           />,
         ]}
         actionButtons={[
@@ -139,6 +155,11 @@ const placeholderServerResponse: ServerResponse = {
 
 const initialFieldValue: ValidatedValue<string> = {
   value: "",
+  isValid: false,
+};
+
+const userLicenceAgreementInitialValue: ValidatedValue<string> = {
+  value: "off",
   isValid: false,
 };
 
