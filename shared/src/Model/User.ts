@@ -11,6 +11,53 @@ export interface User {
 
 type UserPropName = keyof DataProps<User>;
 
+export const UserFullNameValidationRules: Record<FullNameValidationErrorCode, PredicateFn> = {
+  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
+  TOO_SHORT: (text: UserValue) => !!text && text.trim().length >= 5,
+  TOO_LONG: (text: UserValue) => !!text && text.trim().length <= 50,
+};
+
+export const UserEmailValidationRules: Record<EmailValidationErrorCode, PredicateFn> = {
+  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
+  INCORRECT: (text: UserValue) => {
+    // TODO: extract function isSyntacticallyCorrectEmail
+    if (!text) {
+      return false;
+    }
+
+    text = text.trim();
+
+    const keyCharacters = [".", "@"];
+    const containsKeyCharacters = keyCharacters.every(c => !!text && text.includes(c));
+
+    if (!containsKeyCharacters) {
+      return false;
+    }
+
+    const sides = text.split("@");
+    const [login, domain] = sides.map(s => s.trim());
+
+    const doesLoginLookReasonable = login.length >= 2 && /[a-z0-9]+/i.test(login);
+
+    if (!doesLoginLookReasonable) {
+      return false;
+    }
+
+    const domainLevels = domain.split(/\./).reverse();
+    const doDomainPartsLookReasonable = /[a-z]{2,}/i.test(domainLevels[0]) && domainLevels.every(l => l.length >= 1);
+
+    if (!doDomainPartsLookReasonable) {
+      return false;
+    }
+
+    return true;
+  },
+};
+
+export const UserPasswordValidationRules: Record<PasswordValidationErrorCode, PredicateFn> = {
+  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
+};
+
 export type UserPropError = FullNameError | EmailError | PasswordError;
 
 type FullNameError = {
@@ -70,55 +117,8 @@ export function makeUserFromRegistrationFormDTO(
   };
 }
 
-const fullNameVR: Record<FullNameValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
-  TOO_SHORT: (text: UserValue) => !!text && text.trim().length >= 5,
-  TOO_LONG: (text: UserValue) => !!text && text.trim().length <= 50,
-};
-
-const emailVR: Record<EmailValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
-  INCORRECT: (text: UserValue) => {
-    // TODO: extract function isSyntacticallyCorrectEmail
-    if (!text) {
-      return false;
-    }
-
-    text = text.trim();
-
-    const keyCharacters = [".", "@"];
-    const containsKeyCharacters = keyCharacters.every(c => !!text && text.includes(c));
-
-    if (!containsKeyCharacters) {
-      return false;
-    }
-
-    const sides = text.split("@");
-    const [login, domain] = sides.map(s => s.trim());
-
-    const doesLoginLookReasonable = login.length >= 2 && /[a-z0-9]+/i.test(login);
-
-    if (!doesLoginLookReasonable) {
-      return false;
-    }
-
-    const domainLevels = domain.split(/\./).reverse();
-    const doDomainPartsLookReasonable = /[a-z]{2,}/i.test(domainLevels[0]) && domainLevels.every(l => l.length >= 1);
-
-    if (!doDomainPartsLookReasonable) {
-      return false;
-    }
-
-    return true;
-  },
-};
-
-const passwordVR: Record<PasswordValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
-};
-
-export const UserValidationRules: Record<UserPropName, Record<any, PredicateFn>> = {
-  fullName: fullNameVR,
-  email: emailVR,
-  password: passwordVR,
+const UserValidationRules: Record<UserPropName, Record<any, PredicateFn>> = {
+  fullName: UserFullNameValidationRules,
+  email: UserEmailValidationRules,
+  password: UserPasswordValidationRules,
 };

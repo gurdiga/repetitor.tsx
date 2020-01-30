@@ -5,14 +5,13 @@ import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ValidatedValue, UserValue, ValidationRules} from "shared/Utils/Validation";
+import {ValidatedValue, UserValue, ValidationRules, ValidationMessages, ErrorMessages} from "shared/Utils/Validation";
 import {
-  FullNameValidationErrorCode,
-  EmailValidationErrorCode,
-  PasswordValidationErrorCode,
   UserModelValidationErrorCode,
-  UserValidationRules,
   User,
+  UserFullNameValidationRules,
+  UserEmailValidationRules,
+  UserPasswordValidationRules,
 } from "shared/Model/User";
 import {assertNever} from "shared/Utils/Language";
 import {DbErrorCode} from "shared/Model/Utils";
@@ -37,7 +36,7 @@ export function RegistrationPage() {
             label="Nume deplin"
             value={fullName.value}
             onValueChange={updateFullName}
-            validationRules={validationRules.fullName}
+            validationRules={UserFullNameValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={fullNameErrorMessages}
           />,
@@ -47,7 +46,7 @@ export function RegistrationPage() {
             value={email.value}
             inputType="email"
             onValueChange={updateEmail}
-            validationRules={validationRules.email}
+            validationRules={UserEmailValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={emailErrorMessages}
           />,
@@ -56,7 +55,7 @@ export function RegistrationPage() {
             label="Parola"
             value={password.value}
             onValueChange={updatePassword}
-            validationRules={validationRules.password}
+            validationRules={UserPasswordValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={passwordErrorMessages}
           />,
@@ -164,28 +163,26 @@ const userLicenceAgreementInitialValue: ValidatedValue<string> = {
 
 type FieldName = keyof Omit<User, "kind">;
 
-const validationRules = UserValidationRules;
-
-const fullNameErrorMessages: Record<FullNameValidationErrorCode, string> = {
+const fullNameErrorMessages: ValidationMessages<typeof UserFullNameValidationRules> = {
   REQUIRED: "Numele deplin lipsește",
   TOO_SHORT: "Numele este prea scurt",
   TOO_LONG: "Numele este prea lung",
 };
 
-const emailErrorMessages: Record<EmailValidationErrorCode, string> = {
+const emailErrorMessages: ValidationMessages<typeof UserEmailValidationRules> = {
   REQUIRED: "Adresa de email lipsește",
   INCORRECT: "Adresa de email este invalidă",
 };
 
-const passwordErrorMessages: Record<PasswordValidationErrorCode, string> = {
+const passwordErrorMessages: ValidationMessages<typeof UserPasswordValidationRules> = {
   REQUIRED: "Parola lipsește",
 };
 
-const dbErrorMessages: Record<DbErrorCode, string> = {
+const dbErrorMessages: ErrorMessages<DbErrorCode> = {
   ERROR: "Eroare neprevăzută de bază de date",
 };
 
-const modelErrorMessages: Record<UserModelValidationErrorCode, string> = {
+const modelErrorMessages: ErrorMessages<UserModelValidationErrorCode> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
 };
 
@@ -197,6 +194,6 @@ export const ulaValidationRules: ValidationRules<RequireAcceptance> = {
   REQUIRE_ACCEPTANCE: (value: UserValue) => value === "on",
 };
 
-const ulaErrorMessages: Record<RequireAcceptance, string> = {
+const ulaErrorMessages: ErrorMessages<RequireAcceptance> = {
   REQUIRE_ACCEPTANCE: "Este necesar să acceptați condițiile de utilizare",
 };

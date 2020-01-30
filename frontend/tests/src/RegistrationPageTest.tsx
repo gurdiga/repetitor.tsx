@@ -1,23 +1,21 @@
 import {expect} from "chai";
-import {shallow, ShallowWrapper} from "enzyme";
-import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
+import {shallow} from "enzyme";
 import {Form} from "frontend/shared/Components/Form";
+import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
+import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
 import {describe, it} from "mocha";
 import * as React from "react";
 import {RegistrationPage, ulaValidationRules} from "RegistrationPage";
 import {stub} from "sinon";
-import {Stub} from "TestHelpers";
-import {UserValidationRules} from "shared/Model/User";
-import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
+import {Comp, Stub, Wrapper, assertProps} from "TestHelpers";
+import {UserFullNameValidationRules, UserEmailValidationRules, UserPasswordValidationRules} from "shared/Model/User";
 
 describe("<RegistrationPage/>", () => {
-  type Wrapper = ShallowWrapper<React.ComponentProps<typeof RegistrationPage>, {}>;
-
-  let wrapper: Wrapper;
+  let wrapper: Wrapper<typeof RegistrationPage>;
 
   before(() => {
     wrapper = shallow(<RegistrationPage />);
@@ -35,16 +33,16 @@ describe("<RegistrationPage/>", () => {
 
     assertProps<typeof TextField>("numele deplin", fields[0], {
       autoFocus: true,
-      validationRules: UserValidationRules.fullName,
+      validationRules: UserFullNameValidationRules,
     });
 
     assertProps<typeof TextField>("adresa de email", fields[1], {
       inputType: "email",
-      validationRules: UserValidationRules.email,
+      validationRules: UserEmailValidationRules,
     });
 
     assertProps<typeof PasswordField>("parola", fields[2], {
-      validationRules: UserValidationRules.password,
+      validationRules: UserPasswordValidationRules,
     });
 
     assertProps<typeof Checkbox>("condițiile de utilizare", fields[3], {
@@ -186,22 +184,9 @@ describe("<RegistrationPage/>", () => {
     });
   });
 
-  type Comp<C extends React.FunctionComponent<any>> = React.ReactElement<React.ComponentProps<C>>;
-
-  function getSubmitButton(wrapper: Wrapper): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
+  function getSubmitButton(
+    wrapper: Wrapper<typeof RegistrationPage>
+  ): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
     return wrapper.find(Form).props().actionButtons[0];
-  }
-
-  function assertProps<C extends React.FunctionComponent<any>>(
-    subject: string,
-    field: JSX.Element,
-    expectedProps: Partial<React.ComponentProps<C>>
-  ): void {
-    for (const propName in expectedProps) {
-      expect(
-        field.props[propName],
-        `“${subject}” is expected to have prop “${propName}” of “${expectedProps[propName]}”`
-      ).to.equal(expectedProps[propName]);
-    }
   }
 });

@@ -1,4 +1,6 @@
 export type ValidationRules<ErrorCodes extends string = string> = Record<ErrorCodes, PredicateFn>;
+export type ValidationMessages<VR extends ValidationRules> = Record<keyof VR, string>;
+export type ErrorMessages<T extends string> = Record<T, string>;
 export type PredicateFn = (value: UserValue) => boolean;
 export type UserValue = string | undefined;
 
