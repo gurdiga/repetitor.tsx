@@ -63,7 +63,6 @@ describe("<RegistrationPage/>", () => {
     let postActionStub: Stub<typeof ScenarioRunner.runScenario>;
 
     beforeEach(() => {
-      // TODO: implement the unhappy path test too.
       postActionStub = stub(ScenarioRunner, "runScenario").resolves({kind: "Success"});
     });
 
@@ -106,7 +105,7 @@ describe("<RegistrationPage/>", () => {
 
       it("submits the field values to the backend", () => {
         expect(ScenarioRunner.runScenario).to.have.been.called;
-        expect(wrapper.find(".server-response-received-success"), "success message").to.exist;
+        expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
       });
     });
 
@@ -179,7 +178,7 @@ describe("<RegistrationPage/>", () => {
 
       it("submits the form and displays the error message", () => {
         expect(ScenarioRunner.runScenario).to.have.been.called;
-        expect(wrapper.find(".server-response-received-error")).to.exist;
+        expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
       });
     });
   });
