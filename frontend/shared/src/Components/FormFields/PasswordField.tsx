@@ -67,7 +67,7 @@ export function PasswordField(props: Props) {
           title={isMasked ? "Demască parola" : "Maschează parola"}
           onClick={() => setIsMasked(!isMasked)}
         >
-          {isMasked ? eyeClosedIcon : eyeOpenedIcon}
+          {isMasked ? eyeOpenedIcon : eyeClosedIcon}
         </button>
       </span>
 

@@ -7,14 +7,16 @@ export namespace PasswordFieldCss {
     position: "relative",
   });
 
+  const eyeSize = em(2);
+
   export const Input = style(InputCss.InputStyle, {
     width: percent(100),
     fontFamily: "monospace",
     fontSize: em(1.25),
     fontWeight: "normal",
+    paddingRight: eyeSize,
+    textOverflow: "ellipsis",
   });
-
-  const eyeSize = em(2);
 
   export const EyeButton = style({
     border: "none",
