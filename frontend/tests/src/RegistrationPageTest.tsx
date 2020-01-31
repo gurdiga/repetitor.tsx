@@ -60,14 +60,14 @@ describe("<RegistrationPage/>", () => {
   });
 
   context("form submission", () => {
-    let postActionStub: Stub<typeof ScenarioRunner.runScenario>;
+    let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
 
     beforeEach(() => {
-      postActionStub = stub(ScenarioRunner, "runScenario").resolves({kind: "Success"});
+      runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "Success"});
     });
 
     afterEach(() => {
-      postActionStub.restore();
+      runScenarioStub.restore();
     });
 
     context("when fields are properly filled in", () => {
@@ -104,7 +104,7 @@ describe("<RegistrationPage/>", () => {
       });
 
       it("submits the field values to the backend", () => {
-        expect(ScenarioRunner.runScenario).to.have.been.called;
+        expect(runScenarioStub.called).to.be.true;
         expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
       });
     });
@@ -143,7 +143,7 @@ describe("<RegistrationPage/>", () => {
       });
 
       it("does not submit the form", () => {
-        expect(ScenarioRunner.runScenario).not.to.have.been.called;
+        expect(runScenarioStub.called).to.be.false;
       });
     });
 
@@ -171,13 +171,13 @@ describe("<RegistrationPage/>", () => {
           isValid: true,
         });
 
-        postActionStub.restore();
-        postActionStub = stub(ScenarioRunner, "runScenario").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
+        runScenarioStub.restore();
+        runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
         await getSubmitButton(wrapper).props.onClick();
       });
 
       it("submits the form and displays the error message", () => {
-        expect(ScenarioRunner.runScenario).to.have.been.called;
+        expect(runScenarioStub.called).to.be.true;
         expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
       });
     });
