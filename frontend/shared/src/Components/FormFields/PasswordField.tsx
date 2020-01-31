@@ -57,7 +57,7 @@ export function PasswordField(props: Props) {
           onClick={onGenerateButtonClick}
           title={PasswordGenerator.description}
         >
-          Generează una bună
+          👍 Generează una bună
         </button>
 
         <button

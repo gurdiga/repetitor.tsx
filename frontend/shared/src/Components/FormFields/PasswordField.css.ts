@@ -38,7 +38,6 @@ export namespace PasswordFieldCss {
     border: "none",
     backgroundColor: "transparent",
     padding: 0,
-    textDecoration: "underline",
     fontSize: percent(75),
     position: "absolute",
     right: 0,
