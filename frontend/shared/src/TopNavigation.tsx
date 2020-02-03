@@ -10,6 +10,9 @@ export function TopNavigation() {
       <li>
         <a href="/inregistrare/">Înregistrare</a>
       </li>
+      <li>
+        <a href="/autentificare-repetitor/">Autentificare repetitor</a>
+      </li>
     </ul>
   );
 }
