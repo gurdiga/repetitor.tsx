@@ -7,11 +7,11 @@ import {assertEnvVars} from "Utils/Env";
 
 export const HttpPort = getPortNumber();
 
-const AppRoot = path.join(__dirname, "../../..");
+const AppRoot = path.join(__dirname, "../../../..");
 const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 
-type HttpRequest = Pick<express.Request, "path" | "body">;
+type HttpRequest = Pick<express.Request, "path" | "body" | "csrfToken">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
@@ -20,7 +20,7 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
   try {
     const result = await runScenario(scenarioName, dto);
 
-    res.json(result);
+    res.json({...result, csrfToken: req.csrfToken()});
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : error || "Error with no message";
 
@@ -75,7 +75,7 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   if (PagePathNames.includes(pagePathName)) {
     const htmlTemplate = fs.readFileSync(`${__dirname}/index.html`, "utf8");
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
-    const html = htmlTemplate.replace("MAIN_MODULE_PATH", requireModulePath);
+    const html = htmlTemplate.replace("MAIN_MODULE_PATH", requireModulePath).replace("CSRF_TOKEN", req.csrfToken());
 
     res.send(html);
   } else {

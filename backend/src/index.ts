@@ -3,6 +3,7 @@ import * as compression from "compression";
 import * as express from "express";
 import * as morgan from "morgan";
 import * as helmet from "helmet";
+import * as csurf from "csurf";
 import {
   handlePost,
   HttpPort,
@@ -10,11 +11,16 @@ import {
   sendPageHtml,
   sendVendorModule,
   sendSecurityTxt,
-} from "Utils/ExpressAdapter";
+} from "Utils/Express/Adapter";
+import {session} from "Utils/Express/Session";
+
+var csrfProtection = csurf();
 
 express()
+  .set("trust proxy", true)
   .use(helmet())
   .use(morgan("tiny"))
+  .use(session)
   .use(compression())
   .use(express.json())
   .use(cors())
@@ -25,6 +31,6 @@ express()
   .get(["/bundle.js", "/:pagePathName/bundle.js"], (req, res) => {
     sendPageBundle(req.params.pagePathName, res);
   })
-  .get("*", sendPageHtml)
-  .post("/", handlePost)
+  .get("*", csrfProtection, sendPageHtml)
+  .post("/", csrfProtection, handlePost)
   .listen(HttpPort, "localhost");
