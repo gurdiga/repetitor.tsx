@@ -1,3 +1,5 @@
+import {ErrorMessages} from "shared/Utils/Validation";
+
 export type Success = {
   kind: "Success";
 };
@@ -5,6 +7,10 @@ export type Success = {
 export type DbError = {
   kind: "DbError";
   errorCode: DbErrorCode;
+};
+
+export const dbErrorMessages: ErrorMessages<DbErrorCode> = {
+  ERROR: "Eroare neprevăzută de bază de date",
 };
 
 export type DbErrorCode = "ERROR";

@@ -9,6 +9,11 @@ export interface ValidatedValue<V extends UserValue = UserValue> {
   isValid: boolean;
 }
 
+export const initialFieldValue: ValidatedValue<string> = {
+  value: "",
+  isValid: false,
+};
+
 type ValidationResult<C, V> =
   | {
       kind: "Valid";

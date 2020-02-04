@@ -1,5 +1,5 @@
 import {UserRegistrationDTO} from "shared/Scenarios/UserRegistration";
-import {PredicateFn, UserValue, validateWithRules} from "shared/Utils/Validation";
+import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/Utils/Validation";
 import {DataProps} from "shared/Model/Utils";
 
 export interface User {
@@ -9,7 +9,7 @@ export interface User {
   password: string;
 }
 
-type UserPropName = keyof DataProps<User>;
+export type UserPropName = keyof DataProps<User>;
 
 export const UserFullNameValidationRules: Record<FullNameValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
@@ -54,8 +54,17 @@ export const UserEmailValidationRules: Record<EmailValidationErrorCode, Predicat
   },
 };
 
+export const emailErrorMessages: ValidationMessages<typeof UserEmailValidationRules> = {
+  REQUIRED: "Adresa de email lipsește",
+  INCORRECT: "Adresa de email este invalidă",
+};
+
 export const UserPasswordValidationRules: Record<PasswordValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
+};
+
+export const passwordErrorMessages: ValidationMessages<typeof UserPasswordValidationRules> = {
+  REQUIRED: "Parola lipsește",
 };
 
 export type UserPropError = FullNameError | EmailError | PasswordError;

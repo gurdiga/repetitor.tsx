@@ -53,6 +53,12 @@ export enum ResponseState {
   ReceivedError = "received-error",
 }
 
+export const placeholderServerResponse: ServerResponse = {
+  responseState: ResponseState.NotYetSent,
+  responseText: "",
+  shouldShow: false,
+};
+
 export interface TransportError {
   kind: "TransportError";
   error: string;

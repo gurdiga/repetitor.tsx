@@ -130,13 +130,13 @@ describe("<RegistrationPage/>", () => {
         });
 
         passwordField.props.onValueChange({
-          value: "", // <---- Do not fill in the password
-          isValid: false,
+          value: "secret",
+          isValid: true,
         });
 
         userLicenceAgreementCheckbox.props.onValueChange({
-          value: "on",
-          isValid: true,
+          value: "off", // <---- Not checking the User Agreement
+          isValid: false,
         });
 
         await getSubmitButton(wrapper).props.onClick();
@@ -155,6 +155,7 @@ describe("<RegistrationPage/>", () => {
         const fullNameField: Comp<typeof TextField> = fields[0];
         const emailField: Comp<typeof TextField> = fields[1];
         const passwordField: Comp<typeof PasswordField> = fields[2];
+        const ulaCheckbox: Comp<typeof Checkbox> = fields[3];
 
         fullNameField.props.onValueChange({
           value: "full name",
@@ -168,6 +169,11 @@ describe("<RegistrationPage/>", () => {
 
         passwordField.props.onValueChange({
           value: "password",
+          isValid: true,
+        });
+
+        ulaCheckbox.props.onValueChange({
+          value: "on",
           isValid: true,
         });
 

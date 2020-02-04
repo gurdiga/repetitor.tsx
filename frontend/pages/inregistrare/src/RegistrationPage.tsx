@@ -1,20 +1,30 @@
-import {runScenario, ResponseState, ServerResponse} from "frontend/shared/ScenarioRunner";
+import {runScenario, ResponseState, ServerResponse, placeholderServerResponse} from "frontend/shared/ScenarioRunner";
 import {Form} from "frontend/shared/Components/Form";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
-import {ValidatedValue, UserValue, ValidationRules, ValidationMessages, ErrorMessages} from "shared/Utils/Validation";
+import {
+  ValidatedValue,
+  UserValue,
+  ValidationRules,
+  ValidationMessages,
+  ErrorMessages,
+  initialFieldValue,
+} from "shared/Utils/Validation";
 import {
   UserModelValidationErrorCode,
   User,
   UserFullNameValidationRules,
   UserEmailValidationRules,
   UserPasswordValidationRules,
+  emailErrorMessages,
+  passwordErrorMessages,
+  UserPropName,
 } from "shared/Model/User";
 import {assertNever} from "shared/Utils/Language";
-import {DbErrorCode} from "shared/Model/Utils";
+import {dbErrorMessages} from "shared/Model/Utils";
 import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
 
 export function RegistrationPage() {
@@ -78,7 +88,7 @@ export function RegistrationPage() {
             label="Înregistrează"
             onClick={async () => {
               toggleValidationMessage(true);
-              await submitForm({fullName, email, password});
+              await submitForm({fullName, email, password, hasAcceptUserLicenceAgreement});
             }}
           />,
         ]}
@@ -89,7 +99,9 @@ export function RegistrationPage() {
     </PageLayout>
   );
 
-  async function submitForm(fields: Record<FieldName, ValidatedValue<string>>): Promise<void> {
+  async function submitForm(
+    fields: Record<UserPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
+  ): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
     if (anyInvalidField) {
@@ -145,41 +157,15 @@ export function RegistrationPage() {
   }
 }
 
-const placeholderServerResponse: ServerResponse = {
-  responseState: ResponseState.NotYetSent,
-  responseText: "",
-  shouldShow: false,
-};
-
-const initialFieldValue: ValidatedValue<string> = {
-  value: "",
-  isValid: false,
-};
-
 const userLicenceAgreementInitialValue: ValidatedValue<string> = {
   value: "off",
   isValid: false,
 };
 
-type FieldName = keyof Omit<User, "kind">;
-
 const fullNameErrorMessages: ValidationMessages<typeof UserFullNameValidationRules> = {
   REQUIRED: "Numele deplin lipsește",
   TOO_SHORT: "Numele este prea scurt",
   TOO_LONG: "Numele este prea lung",
-};
-
-const emailErrorMessages: ValidationMessages<typeof UserEmailValidationRules> = {
-  REQUIRED: "Adresa de email lipsește",
-  INCORRECT: "Adresa de email este invalidă",
-};
-
-const passwordErrorMessages: ValidationMessages<typeof UserPasswordValidationRules> = {
-  REQUIRED: "Parola lipsește",
-};
-
-const dbErrorMessages: ErrorMessages<DbErrorCode> = {
-  ERROR: "Eroare neprevăzută de bază de date",
 };
 
 const modelErrorMessages: ErrorMessages<UserModelValidationErrorCode> = {
