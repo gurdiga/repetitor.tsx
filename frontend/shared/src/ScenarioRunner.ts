@@ -4,16 +4,35 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
   scenarioName: SN,
   dto: S["DTO"]
 ): Promise<S["Result"] | TransportError> {
+  const csrfTokenMetaTag = document.head.querySelector('meta[name="csrf_token"]');
+
+  if (!csrfTokenMetaTag) {
+    return {
+      kind: "TransportError",
+      error: "Lipsește codul CSRF (meta tag)",
+    };
+  }
+
+  const csrfToken = csrfTokenMetaTag.getAttribute("content");
+
+  if (!csrfToken) {
+    return {
+      kind: "TransportError",
+      error: "Lipsește codul CSRF",
+    };
+  }
+
   try {
+    const requestBody = JSON.stringify({
+      scenarioName,
+      dto,
+      _csrf: csrfToken,
+    });
+
     const response = await fetch("/", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        scenarioName,
-        dto,
-      }),
+      headers: {"Content-Type": "application/json"},
+      body: requestBody,
       redirect: "error",
       cache: "no-store",
     });
@@ -30,7 +49,7 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
     } else {
       return {
         kind: "TransportError",
-        error: response.statusText,
+        error: `Eroare de transmisiune: ${response.status} ${response.statusText}`,
       };
     }
   } catch (e) {
