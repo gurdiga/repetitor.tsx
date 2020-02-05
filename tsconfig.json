@@ -2,9 +2,8 @@
   "files": [],
   "references": [
     {"path": "./backend"},
-    {"path": "./frontend/tests"},
     {"path": "./frontend/pages/home"},
-    {"path": "./frontend/pages/inregistrare"}
+    {"path": "./frontend/pages/inregistrare"},
     {"path": "./frontend/pages/autentificare-repetitor"}
   ]
 }
