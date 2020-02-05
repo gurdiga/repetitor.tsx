@@ -4,12 +4,14 @@ import {style} from "typestyle";
 
 export namespace PasswordFieldCss {
   export const InputContainer = style({
+    $debugName: "InputContainer",
     position: "relative",
   });
 
   const eyeSize = em(2);
 
   export const Input = style(InputCss.InputStyle, {
+    $debugName: "Input",
     width: percent(100),
     fontFamily: "monospace",
     fontSize: em(1.25),
@@ -19,6 +21,7 @@ export namespace PasswordFieldCss {
   });
 
   export const EyeButton = style({
+    $debugName: "EyeButton",
     border: "none",
     backgroundColor: "transparent",
     width: eyeSize,
@@ -35,6 +38,7 @@ export namespace PasswordFieldCss {
   });
 
   export const GenerateButton = style({
+    $debugName: "GenerateButton",
     border: "none",
     backgroundColor: "transparent",
     padding: 0,

@@ -1,9 +1,10 @@
 import * as React from "react";
 import {expect} from "chai";
-import {shallow, ShallowWrapper} from "enzyme";
+import {shallow} from "enzyme";
 import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
 import {PredicateFn} from "shared/Utils/Validation";
 import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
+import {Wrapper} from "TestHelpers";
 
 type ValidationErrorCodes = "ONE" | "TWO" | "THREE";
 
@@ -20,9 +21,7 @@ const validationMessages: Record<ValidationErrorCodes, string> = {
 };
 
 describe("<RegistrationPage/>", () => {
-  type Wrapper = ShallowWrapper<React.ComponentProps<typeof Checkbox>, {}>;
-
-  let wrapper: Wrapper;
+  let wrapper: Wrapper<typeof Checkbox>;
 
   it("does not render error when all the predicates pass", () => {
     wrapper = render(validationRules);
@@ -34,7 +33,7 @@ describe("<RegistrationPage/>", () => {
     expect(wrapper.find(ValidationMessage).prop("text")).to.equal("Due");
   });
 
-  function render(validationRules: Record<ValidationErrorCodes, PredicateFn>): Wrapper {
+  function render(validationRules: Record<ValidationErrorCodes, PredicateFn>): Wrapper<typeof Checkbox> {
     return shallow(
       <Checkbox
         id="yes"

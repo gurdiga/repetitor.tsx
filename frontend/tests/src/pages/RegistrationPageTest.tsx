@@ -11,7 +11,7 @@ import {describe, it} from "mocha";
 import * as React from "react";
 import {RegistrationPage, ulaValidationRules} from "RegistrationPage";
 import {stub} from "sinon";
-import {Comp, Stub, Wrapper, assertProps} from "TestHelpers";
+import {Comp, Stub, Wrapper, expectProps} from "TestHelpers";
 import {UserFullNameValidationRules, UserEmailValidationRules, UserPasswordValidationRules} from "shared/Model/User";
 
 describe("<RegistrationPage/>", () => {
@@ -31,21 +31,21 @@ describe("<RegistrationPage/>", () => {
     const form = wrapper.find(Form);
     const {fields} = form.props();
 
-    assertProps<typeof TextField>("numele deplin", fields[0], {
+    expectProps<typeof TextField>("numele deplin", fields[0], {
       autoFocus: true,
       validationRules: UserFullNameValidationRules,
     });
 
-    assertProps<typeof TextField>("adresa de email", fields[1], {
+    expectProps<typeof TextField>("adresa de email", fields[1], {
       inputType: "email",
       validationRules: UserEmailValidationRules,
     });
 
-    assertProps<typeof PasswordField>("parola", fields[2], {
+    expectProps<typeof PasswordField>("parola", fields[2], {
       validationRules: UserPasswordValidationRules,
     });
 
-    assertProps<typeof Checkbox>("condițiile de utilizare", fields[3], {
+    expectProps<typeof Checkbox>("condițiile de utilizare", fields[3], {
       value: "off",
       validationRules: ulaValidationRules,
     });
@@ -54,7 +54,7 @@ describe("<RegistrationPage/>", () => {
   it("renders the appropriate action buttons", () => {
     const submitButton = getSubmitButton(wrapper);
 
-    assertProps<typeof SubmitButton>("parola", submitButton, {
+    expectProps<typeof SubmitButton>("parola", submitButton, {
       label: "Înregistrează",
     });
   });

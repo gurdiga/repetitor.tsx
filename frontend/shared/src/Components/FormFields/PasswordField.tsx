@@ -6,11 +6,13 @@ import {PasswordGenerator} from "frontend/shared/PasswordGenerator";
 import * as React from "react";
 import {getValidationErrorCode} from "shared/Utils/Validation";
 
-interface Props extends FormField.CommonProps {}
+interface Props extends FormField.CommonProps {
+  hasGenerateButton?: boolean;
+}
 
 export function PasswordField(props: Props) {
   const {id, label, value: initialValue, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
-  const {validationMessages} = props;
+  const {validationMessages, hasGenerateButton} = props;
 
   const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
@@ -51,14 +53,16 @@ export function PasswordField(props: Props) {
           ref={inputRef}
         />
 
-        <button
-          type="button"
-          className={PasswordFieldCss.GenerateButton}
-          onClick={onGenerateButtonClick}
-          title={PasswordGenerator.description}
-        >
-          👍 Generează una bună
-        </button>
+        {hasGenerateButton && (
+          <button
+            type="button"
+            className={PasswordFieldCss.GenerateButton}
+            onClick={onGenerateButtonClick}
+            title={PasswordGenerator.description}
+          >
+            👍 Generează una bună
+          </button>
+        )}
 
         <button
           type="button"

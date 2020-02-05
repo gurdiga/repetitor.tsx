@@ -68,6 +68,7 @@ export function RegistrationPage() {
             validationRules={UserPasswordValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={passwordErrorMessages}
+            hasGenerateButton={true}
           />,
           <Checkbox
             id="userLicenceAgreement"
