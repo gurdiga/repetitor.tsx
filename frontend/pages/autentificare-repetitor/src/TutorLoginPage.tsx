@@ -36,6 +36,7 @@ export function TutorLoginPage() {
             validationRules={UserEmailValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={emailErrorMessages}
+            autoFocus={true}
           />,
           <PasswordField
             id="password"
