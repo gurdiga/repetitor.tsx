@@ -4,15 +4,9 @@ import * as express from "express";
 import * as morgan from "morgan";
 import * as helmet from "helmet";
 import * as csurf from "csurf";
-import {
-  handlePost,
-  HttpPort,
-  sendPageBundle,
-  sendPageHtml,
-  sendVendorModule,
-  sendSecurityTxt,
-} from "Utils/Express/Adapter";
+import {handlePost, sendPageBundle, sendPageHtml, sendVendorModule, sendSecurityTxt} from "Utils/Express/Adapter";
 import {session} from "Utils/Express/Session";
+import {requireNumericEnvVar} from "Utils/Env";
 
 var csrfProtection = csurf();
 
@@ -33,4 +27,4 @@ express()
   })
   .get("*", csrfProtection, sendPageHtml)
   .post("/", csrfProtection, handlePost)
-  .listen(HttpPort, "localhost");
+  .listen(requireNumericEnvVar("BACKEND_HTTP_PORT"), "localhost");

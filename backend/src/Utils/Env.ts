@@ -11,3 +11,11 @@ export function requireEnvVar(varName: string): string {
 
   return process.env[varName]!;
 }
+
+export function requireNumericEnvVar(varName: string): number {
+  const n = parseInt(requireEnvVar(varName), 10);
+
+  assert(!isNaN(n), `Expected env var ${varName} to be a number, not ${n}`);
+
+  return n;
+}

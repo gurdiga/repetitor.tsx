@@ -1,11 +1,7 @@
-import * as assert from "assert";
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
 import {runScenario} from "Utils/ScenarioRunner";
-import {assertEnvVars} from "Utils/Env";
-
-export const HttpPort = getPortNumber();
 
 const AppRoot = path.join(__dirname, "../../../..");
 const RelativePagesRoot = "frontend/pages";
@@ -95,14 +91,4 @@ function getPagePathNames(pagesRoot: string): string[] {
     .readdirSync(pagesRoot, {withFileTypes: true})
     .filter(d => d.isDirectory())
     .map(f => f.name);
-}
-
-function getPortNumber(): number {
-  assertEnvVars(["BACKEND_HTTP_PORT"]);
-
-  const portNumber = parseInt(process.env.BACKEND_HTTP_PORT!, 10);
-
-  assert(!isNaN(portNumber), `Invalid variable value for BACKEND_HTTP_PORT: ${portNumber}`);
-
-  return portNumber;
 }
