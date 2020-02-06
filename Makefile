@@ -133,7 +133,11 @@ pre-commit: lint build test
 
 lint:
 	eslint . \
+		--config config-files/.eslintrc.js \
 		--ignore-path .gitignore \
 		--ext .ts,.tsx
 
 l: lint
+
+env:
+	cp --interactive config-files/.env.template .env

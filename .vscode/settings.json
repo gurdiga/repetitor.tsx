@@ -11,5 +11,6 @@
   },
   "search.exclude": {
     "**/build": true
-  }
+  },
+  "eslint.options": {"configFile": "config-files/.eslintrc.js"}
 }
