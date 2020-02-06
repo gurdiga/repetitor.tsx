@@ -76,14 +76,14 @@ type FullNameError = {
 
 export type FullNameValidationErrorCode = "REQUIRED" | "TOO_SHORT" | "TOO_LONG";
 
-type EmailError = {
+export type EmailError = {
   kind: "EmailError";
   errorCode: EmailValidationErrorCode;
 };
 
 export type EmailValidationErrorCode = "REQUIRED" | "INCORRECT";
 
-type PasswordError = {
+export type PasswordError = {
   kind: "PasswordError";
   errorCode: PasswordValidationErrorCode;
 };

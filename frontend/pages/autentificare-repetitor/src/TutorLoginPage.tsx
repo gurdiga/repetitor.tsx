@@ -15,6 +15,7 @@ import {initialFieldValue, ValidatedValue} from "shared/Utils/Validation";
 import {ServerResponse, runScenario, ResponseState, placeholderServerResponse} from "frontend/shared/ScenarioRunner";
 import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
+import {TutorLoginDTO} from "shared/Scenarios/TutorLogin";
 
 export function TutorLoginPage() {
   const [email, updateEmail] = React.useState(initialFieldValue);
@@ -64,15 +65,14 @@ export function TutorLoginPage() {
     </PageLayout>
   );
 
-  async function submitForm(fields: Record<UserPropName, ValidatedValue<string>>): Promise<void> {
+  async function submitForm(fields: Record<keyof TutorLoginDTO, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
     if (anyInvalidField) {
       return;
     }
 
-    const response = await runScenario("UserRegistration", {
-      fullName: fields.fullName.value,
+    const response = await runScenario("TutorLogin", {
       email: fields.email.value,
       password: fields.password.value,
     });
@@ -103,13 +103,13 @@ export function TutorLoginPage() {
         [responseState, responseText] = [ResponseState.ReceivedError, response.error];
         break;
       default:
-      // assertNever(response); // TODO fix this
+        assertNever(response); // TODO fix this
     }
 
-    // setServerResponse({ // TODO fix this
-    //   responseState,
-    //   responseText,
-    //   shouldShow: true,
-    // });
+    setServerResponse({
+      responseState,
+      responseText,
+      shouldShow: true,
+    });
   }
 }
