@@ -129,4 +129,11 @@ deploy:
 		$(TAG) \
 	| ssh root@forum.homeschooling.md "cd /var/www/repetitor && tar fxz -"
 
-pre-commit: build test
+pre-commit: lint build test
+
+lint:
+	eslint . \
+		--ignore-path .gitignore \
+		--ext .ts,.tsx
+
+l: lint

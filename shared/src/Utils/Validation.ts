@@ -28,7 +28,7 @@ export function validateWithRules<V extends string, VR extends ValidationRules>(
   value: V | undefined,
   validationRules: VR
 ): ValidationResult<keyof VR, V> {
-  let failedValidationRule = Object.entries(validationRules).find(([_errorCode, predicate]) => !predicate(value));
+  const failedValidationRule = Object.entries(validationRules).find(([_errorCode, predicate]) => !predicate(value));
 
   if (failedValidationRule) {
     return {

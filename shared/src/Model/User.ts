@@ -100,7 +100,7 @@ export type UserModelValidationErrorCode = "EMAIL_TAKEN";
 export function makeUserFromRegistrationFormDTO(
   registrationFormDTO: UserRegistrationDTO
 ): User | UserPropError | UserModelError {
-  let fullNameValidationResult = validateWithRules(registrationFormDTO.fullName, UserValidationRules.fullName);
+  const fullNameValidationResult = validateWithRules(registrationFormDTO.fullName, UserValidationRules.fullName);
 
   if (fullNameValidationResult.kind === "Invalid") {
     return {kind: "FullNameError", errorCode: fullNameValidationResult.validationErrorCode};

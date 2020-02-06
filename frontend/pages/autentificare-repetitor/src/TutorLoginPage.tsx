@@ -7,7 +7,6 @@ import {
   UserPasswordValidationRules,
   emailErrorMessages,
   passwordErrorMessages,
-  UserPropName,
 } from "shared/Model/User";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
@@ -89,9 +88,6 @@ export function TutorLoginPage() {
         break;
       case "PasswordError":
         [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
-        break;
-      case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
         break;
       case "DbError":
         [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];

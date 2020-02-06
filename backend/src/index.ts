@@ -8,7 +8,7 @@ import {handlePost, sendPageBundle, sendPageHtml, sendVendorModule, sendSecurity
 import {session} from "Utils/Express/Session";
 import {requireNumericEnvVar} from "Utils/Env";
 
-var csrfProtection = csurf();
+const csrfProtection = csurf();
 
 express()
   .set("trust proxy", true)

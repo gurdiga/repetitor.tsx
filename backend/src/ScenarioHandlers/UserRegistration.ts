@@ -18,6 +18,7 @@ export async function UserRegistration(dto: Scenario["DTO"]): Promise<Scenario["
   }
 
   const {fullName, email, password} = result;
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const {salt, passwordHash} = getStorablePassword(password);
 
   return createUser(fullName, email, passwordHash, salt);

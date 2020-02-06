@@ -134,9 +134,6 @@ export function RegistrationPage() {
       case "DbError":
         [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
         break;
-      case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
-        break;
       case "ModelError":
         [responseState, responseText] = [ResponseState.ReceivedError, modelErrorMessages[response.errorCode]];
         break;
