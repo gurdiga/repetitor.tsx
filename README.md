@@ -1,6 +1,6 @@
 This is going to be an online system for tutors.
 
-### LICENCE
+## LICENCE
 
 
 MIT License

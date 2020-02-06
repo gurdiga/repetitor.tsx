@@ -99,7 +99,7 @@ export function TutorLoginPage() {
         [responseState, responseText] = [ResponseState.ReceivedError, response.error];
         break;
       default:
-        assertNever(response); // TODO fix this
+        assertNever(response);
     }
 
     setServerResponse({
