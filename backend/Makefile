@@ -1,18 +1,6 @@
 .ONESHELL:
 SHELL=bash
 
-test:
-	@set -e
-	source ../.env.test
-	DEBUG=app:none \
-	command time \
-	~/.nvm/nvm-exec node_modules/.bin/mocha \
-		--require ts-node/register \
-		--require tsconfig-paths/register \
-		--reporter dot \
-		--file src/Utils/TestHelpers.ts \
-		src/**/*.test.ts
-
 CLI=build/backend/src/cli.js
 
 # TODO: switch to ts-node

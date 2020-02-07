@@ -3,18 +3,30 @@ SHELL=bash
 
 include .env
 
-default: test-frontend
+default: test-backend
 
 test: test-backend test-frontend
 
 test-backend: node_modules
-	@cd backend && make --no-print-directory test
-
-test-frontend: node_modules
-	@TS_NODE_PROJECT=frontend/tests/tsconfig.json \
+	@set -e
+	source .env.test
+	DEBUG=app:none \
+	TS_NODE_PROJECT=backend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
 	command time \
-	~/.nvm/nvm-exec frontend/node_modules/.bin/mocha \
+	~/.nvm/nvm-exec node_modules/.bin/mocha \
+		--require ts-node/register \
+		--require tsconfig-paths/register \
+		--reporter dot \
+		--file backend/tests/src/TestHelpers.ts \
+		'backend/tests/**/*.ts'
+
+test-frontend: node_modules
+	@set -e
+	TS_NODE_PROJECT=frontend/tests/tsconfig.json \
+	TS_NODE_TRANSPILE_ONLY=true \
+	command time \
+	~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
 		--reporter dot \
