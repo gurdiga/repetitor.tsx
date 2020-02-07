@@ -2,6 +2,7 @@ import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
 import {runScenario} from "Utils/ScenarioRunner";
+import {requireEnvVar} from "Utils/Env";
 
 const AppRoot = path.join(__dirname, "../../../..");
 const RelativePagesRoot = "frontend/pages";
@@ -72,6 +73,10 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const htmlTemplate = fs.readFileSync(`${__dirname}/index.html`, "utf8");
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
     const html = htmlTemplate.replace("MAIN_MODULE_PATH", requireModulePath).replace("CSRF_TOKEN", req.csrfToken());
+
+    if (requireEnvVar("NODE_ENV") === "test") {
+      res.set("XSRF-TOKEN", req.csrfToken());
+    }
 
     res.send(html);
   } else {

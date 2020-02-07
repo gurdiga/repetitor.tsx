@@ -9,6 +9,7 @@ test: test-backend test-frontend
 
 test-backend: node_modules
 	@set -e
+	shopt -s globstar # This is required for something/**/*Test.ts to work properly (?!)
 	source .env.test
 	DEBUG=app:none \
 	TS_NODE_PROJECT=backend/tests/tsconfig.json \
@@ -19,7 +20,8 @@ test-backend: node_modules
 		--require tsconfig-paths/register \
 		--reporter dot \
 		--file backend/tests/src/TestHelpers.ts \
-		'backend/tests/**/*.ts'
+		--exit `# this is related to chai-http hanging Mocha` \
+		backend/tests/**/*Test.ts
 
 test-frontend: node_modules
 	@set -e
@@ -31,7 +33,7 @@ test-frontend: node_modules
 		--require tsconfig-paths/register \
 		--reporter dot \
 		--file frontend/tests/src/TestHelpers.ts \
-		frontend/tests/**/*.ts?
+		frontend/tests/**/*Test.ts?
 
 c: build
 .PHONY: build

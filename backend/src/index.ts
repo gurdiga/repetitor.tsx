@@ -10,7 +10,8 @@ import {requireNumericEnvVar, requireEnvVar} from "Utils/Env";
 
 const csrfProtection = csurf();
 
-express()
+// exported for tests
+export const app = express()
   .set("trust proxy", true)
   .use(helmet())
   .use(morgan("tiny", {skip: () => requireEnvVar("NODE_ENV") === "test"}))
