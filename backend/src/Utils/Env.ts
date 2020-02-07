@@ -7,7 +7,7 @@ export function assertEnvVars(varNames: string[]) {
 }
 
 export function requireEnvVar(varName: string): string {
-  assert(process.env[varName], `Env var is missing: ${varName}`);
+  assert(varName in process.env, `Env var is missing: ${varName}`);
 
   return process.env[varName]!;
 }
