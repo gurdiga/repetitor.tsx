@@ -1,9 +1,7 @@
-import {expect, use} from "chai";
+import {expect} from "chai";
 import {runQuery} from "Utils/Db";
 import {hashString} from "Utils/StringUtils";
 import {UserRegistration} from "ScenarioHandlers/UserRegistration";
-
-use(require("chai-as-promised"));
 
 describe("UserRegistration", () => {
   describe("parameter validation", () => {
