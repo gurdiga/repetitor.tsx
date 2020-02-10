@@ -14,7 +14,7 @@ const csrfProtection = csurf();
 export const app = express()
   .set("trust proxy", true)
   .use(helmet())
-  .use(morgan("tiny", {skip: () => requireEnvVar("NODE_ENV") === "test"}))
+  .use(morgan("combined", {skip: () => requireEnvVar("NODE_ENV") === "test"}))
   .use(session)
   .use(compression())
   .use(express.json())
@@ -27,5 +27,6 @@ export const app = express()
     sendPageBundle(req.params.pagePathName, res);
   })
   .get("*", csrfProtection, sendPageHtml)
-  .post("/", csrfProtection, handlePost)
-  .listen(requireNumericEnvVar("BACKEND_HTTP_PORT"), "localhost");
+  .post("/", csrfProtection, handlePost);
+
+app.listen(requireNumericEnvVar("BACKEND_HTTP_PORT"), "localhost");
