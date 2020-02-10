@@ -1,6 +1,7 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import {app} from "index";
+import ChaiHttp = require("chai-http");
 
 describe("Express integration", () => {
   let agent: ChaiHttp.Agent;

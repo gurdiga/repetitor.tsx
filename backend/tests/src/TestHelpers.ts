@@ -1,10 +1,8 @@
 import {expect, use} from "chai";
 import {connectionPool, runQuery} from "../../src/Utils/Db";
-import * as chaiHttp from "chai-http";
-import * as chaiAsPropmised from "chai-as-promised";
 
-use(chaiAsPropmised);
-use(chaiHttp);
+use(require("chai-as-promised"));
+use(require("chai-http"));
 
 process.on("unhandledRejection", e => {
   throw e;

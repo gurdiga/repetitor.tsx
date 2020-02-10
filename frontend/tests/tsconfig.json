@@ -4,7 +4,7 @@
   "include": ["src", "../shared/src", "../pages/home/src", "../pages/inregistrare/src"],
   "compilerOptions": {
     "module": "commonjs",
-    "noEmit": true,
+    "outDir": "build",
     "baseUrl": ".",
     "paths": {
       "*": ["src/*", "../pages/inregistrare/src/*", "../pages/home/src/*"],

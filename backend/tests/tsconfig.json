@@ -3,7 +3,7 @@
   "references": [{"path": "../"}],
   "include": ["src"],
   "compilerOptions": {
-    "noEmit": true,
+    "outDir": "build",
     "baseUrl": ".",
     "paths": {
       "*": ["src/*", "../src/*"],

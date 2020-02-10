@@ -4,6 +4,8 @@
     {"path": "./backend"},
     {"path": "./frontend/pages/home"},
     {"path": "./frontend/pages/inregistrare"},
-    {"path": "./frontend/pages/autentificare-repetitor"}
+    {"path": "./frontend/pages/autentificare-repetitor"},
+    {"path": "./backend/tests"},
+    {"path": "./frontend/tests"}
   ]
 }
