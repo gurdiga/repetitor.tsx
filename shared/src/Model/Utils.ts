@@ -27,3 +27,5 @@ export function dataProps<DTO extends any>(dto: DTO): DataProps<DTO> {
 
   return Object.fromEntries(entries) as DataProps<DTO>;
 }
+
+export type SystemError = DbError | UnexpectedError;

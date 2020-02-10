@@ -10,9 +10,11 @@ import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
 import {describe, it} from "mocha";
 import * as React from "react";
 import {RegistrationPage, ulaValidationRules} from "RegistrationPage";
+import {UserEmailValidationRules} from "shared/Model/Email";
+import {UserPasswordValidationRules} from "shared/Model/Password";
+import {UserFullNameValidationRules} from "shared/Model/User";
 import {stub} from "sinon";
-import {Comp, Stub, Wrapper, expectProps} from "TestHelpers";
-import {UserFullNameValidationRules, UserEmailValidationRules, UserPasswordValidationRules} from "shared/Model/User";
+import {Comp, expectProps, Stub, Wrapper} from "TestHelpers";
 
 describe("<RegistrationPage/>", () => {
   let wrapper: Wrapper<typeof RegistrationPage>;

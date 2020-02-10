@@ -1,6 +1,8 @@
 import {UserRegistrationDTO} from "shared/Scenarios/UserRegistration";
 import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/Utils/Validation";
 import {DataProps} from "shared/Model/Utils";
+import {EmailError, UserEmailValidationRules} from "shared/Model/Email";
+import {PasswordError, UserPasswordValidationRules} from "shared/Model/Password";
 
 export interface User {
   kind: "User";
@@ -17,56 +19,6 @@ export const UserFullNameValidationRules: Record<FullNameValidationErrorCode, Pr
   TOO_LONG: (text: UserValue) => !!text && text.trim().length <= 50,
 };
 
-export const UserEmailValidationRules: Record<EmailValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
-  INCORRECT: (text: UserValue) => {
-    // TODO: extract function isSyntacticallyCorrectEmail
-    if (!text) {
-      return false;
-    }
-
-    text = text.trim();
-
-    const keyCharacters = [".", "@"];
-    const containsKeyCharacters = keyCharacters.every(c => !!text && text.includes(c));
-
-    if (!containsKeyCharacters) {
-      return false;
-    }
-
-    const sides = text.split("@");
-    const [login, domain] = sides.map(s => s.trim());
-
-    const doesLoginLookReasonable = login.length >= 2 && /[a-z0-9]+/i.test(login);
-
-    if (!doesLoginLookReasonable) {
-      return false;
-    }
-
-    const domainLevels = domain.split(/\./).reverse();
-    const doDomainPartsLookReasonable = /[a-z]{2,}/i.test(domainLevels[0]) && domainLevels.every(l => l.length >= 1);
-
-    if (!doDomainPartsLookReasonable) {
-      return false;
-    }
-
-    return true;
-  },
-};
-
-export const emailErrorMessages: ValidationMessages<typeof UserEmailValidationRules> = {
-  REQUIRED: "Adresa de email lipsește",
-  INCORRECT: "Adresa de email este invalidă",
-};
-
-export const UserPasswordValidationRules: Record<PasswordValidationErrorCode, PredicateFn> = {
-  REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
-};
-
-export const passwordErrorMessages: ValidationMessages<typeof UserPasswordValidationRules> = {
-  REQUIRED: "Parola lipsește",
-};
-
 export type UserPropError = FullNameError | EmailError | PasswordError;
 
 type FullNameError = {
@@ -75,20 +27,6 @@ type FullNameError = {
 };
 
 export type FullNameValidationErrorCode = "REQUIRED" | "TOO_SHORT" | "TOO_LONG";
-
-export type EmailError = {
-  kind: "EmailError";
-  errorCode: EmailValidationErrorCode;
-};
-
-export type EmailValidationErrorCode = "REQUIRED" | "INCORRECT";
-
-export type PasswordError = {
-  kind: "PasswordError";
-  errorCode: PasswordValidationErrorCode;
-};
-
-export type PasswordValidationErrorCode = "REQUIRED";
 
 export type UserModelError = {
   kind: "ModelError";

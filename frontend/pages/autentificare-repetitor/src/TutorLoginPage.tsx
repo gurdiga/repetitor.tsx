@@ -2,12 +2,6 @@ import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
 import {Form} from "frontend/shared/Components/Form";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
-import {
-  UserEmailValidationRules,
-  UserPasswordValidationRules,
-  emailErrorMessages,
-  passwordErrorMessages,
-} from "shared/Model/User";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {initialFieldValue, ValidatedValue} from "shared/Utils/Validation";
@@ -15,6 +9,8 @@ import {ServerResponse, runScenario, ResponseState, placeholderServerResponse} f
 import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
 import {TutorLoginDTO} from "shared/Scenarios/TutorLogin";
+import {UserEmailValidationRules, emailErrorMessages} from "shared/Model/Email";
+import {UserPasswordValidationRules, passwordErrorMessages} from "shared/Model/Password";
 
 export function TutorLoginPage() {
   const [email, updateEmail] = React.useState(initialFieldValue);
@@ -80,8 +76,11 @@ export function TutorLoginPage() {
     let responseText: string;
 
     switch (response.kind) {
-      case "Success":
-        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Înregistrat."];
+      case "LoginCheckSuccess":
+        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Autentificat."];
+        break;
+      case "LoginCheckError":
+        [responseState, responseText] = [ResponseState.ReceivedError, "Adresa de email sau parola incorectă."];
         break;
       case "EmailError":
         [responseState, responseText] = [ResponseState.ReceivedError, emailErrorMessages[response.errorCode]];

@@ -1,31 +1,24 @@
-import {runScenario, ResponseState, ServerResponse, placeholderServerResponse} from "frontend/shared/ScenarioRunner";
 import {Form} from "frontend/shared/Components/Form";
+import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
+import {placeholderServerResponse, ResponseState, runScenario, ServerResponse} from "frontend/shared/ScenarioRunner";
 import * as React from "react";
+import {emailErrorMessages, UserEmailValidationRules} from "shared/Model/Email";
+import {passwordErrorMessages, UserPasswordValidationRules} from "shared/Model/Password";
+import {UserFullNameValidationRules, UserModelValidationErrorCode, UserPropName} from "shared/Model/User";
+import {dbErrorMessages} from "shared/Model/Utils";
+import {assertNever} from "shared/Utils/Language";
 import {
-  ValidatedValue,
-  UserValue,
-  ValidationRules,
-  ValidationMessages,
   ErrorMessages,
   initialFieldValue,
+  UserValue,
+  ValidatedValue,
+  ValidationMessages,
+  ValidationRules,
 } from "shared/Utils/Validation";
-import {
-  UserModelValidationErrorCode,
-  User,
-  UserFullNameValidationRules,
-  UserEmailValidationRules,
-  UserPasswordValidationRules,
-  emailErrorMessages,
-  passwordErrorMessages,
-  UserPropName,
-} from "shared/Model/User";
-import {assertNever} from "shared/Utils/Language";
-import {dbErrorMessages} from "shared/Model/Utils";
-import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);

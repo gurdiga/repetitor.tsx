@@ -13,3 +13,15 @@ export function genRandomString(length: number): string {
     .toString("hex")
     .slice(0, length);
 }
+
+interface StorablePassword {
+  salt: string;
+  passwordHash: string;
+}
+
+export function getStorablePassword(password: string): StorablePassword {
+  const salt = genRandomString(100);
+  const passwordHash = hashString(password, salt);
+
+  return {salt, passwordHash};
+}

@@ -1,5 +1,7 @@
-import {Success, DbError, UnexpectedError} from "shared/Model/Utils";
-import {EmailError, PasswordError} from "shared/Model/User";
+import {SystemError} from "shared/Model/Utils";
+import {EmailError} from "shared/Model/Email";
+import {PasswordError} from "shared/Model/Password";
+import {LoginCheckSuccess, LoginCheckError} from "shared/Model/LoginCheck";
 
 export interface TutorLoginDTO {
   email?: string;
@@ -8,4 +10,4 @@ export interface TutorLoginDTO {
 
 type DTOError = EmailError | PasswordError;
 
-export type TutorLoginResult = Success | DTOError | DbError | UnexpectedError;
+export type TutorLoginResult = LoginCheckSuccess | LoginCheckError | DTOError | SystemError;

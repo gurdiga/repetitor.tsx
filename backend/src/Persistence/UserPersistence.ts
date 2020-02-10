@@ -1,7 +1,8 @@
-import {runQuery} from "Utils/Db";
-import {UserModelError} from "shared/Model/User";
 import {log} from "console";
-import {Success, DbError} from "shared/Model/Utils";
+import {LoginCheckError, LoginCheckSuccess} from "shared/Model/LoginCheck";
+import {UserModelError} from "shared/Model/User";
+import {DbError, Success, SystemError} from "shared/Model/Utils";
+import {runQuery} from "Utils/Db";
 
 export async function createUser(
   fullName: string,
@@ -27,5 +28,30 @@ export async function createUser(
         log("Unexpected DB error", error);
         return {kind: "DbError", errorCode: "ERROR"};
     }
+  }
+}
+
+export async function getUserId(
+  email: string,
+  passwordHash: string
+): Promise<LoginCheckSuccess | LoginCheckError | SystemError> {
+  try {
+    const result = await runQuery({
+      sql: `
+            SELECT id
+            FROM users
+            WHERE email = ? AND password_hash = ?
+          `,
+      params: [email, passwordHash],
+    });
+
+    console.log(`result`, result);
+
+    const userId = result.rows[0].id;
+
+    return {kind: "LoginCheckSuccess", userId};
+  } catch (error) {
+    log("Unexpected DB error", error);
+    return {kind: "DbError", errorCode: "ERROR"};
   }
 }
