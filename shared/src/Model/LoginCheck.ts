@@ -3,6 +3,7 @@ import {TutorLoginDTO} from "shared/Scenarios/TutorLogin";
 import {EmailError, UserEmailValidationRules} from "shared/Model/Email";
 import {PasswordError, UserPasswordValidationRules} from "shared/Model/Password";
 import {validateWithRules, PredicateFn} from "shared/Utils/Validation";
+import {UserSession} from "shared/Model/UserSession";
 
 export interface LoginCheck {
   kind: "LoginCheck";
@@ -14,11 +15,21 @@ export type LoginCheckPropName = keyof DataProps<LoginCheck>;
 
 export type LoginCheckSuccess = {
   kind: "LoginCheckSuccess";
-  userId: number;
 };
 
-export type LoginCheckError = {
-  kind: "LoginCheckError";
+export type LoginCheckInfo = {
+  kind: "LoginCheckInfo";
+  userId: UserSession["userId"];
+};
+
+export type LoginCheckError = UnknownEmailError | IncorrectPasswordError;
+
+export type UnknownEmailError = {
+  kind: "UnknownEmailError";
+};
+
+export type IncorrectPasswordError = {
+  kind: "IncorrectPasswordError";
 };
 
 export type LoginCheckPropError = EmailError | PasswordError;

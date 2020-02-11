@@ -10,4 +10,4 @@ export interface TutorLoginDTO {
 
 type DTOError = EmailError | PasswordError;
 
-export type TutorLoginResult = LoginCheckSuccess | LoginCheckError | DTOError | SystemError;
+export type TutorLoginResult = LoginCheckSuccess | DTOError | LoginCheckError | SystemError;

@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
+import debug from "debug";
 import {runScenario} from "Utils/ScenarioRunner";
 import {requireEnvVar} from "Utils/Env";
 
@@ -8,20 +9,19 @@ const AppRoot = path.join(__dirname, "../../../..");
 const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 
-type HttpRequest = Pick<express.Request, "path" | "body" | "csrfToken">;
+type HttpRequest = Pick<express.Request, "path" | "body" | "csrfToken" | "session">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
+
+const log = debug("app:Adapter:handlePost");
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
   const {scenarioName, dto} = req.body;
 
   try {
-    const result = await runScenario(scenarioName, dto);
-
-    res.json({...result, csrfToken: req.csrfToken()});
+    res.json(await runScenario(scenarioName, dto, req.session));
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : error || "Error with no message";
-
-    res.status(500).json({error: errorMessage});
+    log(`Error on runScenario`, {scenarioName}, error);
+    res.status(500).json({error: "Application Error"});
   }
 }
 
@@ -75,6 +75,7 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const html = htmlTemplate.replace("MAIN_MODULE_PATH", requireModulePath).replace("CSRF_TOKEN", req.csrfToken());
 
     if (requireEnvVar("NODE_ENV") === "test") {
+      // To use in tests.
       res.set("XSRF-TOKEN", req.csrfToken());
     }
 

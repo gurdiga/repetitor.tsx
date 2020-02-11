@@ -10,10 +10,10 @@ export type DbError = {
 };
 
 export const dbErrorMessages: ErrorMessages<DbErrorCode> = {
-  ERROR: "Eroare neprevăzută de bază de date",
+  GENERIC_DB_ERROR: "Eroare neprevăzută de bază de date",
 };
 
-export type DbErrorCode = "ERROR";
+export type DbErrorCode = "GENERIC_DB_ERROR";
 
 export type UnexpectedError = {
   kind: "UnexpectedError";

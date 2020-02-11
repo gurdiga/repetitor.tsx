@@ -1,7 +1,12 @@
 import {TestScenario} from "ScenarioHandlers/TestScenario";
 import {TutorLogin} from "ScenarioHandlers/TutorLogin";
 import {UserRegistration} from "ScenarioHandlers/UserRegistration";
-import {ScenarioHandler, ScenarioName} from "shared/ScenarioRegistry";
+import {
+  ScenarioHandler,
+  ScenarioName,
+  SessionAlteringScenarioHandler,
+  SimpleScenarioHandler,
+} from "shared/ScenarioRegistry";
 
 const scenarioList: Record<ScenarioName, ScenarioHandler<any, any>> = {
   UserRegistration,
@@ -9,16 +14,31 @@ const scenarioList: Record<ScenarioName, ScenarioHandler<any, any>> = {
   TutorLogin,
 };
 
-export async function runScenario(scenarioName?: string, dto: any = {}): Promise<any> {
-  const scenarioHandler = scenarioList[scenarioName as ScenarioName];
+const sessionAlteringScenarios: ScenarioName[] = ["TutorLogin"]; // TODO: Add UserRegistration?
+
+export async function runScenario(scenarioName_?: string, dto: any = {}, session?: any): Promise<any> {
+  const scenarioName = scenarioName_ as ScenarioName;
+  const scenarioHandler = scenarioList[scenarioName];
 
   if (scenarioHandler) {
-    return await scenarioHandler(dto);
+    if (sessionAlteringScenarios.includes(scenarioName)) {
+      if (session) {
+        const sessionAlteringScenario = scenarioHandler as SessionAlteringScenarioHandler<any, any>;
+
+        return await sessionAlteringScenario(dto, session);
+      } else {
+        throw new Error(`Session is missing.`);
+      }
+    } else {
+      const simpleScenarioHandler = scenarioHandler as SimpleScenarioHandler<any, any>;
+
+      return await simpleScenarioHandler(dto);
+    }
   } else {
     if (!scenarioName) {
       throw new Error(`The "scenarioName" param is required`);
     } else {
-      throw new Error(`Could not find scenario handler for: "${scenarioName}"`);
+      throw new Error(`Could not find scenario handler: "${scenarioName}"`);
     }
   }
 }

@@ -1,6 +1,7 @@
 import {UserRegistrationDTO, UserRegistrationResult} from "shared/Scenarios/UserRegistration";
 import {TestScenarioDTO, TestScenarioResult} from "shared/Scenarios/TestScenario";
 import {TutorLoginDTO, TutorLoginResult} from "shared/Scenarios/TutorLogin";
+import {UserSession} from "shared/Model/UserSession";
 
 export interface ScenarioRegistry {
   UserRegistration: {
@@ -18,4 +19,7 @@ export interface ScenarioRegistry {
 }
 
 export type ScenarioName = keyof ScenarioRegistry;
-export type ScenarioHandler<P, R> = (params: P) => Promise<R>;
+export type ScenarioHandler<DTO, R> = SimpleScenarioHandler<DTO, R> | SessionAlteringScenarioHandler<DTO, R>;
+
+export type SimpleScenarioHandler<DTO, R> = (dto: DTO) => Promise<R>;
+export type SessionAlteringScenarioHandler<DTO, R> = (dto: DTO, session: UserSession) => Promise<R>;

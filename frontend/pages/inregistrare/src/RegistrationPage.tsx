@@ -82,7 +82,7 @@ export function RegistrationPage() {
             label="Înregistrează"
             onClick={async () => {
               toggleValidationMessage(true);
-              await submitForm({fullName, email, password, hasAcceptUserLicenceAgreement});
+              await maybeSubmitForm({fullName, email, password, hasAcceptUserLicenceAgreement});
             }}
           />,
         ]}
@@ -93,7 +93,7 @@ export function RegistrationPage() {
     </PageLayout>
   );
 
-  async function submitForm(
+  async function maybeSubmitForm(
     fields: Record<UserPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
   ): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);

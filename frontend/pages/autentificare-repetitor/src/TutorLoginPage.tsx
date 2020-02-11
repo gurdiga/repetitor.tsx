@@ -46,10 +46,10 @@ export function TutorLoginPage() {
         ]}
         actionButtons={[
           <SubmitButton
-            label="Înregistrează"
+            label="Autentifică"
             onClick={async () => {
               toggleValidationMessage(true);
-              await submitForm({email, password} as any); // TODO fix this
+              await maybeSubmitForm({email, password});
             }}
           />,
         ]}
@@ -60,7 +60,7 @@ export function TutorLoginPage() {
     </PageLayout>
   );
 
-  async function submitForm(fields: Record<keyof TutorLoginDTO, ValidatedValue<string>>): Promise<void> {
+  async function maybeSubmitForm(fields: Record<keyof TutorLoginDTO, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
     if (anyInvalidField) {
@@ -79,14 +79,20 @@ export function TutorLoginPage() {
       case "LoginCheckSuccess":
         [responseState, responseText] = [ResponseState.ReceivedSuccess, "Autentificat."];
         break;
-      case "LoginCheckError":
-        [responseState, responseText] = [ResponseState.ReceivedError, "Adresa de email sau parola incorectă."];
-        break;
       case "EmailError":
         [responseState, responseText] = [ResponseState.ReceivedError, emailErrorMessages[response.errorCode]];
         break;
       case "PasswordError":
         [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
+        break;
+      case "UnknownEmailError":
+        [responseState, responseText] = [
+          ResponseState.ReceivedError,
+          "Adresa de email nu este înregistrată în sistem.",
+        ];
+        break;
+      case "IncorrectPasswordError":
+        [responseState, responseText] = [ResponseState.ReceivedError, "Parola este incorectă"];
         break;
       case "DbError":
         [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];

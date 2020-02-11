@@ -18,6 +18,6 @@ export async function TestScenario(_dto: Scenario["DTO"]): Promise<Scenario["Res
       return {kind: "UnexpectedError", errorCode: e.message};
     }
   } catch (e) {
-    return {kind: "DbError", errorCode: e.message};
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }

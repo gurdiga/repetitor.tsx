@@ -1,8 +1,10 @@
-import {log} from "console";
-import {LoginCheckError, LoginCheckSuccess} from "shared/Model/LoginCheck";
+import debug from "debug";
+import {LoginCheckError, LoginCheckInfo} from "shared/Model/LoginCheck";
 import {UserModelError} from "shared/Model/User";
 import {DbError, Success, SystemError} from "shared/Model/Utils";
 import {runQuery} from "Utils/Db";
+
+const log = debug("app:UserPersistence");
 
 export async function createUser(
   fullName: string,
@@ -25,33 +27,44 @@ export async function createUser(
       case "ER_DUP_ENTRY":
         return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
       default:
-        log("Unexpected DB error", error);
-        return {kind: "DbError", errorCode: "ERROR"};
+        log("createUser", "DbError", error);
+
+        return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
     }
   }
 }
 
-export async function getUserId(
+export async function checkLoginInfo(
   email: string,
-  passwordHash: string
-): Promise<LoginCheckSuccess | LoginCheckError | SystemError> {
+  password: string,
+  hashFn: (password: string, salt: string) => string
+): Promise<LoginCheckInfo | LoginCheckError | SystemError> {
   try {
     const result = await runQuery({
       sql: `
-            SELECT id
+            SELECT id, password_salt, password_hash
             FROM users
-            WHERE email = ? AND password_hash = ?
+            WHERE email = ?
           `,
-      params: [email, passwordHash],
+      params: [email],
     });
 
-    console.log(`result`, result);
+    const row = result.rows[0];
 
-    const userId = result.rows[0].id;
+    if (row) {
+      const {id, password_salt: passwordSalt, password_hash: passwordHash} = row;
 
-    return {kind: "LoginCheckSuccess", userId};
+      if (hashFn(password, passwordSalt) === passwordHash) {
+        return {kind: "LoginCheckInfo", userId: id};
+      } else {
+        return {kind: "IncorrectPasswordError"};
+      }
+    } else {
+      return {kind: "UnknownEmailError"};
+    }
   } catch (error) {
-    log("Unexpected DB error", error);
-    return {kind: "DbError", errorCode: "ERROR"};
+    log("checkLoginInfo", "DbError", error);
+
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
