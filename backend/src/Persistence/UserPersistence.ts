@@ -1,10 +1,8 @@
-import debug from "debug";
 import {LoginCheckError, LoginCheckInfo} from "shared/Model/LoginCheck";
 import {UserModelError} from "shared/Model/User";
 import {DbError, Success, SystemError} from "shared/Model/Utils";
 import {runQuery} from "Utils/Db";
-
-const log = debug("app:UserPersistence");
+import {logError} from "Utils/Logging";
 
 export async function createUser(
   fullName: string,
@@ -27,7 +25,7 @@ export async function createUser(
       case "ER_DUP_ENTRY":
         return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
       default:
-        log("createUser", "DbError", error);
+        logError("DbError", error);
 
         return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
     }
@@ -63,7 +61,7 @@ export async function checkLoginInfo(
       return {kind: "UnknownEmailError"};
     }
   } catch (error) {
-    log("checkLoginInfo", "DbError", error);
+    logError("DbError", error);
 
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }

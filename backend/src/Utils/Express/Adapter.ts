@@ -4,6 +4,7 @@ import * as path from "path";
 import debug from "debug";
 import {runScenario} from "Utils/ScenarioRunner";
 import {requireEnvVar} from "Utils/Env";
+import {logError} from "Utils/Logging";
 
 const AppRoot = path.join(__dirname, "../../../..");
 const RelativePagesRoot = "frontend/pages";
@@ -12,15 +13,13 @@ const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 type HttpRequest = Pick<express.Request, "path" | "body" | "csrfToken" | "session">;
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
 
-const log = debug("app:Adapter:handlePost");
-
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
   const {scenarioName, dto} = req.body;
 
   try {
     res.json(await runScenario(scenarioName, dto, req.session));
   } catch (error) {
-    log(`Error on runScenario`, {scenarioName}, error);
+    logError(`Error on runScenario`, {scenarioName}, error);
     res.status(500).json({error: "Application Error"});
   }
 }
