@@ -1,4 +1,7 @@
 import {PageRendering} from "frontend/shared/PageRendering";
 import {RegistrationPage} from "RegistrationPage";
+import {PageProps} from "shared/Utils/PageProps";
 
-PageRendering.render(RegistrationPage);
+export function main(pageProps: PageProps): void {
+  PageRendering.renderPage(RegistrationPage, pageProps);
+}

@@ -21,7 +21,9 @@
     });
 
     requirejs(["bundle"], function() {
-      requirejs(["MAIN_MODULE_PATH"]);
+      requirejs(["MAIN_MODULE_PATH"], function(page) {
+        page.main(PAGE_PROPS);
+      });
     });
   </script>
 </body>

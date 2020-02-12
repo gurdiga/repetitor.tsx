@@ -19,6 +19,7 @@ import {
   ValidationMessages,
   ValidationRules,
 } from "shared/Utils/Validation";
+import {PageProps} from "shared/Utils/PageProps";
 
 export function RegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);

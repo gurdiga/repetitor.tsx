@@ -71,7 +71,10 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   if (PagePathNames.includes(pagePathName)) {
     const htmlTemplate = fs.readFileSync(`${__dirname}/index.html`, "utf8");
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
-    const html = htmlTemplate.replace("MAIN_MODULE_PATH", requireModulePath).replace("CSRF_TOKEN", req.csrfToken());
+    const html = htmlTemplate
+      .replace("MAIN_MODULE_PATH", requireModulePath)
+      .replace("CSRF_TOKEN", req.csrfToken())
+      .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: !!req.session!.userId}));
 
     if (requireEnvVar("NODE_ENV") === "test") {
       // To use in tests.
