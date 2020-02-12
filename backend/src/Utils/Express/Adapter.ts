@@ -1,10 +1,10 @@
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import debug from "debug";
 import {runScenario} from "Utils/ScenarioRunner";
 import {requireEnvVar} from "Utils/Env";
 import {logError} from "Utils/Logging";
+import {UserSession} from "shared/Model/UserSession";
 
 const AppRoot = path.join(__dirname, "../../../..");
 const RelativePagesRoot = "frontend/pages";
@@ -71,10 +71,11 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   if (PagePathNames.includes(pagePathName)) {
     const htmlTemplate = fs.readFileSync(`${__dirname}/index.html`, "utf8");
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
+    const session = (req.session as any) as UserSession;
     const html = htmlTemplate
       .replace("MAIN_MODULE_PATH", requireModulePath)
       .replace("CSRF_TOKEN", req.csrfToken())
-      .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: !!req.session!.userId}));
+      .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: Boolean(session.userId)}));
 
     if (requireEnvVar("NODE_ENV") === "test") {
       // To use in tests.
