@@ -1,5 +1,6 @@
 import {TestScenario} from "ScenarioHandlers/TestScenario";
 import {TutorLogin} from "ScenarioHandlers/TutorLogin";
+import {Logout} from "ScenarioHandlers/Logout";
 import {UserRegistration} from "ScenarioHandlers/UserRegistration";
 import {
   ScenarioHandler,
@@ -12,9 +13,10 @@ const scenarioList: Record<ScenarioName, ScenarioHandler<any, any>> = {
   UserRegistration,
   TestScenario,
   TutorLogin,
+  Logout,
 };
 
-const sessionAlteringScenarios: ScenarioName[] = ["TutorLogin"]; // TODO: Add UserRegistration?
+const sessionAlteringScenarios: ScenarioName[] = ["TutorLogin", "Logout"]; // TODO: Add UserRegistration?
 
 export async function runScenario(scenarioName_?: string, dto: any = {}, session?: any): Promise<any> {
   const scenarioName = scenarioName_ as ScenarioName;

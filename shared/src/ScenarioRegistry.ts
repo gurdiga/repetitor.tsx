@@ -2,6 +2,7 @@ import {UserRegistrationDTO, UserRegistrationResult} from "shared/Scenarios/User
 import {TestScenarioDTO, TestScenarioResult} from "shared/Scenarios/TestScenario";
 import {TutorLoginDTO, TutorLoginResult} from "shared/Scenarios/TutorLogin";
 import {UserSession} from "shared/Model/UserSession";
+import {LogoutDTO, LogoutResult} from "shared/Scenarios/Logout";
 
 export interface ScenarioRegistry {
   UserRegistration: {
@@ -11,6 +12,10 @@ export interface ScenarioRegistry {
   TutorLogin: {
     DTO: TutorLoginDTO;
     Result: TutorLoginResult;
+  };
+  Logout: {
+    DTO: LogoutDTO;
+    Result: LogoutResult;
   };
   TestScenario: {
     DTO: TestScenarioDTO;

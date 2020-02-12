@@ -134,6 +134,7 @@ export function RegistrationPage() {
       case "UnexpectedError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.errorCode];
         break;
+      case "ServerError":
       case "TransportError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.error];
         break;
