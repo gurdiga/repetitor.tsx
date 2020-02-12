@@ -1,18 +1,46 @@
-import {PageLayout} from "frontend/shared/PageLayout";
-import * as React from "react";
 import {Form} from "frontend/shared/Components/Form";
-import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
+import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import {initialFieldValue, ValidatedValue} from "shared/Utils/Validation";
-import {ServerResponse, runScenario, ResponseState, placeholderServerResponse} from "frontend/shared/ScenarioRunner";
-import {assertNever} from "shared/Utils/Language";
+import {PageLayout} from "frontend/shared/PageLayout";
+import {navigateToPage} from "frontend/shared/PageNavigation";
+import {placeholderServerResponse, ResponseState, runScenario, ServerResponse} from "frontend/shared/ScenarioRunner";
+import * as React from "react";
+import {emailErrorMessages, UserEmailValidationRules} from "shared/Model/Email";
+import {passwordErrorMessages, UserPasswordValidationRules} from "shared/Model/Password";
 import {dbErrorMessages} from "shared/Model/Utils";
 import {TutorLoginDTO} from "shared/Scenarios/TutorLogin";
-import {UserEmailValidationRules, emailErrorMessages} from "shared/Model/Email";
-import {UserPasswordValidationRules, passwordErrorMessages} from "shared/Model/Password";
+import {assertNever} from "shared/Utils/Language";
+import {initialFieldValue, ValidatedValue} from "shared/Utils/Validation";
+import {PageProps} from "shared/Utils/PageProps";
 
-export function TutorLoginPage() {
+export function TutorLoginPage(props: PageProps) {
+  return (
+    <PageLayout title="Autentificare repetitor">
+      {props.isAuthenticated ? renderAlreadyLoggedState() : renderLoginForm()}
+    </PageLayout>
+  );
+}
+
+function renderAlreadyLoggedState() {
+  return (
+    <div>
+      <p>Deja v-ați autentificat.</p>
+      <p>
+        Dacă doriți să vă dezautentifcați, apăsați pe acest buton:{" "}
+        <button
+          onClick={async () => {
+            // const response = await runScenario("Logout", {});
+          }}
+        >
+          Dezautentificare
+        </button>
+      </p>
+    </div>
+  );
+}
+
+function renderLoginForm() {
   const [email, updateEmail] = React.useState(initialFieldValue);
   const [password, updatePassword] = React.useState(initialFieldValue);
 
@@ -20,7 +48,7 @@ export function TutorLoginPage() {
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
-    <PageLayout title="Autentificare repetitor">
+    <>
       <Form
         fields={[
           <TextField
@@ -57,7 +85,7 @@ export function TutorLoginPage() {
       {serverResponse.shouldShow && (
         <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
       )}
-    </PageLayout>
+    </>
   );
 
   async function maybeSubmitForm(fields: Record<keyof TutorLoginDTO, ValidatedValue<string>>): Promise<void> {
@@ -105,6 +133,10 @@ export function TutorLoginPage() {
         break;
       default:
         assertNever(response);
+    }
+
+    if (responseState === ResponseState.ReceivedSuccess) {
+      navigateToPage("/");
     }
 
     setServerResponse({

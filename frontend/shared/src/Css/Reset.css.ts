@@ -21,18 +21,22 @@ export namespace ResetCss {
     });
 
     // No default margins
-    cssRule("*", {
-      margin: important(0),
+    cssRule(`${rootElementSelector} *`, {
+      margin: 0,
     });
 
     // Lists
-    cssRule("ul, ol", {
+    cssRule(`${rootElementSelector} ul, ${rootElementSelector} ol`, {
       listStyleType: "none",
       padding: 0,
     });
 
-    cssRule("button", {
+    cssRule(`${rootElementSelector} button`, {
       cursor: "pointer",
+    });
+
+    cssRule(`${rootElementSelector} p`, {
+      marginTop: "0.5em",
     });
   }
 }
