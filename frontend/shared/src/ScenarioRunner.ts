@@ -3,7 +3,7 @@ import {ScenarioName, ScenarioRegistry} from "shared/ScenarioRegistry";
 export async function runScenario<SN extends ScenarioName, S extends ScenarioRegistry[SN]>(
   scenarioName: SN,
   dto: S["DTO"]
-): Promise<S["Result"] | TransportError> {
+): Promise<S["Result"] | TransportError | ServerError> {
   const csrfTokenMetaTag = document.head.querySelector('meta[name="csrf_token"]');
 
   if (!csrfTokenMetaTag) {
@@ -43,13 +43,13 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
       } catch (e) {
         return {
           kind: "TransportError",
-          error: "Could not parse the respons JSON",
+          error: "Nu înțeleg răspunsul de la server (parsare JSON).",
         };
       }
     } else {
       return {
-        kind: "TransportError",
-        error: `Eroare de transmisiune: ${response.status} ${response.statusText}`,
+        kind: "ServerError",
+        error: `Eroare neprevăzută de aplicație (${response.status} ${response.statusText})`,
       };
     }
   } catch (e) {
@@ -80,5 +80,10 @@ export const placeholderServerResponse: ServerResponse = {
 
 export interface TransportError {
   kind: "TransportError";
+  error: string;
+}
+
+export interface ServerError {
+  kind: "ServerError";
   error: string;
 }
