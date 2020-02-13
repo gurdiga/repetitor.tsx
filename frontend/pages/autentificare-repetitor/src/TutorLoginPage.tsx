@@ -26,38 +26,36 @@ function renderAlreadyLoggedState() {
   const [logoutError, setLogoutError] = React.useState("");
 
   return (
-    <div>
+    <>
       <p>Deja v-ați autentificat.</p>
-      <p>
-        Dacă doriți să vă dezautentifcați, apăsați pe acest buton:{" "}
-        <button
-          onClick={async () => {
-            const response = await runScenario("Logout", {});
-
-            switch (response.kind) {
-              case "LogoutSuccess":
-                navigateToPage("/");
-                break;
-              case "TransportError":
-                setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
-                break;
-              case "ServerError":
-                setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
-                break;
-              case "UnexpectedError":
-                setLogoutError(`Eroare neprevăzută (${response.errorCode}). Încercați mai tîrziu.`);
-                break;
-              default:
-                assertNever(response);
-            }
-          }}
-        >
-          Dezautentificare
-        </button>
-      </p>
+      <p>Dacă doriți să vă dezautentifcați, apăsați pe acest buton:</p>
+      <button onClick={handleLogoutButtonClick}>Dezautentificare</button>
       {logoutError && <p className="error-message">{logoutError}</p>}
-    </div>
+    </>
   );
+
+  function handleLogoutButtonClick() {
+    async () => {
+      const response = await runScenario("Logout", {});
+
+      switch (response.kind) {
+        case "LogoutSuccess":
+          navigateToPage("/");
+          break;
+        case "TransportError":
+          setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
+          break;
+        case "ServerError":
+          setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
+          break;
+        case "UnexpectedError":
+          setLogoutError(`Eroare neprevăzută (${response.errorCode}). Încercați mai tîrziu.`);
+          break;
+        default:
+          assertNever(response);
+      }
+    };
+  }
 }
 
 function renderLoginForm() {
