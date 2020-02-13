@@ -29,7 +29,7 @@ export async function runScenario(scenarioName_?: string, dto: any = {}, session
 
         return await sessionAlteringScenario(dto, session);
       } else {
-        throw new Error(`Session is missing.`);
+        throw new Error(`Session is missing`);
       }
     } else {
       const simpleScenarioHandler = scenarioHandler as SimpleScenarioHandler<any, any>;
