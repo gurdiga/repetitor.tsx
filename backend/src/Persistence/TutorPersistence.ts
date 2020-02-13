@@ -1,15 +1,15 @@
 import {LoginCheckError, LoginCheckInfo} from "shared/Model/LoginCheck";
-import {UserModelError} from "shared/Model/User";
+import {TutorModelError} from "shared/Model/Tutor";
 import {DbError, Success, SystemError} from "shared/Model/Utils";
 import {runQuery} from "Utils/Db";
 import {logError} from "Utils/Logging";
 
-export async function createUser(
+export async function createTutor(
   fullName: string,
   email: string,
   passwordHash: string,
   salt: string
-): Promise<Success | UserModelError | DbError> {
+): Promise<Success | TutorModelError | DbError> {
   try {
     await runQuery({
       sql: `

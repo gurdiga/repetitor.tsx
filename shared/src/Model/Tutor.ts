@@ -1,25 +1,25 @@
-import {UserRegistrationDTO} from "shared/Scenarios/UserRegistration";
-import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/Utils/Validation";
+import {TutorRegistrationDTO} from "shared/Scenarios/TutorRegistration";
+import {PredicateFn, UserValue, validateWithRules} from "shared/Utils/Validation";
 import {DataProps} from "shared/Model/Utils";
 import {EmailError, UserEmailValidationRules} from "shared/Model/Email";
 import {PasswordError, UserPasswordValidationRules} from "shared/Model/Password";
 
-export interface User {
+export interface Tutor {
   kind: "User";
   fullName: string;
   email: string;
   password: string;
 }
 
-export type UserPropName = keyof DataProps<User>;
+export type TutorPropName = keyof DataProps<Tutor>;
 
-export const UserFullNameValidationRules: Record<FullNameValidationErrorCode, PredicateFn> = {
+export const TutorFullNameValidationRules: Record<FullNameValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
   TOO_SHORT: (text: UserValue) => !!text && text.trim().length >= 5,
   TOO_LONG: (text: UserValue) => !!text && text.trim().length <= 50,
 };
 
-export type UserPropError = FullNameError | EmailError | PasswordError;
+export type TutorPropError = FullNameError | EmailError | PasswordError;
 
 type FullNameError = {
   kind: "FullNameError";
@@ -28,16 +28,16 @@ type FullNameError = {
 
 export type FullNameValidationErrorCode = "REQUIRED" | "TOO_SHORT" | "TOO_LONG";
 
-export type UserModelError = {
+export type TutorModelError = {
   kind: "ModelError";
   errorCode: UserModelValidationErrorCode;
 };
 
 export type UserModelValidationErrorCode = "EMAIL_TAKEN";
 
-export function makeUserFromRegistrationFormDTO(
-  registrationFormDTO: UserRegistrationDTO
-): User | UserPropError | UserModelError {
+export function makeTutorFromRegistrationFormDTO(
+  registrationFormDTO: TutorRegistrationDTO
+): Tutor | TutorPropError | TutorModelError {
   const fullNameValidationResult = validateWithRules(registrationFormDTO.fullName, UserValidationRules.fullName);
 
   if (fullNameValidationResult.kind === "Invalid") {
@@ -64,8 +64,8 @@ export function makeUserFromRegistrationFormDTO(
   };
 }
 
-const UserValidationRules: Record<UserPropName, Record<any, PredicateFn>> = {
-  fullName: UserFullNameValidationRules,
+const UserValidationRules: Record<TutorPropName, Record<any, PredicateFn>> = {
+  fullName: TutorFullNameValidationRules,
   email: UserEmailValidationRules,
   password: UserPasswordValidationRules,
 };

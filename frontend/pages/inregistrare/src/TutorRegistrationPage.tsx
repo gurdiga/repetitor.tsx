@@ -8,7 +8,7 @@ import {placeholderServerResponse, ResponseState, runScenario, ServerResponse} f
 import * as React from "react";
 import {emailErrorMessages, UserEmailValidationRules} from "shared/Model/Email";
 import {passwordErrorMessages, UserPasswordValidationRules} from "shared/Model/Password";
-import {UserFullNameValidationRules, UserModelValidationErrorCode, UserPropName} from "shared/Model/User";
+import {TutorFullNameValidationRules, UserModelValidationErrorCode, TutorPropName} from "shared/Model/Tutor";
 import {dbErrorMessages} from "shared/Model/Utils";
 import {assertNever} from "shared/Utils/Language";
 import {
@@ -19,9 +19,8 @@ import {
   ValidationMessages,
   ValidationRules,
 } from "shared/Utils/Validation";
-import {PageProps} from "shared/Utils/PageProps";
 
-export function RegistrationPage() {
+export function TutorRegistrationPage() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
   const [email, updateEmail] = React.useState(initialFieldValue);
   const [password, updatePassword] = React.useState(initialFieldValue);
@@ -40,7 +39,7 @@ export function RegistrationPage() {
             label="Nume deplin"
             value={fullName.value}
             onValueChange={updateFullName}
-            validationRules={UserFullNameValidationRules}
+            validationRules={TutorFullNameValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={fullNameErrorMessages}
           />,
@@ -95,7 +94,7 @@ export function RegistrationPage() {
   );
 
   async function maybeSubmitForm(
-    fields: Record<UserPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
+    fields: Record<TutorPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
   ): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
@@ -103,7 +102,7 @@ export function RegistrationPage() {
       return;
     }
 
-    const response = await runScenario("UserRegistration", {
+    const response = await runScenario("TutorRegistration", {
       fullName: fields.fullName.value,
       email: fields.email.value,
       password: fields.password.value,
@@ -155,7 +154,7 @@ const userLicenceAgreementInitialValue: ValidatedValue<string> = {
   isValid: false,
 };
 
-const fullNameErrorMessages: ValidationMessages<typeof UserFullNameValidationRules> = {
+const fullNameErrorMessages: ValidationMessages<typeof TutorFullNameValidationRules> = {
   REQUIRED: "Numele deplin lipsește",
   TOO_SHORT: "Numele este prea scurt",
   TOO_LONG: "Numele este prea lung",

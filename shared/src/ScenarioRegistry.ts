@@ -1,13 +1,13 @@
-import {UserRegistrationDTO, UserRegistrationResult} from "shared/Scenarios/UserRegistration";
+import {TutorRegistrationDTO, TutorRegistrationResult} from "shared/Scenarios/TutorRegistration";
 import {TestScenarioDTO, TestScenarioResult} from "shared/Scenarios/TestScenario";
 import {TutorLoginDTO, TutorLoginResult} from "shared/Scenarios/TutorLogin";
 import {UserSession} from "shared/Model/UserSession";
 import {LogoutDTO, LogoutResult} from "shared/Scenarios/Logout";
 
 export interface ScenarioRegistry {
-  UserRegistration: {
-    DTO: UserRegistrationDTO;
-    Result: UserRegistrationResult;
+  TutorRegistration: {
+    DTO: TutorRegistrationDTO;
+    Result: TutorRegistrationResult;
   };
   TutorLogin: {
     DTO: TutorLoginDTO;

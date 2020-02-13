@@ -9,18 +9,18 @@ import {PageLayout} from "frontend/shared/PageLayout";
 import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
 import {describe, it} from "mocha";
 import * as React from "react";
-import {RegistrationPage, ulaValidationRules} from "RegistrationPage";
+import {TutorRegistrationPage, ulaValidationRules} from "TutorRegistrationPage";
 import {UserEmailValidationRules} from "shared/Model/Email";
 import {UserPasswordValidationRules} from "shared/Model/Password";
-import {UserFullNameValidationRules} from "shared/Model/User";
+import {TutorFullNameValidationRules} from "shared/Model/Tutor";
 import {stub} from "sinon";
 import {Comp, expectProps, Stub, Wrapper} from "TestHelpers";
 
-describe("<RegistrationPage/>", () => {
-  let wrapper: Wrapper<typeof RegistrationPage>;
+describe("<TutorRegistrationPage/>", () => {
+  let wrapper: Wrapper<typeof TutorRegistrationPage>;
 
   before(() => {
-    wrapper = shallow(<RegistrationPage />);
+    wrapper = shallow(<TutorRegistrationPage />);
   });
 
   it("renders the page layout with the appropriate title", () => {
@@ -35,7 +35,7 @@ describe("<RegistrationPage/>", () => {
 
     expectProps<typeof TextField>("numele deplin", fields[0], {
       autoFocus: true,
-      validationRules: UserFullNameValidationRules,
+      validationRules: TutorFullNameValidationRules,
     });
 
     expectProps<typeof TextField>("adresa de email", fields[1], {
@@ -192,7 +192,7 @@ describe("<RegistrationPage/>", () => {
   });
 
   function getSubmitButton(
-    wrapper: Wrapper<typeof RegistrationPage>
+    wrapper: Wrapper<typeof TutorRegistrationPage>
   ): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
     return wrapper.find(Form).props().actionButtons[0];
   }

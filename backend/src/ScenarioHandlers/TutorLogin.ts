@@ -1,4 +1,4 @@
-import {checkLoginInfo} from "Persistence/UserPersistence";
+import {checkLoginInfo} from "Persistence/TutorPersistence";
 import {makeLoginCkeckFromLoginDTO} from "shared/Model/LoginCheck";
 import {ScenarioRegistry} from "shared/ScenarioRegistry";
 import {hashString} from "Utils/StringUtils";

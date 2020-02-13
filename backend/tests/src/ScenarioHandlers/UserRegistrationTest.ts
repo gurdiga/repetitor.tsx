@@ -1,21 +1,24 @@
 import {expect} from "chai";
+import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
 import {runQuery} from "Utils/Db";
 import {hashString} from "Utils/StringUtils";
-import {UserRegistration} from "ScenarioHandlers/UserRegistration";
 
-describe("UserRegistration", () => {
+describe("TutorRegistration", () => {
   describe("parameter validation", () => {
     context("when either of the email or password is missing", () => {
       it("throws with the appropriate error message", async () => {
         const params = {email: "", password: "secret", fullName: "John DOE"};
 
-        await expect(UserRegistration(params)).to.eventually.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
+        await expect(TutorRegistration(params)).to.eventually.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
       });
 
       it("throws with the appropriate error message", async () => {
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
 
-        await expect(UserRegistration(params)).to.eventually.deep.equal({kind: "PasswordError", errorCode: "REQUIRED"});
+        await expect(TutorRegistration(params)).to.eventually.deep.equal({
+          kind: "PasswordError",
+          errorCode: "REQUIRED",
+        });
       });
     });
   });
@@ -24,7 +27,7 @@ describe("UserRegistration", () => {
     const params = {email: "some@email.com", password: "secret", fullName: "John DOE"};
 
     context("happy path", () => {
-      before(() => UserRegistration(params));
+      before(() => TutorRegistration(params));
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("adds the appropriate row to the users table", async () => {
@@ -45,11 +48,14 @@ describe("UserRegistration", () => {
     });
 
     context("when there is already a user like that", () => {
-      before(() => UserRegistration(params));
+      before(() => TutorRegistration(params));
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("trows with an appropriate error message", async () => {
-        await expect(UserRegistration(params)).to.eventually.deep.equal({kind: "ModelError", errorCode: "EMAIL_TAKEN"});
+        await expect(TutorRegistration(params)).to.eventually.deep.equal({
+          kind: "ModelError",
+          errorCode: "EMAIL_TAKEN",
+        });
       });
     });
   });

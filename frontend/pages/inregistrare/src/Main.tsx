@@ -1,7 +1,7 @@
 import {PageRendering} from "frontend/shared/PageRendering";
-import {RegistrationPage} from "RegistrationPage";
+import {TutorRegistrationPage} from "TutorRegistrationPage";
 import {PageProps} from "shared/Utils/PageProps";
 
 export function main(pageProps: PageProps): void {
-  PageRendering.renderPage(RegistrationPage, pageProps);
+  PageRendering.renderPage(TutorRegistrationPage, pageProps);
 }
