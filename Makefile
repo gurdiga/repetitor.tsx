@@ -43,7 +43,14 @@ build: node_modules
 	node_modules/.bin/tsc --build
 
 watch: node_modules
-	~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w
+	~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w \
+	| tee >( \
+		while read ln; do \
+			if echo "$${ln}" | grep -q "Found 0 errors. Watching for file changes."; then \
+				osascript -e 'display notification "Compilation complete" with title "Repetitor build"'; \
+			fi; \
+		done \
+	)
 
 start: build
 	@set -e
