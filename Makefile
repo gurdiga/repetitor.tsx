@@ -3,7 +3,7 @@ SHELL=bash
 
 include .env
 
-default: build
+default: test-backend
 
 test: test-backend test-frontend
 
@@ -21,7 +21,7 @@ test-backend: node_modules
 		--reporter dot \
 		--file backend/tests/src/TestHelpers.ts \
 		--exit `# this is related to chai-http hanging Mocha` \
-		backend/tests/**/*Test.ts
+		$${FILES:-'backend/tests/**/*Test.ts'}
 
 test-frontend: node_modules
 	@set -e
@@ -33,7 +33,7 @@ test-frontend: node_modules
 		--require tsconfig-paths/register \
 		--reporter dot \
 		--file frontend/tests/src/TestHelpers.ts \
-		frontend/tests/**/*Test.ts?
+		$${FILES:-'frontend/tests/**/*Test.ts?'}
 
 c: build
 .PHONY: build
