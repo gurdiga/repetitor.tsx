@@ -20,7 +20,7 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
     res.json(await runScenario(scenarioName, dto, req.session));
   } catch (error) {
     logError(`Error on runScenario`, {scenarioName}, error);
-    res.status(500).json({error: "Application Error"});
+    res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});
   }
 }
 
