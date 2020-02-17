@@ -34,27 +34,25 @@ function renderAlreadyLoggedState() {
     </>
   );
 
-  function handleLogoutButtonClick() {
-    async () => {
-      const response = await runScenario("Logout", {});
+  async function handleLogoutButtonClick() {
+    const response = await runScenario("Logout", {});
 
-      switch (response.kind) {
-        case "LogoutSuccess":
-          navigateToPage("/");
-          break;
-        case "TransportError":
-          setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
-          break;
-        case "ServerError":
-          setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
-          break;
-        case "UnexpectedError":
-          setLogoutError(`Eroare neprevăzută (${response.errorCode}). Încercați mai tîrziu.`);
-          break;
-        default:
-          assertNever(response);
-      }
-    };
+    switch (response.kind) {
+      case "LogoutSuccess":
+        navigateToPage("/");
+        break;
+      case "TransportError":
+        setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
+        break;
+      case "ServerError":
+        setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
+        break;
+      case "UnexpectedError":
+        setLogoutError(`Eroare neprevăzută (${response.errorCode}). Încercați mai tîrziu.`);
+        break;
+      default:
+        assertNever(response);
+    }
   }
 }
 
