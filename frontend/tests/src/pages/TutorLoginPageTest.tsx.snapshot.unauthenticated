@@ -1,0 +1,3 @@
+<PageLayout title="Autentificare repetitor">
+  <Form fields={{...}} actionButtons={{...}} />
+</PageLayout>

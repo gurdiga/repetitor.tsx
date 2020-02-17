@@ -1,0 +1,11 @@
+<PageLayout title="Autentificare repetitor">
+  <p>
+    Deja v-ați autentificat.
+  </p>
+  <p>
+    Dacă doriți să vă dezautentifcați, apăsați pe acest buton:
+  </p>
+  <button onClick={[Function: handleLogoutButtonClick]}>
+    Dezautentificare
+  </button>
+</PageLayout>

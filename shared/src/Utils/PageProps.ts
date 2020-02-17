@@ -1,3 +1,3 @@
 export interface PageProps {
-  isAuthenticated: true;
+  isAuthenticated: boolean;
 }

@@ -3,8 +3,7 @@ SHELL=bash
 
 include .env
 
-default:
-	make --no-print-directory test-backend FILES=backend/tests/src/Utils/ScenarioRunnerTest.ts
+default: test-frontend
 
 test: test-backend test-frontend
 

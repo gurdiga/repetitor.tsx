@@ -1,13 +1,24 @@
 {
   "extends": "../tsconfig-base.json",
   "references": [{"path": "../../shared"}, {"path": "../shared"}],
-  "include": ["src", "../shared/src", "../pages/home/src", "../pages/inregistrare-repetitor/src"],
+  "include": [
+    "src",
+    "../shared/src",
+    "../pages/home/src",
+    "../pages/autentificare-repetitor/src",
+    "../pages/inregistrare-repetitor/src"
+  ],
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "build",
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*", "../pages/inregistrare-repetitor/src/*", "../pages/home/src/*"],
+      "*": [
+        "src/*",
+        "../pages/autentificare-repetitor/src/*",
+        "../pages/inregistrare-repetitor/src/*",
+        "../pages/home/src/*"
+      ],
       "shared/*": ["../../shared/src/*"],
       "frontend/shared/*": ["../shared/src/*"]
     }
