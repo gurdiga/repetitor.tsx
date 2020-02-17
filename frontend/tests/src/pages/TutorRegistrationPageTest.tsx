@@ -14,7 +14,7 @@ import {UserEmailValidationRules} from "shared/Model/Email";
 import {UserPasswordValidationRules} from "shared/Model/Password";
 import {TutorFullNameValidationRules} from "shared/Model/Tutor";
 import {stub} from "sinon";
-import {Comp, expectProps, Stub, Wrapper} from "TestHelpers";
+import {Comp, expectProps, Stub, Wrapper, expectToRenderSnapshot} from "TestHelpers";
 
 describe("<TutorRegistrationPage/>", () => {
   let wrapper: Wrapper<typeof TutorRegistrationPage>;
@@ -59,6 +59,10 @@ describe("<TutorRegistrationPage/>", () => {
     expectProps<typeof SubmitButton>("parola", submitButton, {
       label: "Înregistrează",
     });
+  });
+
+  it("renders the expected snapshot", () => {
+    expectToRenderSnapshot(__filename, wrapper, "default");
   });
 
   context("form submission", () => {

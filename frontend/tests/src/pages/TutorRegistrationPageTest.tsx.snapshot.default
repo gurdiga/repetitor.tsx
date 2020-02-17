@@ -1,0 +1,3 @@
+<PageLayout title="Înregistrare repetitor">
+  <Form fields={{...}} actionButtons={{...}} />
+</PageLayout>
