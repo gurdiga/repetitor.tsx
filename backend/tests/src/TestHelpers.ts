@@ -1,5 +1,5 @@
 import {expect, use} from "chai";
-import {connectionPool, runQuery} from "../../src/Utils/Db";
+import {connectionPool, runQuery, RowSet} from "../../src/Utils/Db";
 
 use(require("chai-as-promised"));
 use(require("chai-http"));
@@ -19,7 +19,7 @@ after(async () => {
 });
 
 async function truncateAllTables(): Promise<void> {
-  const {rows} = await runQuery({sql: "SHOW TABLES", params: []});
+  const {rows} = (await runQuery({sql: "SHOW TABLES", params: []})) as RowSet;
   const operations = rows
     .map(row => Object.values(row)[0])
     .map(tableName => {

@@ -26,7 +26,7 @@ describe("<TutorRegistrationPage/>", () => {
   it("renders the page layout with the appropriate title", () => {
     const layout = wrapper.find(PageLayout);
 
-    expect(layout.prop("title")).to.equal("Înregistrare tutore");
+    expect(layout.prop("title")).to.equal("Înregistrare repetitor");
   });
 
   it("renders a form with the appropriate fields", () => {
@@ -65,7 +65,7 @@ describe("<TutorRegistrationPage/>", () => {
     let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
 
     beforeEach(() => {
-      runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "Success"});
+      runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "TutorCreationSuccess", id: 42});
     });
 
     afterEach(() => {

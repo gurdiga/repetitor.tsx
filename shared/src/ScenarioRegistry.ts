@@ -4,6 +4,9 @@ import {TutorLoginDTO, TutorLoginResult} from "shared/Scenarios/TutorLogin";
 import {UserSession} from "shared/Model/UserSession";
 import {LogoutDTO, LogoutResult} from "shared/Scenarios/Logout";
 
+export type SimpleScenarioName = "TestScenario";
+export type SessionAlteringScenarioName = "TutorRegistration" | "TutorLogin" | "Logout";
+
 export interface ScenarioRegistry {
   TutorRegistration: {
     DTO: TutorRegistrationDTO;

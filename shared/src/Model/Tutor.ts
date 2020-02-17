@@ -33,6 +33,11 @@ export type TutorModelError = {
   errorCode: UserModelValidationErrorCode;
 };
 
+export type TutorCreationSuccess = {
+  kind: "TutorCreationSuccess";
+  id: number;
+};
+
 export type UserModelValidationErrorCode = "EMAIL_TAKEN";
 
 export function makeTutorFromRegistrationFormDTO(

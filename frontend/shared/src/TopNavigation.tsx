@@ -8,7 +8,7 @@ export function TopNavigation() {
         <a href="/">Pagina principală</a>
       </li>
       <li>
-        <a href="/inregistrare/">Înregistrare</a>
+        <a href="/inregistrare-repetitor/">Înregistrare repetitor</a>
       </li>
       <li>
         <a href="/autentificare-repetitor/">Autentificare repetitor</a>

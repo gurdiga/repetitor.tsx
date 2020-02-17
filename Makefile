@@ -120,7 +120,13 @@ node_modules backend/node_modules frontend/node_modules:
 	touch $@
 
 clean:
-	rm -rf shared/build/ backend/build/ backend/tests/build frontend/shared/build/ frontend/tests/build/ frontend/pages/*/build/
+	rm -rf \
+		shared/build/ \
+		backend/build/ \
+		backend/tests/build/ \
+		frontend/shared/build/ \
+		frontend/tests/build/ \
+		frontend/pages/*/build/
 
 uninstall: clean
 	rm -rf {.,backend,frontend}/node_modules

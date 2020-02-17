@@ -7,23 +7,31 @@ import {
   ScenarioName,
   SessionAlteringScenarioHandler,
   SimpleScenarioHandler,
+  SimpleScenarioName,
+  SessionAlteringScenarioName,
 } from "shared/ScenarioRegistry";
 
-const scenarioList: Record<ScenarioName, ScenarioHandler<any, any>> = {
-  TutorRegistration,
+const simpleScenarioHandlers: Record<SimpleScenarioName, SimpleScenarioHandler<any, any>> = {
   TestScenario,
+};
+
+const sessionAlteringScenarioHandlers: Record<SessionAlteringScenarioName, SessionAlteringScenarioHandler<any, any>> = {
+  TutorRegistration,
   TutorLogin,
   Logout,
 };
 
-const sessionAlteringScenarios: ScenarioName[] = ["TutorLogin", "Logout"]; // TODO: Add TutorRegistration?
+const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
+  ...simpleScenarioHandlers,
+  ...sessionAlteringScenarioHandlers,
+};
 
 export async function runScenario(scenarioName_?: string, dto: any = {}, session?: any): Promise<any> {
   const scenarioName = scenarioName_ as ScenarioName;
-  const scenarioHandler = scenarioList[scenarioName];
+  const scenarioHandler = scenarioHandlers[scenarioName];
 
   if (scenarioHandler) {
-    if (sessionAlteringScenarios.includes(scenarioName)) {
+    if (scenarioName in sessionAlteringScenarioHandlers) {
       if (session) {
         const sessionAlteringScenario = scenarioHandler as SessionAlteringScenarioHandler<any, any>;
 

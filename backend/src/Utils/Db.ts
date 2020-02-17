@@ -6,8 +6,14 @@ interface DataRow {
   [fieldName: string]: any;
 }
 
-export interface Result {
+type Result = RowSet | InsertResult;
+
+export interface RowSet {
   rows: DataRow[];
+}
+
+export interface InsertResult {
+  insertId: number;
 }
 
 interface ParametrizedQuery {
@@ -30,11 +36,15 @@ export function runQuery(query: ParametrizedQuery): Promise<Result> {
   log({query});
 
   return new Promise<Result>((resolve, reject) => {
-    connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, rows, _fields) {
+    connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, result, _fields) {
       if (error) {
         reject(error);
       } else {
-        resolve({rows: rows as DataRow[]});
+        if ("insertId" in result) {
+          resolve({insertId: result.insertId});
+        } else {
+          resolve({rows: result as DataRow[]});
+        }
       }
     });
   });

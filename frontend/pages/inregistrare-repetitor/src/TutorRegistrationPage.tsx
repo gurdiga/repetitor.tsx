@@ -30,7 +30,7 @@ export function TutorRegistrationPage() {
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
-    <PageLayout title="Înregistrare tutore">
+    <PageLayout title="Înregistrare repetitor">
       <Form
         fields={[
           <TextField
@@ -112,7 +112,7 @@ export function TutorRegistrationPage() {
     let responseText: string;
 
     switch (response.kind) {
-      case "Success":
+      case "TutorCreationSuccess":
         [responseState, responseText] = [ResponseState.ReceivedSuccess, "Înregistrat."];
         break;
       case "FullNameError":

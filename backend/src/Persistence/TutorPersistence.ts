@@ -1,7 +1,7 @@
 import {LoginCheckError, LoginCheckInfo} from "shared/Model/LoginCheck";
-import {TutorModelError} from "shared/Model/Tutor";
-import {DbError, Success, SystemError} from "shared/Model/Utils";
-import {runQuery} from "Utils/Db";
+import {TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
+import {DbError, SystemError} from "shared/Model/Utils";
+import {runQuery, InsertResult, RowSet} from "Utils/Db";
 import {logError} from "Utils/Logging";
 
 export async function createTutor(
@@ -9,17 +9,17 @@ export async function createTutor(
   email: string,
   passwordHash: string,
   salt: string
-): Promise<Success | TutorModelError | DbError> {
+): Promise<TutorCreationSuccess | TutorModelError | DbError> {
   try {
-    await runQuery({
+    const result = (await runQuery({
       sql: `
             INSERT INTO users(email, password_hash, password_salt, full_name)
             VALUES(?, ?, ?, ?)
           `,
       params: [email, passwordHash, salt, fullName],
-    });
+    })) as InsertResult;
 
-    return {kind: "Success"};
+    return {kind: "TutorCreationSuccess", id: result.insertId};
   } catch (error) {
     switch (error.code) {
       case "ER_DUP_ENTRY":
@@ -38,14 +38,14 @@ export async function checkLoginInfo(
   hashFn: (password: string, salt: string) => string
 ): Promise<LoginCheckInfo | LoginCheckError | SystemError> {
   try {
-    const result = await runQuery({
+    const result = (await runQuery({
       sql: `
             SELECT id, password_salt, password_hash
             FROM users
             WHERE email = ?
           `,
       params: [email],
-    });
+    })) as RowSet;
 
     const row = result.rows[0];
 
