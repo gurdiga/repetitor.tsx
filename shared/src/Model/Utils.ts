@@ -17,7 +17,7 @@ export type DbErrorCode = "GENERIC_DB_ERROR";
 
 export type UnexpectedError = {
   kind: "UnexpectedError";
-  errorCode: string;
+  error: string;
 };
 
 export type DataProps<T> = Omit<T, "kind">;

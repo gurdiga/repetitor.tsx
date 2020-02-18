@@ -131,7 +131,7 @@ export function TutorRegistrationPage() {
         [responseState, responseText] = [ResponseState.ReceivedError, modelErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.errorCode];
+        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
         break;
       case "ServerError":
       case "TransportError":

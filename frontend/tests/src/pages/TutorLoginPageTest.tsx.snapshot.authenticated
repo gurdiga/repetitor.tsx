@@ -5,7 +5,7 @@
   <p>
     Dacă doriți să vă dezautentifcați, apăsați pe acest buton:
   </p>
-  <button onClick={[Function: handleLogoutButtonClick]}>
+  <button data-test-id="logout-button" onClick={[Function: handleLogoutButtonClick]}>
     Dezautentificare
   </button>
 </PageLayout>

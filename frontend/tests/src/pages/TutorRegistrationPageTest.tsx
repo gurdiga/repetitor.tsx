@@ -5,7 +5,6 @@ import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import {PageLayout} from "frontend/shared/PageLayout";
 import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
 import {describe, it} from "mocha";
 import * as React from "react";
@@ -23,31 +22,27 @@ describe("<TutorRegistrationPage/>", () => {
     wrapper = shallow(<TutorRegistrationPage />);
   });
 
-  it("renders the page layout with the appropriate title", () => {
-    const layout = wrapper.find(PageLayout);
-
-    expect(layout.prop("title")).to.equal("Înregistrare repetitor");
-  });
-
   it("renders a form with the appropriate fields", () => {
     const form = wrapper.find(Form);
-    const {fields} = form.props();
+    const {
+      fields: [nameField, emailField, passwordField, ulaCheckbox],
+    } = form.props();
 
-    expectProps<typeof TextField>("numele deplin", fields[0], {
+    expectProps<typeof TextField>("name field", nameField, {
       autoFocus: true,
       validationRules: TutorFullNameValidationRules,
     });
 
-    expectProps<typeof TextField>("adresa de email", fields[1], {
+    expectProps<typeof TextField>("email field", emailField, {
       inputType: "email",
       validationRules: UserEmailValidationRules,
     });
 
-    expectProps<typeof PasswordField>("parola", fields[2], {
+    expectProps<typeof PasswordField>("password field", passwordField, {
       validationRules: UserPasswordValidationRules,
     });
 
-    expectProps<typeof Checkbox>("condițiile de utilizare", fields[3], {
+    expectProps<typeof Checkbox>("accepts terms of use checkbox", ulaCheckbox, {
       value: "off",
       validationRules: ulaValidationRules,
     });
@@ -56,7 +51,7 @@ describe("<TutorRegistrationPage/>", () => {
   it("renders the appropriate action buttons", () => {
     const submitButton = getSubmitButton(wrapper);
 
-    expectProps<typeof SubmitButton>("parola", submitButton, {
+    expectProps<typeof SubmitButton>("submit button", submitButton, {
       label: "Înregistrează",
     });
   });

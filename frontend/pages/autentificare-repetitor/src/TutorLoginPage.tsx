@@ -29,7 +29,9 @@ function renderAlreadyLoggedState() {
     <>
       <p>Deja v-ați autentificat.</p>
       <p>Dacă doriți să vă dezautentifcați, apăsați pe acest buton:</p>
-      <button onClick={handleLogoutButtonClick}>Dezautentificare</button>
+      <button data-test-id="logout-button" onClick={handleLogoutButtonClick}>
+        Dezautentificare
+      </button>
       {logoutError && <p className="error-message">{logoutError}</p>}
     </>
   );
@@ -48,11 +50,13 @@ function renderAlreadyLoggedState() {
         setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
         break;
       case "UnexpectedError":
-        setLogoutError(`Eroare neprevăzută (${response.errorCode}). Încercați mai tîrziu.`);
+        setLogoutError(`Eroare neprevăzută (${response.error}). Încercați mai tîrziu.`);
         break;
       default:
         assertNever(response);
     }
+
+    return response;
   }
 }
 
@@ -93,7 +97,7 @@ function renderLoginForm() {
             label="Autentifică"
             onClick={async () => {
               toggleValidationMessage(true);
-              await maybeSubmitForm({email, password});
+              return await maybeSubmitForm({email, password});
             }}
           />,
         ]}
@@ -142,7 +146,7 @@ function renderLoginForm() {
         [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.errorCode];
+        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
         break;
       case "TransportError":
       case "ServerError":
