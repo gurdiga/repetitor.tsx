@@ -156,7 +156,7 @@ deploy:
 		$(TAG) \
 	| ssh root@forum.homeschooling.md "cd /var/www/repetitor && tar fxz -"
 
-pre-commit: lint build test
+pre-commit: lint clean build test
 pc: pre-commit
 
 lint:
