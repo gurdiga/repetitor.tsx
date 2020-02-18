@@ -34,7 +34,7 @@ export function TextField(props: Props) {
       {showValidationMessage && validationErrorCode && (
         <ValidationMessage text={validationMessages[validationErrorCode]} />
       )}
-      {info && <p className="field-info">{info}</p>}
+      {info && <p className={TextFieldCss.Info}>{info}</p>}
     </>
   );
 }

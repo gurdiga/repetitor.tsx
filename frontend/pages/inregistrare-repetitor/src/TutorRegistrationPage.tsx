@@ -42,6 +42,7 @@ export function TutorRegistrationPage() {
             validationRules={TutorFullNameValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={fullNameErrorMessages}
+            info="Va fi afișat pe pagina dumneavoastră de profil"
           />,
           <TextField
             id="email"

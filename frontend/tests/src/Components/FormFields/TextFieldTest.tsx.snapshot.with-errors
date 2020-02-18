@@ -5,7 +5,7 @@
   </label>
   <input type="text" id="firstName" autoFocus={false} value="" onInput={[Function]} className="frq3ztx" />
   <ValidationMessage text="Numele lipsește" />
-  <p className="field-info">
+  <p className="f1h3qb4v">
     Va fi afișat pe pagina dumneavoastră de profil
   </p>
 </Fragment>
