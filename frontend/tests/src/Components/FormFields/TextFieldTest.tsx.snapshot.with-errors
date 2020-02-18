@@ -1,0 +1,11 @@
+<Fragment>
+  <label htmlFor="firstName">
+    First name
+    :
+  </label>
+  <input type="text" id="firstName" autoFocus={false} value="" onInput={[Function]} className="frq3ztx" />
+  <ValidationMessage text="Numele lipsește" />
+  <p className="field-info">
+    Va fi afișat pe pagina dumneavoastră de profil
+  </p>
+</Fragment>
