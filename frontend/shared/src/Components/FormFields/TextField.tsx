@@ -13,7 +13,7 @@ interface Props extends FormField.CommonProps {
 type InputType = "text" | "email";
 
 export function TextField(props: Props) {
-  const {validationRules, onValueChange, id, autoFocus, inputType, label, showValidationMessage, value} = props;
+  const {validationRules, onValueChange, id, autoFocus, inputType, label, showValidationMessage, value, info} = props;
   const {validationMessages} = props;
 
   const initialValidationErrorCode = getValidationErrorCode(value, validationRules);
