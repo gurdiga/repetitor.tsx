@@ -19,8 +19,27 @@ import {
   ValidationMessages,
   ValidationRules,
 } from "shared/Utils/Validation";
+import {PageProps} from "shared/Utils/PageProps";
+import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 
-export function TutorRegistrationPage() {
+export function TutorRegistrationPage(props: PageProps) {
+  return (
+    <PageLayout title="Înregistrare repetitor">
+      {props.isAuthenticated ? renderAlreadyLoggedState() : renderLoginForm()}
+    </PageLayout>
+  );
+}
+
+function renderAlreadyLoggedState() {
+  return (
+    <AlreadyLoggedIn>
+      <p>Deja v-ați înregistrat.</p>
+      <p>Dacă doriți să vă dezautentifcați, apăsați pe acest buton:</p>
+    </AlreadyLoggedIn>
+  );
+}
+
+function renderLoginForm() {
   const [fullName, updateFullName] = React.useState(initialFieldValue);
   const [email, updateEmail] = React.useState(initialFieldValue);
   const [password, updatePassword] = React.useState(initialFieldValue);
@@ -30,7 +49,7 @@ export function TutorRegistrationPage() {
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
-    <PageLayout title="Înregistrare repetitor">
+    <>
       <Form
         fields={[
           <TextField
@@ -91,7 +110,7 @@ export function TutorRegistrationPage() {
       {serverResponse.shouldShow && (
         <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
       )}
-    </PageLayout>
+    </>
   );
 
   async function maybeSubmitForm(

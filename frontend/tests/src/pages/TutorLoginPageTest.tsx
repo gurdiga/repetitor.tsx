@@ -11,6 +11,7 @@ import {expectProps, expectToRenderSnapshot, Stub, Wrapper, Comp} from "TestHelp
 import {TutorLoginPage} from "TutorLoginPage";
 import {expect} from "chai";
 import Sinon = require("sinon");
+import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 
 describe("<TutorLoginPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
@@ -234,25 +235,19 @@ describe("<TutorLoginPage/>", () => {
     });
 
     it("renders a button to log out", () => {
-      const logoutButton = shallow(<TutorLoginPage isAuthenticated={true} />).find(
-        `button[data-test-id="logout-button"]`
-      );
+      const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
 
-      expect(logoutButton.exists()).to.be.true;
+      clickLogoutButtonInPage(wrapper);
 
-      logoutButton.simulate("click");
       expect(runScenarioStub.calledWith("Logout", {})).to.be.true;
     });
 
     describe("logout result", () => {
       context("when the server says OK", () => {
         it("navigates to homepage", async () => {
-          const logoutButton = shallow(<TutorLoginPage isAuthenticated={true} />).find(
-            `button[data-test-id="logout-button"]`
-          );
-          const mouseEvent = ({} as any) as React.MouseEvent<HTMLButtonElement>;
+          const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
 
-          await logoutButton.prop("onClick")!(mouseEvent);
+          await clickLogoutButtonInPage(wrapper);
 
           expect(locationStub.calledWith("/"), "navigates to homepage").to.be.true;
         });
@@ -270,17 +265,16 @@ describe("<TutorLoginPage/>", () => {
 
         it("displays an appropriate error message", async () => {
           const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
-          const logoutButton = wrapper.find(`button[data-test-id="logout-button"]`);
-          const mouseEvent = ({} as any) as React.MouseEvent<HTMLButtonElement>;
+          const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
-          await logoutButton.prop("onClick")!(mouseEvent);
+          await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
 
-          expect(wrapper.find(".error-message").text()).to.equal("„Opps!” Încercați mai tîrziu.");
+          expect(alreadyLoggedIn.find(".error-message").text()).to.equal("„Opps!” Încercați mai tîrziu.");
           expect(locationStub.called, "does NOT navigate to homepage").to.be.false;
         });
       });
 
-      context("when there is an unespected errpt", () => {
+      context("when there is an unexpected error", () => {
         beforeEach(async () => {
           runScenarioStub.restore();
           runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({
@@ -295,12 +289,13 @@ describe("<TutorLoginPage/>", () => {
 
         it("displays an appropriate error message", async () => {
           const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
-          const logoutButton = wrapper.find(`button[data-test-id="logout-button"]`);
-          const mouseEvent = ({} as any) as React.MouseEvent<HTMLButtonElement>;
+          const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
-          await logoutButton.prop("onClick")!(mouseEvent);
+          await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
 
-          expect(wrapper.find(".error-message").text()).to.equal("Eroare neprevăzută (Crash!). Încercați mai tîrziu.");
+          expect(alreadyLoggedIn.find(".error-message").text()).to.equal(
+            "Eroare neprevăzută (Crash!). Încercați mai tîrziu."
+          );
           expect(locationStub.called, "does NOT navigate to homepage").to.be.false;
         });
       });
@@ -317,16 +312,28 @@ describe("<TutorLoginPage/>", () => {
 
         it("displays an appropriate error message", async () => {
           const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
-          const logoutButton = wrapper.find(`button[data-test-id="logout-button"]`);
-          const mouseEvent = ({} as any) as React.MouseEvent<HTMLButtonElement>;
+          const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
-          await logoutButton.prop("onClick")!(mouseEvent);
+          await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
 
-          expect(wrapper.find(".error-message").text()).to.equal("„Help” Încercați mai tîrziu.");
+          expect(alreadyLoggedIn.find(".error-message").text()).to.equal("„Help” Încercați mai tîrziu.");
           expect(locationStub.called, "does NOT navigate to homepage").to.be.false;
         });
       });
     });
+
+    async function clickLogoutButtonInPage(wrapper: Wrapper<typeof TutorLoginPage>) {
+      const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
+
+      await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
+    }
+
+    async function clickLogoutButtonInAlreadyLoggedIn(wrapper: Wrapper<typeof AlreadyLoggedIn>) {
+      const mouseEvent = ({} as any) as React.MouseEvent<HTMLButtonElement>;
+      const logoutButton = wrapper.find(`button[data-test-id="logout-button"]`);
+
+      await logoutButton.prop("onClick")!(mouseEvent);
+    }
   });
 
   describe("snapshots", () => {

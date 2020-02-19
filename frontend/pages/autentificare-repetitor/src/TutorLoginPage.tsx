@@ -13,6 +13,7 @@ import {TutorLoginDTO} from "shared/Scenarios/TutorLogin";
 import {assertNever} from "shared/Utils/Language";
 import {initialFieldValue, ValidatedValue} from "shared/Utils/Validation";
 import {PageProps} from "shared/Utils/PageProps";
+import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 
 export function TutorLoginPage(props: PageProps) {
   return (
@@ -23,41 +24,12 @@ export function TutorLoginPage(props: PageProps) {
 }
 
 function renderAlreadyLoggedState() {
-  const [logoutError, setLogoutError] = React.useState("");
-
   return (
-    <>
+    <AlreadyLoggedIn>
       <p>Deja v-ați autentificat.</p>
       <p>Dacă doriți să vă dezautentifcați, apăsați pe acest buton:</p>
-      <button data-test-id="logout-button" onClick={handleLogoutButtonClick}>
-        Dezautentificare
-      </button>
-      {logoutError && <p className="error-message">{logoutError}</p>}
-    </>
+    </AlreadyLoggedIn>
   );
-
-  async function handleLogoutButtonClick() {
-    const response = await runScenario("Logout", {});
-
-    switch (response.kind) {
-      case "LogoutSuccess":
-        navigateToPage("/");
-        break;
-      case "TransportError":
-        setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
-        break;
-      case "ServerError":
-        setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
-        break;
-      case "UnexpectedError":
-        setLogoutError(`Eroare neprevăzută (${response.error}). Încercați mai tîrziu.`);
-        break;
-      default:
-        assertNever(response);
-    }
-
-    return response;
-  }
 }
 
 function renderLoginForm() {

@@ -14,185 +14,205 @@ import {UserPasswordValidationRules} from "shared/Model/Password";
 import {TutorFullNameValidationRules} from "shared/Model/Tutor";
 import {stub} from "sinon";
 import {Comp, expectProps, Stub, Wrapper, expectToRenderSnapshot} from "TestHelpers";
+import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 
 describe("<TutorRegistrationPage/>", () => {
   let wrapper: Wrapper<typeof TutorRegistrationPage>;
 
-  before(() => {
-    wrapper = shallow(<TutorRegistrationPage />);
-  });
-
-  it("renders a form with the appropriate fields", () => {
-    const form = wrapper.find(Form);
-    const {
-      fields: [nameField, emailField, passwordField, ulaCheckbox],
-    } = form.props();
-
-    expectProps<typeof TextField>("name field", nameField, {
-      autoFocus: true,
-      validationRules: TutorFullNameValidationRules,
+  context("when the user is not yet authenticated", () => {
+    before(() => {
+      wrapper = shallow(<TutorRegistrationPage isAuthenticated={false} />);
     });
 
-    expectProps<typeof TextField>("email field", emailField, {
-      inputType: "email",
-      validationRules: UserEmailValidationRules,
-    });
+    it("renders a form with the appropriate fields", () => {
+      const form = wrapper.find(Form);
+      const {
+        fields: [nameField, emailField, passwordField, ulaCheckbox],
+      } = form.props();
 
-    expectProps<typeof PasswordField>("password field", passwordField, {
-      validationRules: UserPasswordValidationRules,
-    });
-
-    expectProps<typeof Checkbox>("accepts terms of use checkbox", ulaCheckbox, {
-      value: "off",
-      validationRules: ulaValidationRules,
-    });
-  });
-
-  it("renders the appropriate action buttons", () => {
-    const submitButton = getSubmitButton(wrapper);
-
-    expectProps<typeof SubmitButton>("submit button", submitButton, {
-      label: "Înregistrează",
-    });
-  });
-
-  it("renders the expected snapshot", () => {
-    expectToRenderSnapshot(__filename, wrapper, "default");
-  });
-
-  context("form submission", () => {
-    let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
-
-    beforeEach(() => {
-      runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "TutorCreationSuccess", id: 42});
-    });
-
-    afterEach(() => {
-      runScenarioStub.restore();
-    });
-
-    context("when fields are properly filled in", () => {
-      beforeEach(async () => {
-        const form = wrapper.find(Form);
-        const {fields} = form.props();
-
-        const fullNameField: Comp<typeof TextField> = fields[0];
-        const emailField: Comp<typeof TextField> = fields[1];
-        const passwordField: Comp<typeof PasswordField> = fields[2];
-        const userLicenceAgreementCheckbox: Comp<typeof Checkbox> = fields[3];
-
-        fullNameField.props.onValueChange({
-          value: "full name",
-          isValid: true,
-        });
-
-        emailField.props.onValueChange({
-          value: "email@example.com",
-          isValid: true,
-        });
-
-        passwordField.props.onValueChange({
-          value: "password",
-          isValid: true,
-        });
-
-        userLicenceAgreementCheckbox.props.onValueChange({
-          value: "on",
-          isValid: true,
-        });
-
-        await getSubmitButton(wrapper).props.onClick();
+      expectProps<typeof TextField>("name field", nameField, {
+        autoFocus: true,
+        validationRules: TutorFullNameValidationRules,
       });
 
-      it("submits the field values to the backend", () => {
-        expect(runScenarioStub.called).to.be.true;
-        expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
+      expectProps<typeof TextField>("email field", emailField, {
+        inputType: "email",
+        validationRules: UserEmailValidationRules,
+      });
+
+      expectProps<typeof PasswordField>("password field", passwordField, {
+        validationRules: UserPasswordValidationRules,
+      });
+
+      expectProps<typeof Checkbox>("accepts terms of use checkbox", ulaCheckbox, {
+        value: "off",
+        validationRules: ulaValidationRules,
       });
     });
 
-    context("when some of the fields aren’t properly filled in", () => {
-      beforeEach(async () => {
-        const form = wrapper.find(Form);
-        const {fields} = form.props();
+    it("renders the appropriate action buttons", () => {
+      const submitButton = getSubmitButton(wrapper);
 
-        const fullNameField: Comp<typeof TextField> = fields[0];
-        const emailField: Comp<typeof TextField> = fields[1];
-        const passwordField: Comp<typeof PasswordField> = fields[2];
-        const userLicenceAgreementCheckbox: Comp<typeof Checkbox> = fields[3];
-
-        fullNameField.props.onValueChange({
-          value: "full name",
-          isValid: true,
-        });
-
-        emailField.props.onValueChange({
-          value: "email@example.com",
-          isValid: true,
-        });
-
-        passwordField.props.onValueChange({
-          value: "secret",
-          isValid: true,
-        });
-
-        userLicenceAgreementCheckbox.props.onValueChange({
-          value: "off", // <---- Not checking the User Agreement
-          isValid: false,
-        });
-
-        await getSubmitButton(wrapper).props.onClick();
-      });
-
-      it("does not submit the form", () => {
-        expect(runScenarioStub.called).to.be.false;
+      expectProps<typeof SubmitButton>("submit button", submitButton, {
+        label: "Înregistrează",
       });
     });
 
-    context("when the backend responds with an error", () => {
-      beforeEach(async () => {
-        const form = wrapper.find(Form);
-        const {fields} = form.props();
+    it("renders the expected snapshot", () => {
+      expectToRenderSnapshot(__filename, wrapper, "default");
+    });
 
-        const fullNameField: Comp<typeof TextField> = fields[0];
-        const emailField: Comp<typeof TextField> = fields[1];
-        const passwordField: Comp<typeof PasswordField> = fields[2];
-        const ulaCheckbox: Comp<typeof Checkbox> = fields[3];
+    context("form submission", () => {
+      let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
 
-        fullNameField.props.onValueChange({
-          value: "full name",
-          isValid: true,
-        });
+      beforeEach(() => {
+        runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "TutorCreationSuccess", id: 42});
+      });
 
-        emailField.props.onValueChange({
-          value: "email@example.com",
-          isValid: true,
-        });
-
-        passwordField.props.onValueChange({
-          value: "password",
-          isValid: true,
-        });
-
-        ulaCheckbox.props.onValueChange({
-          value: "on",
-          isValid: true,
-        });
-
+      afterEach(() => {
         runScenarioStub.restore();
-        runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "PasswordError", errorCode: "REQUIRED"});
-        await getSubmitButton(wrapper).props.onClick();
       });
 
-      it("submits the form and displays the error message", () => {
-        expect(runScenarioStub.called).to.be.true;
-        expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
+      context("when fields are properly filled in", () => {
+        beforeEach(async () => {
+          const form = wrapper.find(Form);
+          const {fields} = form.props();
+
+          const fullNameField: Comp<typeof TextField> = fields[0];
+          const emailField: Comp<typeof TextField> = fields[1];
+          const passwordField: Comp<typeof PasswordField> = fields[2];
+          const userLicenceAgreementCheckbox: Comp<typeof Checkbox> = fields[3];
+
+          fullNameField.props.onValueChange({
+            value: "full name",
+            isValid: true,
+          });
+
+          emailField.props.onValueChange({
+            value: "email@example.com",
+            isValid: true,
+          });
+
+          passwordField.props.onValueChange({
+            value: "password",
+            isValid: true,
+          });
+
+          userLicenceAgreementCheckbox.props.onValueChange({
+            value: "on",
+            isValid: true,
+          });
+
+          await getSubmitButton(wrapper).props.onClick();
+        });
+
+        it("submits the field values to the backend", () => {
+          expect(runScenarioStub.called).to.be.true;
+          expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
+        });
+      });
+
+      context("when some of the fields aren’t properly filled in", () => {
+        beforeEach(async () => {
+          const form = wrapper.find(Form);
+          const {fields} = form.props();
+
+          const fullNameField: Comp<typeof TextField> = fields[0];
+          const emailField: Comp<typeof TextField> = fields[1];
+          const passwordField: Comp<typeof PasswordField> = fields[2];
+          const userLicenceAgreementCheckbox: Comp<typeof Checkbox> = fields[3];
+
+          fullNameField.props.onValueChange({
+            value: "full name",
+            isValid: true,
+          });
+
+          emailField.props.onValueChange({
+            value: "email@example.com",
+            isValid: true,
+          });
+
+          passwordField.props.onValueChange({
+            value: "secret",
+            isValid: true,
+          });
+
+          userLicenceAgreementCheckbox.props.onValueChange({
+            value: "off", // <---- Not checking the User Agreement
+            isValid: false,
+          });
+
+          await getSubmitButton(wrapper).props.onClick();
+        });
+
+        it("does not submit the form", () => {
+          expect(runScenarioStub.called).to.be.false;
+        });
+      });
+
+      context("when the backend responds with an error", () => {
+        beforeEach(async () => {
+          const form = wrapper.find(Form);
+          const {fields} = form.props();
+
+          const fullNameField: Comp<typeof TextField> = fields[0];
+          const emailField: Comp<typeof TextField> = fields[1];
+          const passwordField: Comp<typeof PasswordField> = fields[2];
+          const ulaCheckbox: Comp<typeof Checkbox> = fields[3];
+
+          fullNameField.props.onValueChange({
+            value: "full name",
+            isValid: true,
+          });
+
+          emailField.props.onValueChange({
+            value: "email@example.com",
+            isValid: true,
+          });
+
+          passwordField.props.onValueChange({
+            value: "password",
+            isValid: true,
+          });
+
+          ulaCheckbox.props.onValueChange({
+            value: "on",
+            isValid: true,
+          });
+
+          runScenarioStub.restore();
+          runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({
+            kind: "PasswordError",
+            errorCode: "REQUIRED",
+          });
+          await getSubmitButton(wrapper).props.onClick();
+        });
+
+        it("submits the form and displays the error message", () => {
+          expect(runScenarioStub.called).to.be.true;
+          expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
+        });
       });
     });
+
+    function getSubmitButton(
+      wrapper: Wrapper<typeof TutorRegistrationPage>
+    ): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
+      return wrapper.find(Form).props().actionButtons[0];
+    }
   });
 
-  function getSubmitButton(
-    wrapper: Wrapper<typeof TutorRegistrationPage>
-  ): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
-    return wrapper.find(Form).props().actionButtons[0];
-  }
+  describe("snapshots", () => {
+    it("renders the authenticated state", () => {
+      const wrapper = shallow(<TutorRegistrationPage isAuthenticated={true} />);
+
+      expectToRenderSnapshot(__filename, wrapper, "authenticated");
+    });
+
+    it("renders the unauthenticated state", () => {
+      const wrapper = shallow(<TutorRegistrationPage isAuthenticated={false} />);
+
+      expectToRenderSnapshot(__filename, wrapper, "unauthenticated");
+    });
+  });
 });
