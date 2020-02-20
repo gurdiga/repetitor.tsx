@@ -13,3 +13,11 @@ export function requireNumericEnvVar(varName: string): number {
 
   return n;
 }
+
+export function isDevelopmentEnvironment(): boolean {
+  return requireEnvVar("NODE_ENV") === "development";
+}
+
+export function isTestEnvironment(): boolean {
+  return requireEnvVar("NODE_ENV") === "test";
+}

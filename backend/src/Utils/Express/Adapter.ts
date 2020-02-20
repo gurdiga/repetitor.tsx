@@ -2,7 +2,7 @@ import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
 import {runScenario} from "Utils/ScenarioRunner";
-import {requireEnvVar} from "Utils/Env";
+import {requireEnvVar, isTestEnvironment} from "Utils/Env";
 import {logError} from "Utils/Logging";
 import {UserSession} from "shared/Model/UserSession";
 
@@ -77,7 +77,7 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
       .replace("CSRF_TOKEN", req.csrfToken())
       .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: Boolean(session.userId)}));
 
-    if (requireEnvVar("NODE_ENV") === "test") {
+    if (isTestEnvironment()) {
       // To use in tests.
       res.set("XSRF-TOKEN", req.csrfToken());
     }

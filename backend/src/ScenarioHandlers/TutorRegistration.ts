@@ -37,6 +37,7 @@ function sendWelcomeMessage(fullName: string, email: string) {
 }
 
 function getMessage(name: string): string {
+  // TODO: Make this good after the confirmation link is up.
   const emailConfirmationLink = "/confirmare-repetitor"; // TODO: get the real link
 
   return `

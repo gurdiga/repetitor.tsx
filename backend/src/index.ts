@@ -6,7 +6,7 @@ import * as helmet from "helmet";
 import * as csurf from "csurf";
 import {handlePost, sendPageBundle, sendPageHtml, sendVendorModule, sendSecurityTxt} from "Utils/Express/Adapter";
 import {session} from "Utils/Express/Session";
-import {requireNumericEnvVar, requireEnvVar} from "Utils/Env";
+import {requireNumericEnvVar, isTestEnvironment} from "Utils/Env";
 
 const csrfProtection = csurf();
 
@@ -14,7 +14,7 @@ const csrfProtection = csurf();
 export const app = express()
   .set("trust proxy", true)
   .use(helmet())
-  .use(morgan("combined", {skip: () => requireEnvVar("NODE_ENV") === "test"}))
+  .use(morgan("combined", {skip: isTestEnvironment}))
   .use(session)
   .use(compression())
   .use(express.json())
