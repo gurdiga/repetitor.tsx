@@ -6,6 +6,7 @@ import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
+import * as PageNavigation from "frontend/shared/PageNavigation";
 import {describe, it} from "mocha";
 import * as React from "react";
 import {TutorRegistrationPage, ulaValidationRules} from "TutorRegistrationPage";
@@ -14,7 +15,6 @@ import {UserPasswordValidationRules} from "shared/Model/Password";
 import {TutorFullNameValidationRules} from "shared/Model/Tutor";
 import {stub} from "sinon";
 import {Comp, expectProps, Stub, Wrapper, expectToRenderSnapshot} from "TestHelpers";
-import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 
 describe("<TutorRegistrationPage/>", () => {
   let wrapper: Wrapper<typeof TutorRegistrationPage>;
@@ -64,13 +64,16 @@ describe("<TutorRegistrationPage/>", () => {
 
     context("form submission", () => {
       let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
+      let navigateToPageStub: Stub<typeof PageNavigation.navigateToPage>;
 
       beforeEach(() => {
         runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "TutorCreationSuccess", id: 42});
+        navigateToPageStub = stub(PageNavigation, "navigateToPage");
       });
 
       afterEach(() => {
         runScenarioStub.restore();
+        navigateToPageStub.restore();
       });
 
       context("when fields are properly filled in", () => {
@@ -109,6 +112,10 @@ describe("<TutorRegistrationPage/>", () => {
         it("submits the field values to the backend", () => {
           expect(runScenarioStub.called).to.be.true;
           expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
+        });
+
+        it("navigates to the home page", () => {
+          expect(navigateToPageStub.calledWith("/")).to.be.true;
         });
       });
 

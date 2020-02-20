@@ -1,16 +1,19 @@
+import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 import {Form} from "frontend/shared/Components/Form";
 import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
 import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
+import {navigateToPage} from "frontend/shared/PageNavigation";
 import {placeholderServerResponse, ResponseState, runScenario, ServerResponse} from "frontend/shared/ScenarioRunner";
 import * as React from "react";
 import {emailErrorMessages, UserEmailValidationRules} from "shared/Model/Email";
 import {passwordErrorMessages, UserPasswordValidationRules} from "shared/Model/Password";
-import {TutorFullNameValidationRules, UserModelValidationErrorCode, TutorPropName} from "shared/Model/Tutor";
+import {TutorFullNameValidationRules, TutorPropName, UserModelValidationErrorCode} from "shared/Model/Tutor";
 import {dbErrorMessages} from "shared/Model/Utils";
 import {assertNever} from "shared/Utils/Language";
+import {PageProps} from "shared/Utils/PageProps";
 import {
   ErrorMessages,
   initialFieldValue,
@@ -19,8 +22,6 @@ import {
   ValidationMessages,
   ValidationRules,
 } from "shared/Utils/Validation";
-import {PageProps} from "shared/Utils/PageProps";
-import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 
 export function TutorRegistrationPage(props: PageProps) {
   return (
@@ -159,6 +160,10 @@ function renderLoginForm() {
         break;
       default:
         assertNever(response);
+    }
+
+    if (responseState === ResponseState.ReceivedSuccess) {
+      navigateToPage("/");
     }
 
     setServerResponse({
