@@ -75,7 +75,7 @@ edit:
 	code -n .
 
 open:
-	open http://localhost:$(BACKEND_HTTP_PORT)
+	open http://localhost:$(APP_BACKEND_HTTP_PORT)
 
 update:
 	@set -e

@@ -53,21 +53,16 @@ export async function assertRejectedPromise(params: AssertionParams): Promise<vo
 
 export type Stub<T extends (...args: any) => any> = Sinon.SinonStub<Parameters<T>, ReturnType<T>>;
 
-export function stubExport<T extends Record<string, (...args: any[]) => R>, R>(
+export function stubExport<T extends Record<string, (...args: any[]) => any>>(
   module: T,
   functionName: keyof T,
   before: Mocha.HookFunction,
-  after: Mocha.HookFunction,
-  returnValue?: R
+  after: Mocha.HookFunction
 ): void {
   let exportedFunction: Stub<any>;
 
   before(() => {
     exportedFunction = Sinon.stub(module, functionName);
-
-    if (returnValue) {
-      exportedFunction = exportedFunction.returns(returnValue);
-    }
   });
 
   after(() => {

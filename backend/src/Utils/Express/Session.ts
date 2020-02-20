@@ -6,7 +6,7 @@ const MySQLSessionStore = require("express-mysql-session")(expressSession);
 const sessionStore = new MySQLSessionStore({}, connectionPool);
 
 export const session = expressSession({
-  secret: requireEnvVar("SESSION_COOKIE_SECRET"),
+  secret: requireEnvVar("APP_SESSION_COOKIE_SECRET"),
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
