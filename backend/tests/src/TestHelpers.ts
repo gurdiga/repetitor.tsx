@@ -1,5 +1,6 @@
 import {expect, use} from "chai";
 import {connectionPool, runQuery, RowSet} from "../../src/Utils/Db";
+import Sinon = require("sinon");
 
 use(require("chai-as-promised"));
 use(require("chai-http"));
@@ -48,4 +49,28 @@ export async function assertRejectedPromise(params: AssertionParams): Promise<vo
   if (!coughtException) {
     expect.fail(`Promise NOT rejected with "${expectedErrorMessage}"`);
   }
+}
+
+export type Stub<T extends (...args: any) => any> = Sinon.SinonStub<Parameters<T>, ReturnType<T>>;
+
+export function stubExport<T extends Record<string, (...args: any[]) => R>, R>(
+  module: T,
+  functionName: keyof T,
+  before: Mocha.HookFunction,
+  after: Mocha.HookFunction,
+  returnValue?: R
+): void {
+  let exportedFunction: Stub<any>;
+
+  before(() => {
+    exportedFunction = Sinon.stub(module, functionName);
+
+    if (returnValue) {
+      exportedFunction = exportedFunction.returns(returnValue);
+    }
+  });
+
+  after(() => {
+    exportedFunction.restore();
+  });
 }

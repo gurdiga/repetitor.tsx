@@ -1,10 +1,14 @@
 import {expect} from "chai";
 import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
-import {runQuery, RowSet} from "Utils/Db";
-import {hashString} from "Utils/StringUtils";
 import {UserSession} from "shared/Model/UserSession";
+import {stubExport} from "TestHelpers";
+import {RowSet, runQuery} from "Utils/Db";
+import * as EmailUtils from "Utils/EmailUtils";
+import {hashString} from "Utils/StringUtils";
 
 describe("TutorRegistration", () => {
+  stubExport(EmailUtils, "sendEmail", before, after);
+
   describe("parameter validation", () => {
     context("when either of the email or password is missing", () => {
       it("throws with the appropriate error message", async () => {
