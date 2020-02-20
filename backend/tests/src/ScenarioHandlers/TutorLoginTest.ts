@@ -2,9 +2,13 @@ import {expect} from "chai";
 import {TutorLogin} from "ScenarioHandlers/TutorLogin";
 import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
 import {runQuery} from "Utils/Db";
+import {stubExport} from "TestHelpers";
+import * as EmailUtils from "Utils/EmailUtils";
 
 describe("TutorLogin", () => {
   const session = {userId: undefined};
+
+  stubExport(EmailUtils, "sendEmail", before, after);
 
   it("validates the email", async () => {
     const result = await TutorLogin({email: "", password: "secrets"}, session);

@@ -1,5 +1,5 @@
 import {createTransport} from "nodemailer";
-import {requireEnvVar, requireNumericEnvVar, isTestEnvironment} from "Utils/Env";
+import {requireEnvVar, requireNumericEnvVar, isTestEnvironment, isDevelopmentEnvironment} from "Utils/Env";
 import {logError} from "Utils/Logging";
 
 const transporter = createTransport({
@@ -11,8 +11,8 @@ const transporter = createTransport({
     user: requireEnvVar("APP_SMTP_USER"),
     pass: requireEnvVar("APP_SMTP_PASSWORD"),
   },
-  logger: isTestEnvironment(),
-  debug: isTestEnvironment(),
+  logger: !isTestEnvironment(),
+  debug: isDevelopmentEnvironment(),
 });
 
 const emailConfirmationMessageSenderAddress = requireEnvVar("APP_EMAIL_CONFIRMATION_MESSAGE_SENDER_ADDRESS");
