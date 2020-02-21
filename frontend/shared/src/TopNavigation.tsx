@@ -1,17 +1,18 @@
 import {TopNavigationCss} from "frontend/shared/TopNavigation.css";
 import * as React from "react";
+import {PagePath} from "frontend/shared/PageNavigation";
 
 export function TopNavigation() {
   return (
     <ul className={TopNavigationCss.LinkList}>
       <li>
-        <a href="/">Pagina principală</a>
+        <a href={PagePath.Home}>Pagina principală</a>
       </li>
       <li>
-        <a href="/inregistrare-repetitor/">Înregistrare repetitor</a>
+        <a href={PagePath.TutorRegistration}>Înregistrare repetitor</a>
       </li>
       <li>
-        <a href="/autentificare-repetitor/">Autentificare repetitor</a>
+        <a href={PagePath.TutorLogin}>Autentificare repetitor</a>
       </li>
     </ul>
   );

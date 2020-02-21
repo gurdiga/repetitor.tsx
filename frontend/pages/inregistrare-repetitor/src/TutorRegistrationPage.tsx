@@ -5,7 +5,7 @@ import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/PageLayout";
-import {navigateToPage} from "frontend/shared/PageNavigation";
+import {navigateToPage, PagePath} from "frontend/shared/PageNavigation";
 import {placeholderServerResponse, ResponseState, runScenario, ServerResponse} from "frontend/shared/ScenarioRunner";
 import * as React from "react";
 import {emailErrorMessages, UserEmailValidationRules} from "shared/Model/Email";
@@ -163,7 +163,7 @@ function renderLoginForm() {
     }
 
     if (responseState === ResponseState.ReceivedSuccess) {
-      navigateToPage("/");
+      navigateToPage(PagePath.Home);
     }
 
     setServerResponse({

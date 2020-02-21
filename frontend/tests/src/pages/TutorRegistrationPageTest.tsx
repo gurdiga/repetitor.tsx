@@ -115,7 +115,7 @@ describe("<TutorRegistrationPage/>", () => {
         });
 
         it("navigates to the home page", () => {
-          expect(navigateToPageStub.calledWith("/")).to.be.true;
+          expect(navigateToPageStub.calledWith(PageNavigation.PagePath.Home)).to.be.true;
         });
       });
 

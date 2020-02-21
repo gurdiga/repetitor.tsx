@@ -1,4 +1,4 @@
-import {navigateToPage} from "frontend/shared/PageNavigation";
+import {navigateToPage, PagePath} from "frontend/shared/PageNavigation";
 import {runScenario} from "frontend/shared/ScenarioRunner";
 import * as React from "react";
 import {assertNever} from "shared/Utils/Language";
@@ -21,7 +21,7 @@ export function AlreadyLoggedIn(props: React.ComponentProps<any>) {
 
     switch (response.kind) {
       case "LogoutSuccess":
-        navigateToPage("/");
+        navigateToPage(PagePath.Home);
         break;
       case "TransportError":
         setLogoutError(`„${response.error}” Încercați mai tîrziu.`);
