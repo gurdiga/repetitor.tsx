@@ -13,6 +13,10 @@ describe("Express integration", () => {
     res = await agent.get("/");
   });
 
+  it("responds with HTTP OK 200", () => {
+    expect(res).to.have.status(200);
+  });
+
   it("includes the CSRF token into the page", () => {
     const csrfToken = res.header["xsrf-token"];
     const expectedTag = `<meta name="csrf_token" content="${csrfToken}" />`;
@@ -26,7 +30,7 @@ describe("Express integration", () => {
     expect(res.text).to.have.string(expectedTag);
   });
 
-  it("renders the golden sample", () => {
+  it("renders the golden sample HTML", () => {
     const csrfToken = res.header["xsrf-token"];
     const goldenSampleHtml = `<!DOCTYPE html>
 <head>
@@ -65,23 +69,6 @@ describe("Express integration", () => {
     expect(res.text).to.equal(goldenSampleHtml);
   });
 
-  it("sets the expected headers on the response", () => {
-    const goldenSampleHeaders = {
-      "x-dns-prefetch-control": "off",
-      "x-frame-options": "SAMEORIGIN",
-      "strict-transport-security": "max-age=15552000; includeSubDomains",
-      "x-download-options": "noopen",
-      "x-content-type-options": "nosniff",
-      "x-xss-protection": "1; mode=block",
-      "access-control-allow-origin": "*",
-      "content-type": "text/html; charset=utf-8",
-      vary: "Accept-Encoding",
-      connection: "close",
-    };
-
-    expect(res.header, "headers").to.deep.include(goldenSampleHeaders);
-  });
-
   it("sets the session cookie appropriately", () => {
     const sessionCookie = res.header["set-cookie"][0];
     const sessionCookieRegexp = /connect.sid=(.+); Path=\/; Expires=(.+); HttpOnly; SameSite=Strict/;
@@ -99,8 +86,21 @@ describe("Express integration", () => {
     expect(actualExpirationDate).to.equal(expectedExpirationDate);
   });
 
-  it("responds with HTTP OK 200", () => {
-    expect(res).to.have.status(200);
+  it("sets the expected headers on the response", () => {
+    const goldenSampleHeaders = {
+      "x-dns-prefetch-control": "off",
+      "x-frame-options": "SAMEORIGIN",
+      "strict-transport-security": "max-age=15552000; includeSubDomains",
+      "x-download-options": "noopen",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "1; mode=block",
+      "access-control-allow-origin": "*",
+      "content-type": "text/html; charset=utf-8",
+      vary: "Accept-Encoding",
+      connection: "close",
+    };
+
+    expect(res.header, "headers").to.deep.include(goldenSampleHeaders);
   });
 
   it("responds to /.well-known/security.txt", async () => {

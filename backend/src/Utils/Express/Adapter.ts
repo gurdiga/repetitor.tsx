@@ -25,8 +25,6 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
   }
 }
 
-export const VENDOR_MODULE_PREFIX = "/vendor_modules/";
-
 const frontendNodeModulesPath = `${FrontendPath}/node_modules`;
 const vendorBundlePaths: Record<string, string> = {
   react: `${frontendNodeModulesPath}/react/umd/react.production.min.js`,
@@ -43,6 +41,7 @@ const vendorBundleVersions = vendorBundleNames.reduce((acc, bundleName) => {
   return acc;
 }, {} as Record<string, string>);
 
+export const VENDOR_MODULE_PREFIX = "/vendor_modules/";
 export const requireJsPathsForVendorBundles = vendorBundleNames.reduce((acc, bundleName) => {
   acc[bundleName] = `${VENDOR_MODULE_PREFIX}${bundleName}-${vendorBundleVersions[bundleName]}`;
   return acc;
