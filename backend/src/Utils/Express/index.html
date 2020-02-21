@@ -8,16 +8,10 @@
 </head>
 <body>
   <div id="root"></div>
-  <script src="/umd_node_modules/require.min.js"></script>
+  <script src="REQUIRE_JS_BUNDLE"></script>
   <script>
     requirejs.config({
-      paths: {
-        react: "/umd_node_modules/react.production.min",
-        "react-dom": "/umd_node_modules/react-dom.production.min",
-        typestyle: "/umd_node_modules/typestyle.min",
-        csx: "/umd_node_modules/csx.min",
-        csstips: "/umd_node_modules/csstips.min",
-      },
+      paths: VENDOR_BUNDLES,
     });
 
     requirejs(["bundle"], function() {

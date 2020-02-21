@@ -1,12 +1,13 @@
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import {runScenario} from "Utils/ScenarioRunner";
-import {requireEnvVar, isTestEnvironment} from "Utils/Env";
-import {logError} from "Utils/Logging";
 import {UserSession} from "shared/Model/UserSession";
+import {isTestEnvironment} from "Utils/Env";
+import {logError} from "Utils/Logging";
+import {runScenario} from "Utils/ScenarioRunner";
 
 const AppRoot = path.join(__dirname, "../../../..");
+const FrontendPath = `${AppRoot}/frontend`;
 const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 
@@ -24,18 +25,36 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
   }
 }
 
-const FrontendNodeModulesPath = `${AppRoot}/frontend/node_modules`;
-const VendorModules: Record<string, string> = {
-  "react.production.min.js": `${FrontendNodeModulesPath}/react/umd/react.production.min.js`,
-  "react-dom.production.min.js": `${FrontendNodeModulesPath}/react-dom/umd/react-dom.production.min.js`,
-  "typestyle.min.js": `${FrontendNodeModulesPath}/typestyle/umd/typestyle.min.js`,
-  "csx.min.js": `${FrontendNodeModulesPath}/csx/umd/csx.min.js`,
-  "csstips.min.js": `${FrontendNodeModulesPath}/csstips/umd/csstips.min.js`,
-  "require.min.js": `${FrontendNodeModulesPath}/requirejs/require.js`,
+export const VENDOR_MODULE_PREFIX = "/vendor_modules/";
+
+const frontendNodeModulesPath = `${FrontendPath}/node_modules`;
+const vendorBundlePaths: Record<string, string> = {
+  react: `${frontendNodeModulesPath}/react/umd/react.production.min.js`,
+  "react-dom": `${frontendNodeModulesPath}/react-dom/umd/react-dom.production.min.js`,
+  typestyle: `${frontendNodeModulesPath}/typestyle/umd/typestyle.min.js`,
+  csx: `${frontendNodeModulesPath}/csx/umd/csx.min.js`,
+  csstips: `${frontendNodeModulesPath}/csstips/umd/csstips.min.js`,
+  requirejs: `${frontendNodeModulesPath}/requirejs/require.js`,
 };
+const vendorBundleNames = Object.keys(vendorBundlePaths);
+const frontendDependencies = JSON.parse(fs.readFileSync(`${FrontendPath}/package-lock.json`, "utf8")).dependencies;
+const vendorBundleVersions = vendorBundleNames.reduce((acc, bundleName) => {
+  acc[bundleName] = frontendDependencies[bundleName].version;
+  return acc;
+}, {} as Record<string, string>);
+
+export const requireJsPathsForVendorBundles = vendorBundleNames.reduce((acc, bundleName) => {
+  acc[bundleName] = `${VENDOR_MODULE_PREFIX}${bundleName}-${vendorBundleVersions[bundleName]}`;
+  return acc;
+}, {} as Record<string, string>);
+
+export const versionedVendorBundlePaths = vendorBundleNames.reduce((acc, bundleName) => {
+  acc[`${bundleName}-${vendorBundleVersions[bundleName]}.js`] = vendorBundlePaths[bundleName];
+  return acc;
+}, {} as Record<string, string>);
 
 export function sendVendorModule(vendorModuleFileName: string, res: HttpResponse): void {
-  const vendorModuleFilePath = VendorModules[vendorModuleFileName];
+  const vendorModuleFilePath = versionedVendorBundlePaths[vendorModuleFileName];
 
   if (vendorModuleFilePath) {
     res.sendFile(vendorModuleFilePath);
@@ -73,6 +92,8 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
     const session = (req.session as any) as UserSession;
     const html = htmlTemplate
+      .replace("REQUIRE_JS_BUNDLE", `${requireJsPathsForVendorBundles["requirejs"]}.js`)
+      .replace("VENDOR_BUNDLES", JSON.stringify(requireJsPathsForVendorBundles))
       .replace("MAIN_MODULE_PATH", requireModulePath)
       .replace("CSRF_TOKEN", req.csrfToken())
       .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: Boolean(session.userId)}));

@@ -2,6 +2,7 @@ import * as chai from "chai";
 import {expect} from "chai";
 import {app} from "index";
 import ChaiHttp = require("chai-http");
+import {versionedVendorBundlePaths, VENDOR_MODULE_PREFIX, requireJsPathsForVendorBundles} from "Utils/Express/Adapter";
 
 describe("Express integration", () => {
   let agent: ChaiHttp.Agent;
@@ -67,19 +68,38 @@ describe("Express integration", () => {
   });
 
   describe("serving of vendor UMD modules", () => {
-    it("serves the ones that exis", async () => {
-      ["react-dom.production.min", "react-dom.production.min", "typestyle.min", "csx.min", "csstips.min"].forEach(
-        async module => {
-          res = await agent.get(`/umd_node_modules/${module}.js`);
+    it("correctly computes the golden samples", () => {
+      expect(versionedVendorBundlePaths).to.deep.equal({
+        "react-16.12.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
+        "react-dom-16.12.0.js":
+          "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react-dom/umd/react-dom.production.min.js",
+        "typestyle-2.0.4.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/typestyle/umd/typestyle.min.js",
+        "csx-10.0.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csx/umd/csx.min.js",
+        "csstips-1.2.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csstips/umd/csstips.min.js",
+        "requirejs-2.3.6.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/requirejs/require.js",
+      });
 
-          expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
-          expect(res).to.have.status(200);
-        }
-      );
+      expect(requireJsPathsForVendorBundles).to.deep.equal({
+        react: `${VENDOR_MODULE_PREFIX}react-16.12.0`,
+        "react-dom": `${VENDOR_MODULE_PREFIX}react-dom-16.12.0`,
+        typestyle: `${VENDOR_MODULE_PREFIX}typestyle-2.0.4`,
+        csx: `${VENDOR_MODULE_PREFIX}csx-10.0.1`,
+        csstips: `${VENDOR_MODULE_PREFIX}csstips-1.2.0`,
+        requirejs: `${VENDOR_MODULE_PREFIX}requirejs-2.3.6`,
+      });
+    });
+
+    it("serves the ones that exis", async () => {
+      Object.keys(versionedVendorBundlePaths).forEach(async module => {
+        res = await agent.get(`${VENDOR_MODULE_PREFIX}${module}`);
+
+        expect(res).to.have.status(200);
+        expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
+      });
     });
 
     it("responds with 404 for the ones that do not exist", async () => {
-      res = await agent.get(`/umd_node_modules/nonexistent.js`);
+      res = await agent.get(`${VENDOR_MODULE_PREFIX}nonexistent.js`);
 
       expect(res).to.be.text;
       expect(res).to.have.status(404);
