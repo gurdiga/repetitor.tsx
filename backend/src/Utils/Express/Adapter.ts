@@ -92,7 +92,7 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
     const session = (req.session as any) as UserSession;
     const html = htmlTemplate
-      .replace("REQUIRE_JS_BUNDLE", `${requireJsPathsForVendorBundles["requirejs"]}.js`)
+      .replace("REQUIREJS_BUNDLE", `${requireJsPathsForVendorBundles["requirejs"]}.js`)
       .replace("VENDOR_BUNDLES", JSON.stringify(requireJsPathsForVendorBundles))
       .replace("MAIN_MODULE_PATH", requireModulePath)
       .replace("CSRF_TOKEN", req.csrfToken())

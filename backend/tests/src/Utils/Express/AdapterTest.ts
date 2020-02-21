@@ -20,6 +20,42 @@ describe("Express integration", () => {
     expect(res.text).to.have.string(expectedTag);
   });
 
+  it("includes the reference to the RequireJS loader", () => {
+    const expectedTag = '<script src="/vendor_modules/requirejs-2.3.6.js"></script>';
+
+    expect(res.text).to.have.string(expectedTag);
+  });
+
+  it("renders the golden sample", () => {
+    const csrfToken = res.header["xsrf-token"];
+    const goldenSampleHtml = `<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf_token" content="${csrfToken}" />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <title>Loading…</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/vendor_modules/requirejs-2.3.6.js"></script>
+  <script>
+    requirejs.config({
+      paths: {"react":"/vendor_modules/react-16.12.0","react-dom":"/vendor_modules/react-dom-16.12.0","typestyle":"/vendor_modules/typestyle-2.0.4","csx":"/vendor_modules/csx-10.0.1","csstips":"/vendor_modules/csstips-1.2.0","requirejs":"/vendor_modules/requirejs-2.3.6"},
+    });
+
+    requirejs(["bundle"], function() {
+      requirejs(["frontend/pages/home/src/Main"], function(page) {
+        page.main({"isAuthenticated":false});
+      });
+    });
+  </script>
+</body>
+`;
+
+    expect(res.text).to.equal(goldenSampleHtml);
+  });
+
   it("sets the expected headers on the response", () => {
     const goldenSampleHeaders = {
       "x-dns-prefetch-control": "off",
