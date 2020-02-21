@@ -4,29 +4,17 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
   scenarioName: SN,
   dto: S["DTO"]
 ): Promise<S["Result"] | TransportError | ServerError> {
-  const csrfTokenMetaTag = document.head.querySelector('meta[name="csrf_token"]');
+  const getCsrfTokenResult = getCsrfToken();
 
-  if (!csrfTokenMetaTag) {
-    return {
-      kind: "TransportError",
-      error: "Lipsește codul CSRF (meta tag)",
-    };
-  }
-
-  const csrfToken = csrfTokenMetaTag.getAttribute("content");
-
-  if (!csrfToken) {
-    return {
-      kind: "TransportError",
-      error: "Lipsește codul CSRF",
-    };
+  if (getCsrfTokenResult.kind !== "CsrfTokenResultSuccess") {
+    return getCsrfTokenResult;
   }
 
   try {
     const requestBody = JSON.stringify({
       scenarioName,
       dto,
-      _csrf: csrfToken,
+      _csrf: getCsrfTokenResult.csrfToken,
     });
 
     const response = await fetch("/", {
@@ -86,4 +74,34 @@ export interface TransportError {
 export interface ServerError {
   kind: "ServerError";
   error: string;
+}
+
+interface CsrfTokenResultSuccess {
+  kind: "CsrfTokenResultSuccess";
+  csrfToken: string;
+}
+
+function getCsrfToken(): TransportError | CsrfTokenResultSuccess {
+  const csrfTokenMetaTag = document.head.querySelector('meta[name="csrf_token"]');
+
+  if (!csrfTokenMetaTag) {
+    return {
+      kind: "TransportError",
+      error: "Lipsește codul CSRF (meta tag)",
+    };
+  }
+
+  const csrfToken = csrfTokenMetaTag.getAttribute("content");
+
+  if (!csrfToken) {
+    return {
+      kind: "TransportError",
+      error: "Lipsește codul CSRF",
+    };
+  }
+
+  return {
+    kind: "CsrfTokenResultSuccess",
+    csrfToken,
+  };
 }
