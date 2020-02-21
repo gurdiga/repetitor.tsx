@@ -15,10 +15,10 @@ type HttpRequest = Pick<express.Request, "path" | "body" | "csrfToken" | "sessio
 type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
-  const {scenarioName, dto} = req.body;
+  const {scenarioName, scenarioInput} = req.body;
 
   try {
-    res.json(await runScenario(scenarioName, dto, req.session));
+    res.json(await runScenario(scenarioName, scenarioInput, req.session));
   } catch (error) {
     logError(`Error on runScenario`, {scenarioName}, error);
     res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});

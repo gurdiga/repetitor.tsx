@@ -3,7 +3,7 @@ import {ScenarioRegistry} from "shared/ScenarioRegistry";
 
 type Scenario = ScenarioRegistry["TestScenario"];
 
-export async function TestScenario(_dto: Scenario["DTO"]): Promise<Scenario["Result"]> {
+export async function TestScenario(_input: Scenario["Input"]): Promise<Scenario["Result"]> {
   try {
     const result = (await runQuery({
       sql: "SELECT 1 + 1 AS sum",

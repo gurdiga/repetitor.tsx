@@ -1,6 +1,6 @@
 import {getStorablePassword} from "../Utils/StringUtils";
 import {createTutor} from "../Persistence/TutorPersistence";
-import {makeTutorFromRegistrationFormDTO} from "shared/Model/Tutor";
+import {makeTutorFromRegistrationFormInput} from "shared/Model/Tutor";
 import {ScenarioRegistry} from "shared/ScenarioRegistry";
 import {UserSession} from "shared/Model/UserSession";
 import {sendEmail} from "Utils/EmailUtils";
@@ -8,8 +8,8 @@ import {requireEnvVar} from "Utils/Env";
 
 type Scenario = ScenarioRegistry["TutorRegistration"];
 
-export async function TutorRegistration(dto: Scenario["DTO"], session: UserSession): Promise<Scenario["Result"]> {
-  const result = makeTutorFromRegistrationFormDTO(dto);
+export async function TutorRegistration(input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
+  const result = makeTutorFromRegistrationFormInput(input);
 
   if (result.kind !== "User") {
     return result;

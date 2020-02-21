@@ -3,11 +3,11 @@ import {EmailError} from "shared/Model/Email";
 import {PasswordError} from "shared/Model/Password";
 import {LoginCheckSuccess, LoginCheckError} from "shared/Model/LoginCheck";
 
-export interface TutorLoginDTO {
+export interface TutorLoginInput {
   email?: string;
   password?: string;
 }
 
-type DTOError = EmailError | PasswordError;
+type InputError = EmailError | PasswordError;
 
-export type TutorLoginResult = LoginCheckSuccess | DTOError | LoginCheckError | SystemError;
+export type TutorLoginResult = LoginCheckSuccess | InputError | LoginCheckError | SystemError;

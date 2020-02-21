@@ -2,7 +2,7 @@ import {ScenarioName, ScenarioRegistry} from "shared/ScenarioRegistry";
 
 export async function runScenario<SN extends ScenarioName, S extends ScenarioRegistry[SN]>(
   scenarioName: SN,
-  dto: S["DTO"]
+  scenarioInput: S["Input"]
 ): Promise<S["Result"] | TransportError | ServerError> {
   const getCsrfTokenResult = getCsrfToken();
 
@@ -13,7 +13,7 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
   try {
     const requestBody = JSON.stringify({
       scenarioName,
-      dto,
+      scenarioInput,
       _csrf: getCsrfTokenResult.csrfToken,
     });
 

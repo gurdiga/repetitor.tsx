@@ -22,10 +22,10 @@ export type UnexpectedError = {
 
 export type DataProps<T> = Omit<T, "kind">;
 
-export function dataProps<DTO extends any>(dto: DTO): DataProps<DTO> {
-  const entries = Object.entries(dto).filter(([propName]) => propName === "kind");
+export function dataProps<SI extends any>(scenarioInput: SI): DataProps<SI> {
+  const entries = Object.entries(scenarioInput).filter(([propName]) => propName === "kind");
 
-  return Object.fromEntries(entries) as DataProps<DTO>;
+  return Object.fromEntries(entries) as DataProps<SI>;
 }
 
 export type SystemError = DbError | UnexpectedError;

@@ -1,33 +1,33 @@
-import {TutorRegistrationDTO, TutorRegistrationResult} from "shared/Scenarios/TutorRegistration";
-import {TestScenarioDTO, TestScenarioResult} from "shared/Scenarios/TestScenario";
-import {TutorLoginDTO, TutorLoginResult} from "shared/Scenarios/TutorLogin";
+import {TutorRegistrationInput, TutorRegistrationResult} from "shared/Scenarios/TutorRegistration";
+import {TestScenarioInput, TestScenarioResult} from "shared/Scenarios/TestScenario";
+import {TutorLoginInput, TutorLoginResult} from "shared/Scenarios/TutorLogin";
 import {UserSession} from "shared/Model/UserSession";
-import {LogoutDTO, LogoutResult} from "shared/Scenarios/Logout";
+import {LogoutInput, LogoutResult} from "shared/Scenarios/Logout";
 
 export type SimpleScenarioName = "TestScenario";
 export type SessionAlteringScenarioName = "TutorRegistration" | "TutorLogin" | "Logout";
 
 export interface ScenarioRegistry {
   TutorRegistration: {
-    DTO: TutorRegistrationDTO;
+    Input: TutorRegistrationInput;
     Result: TutorRegistrationResult;
   };
   TutorLogin: {
-    DTO: TutorLoginDTO;
+    Input: TutorLoginInput;
     Result: TutorLoginResult;
   };
   Logout: {
-    DTO: LogoutDTO;
+    Input: LogoutInput;
     Result: LogoutResult;
   };
   TestScenario: {
-    DTO: TestScenarioDTO;
+    Input: TestScenarioInput;
     Result: TestScenarioResult;
   };
 }
 
 export type ScenarioName = keyof ScenarioRegistry;
-export type ScenarioHandler<DTO, R> = SimpleScenarioHandler<DTO, R> | SessionAlteringScenarioHandler<DTO, R>;
+export type ScenarioHandler<I, R> = SimpleScenarioHandler<I, R> | SessionAlteringScenarioHandler<I, R>;
 
-export type SimpleScenarioHandler<DTO, R> = (dto: DTO) => Promise<R>;
-export type SessionAlteringScenarioHandler<DTO, R> = (dto: DTO, session: UserSession) => Promise<R>;
+export type SimpleScenarioHandler<I, R> = (scenarioInput: I) => Promise<R>;
+export type SessionAlteringScenarioHandler<I, R> = (scenarioInput: I, session: UserSession) => Promise<R>;

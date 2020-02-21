@@ -1,13 +1,13 @@
 import {checkLoginInfo} from "Persistence/TutorPersistence";
-import {makeLoginCkeckFromLoginDTO} from "shared/Model/LoginCheck";
+import {makeLoginCkeckFromLoginInput} from "shared/Model/LoginCheck";
 import {ScenarioRegistry} from "shared/ScenarioRegistry";
 import {hashString} from "Utils/StringUtils";
 import {UserSession} from "shared/Model/UserSession";
 
 type Scenario = ScenarioRegistry["TutorLogin"];
 
-export async function TutorLogin(dto: Scenario["DTO"], session: UserSession): Promise<Scenario["Result"]> {
-  const result = makeLoginCkeckFromLoginDTO(dto);
+export async function TutorLogin(input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
+  const result = makeLoginCkeckFromLoginInput(input);
 
   if (result.kind !== "LoginCheck") {
     return result;

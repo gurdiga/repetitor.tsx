@@ -1,4 +1,4 @@
-import {TutorRegistrationDTO} from "shared/Scenarios/TutorRegistration";
+import {TutorRegistrationInput} from "shared/Scenarios/TutorRegistration";
 import {PredicateFn, UserValue, validateWithRules} from "shared/Utils/Validation";
 import {DataProps} from "shared/Model/Utils";
 import {EmailError, UserEmailValidationRules} from "shared/Model/Email";
@@ -40,22 +40,22 @@ export type TutorCreationSuccess = {
 
 export type UserModelValidationErrorCode = "EMAIL_TAKEN";
 
-export function makeTutorFromRegistrationFormDTO(
-  registrationFormDTO: TutorRegistrationDTO
+export function makeTutorFromRegistrationFormInput(
+  input: TutorRegistrationInput
 ): Tutor | TutorPropError | TutorModelError {
-  const fullNameValidationResult = validateWithRules(registrationFormDTO.fullName, UserValidationRules.fullName);
+  const fullNameValidationResult = validateWithRules(input.fullName, UserValidationRules.fullName);
 
   if (fullNameValidationResult.kind === "Invalid") {
     return {kind: "FullNameError", errorCode: fullNameValidationResult.validationErrorCode};
   }
 
-  const emailValidationResult = validateWithRules(registrationFormDTO.email, UserValidationRules.email);
+  const emailValidationResult = validateWithRules(input.email, UserValidationRules.email);
 
   if (emailValidationResult.kind === "Invalid") {
     return {kind: "EmailError", errorCode: emailValidationResult.validationErrorCode};
   }
 
-  const passwordValidationResult = validateWithRules(registrationFormDTO.password, UserValidationRules.password);
+  const passwordValidationResult = validateWithRules(input.password, UserValidationRules.password);
 
   if (passwordValidationResult.kind === "Invalid") {
     return {kind: "PasswordError", errorCode: passwordValidationResult.validationErrorCode};

@@ -1,7 +1,7 @@
 import {SystemError} from "shared/Model/Utils";
 import {TutorPropError, TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
 
-export interface TutorRegistrationDTO {
+export interface TutorRegistrationInput {
   fullName?: string;
   email?: string;
   password?: string;

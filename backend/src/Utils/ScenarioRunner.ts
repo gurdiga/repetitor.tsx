@@ -26,7 +26,7 @@ const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   ...sessionAlteringScenarioHandlers,
 };
 
-export async function runScenario(scenarioName_?: string, dto: any = {}, session?: any): Promise<any> {
+export async function runScenario(scenarioName_?: string, scenarioInput: any = {}, session?: any): Promise<any> {
   const scenarioName = scenarioName_ as ScenarioName;
   const scenarioHandler = scenarioHandlers[scenarioName];
 
@@ -35,14 +35,14 @@ export async function runScenario(scenarioName_?: string, dto: any = {}, session
       if (session) {
         const sessionAlteringScenario = scenarioHandler as SessionAlteringScenarioHandler<any, any>;
 
-        return await sessionAlteringScenario(dto, session);
+        return await sessionAlteringScenario(scenarioInput, session);
       } else {
         throw new Error(`Session is missing`);
       }
     } else {
       const simpleScenarioHandler = scenarioHandler as SimpleScenarioHandler<any, any>;
 
-      return await simpleScenarioHandler(dto);
+      return await simpleScenarioHandler(scenarioInput);
     }
   } else {
     if (!scenarioName) {
