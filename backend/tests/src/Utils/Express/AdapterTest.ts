@@ -20,8 +20,7 @@ describe("Express integration", () => {
   });
 
   it("sets the expected headers on the response", () => {
-    // golden sample
-    const expectedHeaders = {
+    const goldenSampleHeaders = {
       "x-dns-prefetch-control": "off",
       "x-frame-options": "SAMEORIGIN",
       "strict-transport-security": "max-age=15552000; includeSubDomains",
@@ -34,7 +33,7 @@ describe("Express integration", () => {
       connection: "close",
     };
 
-    expect(res.header, "headers").to.deep.include(expectedHeaders);
+    expect(res.header, "headers").to.deep.include(goldenSampleHeaders);
   });
 
   it("sets the session cookie appropriately", () => {
