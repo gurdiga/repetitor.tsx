@@ -93,10 +93,10 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const session = (req.session as any) as UserSession;
     const html = htmlTemplate
       .replace("REQUIREJS_BUNDLE", `${requireJsPathsForVendorBundles["requirejs"]}.js`)
-      .replace("VENDOR_BUNDLES", JSON.stringify(requireJsPathsForVendorBundles))
+      .replace("VENDOR_BUNDLES", JSON.stringify(requireJsPathsForVendorBundles, null, "  "))
       .replace("MAIN_MODULE_PATH", requireModulePath)
       .replace("CSRF_TOKEN", req.csrfToken())
-      .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: Boolean(session.userId)}));
+      .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: Boolean(session.userId)}, null, "  "));
 
     if (isTestEnvironment()) {
       // To use in tests.

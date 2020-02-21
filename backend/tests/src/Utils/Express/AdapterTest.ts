@@ -41,12 +41,21 @@ describe("Express integration", () => {
   <script src="/vendor_modules/requirejs-2.3.6.js"></script>
   <script>
     requirejs.config({
-      paths: {"react":"/vendor_modules/react-16.12.0","react-dom":"/vendor_modules/react-dom-16.12.0","typestyle":"/vendor_modules/typestyle-2.0.4","csx":"/vendor_modules/csx-10.0.1","csstips":"/vendor_modules/csstips-1.2.0","requirejs":"/vendor_modules/requirejs-2.3.6"},
+      paths: {
+  "react": "/vendor_modules/react-16.12.0",
+  "react-dom": "/vendor_modules/react-dom-16.12.0",
+  "typestyle": "/vendor_modules/typestyle-2.0.4",
+  "csx": "/vendor_modules/csx-10.0.1",
+  "csstips": "/vendor_modules/csstips-1.2.0",
+  "requirejs": "/vendor_modules/requirejs-2.3.6"
+}
     });
 
     requirejs(["bundle"], function() {
       requirejs(["frontend/pages/home/src/Main"], function(page) {
-        page.main({"isAuthenticated":false});
+        page.main({
+  "isAuthenticated": false
+});
       });
     });
   </script>
