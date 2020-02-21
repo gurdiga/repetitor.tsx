@@ -80,6 +80,31 @@ export function sendPageBundle(pagePathName: string | undefined, res: HttpRespon
   }
 }
 
+const htmlTemplate = `<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="csrf_token" content="CSRF_TOKEN" />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <title>Loading…</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="REQUIREJS_BUNDLE"></script>
+  <script>
+    requirejs.config({
+      paths: VENDOR_BUNDLES
+    });
+
+    requirejs(["bundle"], function() {
+      requirejs(["MAIN_MODULE_PATH"], function(page) {
+        page.main(PAGE_PROPS);
+      });
+    });
+  </script>
+</body>
+`;
+
 export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   let pagePathName = req.path.replace(/^\/|\/$/g, ""); // strip the slashes on both ends
 
@@ -88,7 +113,6 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   }
 
   if (PagePathNames.includes(pagePathName)) {
-    const htmlTemplate = fs.readFileSync(`${__dirname}/index.html`, "utf8");
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
     const session = (req.session as any) as UserSession;
     const html = htmlTemplate
