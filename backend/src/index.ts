@@ -1,21 +1,21 @@
 import * as cors from "cors";
 import * as compression from "compression";
 import * as express from "express";
-import * as morgan from "morgan";
 import * as helmet from "helmet";
 import * as csurf from "csurf";
 import {handlePost, sendPageBundle, sendPageHtml, sendVendorModule, sendSecurityTxt} from "Utils/Express/Adapter";
 import {VENDOR_MODULE_PREFIX} from "Utils/Express/Adapter";
 import {session} from "Utils/Express/Session";
-import {requireNumericEnvVar, isTestEnvironment} from "Utils/Env";
+import {requireNumericEnvVar} from "Utils/Env";
+import {errorLoggingMiddleware} from "Utils/Logging";
 
 const csrfProtection = csurf();
 
 // exported for tests
 export const app = express()
   .set("trust proxy", true)
+  .use(errorLoggingMiddleware)
   .use(helmet())
-  .use(morgan("combined", {skip: isTestEnvironment}))
   .use(session)
   .use(compression())
   .use(express.json())

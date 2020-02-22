@@ -90,7 +90,7 @@ const htmlTemplate = `<!DOCTYPE html>
   <script src="${requireJsPathsForVendorBundles["rollbar"]}.js"></script>
   <script>
     rollbar.init({
-      accessToken: "${requireEnvVar("APP_ROLLBAR_ACCESS_TOKEN")}",
+      accessToken: "${requireEnvVar("APP_ROLLBAR_POST_CLIENT_ITEM_TOKEN")}",
       captureUncaught: true,
       captureUnhandledRejections: true,
       payload: {

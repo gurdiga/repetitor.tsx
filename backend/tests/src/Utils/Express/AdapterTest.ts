@@ -42,7 +42,7 @@ describe("Express integration", () => {
   <script src="/vendor_modules/rollbar-2.14.4.js"></script>
   <script>
     rollbar.init({
-      accessToken: "APP_ROLLBAR_ACCESS_TOKEN",
+      accessToken: "APP_ROLLBAR_POST_CLIENT_ITEM_TOKEN",
       captureUncaught: true,
       captureUnhandledRejections: true,
       payload: {
@@ -196,7 +196,14 @@ describe("Express integration", () => {
 
   it("is inspectable", () => {
     const middlewareNames = app._router.stack.map((layer: any) => layer.name);
-    const expectedMiddlewareNames = ["helmet", "logger", "session", "compression", "jsonParser", "corsMiddleware"];
+    const expectedMiddlewareNames = [
+      "errorLoggingMiddleware",
+      "helmet",
+      "session",
+      "compression",
+      "jsonParser",
+      "corsMiddleware",
+    ];
 
     expect(middlewareNames).to.include.members(expectedMiddlewareNames);
   });
