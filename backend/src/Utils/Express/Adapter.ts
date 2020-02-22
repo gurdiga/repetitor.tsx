@@ -26,7 +26,7 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
 }
 
 const frontendNodeModulesPath = `${FrontendPath}/node_modules`;
-const vendorBundlePaths: Record<string, string> = {
+const vendorModulePaths: Record<string, string> = {
   react: `${frontendNodeModulesPath}/react/umd/react.production.min.js`,
   "react-dom": `${frontendNodeModulesPath}/react-dom/umd/react-dom.production.min.js`,
   typestyle: `${frontendNodeModulesPath}/typestyle/umd/typestyle.min.js`,
@@ -35,26 +35,26 @@ const vendorBundlePaths: Record<string, string> = {
   requirejs: `${frontendNodeModulesPath}/requirejs/require.js`,
   rollbar: `${frontendNodeModulesPath}/rollbar/dist/rollbar.umd.min.js`,
 };
-const vendorBundleNames = Object.keys(vendorBundlePaths);
+const vendorModuleNames = Object.keys(vendorModulePaths);
 const frontendDependencies = JSON.parse(fs.readFileSync(`${FrontendPath}/package-lock.json`, "utf8")).dependencies;
-const vendorBundleVersions = vendorBundleNames.reduce((acc, bundleName) => {
-  acc[bundleName] = frontendDependencies[bundleName].version;
+const vendorModuleVersions = vendorModuleNames.reduce((acc, moduleName) => {
+  acc[moduleName] = frontendDependencies[moduleName].version;
   return acc;
 }, {} as Record<string, string>);
 
 export const VENDOR_MODULE_PREFIX = "/vendor_modules/";
-export const webPathsForVendorBundles = vendorBundleNames.reduce((acc, bundleName) => {
-  acc[bundleName] = `${VENDOR_MODULE_PREFIX}${bundleName}-${vendorBundleVersions[bundleName]}`;
+export const webPathsForVendorModules = vendorModuleNames.reduce((acc, moduleName) => {
+  acc[moduleName] = `${VENDOR_MODULE_PREFIX}${moduleName}-${vendorModuleVersions[moduleName]}`;
   return acc;
 }, {} as Record<string, string>);
 
-export const versionedVendorBundlePaths = vendorBundleNames.reduce((acc, bundleName) => {
-  acc[`${bundleName}-${vendorBundleVersions[bundleName]}.js`] = vendorBundlePaths[bundleName];
+export const versionedVendorModulePaths = vendorModuleNames.reduce((acc, moduleName) => {
+  acc[`${moduleName}-${vendorModuleVersions[moduleName]}.js`] = vendorModulePaths[moduleName];
   return acc;
 }, {} as Record<string, string>);
 
 export function sendVendorModule(vendorModuleFileName: string, res: HttpResponse): void {
-  const vendorModuleFilePath = versionedVendorBundlePaths[vendorModuleFileName];
+  const vendorModuleFilePath = versionedVendorModulePaths[vendorModuleFileName];
 
   if (vendorModuleFilePath) {
     res.sendFile(vendorModuleFilePath, {maxAge: "1000 days"});
@@ -71,10 +71,8 @@ export function sendPageBundle(pagePathName: string | undefined, res: HttpRespon
     pagePathName = "home";
   }
 
-  const pageBundleFilePath = `${PagesRoot}/${pagePathName}/build/bundle.js`;
-
   if (PagePathNames.includes(pagePathName)) {
-    res.sendFile(pageBundleFilePath);
+    res.sendFile(`${PagesRoot}/${pagePathName}/build/bundle.js`);
   } else {
     res.sendStatus(404);
   }
@@ -87,7 +85,7 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta name="csrf_token" content="CSRF_TOKEN" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
-  <script src="${webPathsForVendorBundles["rollbar"]}.js"></script>
+  <script src="${webPathsForVendorModules["rollbar"]}.js"></script>
   <script>
     rollbar.init({
       accessToken: "${requireEnvVar("APP_ROLLBAR_POST_CLIENT_ITEM_TOKEN")}",
@@ -101,10 +99,10 @@ const htmlTemplate = `<!DOCTYPE html>
 </head>
 <body>
   <div id="root"></div>
-  <script src="${webPathsForVendorBundles["requirejs"]}.js"></script>
+  <script src="${webPathsForVendorModules["requirejs"]}.js"></script>
   <script>
     requirejs.config({
-      paths: ${JSON.stringify(webPathsForVendorBundles, null, "  ")}
+      paths: ${JSON.stringify(webPathsForVendorModules, null, "  ")}
     });
 
     requirejs(["bundle"], function() {
