@@ -14,7 +14,6 @@ test-backend: node_modules
 	DEBUG=app:none \
 	TS_NODE_PROJECT=backend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
-	command time \
 	~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
@@ -27,7 +26,6 @@ test-frontend: node_modules
 	@set -e
 	TS_NODE_PROJECT=frontend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
-	command time \
 	~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
@@ -39,7 +37,6 @@ c: build
 .PHONY: build
 build: node_modules
 	~/.nvm/nvm-exec \
-	command time \
 	node_modules/.bin/tsc --build
 
 watch: node_modules
