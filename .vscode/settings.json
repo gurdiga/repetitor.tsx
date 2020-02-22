@@ -12,7 +12,9 @@
     "**/node_modules": true
   },
   "search.exclude": {
-    "**/build": true
+    "**/.bash_history": true,
+    "**/build": true,
+    "**/package*.json": true
   },
   "eslint.options": {"configFile": "config-files/.eslintrc.js"}
 }
