@@ -43,7 +43,7 @@ const vendorBundleVersions = vendorBundleNames.reduce((acc, bundleName) => {
 }, {} as Record<string, string>);
 
 export const VENDOR_MODULE_PREFIX = "/vendor_modules/";
-export const requireJsPathsForVendorBundles = vendorBundleNames.reduce((acc, bundleName) => {
+export const webPathsForVendorBundles = vendorBundleNames.reduce((acc, bundleName) => {
   acc[bundleName] = `${VENDOR_MODULE_PREFIX}${bundleName}-${vendorBundleVersions[bundleName]}`;
   return acc;
 }, {} as Record<string, string>);
@@ -57,7 +57,7 @@ export function sendVendorModule(vendorModuleFileName: string, res: HttpResponse
   const vendorModuleFilePath = versionedVendorBundlePaths[vendorModuleFileName];
 
   if (vendorModuleFilePath) {
-    res.sendFile(vendorModuleFilePath);
+    res.sendFile(vendorModuleFilePath, {maxAge: "1000 days"});
   } else {
     res.sendStatus(404);
   }
@@ -87,7 +87,7 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta name="csrf_token" content="CSRF_TOKEN" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
-  <script src="${requireJsPathsForVendorBundles["rollbar"]}.js"></script>
+  <script src="${webPathsForVendorBundles["rollbar"]}.js"></script>
   <script>
     rollbar.init({
       accessToken: "${requireEnvVar("APP_ROLLBAR_POST_CLIENT_ITEM_TOKEN")}",
@@ -101,10 +101,10 @@ const htmlTemplate = `<!DOCTYPE html>
 </head>
 <body>
   <div id="root"></div>
-  <script src="${requireJsPathsForVendorBundles["requirejs"]}.js"></script>
+  <script src="${webPathsForVendorBundles["requirejs"]}.js"></script>
   <script>
     requirejs.config({
-      paths: ${JSON.stringify(requireJsPathsForVendorBundles, null, "  ")}
+      paths: ${JSON.stringify(webPathsForVendorBundles, null, "  ")}
     });
 
     requirejs(["bundle"], function() {
