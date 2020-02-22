@@ -39,6 +39,17 @@ describe("Express integration", () => {
   <meta name="csrf_token" content="${csrfToken}" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
+  <script src="/vendor_modules/rollbar-2.14.4.js"></script>
+  <script>
+    rollbar.init({
+      accessToken: "APP_ROLLBAR_ACCESS_TOKEN",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      payload: {
+          environment: "test"
+      }
+    });
+  </script>
 </head>
 <body>
   <div id="root"></div>
@@ -51,7 +62,8 @@ describe("Express integration", () => {
   "typestyle": "/vendor_modules/typestyle-2.0.4",
   "csx": "/vendor_modules/csx-10.0.1",
   "csstips": "/vendor_modules/csstips-1.2.0",
-  "requirejs": "/vendor_modules/requirejs-2.3.6"
+  "requirejs": "/vendor_modules/requirejs-2.3.6",
+  "rollbar": "/vendor_modules/rollbar-2.14.4"
 }
     });
 
@@ -122,15 +134,17 @@ describe("Express integration", () => {
         "csx-10.0.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csx/umd/csx.min.js",
         "csstips-1.2.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csstips/umd/csstips.min.js",
         "requirejs-2.3.6.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/requirejs/require.js",
+        "rollbar-2.14.4.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/rollbar/dist/rollbar.umd.min.js",
       });
 
       expect(requireJsPathsForVendorBundles).to.deep.equal({
-        react: `${VENDOR_MODULE_PREFIX}react-16.12.0`,
-        "react-dom": `${VENDOR_MODULE_PREFIX}react-dom-16.12.0`,
-        typestyle: `${VENDOR_MODULE_PREFIX}typestyle-2.0.4`,
-        csx: `${VENDOR_MODULE_PREFIX}csx-10.0.1`,
-        csstips: `${VENDOR_MODULE_PREFIX}csstips-1.2.0`,
-        requirejs: `${VENDOR_MODULE_PREFIX}requirejs-2.3.6`,
+        react: `/vendor_modules/react-16.12.0`,
+        "react-dom": `/vendor_modules/react-dom-16.12.0`,
+        typestyle: `/vendor_modules/typestyle-2.0.4`,
+        csx: `/vendor_modules/csx-10.0.1`,
+        csstips: `/vendor_modules/csstips-1.2.0`,
+        rollbar: "/vendor_modules/rollbar-2.14.4",
+        requirejs: `/vendor_modules/requirejs-2.3.6`,
       });
     });
 

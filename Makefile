@@ -114,7 +114,7 @@ node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules back
 backend/node_modules: backend/package.json
 frontend/node_modules: frontend/package.json
 node_modules backend/node_modules frontend/node_modules:
-	@set -ex
+	@set -e
 	( cd $(@D) && ~/.nvm/nvm-exec npm install )
 	touch $@
 

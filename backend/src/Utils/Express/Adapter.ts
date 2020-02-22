@@ -2,7 +2,7 @@ import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
 import {UserSession} from "shared/Model/UserSession";
-import {isTestEnvironment} from "Utils/Env";
+import {isTestEnvironment, requireEnvVar} from "Utils/Env";
 import {logError} from "Utils/Logging";
 import {runScenario} from "Utils/ScenarioRunner";
 
@@ -33,6 +33,7 @@ const vendorBundlePaths: Record<string, string> = {
   csx: `${frontendNodeModulesPath}/csx/umd/csx.min.js`,
   csstips: `${frontendNodeModulesPath}/csstips/umd/csstips.min.js`,
   requirejs: `${frontendNodeModulesPath}/requirejs/require.js`,
+  rollbar: `${frontendNodeModulesPath}/rollbar/dist/rollbar.umd.min.js`,
 };
 const vendorBundleNames = Object.keys(vendorBundlePaths);
 const frontendDependencies = JSON.parse(fs.readFileSync(`${FrontendPath}/package-lock.json`, "utf8")).dependencies;
@@ -86,13 +87,24 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta name="csrf_token" content="CSRF_TOKEN" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
+  <script src="${requireJsPathsForVendorBundles["rollbar"]}.js"></script>
+  <script>
+    rollbar.init({
+      accessToken: "${requireEnvVar("APP_ROLLBAR_ACCESS_TOKEN")}",
+      captureUncaught: true,
+      captureUnhandledRejections: true,
+      payload: {
+          environment: "${requireEnvVar("NODE_ENV")}"
+      }
+    });
+  </script>
 </head>
 <body>
   <div id="root"></div>
-  <script src="REQUIREJS_BUNDLE"></script>
+  <script src="${requireJsPathsForVendorBundles["requirejs"]}.js"></script>
   <script>
     requirejs.config({
-      paths: VENDOR_BUNDLES
+      paths: ${JSON.stringify(requireJsPathsForVendorBundles, null, "  ")}
     });
 
     requirejs(["bundle"], function() {
@@ -115,8 +127,6 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
     const session = (req.session as any) as UserSession;
     const html = htmlTemplate
-      .replace("REQUIREJS_BUNDLE", `${requireJsPathsForVendorBundles["requirejs"]}.js`)
-      .replace("VENDOR_BUNDLES", JSON.stringify(requireJsPathsForVendorBundles, null, "  "))
       .replace("MAIN_MODULE_PATH", requireModulePath)
       .replace("CSRF_TOKEN", req.csrfToken())
       .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: Boolean(session.userId)}, null, "  "));
