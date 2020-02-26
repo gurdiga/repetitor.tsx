@@ -107,8 +107,7 @@ package.json-dirs:
 		-name package.json \
 	| xargs dirname
 
-node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules backend/node_modules
-backend/node_modules: backend/package.json
+node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules
 frontend/node_modules: frontend/package.json
 node_modules backend/node_modules frontend/node_modules:
 	@set -e
