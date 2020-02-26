@@ -14,7 +14,7 @@
   "search.exclude": {
     "**/.bash_history": true,
     "**/build": true,
-    "**/package*.json": true
+    "**/package-lock.json": true
   },
   "eslint.options": {"configFile": "config-files/.eslintrc.js"}
 }
