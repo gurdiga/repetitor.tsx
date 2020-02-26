@@ -3,6 +3,12 @@
   "author": "Vlad GURDIGA <gurdiga@gmail.com>",
   "description": "This is going to be an online system for tutors.",
   "license": "MIT",
+  "engines": {
+    "node": "13.1.0"
+  },
+  "scripts": {
+    "start": "node --require ts-node/register --require tsconfig-paths/register backend/src/index.ts"
+  },
   "devDependencies": {
     "nodemon": "^2.0.2",
     "ts-node": "^8.6.2",
