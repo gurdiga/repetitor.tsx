@@ -53,7 +53,7 @@ export async function assertRejectedPromise(params: AssertionParams): Promise<vo
 
 export type Stub<T extends (...args: any) => any> = Sinon.SinonStub<Parameters<T>, ReturnType<T>>;
 
-export function stubExport<T extends Record<string, (...args: any[]) => any>>(
+export function stubExport<T extends any>(
   module: T,
   functionName: keyof T,
   before: Mocha.HookFunction,
