@@ -58,14 +58,7 @@ start: build
 		--watch backend/tsconfig.json \
 		--watch backend/package.json \
 		--watch shared/tsconfig.json \
-		--exec '\
-			DEBUG=app:* \
-			TS_NODE_PROJECT=backend/tsconfig.json \
-			node \
-				--require ts-node/register \
-				--require tsconfig-paths/register \
-				backend/src/index.ts \
-		'
+		--exec 'npm start'
 
 e: edit
 edit:
