@@ -30,4 +30,7 @@ export const app = express()
   .get("*", csrfProtection, sendPageHtml)
   .post("/", csrfProtection, handlePost);
 
-app.listen(requireNumericEnvVar("APP_BACKEND_HTTP_PORT"), "localhost");
+app.listen(requireNumericEnvVar("APP_BACKEND_HTTP_PORT"), "localhost").on("error", error => {
+  console.error(error);
+  process.exit(1);
+});
