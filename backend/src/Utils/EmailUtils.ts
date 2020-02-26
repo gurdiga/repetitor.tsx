@@ -2,7 +2,8 @@ import {createTransport} from "nodemailer";
 import {requireEnvVar, requireNumericEnvVar, isTestEnvironment, isDevelopmentEnvironment} from "Utils/Env";
 import {logError} from "Utils/Logging";
 
-const transporter = createTransport({
+// Exported for tests only.
+export const transporter = createTransport({
   pool: true,
   host: requireEnvVar("APP_SMTP_HOST"),
   port: requireNumericEnvVar("APP_SMTP_PORT"),
