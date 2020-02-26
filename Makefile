@@ -166,3 +166,12 @@ l: lint
 
 env:
 	cp --interactive config-files/.env.template .env
+
+heroku-env:
+	heroku config:set \
+		--app repetitor \
+		` sed \
+			-e 's/^export //' .env.production \
+			-e '/^$$/d' \
+			| paste -sd " " - \
+		`
