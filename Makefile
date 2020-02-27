@@ -58,7 +58,11 @@ start: build
 		--watch backend/tsconfig.json \
 		--watch backend/package.json \
 		--watch shared/tsconfig.json \
-		--exec 'npm start'
+		--exec '\
+			DEBUG=app:* \
+			TS_NODE_PROJECT=backend/tsconfig.json \
+			npm start \
+		'
 
 e: edit
 edit:
