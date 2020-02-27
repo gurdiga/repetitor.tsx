@@ -160,7 +160,7 @@ l: lint
 env:
 	cp --interactive config-files/.env.template .env
 
-heroku-env:
+h-env:
 	heroku config:set \
 		--app repetitor \
 		` sed \
@@ -168,3 +168,6 @@ heroku-env:
 			-e '/^$$/d' \
 			| paste -sd " " - \
 		`
+
+h-tail:
+	heroku logs --tail --app repetitor
