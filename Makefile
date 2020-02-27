@@ -172,6 +172,9 @@ h-env:
 			-e '/^$$/d' \
 			| paste -sd " " - \
 		`
+	heroku config:set \
+		--app repetitor \
+		PORT=$$APP_BACKEND_HTTP_PORT
 
 h-tail:
 	heroku logs --tail --app repetitor
