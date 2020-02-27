@@ -69,7 +69,7 @@ edit:
 	code -n .
 
 open:
-	open http://localhost:$(APP_BACKEND_HTTP_PORT)
+	open http://localhost:$(PORT)
 
 update:
 	@set -e
@@ -174,7 +174,7 @@ h-env:
 		`
 	heroku config:set \
 		--app repetitor \
-		PORT=$$APP_BACKEND_HTTP_PORT
+		PORT=$$PORT
 
 h-tail:
 	heroku logs --tail --app repetitor

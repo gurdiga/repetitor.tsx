@@ -22,7 +22,7 @@ run-action-http: $(CLI)
 		--header "Content-Type: application/json" \
 		--request POST \
 		--data '$(ACTION)' \
-		localhost:$$APP_BACKEND_HTTP_PORT
+		localhost:$$PORT
 	echo ""
 
 run-http:
@@ -30,7 +30,7 @@ run-http:
 		--header "Content-Type: application/json" \
 		--request POST \
 		--data '$(SAMPLE_REQUEST)' \
-		localhost:$$APP_BACKEND_HTTP_PORT
+		localhost:$$PORT
 	echo ""
 
 define SAMPLE_REQUEST

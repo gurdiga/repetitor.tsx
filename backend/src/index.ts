@@ -31,9 +31,9 @@ export const app = express()
   .post("/", csrfProtection, handlePost);
 
 app
-  .listen(requireNumericEnvVar("APP_BACKEND_HTTP_PORT"))
+  .listen(requireNumericEnvVar("PORT"))
   .on("listening", () => {
-    console.log(`Listening on port: ${requireNumericEnvVar("APP_BACKEND_HTTP_PORT")}`);
+    console.log(`Listening on port: ${requireNumericEnvVar("PORT")}`);
     console.log(`PORT: ${process.env.PORT}`);
   })
   .on("error", error => {
