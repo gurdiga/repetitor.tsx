@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "author": "Vlad GURDIGA <gurdiga@gmail.com>",
+  "description": "none",
+  "repository": "none",
+  "license": "MIT",
+  "dependencies": {
+    "@types/compression": "^1.0.1",
+    "@types/cors": "^2.8.6",
+    "@types/csurf": "^1.9.36",
+    "@types/debug": "^4.1.5",
+    "@types/express": "^4.17.2",
+    "@types/express-mysql-session": "^1.2.2",
+    "@types/express-session": "^1.15.16",
+    "@types/helmet": "0.0.45",
+    "@types/morgan": "^1.7.37",
+    "@types/mysql": "^2.15.8",
+    "@types/node": "^13.1.8",
+    "@types/nodemailer": "^6.4.0",
+    "chai-http": "^4.3.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "express-mysql-session": "^2.1.3",
+    "express-session": "^1.17.0",
+    "helmet": "^3.21.2",
+    "mysql": "^2.17.1",
+    "nodemailer": "^6.4.2",
+    "rollbar": "^2.14.4"
+  }
+}
