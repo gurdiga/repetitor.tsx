@@ -58,11 +58,7 @@ start: build
 		--watch backend/tsconfig.json \
 		--watch backend/package.json \
 		--watch shared/tsconfig.json \
-		--exec '\
-			DEBUG=app:* \
-			TS_NODE_PROJECT=backend/tsconfig.json \
-			npm start \
-		'
+		--exec 'heroku local'
 
 e: edit
 edit:
@@ -167,14 +163,9 @@ env:
 h-env:
 	heroku config:set \
 		--app repetitor \
-		` sed \
-			-e 's/^export //' .env.production \
-			-e '/^$$/d' \
+		` sed 's/^export //' .env.production \
 			| paste -sd " " - \
 		`
-	heroku config:set \
-		--app repetitor \
-		PORT=$$PORT
 
 h-tail:
 	heroku logs --tail --app repetitor
