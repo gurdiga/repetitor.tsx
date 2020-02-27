@@ -7,8 +7,8 @@
     "node": "13.1.0"
   },
   "scripts": {
-    "build": "(cd backend && npm i) && (cd frontend && npm i)",
-    "start": "source .env && DEBUG=app:* TS_NODE_PROJECT=backend/tsconfig.json node --require ts-node/register --require tsconfig-paths/register backend/src/index.ts"
+    "build": "(cd backend && npm i) && (cd frontend && npm i) && tsc --build -v",
+    "start": "node --require ts-node/register --require tsconfig-paths/register backend/src/index.ts"
   },
   "devDependencies": {
     "nodemon": "^2.0.2",
