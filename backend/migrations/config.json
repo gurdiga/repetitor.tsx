@@ -1,0 +1,12 @@
+{
+  "defaultEnv": "development",
+  "development": {
+    "driver": "mysql",
+    "host": {"ENV": "APP_DB_HOST"},
+    "user": {"ENV": "APP_DB_USER"},
+    "password": {"ENV": "APP_DB_PASSWORD"},
+    "database": {"ENV": "APP_DB_NAME"},
+    "multipleStatements": true
+  },
+  "sql-file": true
+}

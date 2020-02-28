@@ -160,6 +160,38 @@ l: lint
 env:
 	cp --interactive config-files/.env.template .env
 
+migrate:
+	@set -e
+	if [ "$$ENV" ]; then source .env.$$ENV else source .env; fi
+	db-migrate $${DIRECTION:-up} \
+		--log-level sql \
+		--env $${ENV:-development} \
+		--config backend/migrations/config.json \
+		--migrations-dir backend/migrations
+
+mup:
+	@make migrate --no-print-directory DIRECTION=up
+
+mdown:
+	@make migrate --no-print-directory DIRECTION=down
+
+migration:
+	@set -e
+	if [ "$$ENV" ]; then source .env.$$ENV else source .env; fi
+	read -p "Migration title: " MIGRATION_TITLE
+	db-migrate create $$MIGRATION_TITLE \
+		--sql-file \
+		--env $${ENV:-development} \
+		--config backend/migrations/config.json \
+		--migrations-dir backend/migrations
+
+mnew: migration
+
+sql:
+	@set -e
+	if [ "$$ENV" ]; then source .env.$$ENV else source .env; fi
+	mysql --host $$APP_DB_HOST --user $$APP_DB_USER --password=$$APP_DB_PASSWORD $$APP_DB_NAME
+
 h-env:
 	heroku config:set \
 		--app repetitor \
