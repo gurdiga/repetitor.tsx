@@ -55,10 +55,6 @@
     "type": "git",
     "url": "git+https://github.com/gurdiga/repetitor.tsx.git"
   },
-  "cacheDirectories": [
-    "backend/node_modules",
-    "frontend/node_modules"
-  ],
   "devDependencies": {
     "@types/chai": "^4.2.8",
     "@types/chai-as-promised": "^7.1.2",
