@@ -154,9 +154,6 @@ lint:
 
 l: lint
 
-env:
-	cp --interactive config-files/.env.template .env
-
 migrate:
 	@set -e
 	db-migrate $${DIRECTION:-up} \
