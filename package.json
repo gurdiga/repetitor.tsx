@@ -51,10 +51,7 @@
     "build": "tsc --build -v",
     "start": "node --require ts-node/register --require tsconfig-paths/register backend/src/index.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gurdiga/repetitor.tsx.git"
-  },
+  "repository": "github:user/repo",
   "devDependencies": {
     "@types/chai": "^4.2.8",
     "@types/chai-as-promised": "^7.1.2",
