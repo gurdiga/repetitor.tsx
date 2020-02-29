@@ -1,6 +1,7 @@
 import {em, percent} from "csx";
 import {InputCss} from "frontend/shared/Components/FormFields/Input.css";
 import {style} from "typestyle";
+import {ButtonStyle} from "frontend/shared/Components/FormFields/Button.css";
 
 export namespace PasswordFieldCss {
   export const InputContainer = style({
@@ -20,7 +21,7 @@ export namespace PasswordFieldCss {
     textOverflow: "ellipsis",
   });
 
-  export const EyeButton = style({
+  export const EyeButton = style(ButtonStyle, {
     $debugName: "EyeButton",
     border: "none",
     backgroundColor: "transparent",
