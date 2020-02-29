@@ -151,7 +151,6 @@ pc: pre-commit
 
 lint:
 	eslint . \
-		--config config-files/.eslintrc.js \
 		--ignore-path .gitignore \
 		--ext .ts,.tsx
 

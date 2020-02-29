@@ -16,5 +16,5 @@
     "**/build": true,
     "**/package-lock.json": true
   },
-  "eslint.options": {"configFile": "config-files/.eslintrc.js"}
+  "eslint.enable": true
 }
