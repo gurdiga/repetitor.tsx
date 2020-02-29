@@ -1,8 +1,6 @@
 .ONESHELL:
 SHELL=bash
 
-include .env
-
 default: test-backend
 
 test: test-backend test-frontend
@@ -186,7 +184,7 @@ mnew: migration
 
 sql:
 	@set -e
-	if [ "$$ENV" ]; then source .env.$$ENV else source .env; fi
+	if [ "$$NODE_ENV" ]; then source .env.$$NODE_ENV else source .env; fi
 	mysql --host $$APP_DB_HOST --user $$APP_DB_USER --password=$$APP_DB_PASSWORD $$APP_DB_NAME
 
 h-env:
