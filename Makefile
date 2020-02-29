@@ -161,10 +161,9 @@ env:
 
 migrate:
 	@set -e
-	if [ "$$ENV" ]; then source .env.$$ENV else source .env; fi
 	db-migrate $${DIRECTION:-up} \
-		--log-level sql \
-		--env $${ENV:-development} \
+		--verbose \
+		--env $$NODE_ENV \
 		--config backend/migrations/config.json \
 		--migrations-dir backend/migrations
 
@@ -179,7 +178,6 @@ migration:
 	if [ "$$ENV" ]; then source .env.$$ENV else source .env; fi
 	read -p "Migration title: " MIGRATION_TITLE
 	db-migrate create $$MIGRATION_TITLE \
-		--sql-file \
 		--env $${ENV:-development} \
 		--config backend/migrations/config.json \
 		--migrations-dir backend/migrations

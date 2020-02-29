@@ -1,0 +1,20 @@
+exports.up = function(db, callback) {
+  const sql = `
+  `;
+
+  db.runSql(sql, call(callback));
+};
+
+exports.down = function(db, callback) {
+  const sql = `
+  `;
+
+  db.runSql(sql, call(callback));
+};
+
+function call(callback) {
+  return function(err) {
+    if (err) return console.error(err);
+    callback();
+  };
+}

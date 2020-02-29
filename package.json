@@ -45,7 +45,8 @@
     ]
   },
   "scripts": {
-    "heroku-prebuild": "(cd backend && npm install) && (cd frontend && npm install)",
+    "migrate": "db-migrate up --verbose --env $NODE_ENV --config backend/migrations/config.json --migrations-dir backend/migrations",
+    "heroku-prebuild": "(cd backend && npm install) && (cd frontend && npm install) && npm run-script migrate",
     "build": "tsc --build -v",
     "start": "node --require ts-node/register --require tsconfig-paths/register backend/src/index.ts"
   },
