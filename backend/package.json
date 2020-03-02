@@ -4,9 +4,6 @@
   "description": "none",
   "repository": "none",
   "license": "MIT",
-  "devDependencies": {
-    "chai-http": "^4.3.0"
-  },
   "dependencies": {
     "@types/compression": "^1.0.1",
     "@types/cors": "^2.8.6",
@@ -20,6 +17,7 @@
     "@types/mysql": "^2.15.8",
     "@types/node": "^13.1.8",
     "@types/nodemailer": "^6.4.0",
+    "chai-http": "^4.3.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
