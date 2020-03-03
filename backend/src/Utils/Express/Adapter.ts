@@ -5,6 +5,7 @@ import {UserSession} from "shared/Model/UserSession";
 import {isTestEnvironment, requireEnvVar} from "Utils/Env";
 import {logError} from "Utils/Logging";
 import {runScenario} from "Utils/ScenarioRunner";
+import {PageProps} from "shared/Utils/PageProps";
 
 const AppRoot = path.join(__dirname, "../../../..");
 const FrontendPath = `${AppRoot}/frontend`;
@@ -124,10 +125,12 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   if (PagePathNames.includes(pagePathName)) {
     const requireModulePath = `${RelativePagesRoot}/${pagePathName}/src/Main`;
     const session = (req.session as any) as UserSession;
+    const pageProps: PageProps = {isAuthenticated: Boolean(session.userId)};
+
     const html = htmlTemplate
       .replace("MAIN_MODULE_PATH", requireModulePath)
       .replace("CSRF_TOKEN", req.csrfToken())
-      .replace("PAGE_PROPS", JSON.stringify({isAuthenticated: Boolean(session.userId)}, null, "  "));
+      .replace("PAGE_PROPS", JSON.stringify(pageProps, null, "  "));
 
     if (isTestEnvironment()) {
       // To use in tests.
