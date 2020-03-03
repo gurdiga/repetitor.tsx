@@ -6,13 +6,13 @@ export function TopNavigation() {
   return (
     <ul className={TopNavigationCss.LinkList}>
       <li>
-        <a href={PagePath.Home}>Pagina principală</a>
+        <a href={PagePath.Home}>Home</a>
       </li>
       <li>
-        <a href={PagePath.TutorRegistration}>Înregistrare repetitor</a>
+        <a href={PagePath.TutorRegistration}>Înregistrare</a>
       </li>
       <li>
-        <a href={PagePath.TutorLogin}>Autentificare repetitor</a>
+        <a href={PagePath.TutorLogin}>Autentificare</a>
       </li>
     </ul>
   );

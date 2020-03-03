@@ -7,6 +7,7 @@
     {"path": "./frontend/pages/home"},
     {"path": "./frontend/pages/inregistrare-repetitor"},
     {"path": "./frontend/pages/autentificare-repetitor"},
+    {"path": "./frontend/pages/recuperare-parola"},
     {"path": "./backend/tests"},
     {"path": "./frontend/tests"}
   ]
