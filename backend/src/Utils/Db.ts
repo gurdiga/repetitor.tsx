@@ -2,7 +2,7 @@ import * as debug from "debug";
 import * as mysql from "mysql";
 import {requireEnvVar} from "Utils/Env";
 
-interface DataRow {
+export interface DataRow {
   [fieldName: string]: any;
 }
 

@@ -2,7 +2,7 @@ import {expect} from "chai";
 import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
 import {UserSession} from "shared/Model/UserSession";
 import {stubExport} from "TestHelpers";
-import {RowSet, runQuery} from "Utils/Db";
+import {RowSet, runQuery, DataRow} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import {hashString} from "Utils/StringUtils";
 
@@ -38,17 +38,19 @@ describe("TutorRegistration", () => {
     let session: UserSession;
 
     context("happy path", () => {
-      before(() => {
+      let row: DataRow;
+
+      before(async () => {
         session = {userId: undefined};
         TutorRegistration(params, session);
+
+        const {rows} = (await runQuery({sql: "SELECT * FROM users", params: []})) as RowSet;
+        row = rows[0];
       });
 
       after(() => runQuery({sql: "DELETE FROM users", params: []}));
 
-      it("adds the appropriate row to the users table", async () => {
-        const {rows} = (await runQuery({sql: "SELECT * FROM users", params: []})) as RowSet;
-        const row = rows[0];
-
+      it("adds the appropriate row to the users table", () => {
         if (!row) {
           expect(row).to.exist;
           return;
@@ -59,8 +61,11 @@ describe("TutorRegistration", () => {
 
         const passwordHash = hashString(params.password, row.password_salt as string);
         expect(row.password_hash, "Row is expected to have the hashed password").to.equal(passwordHash);
+      });
 
+      it("initializes the session", () => {
         expect(session.userId, "sets the usedIs on the session accordingly").to.equal(row.id);
+        expect(session.email, "sets the email on the session accordingly").to.equal(row.email);
       });
     });
 

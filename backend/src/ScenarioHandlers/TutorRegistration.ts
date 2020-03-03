@@ -22,6 +22,7 @@ export async function TutorRegistration(input: Scenario["Input"], session: UserS
 
   if (createTutorResult.kind === "TutorCreationSuccess") {
     session.userId = createTutorResult.id;
+    session.email = email;
   }
 
   sendWelcomeMessage(fullName, email);
