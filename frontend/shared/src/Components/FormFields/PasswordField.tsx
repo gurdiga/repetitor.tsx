@@ -5,6 +5,7 @@ import {FormValidation} from "frontend/shared/FormValidation";
 import {PasswordGenerator} from "frontend/shared/PasswordGenerator";
 import * as React from "react";
 import {getValidationErrorCode} from "shared/Utils/Validation";
+import {TextFieldCss} from "frontend/shared/Components/FormFields/TextField.css";
 
 interface Props extends FormField.CommonProps {
   hasGenerateButton?: boolean;
@@ -12,7 +13,7 @@ interface Props extends FormField.CommonProps {
 
 export function PasswordField(props: Props) {
   const {id, label, value: initialValue, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
-  const {validationMessages, hasGenerateButton} = props;
+  const {validationMessages, hasGenerateButton, info} = props;
 
   const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
@@ -78,6 +79,7 @@ export function PasswordField(props: Props) {
       {showValidationMessage && validationErrorCode && (
         <ValidationMessage text={validationMessages[validationErrorCode]} />
       )}
+      {info && (typeof info === "string" ? <p className={TextFieldCss.Info}>{info}</p> : info)}
     </>
   );
 }
