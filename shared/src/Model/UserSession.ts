@@ -1,3 +1,4 @@
 export interface UserSession {
-  userId: number | undefined;
+  userId?: number;
+  email?: string;
 }

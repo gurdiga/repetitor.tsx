@@ -6,7 +6,7 @@ export function HomePage(props: PageProps) {
   return (
     <PageLayout title="Pagina principală" footerContent={<Footer />}>
       <div>HomePage content</div>
-      <pre>{JSON.stringify(props)}</pre>
+      <pre>{JSON.stringify(props, null, "  ")}</pre>
     </PageLayout>
   );
 }
