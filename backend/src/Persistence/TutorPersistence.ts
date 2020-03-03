@@ -1,8 +1,10 @@
-import {LoginCheckError, LoginCheckInfo} from "shared/Model/LoginCheck";
+import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/Model/LoginCheck";
 import {TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
 import {DbError, SystemError} from "shared/Model/Utils";
 import {runQuery, InsertResult, RowSet} from "Utils/Db";
 import {logError} from "Utils/Logging";
+import {EmailExists, RecoveryToken} from "shared/Model/TutorPasswordRecovery";
+import {genRandomString} from "Utils/StringUtils";
 
 export async function createTutor(
   fullName: string,
@@ -63,6 +65,59 @@ export async function checkLoginInfo(
   } catch (error) {
     logError("DbError", error);
 
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+export async function checkIfEmailExists(email: string): Promise<EmailExists | UnknownEmailError | SystemError> {
+  try {
+    const result = (await runQuery({
+      sql: `
+            SELECT id, full_name
+            FROM users
+            WHERE email = ?
+           `,
+      params: [email],
+    })) as RowSet;
+
+    const row = result.rows[0];
+
+    if (row) {
+      return {
+        kind: "EmailExists",
+        userId: row["id"],
+        fullName: row["full_name"],
+      };
+    } else {
+      return {kind: "UnknownEmailError"};
+    }
+  } catch (error) {
+    logError("DbError", error);
+
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+export async function createTutorPasswordRecoveryToken(userId: number): Promise<RecoveryToken | DbError> {
+  const token = genRandomString(16);
+  const timestamp = Date.now();
+
+  try {
+    // TODO: add table
+    // TODO: purge expired tokens
+    await runQuery({
+      sql: `
+            INSERT INTO users(userId, token, timestamp)
+            VALUES(?, ?, ?)
+           `,
+      params: [userId, token, timestamp],
+    });
+
+    return {
+      kind: "RecoveryToken",
+      token,
+    };
+  } catch (error) {
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }

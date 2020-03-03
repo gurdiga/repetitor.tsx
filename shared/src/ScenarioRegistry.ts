@@ -3,8 +3,9 @@ import {TestScenarioInput, TestScenarioResult} from "shared/Scenarios/TestScenar
 import {TutorLoginInput, TutorLoginResult} from "shared/Scenarios/TutorLogin";
 import {UserSession} from "shared/Model/UserSession";
 import {LogoutInput, LogoutResult} from "shared/Scenarios/Logout";
+import {TutorPasswordRecoveryInput, TutorPasswordRecoveryResult} from "shared/Scenarios/TutorPasswordRecovery";
 
-export type SimpleScenarioName = "TestScenario";
+export type SimpleScenarioName = "TestScenario" | "TutorPasswordRecovery";
 export type SessionAlteringScenarioName = "TutorRegistration" | "TutorLogin" | "Logout";
 
 export interface ScenarioRegistry {
@@ -23,6 +24,10 @@ export interface ScenarioRegistry {
   TestScenario: {
     Input: TestScenarioInput;
     Result: TestScenarioResult;
+  };
+  TutorPasswordRecovery: {
+    Input: TutorPasswordRecoveryInput;
+    Result: TutorPasswordRecoveryResult;
   };
 }
 
