@@ -116,6 +116,8 @@ export async function createTutorPasswordRecoveryToken(userId: number): Promise<
       token,
     };
   } catch (error) {
+    logError(error);
+
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }

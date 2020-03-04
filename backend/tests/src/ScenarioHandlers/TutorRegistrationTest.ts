@@ -40,7 +40,7 @@ describe("TutorRegistration", () => {
     context("happy path", () => {
       let row: DataRow;
 
-      before(async () => {
+      beforeEach(async () => {
         session = {userId: undefined};
         TutorRegistration(params, session);
 
@@ -48,7 +48,7 @@ describe("TutorRegistration", () => {
         row = rows[0];
       });
 
-      after(() => runQuery({sql: "DELETE FROM users", params: []}));
+      afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("adds the appropriate row to the users table", () => {
         if (!row) {
