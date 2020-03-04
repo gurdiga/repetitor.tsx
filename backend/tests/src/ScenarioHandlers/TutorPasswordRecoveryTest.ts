@@ -4,9 +4,10 @@ import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
 import {runQuery, RowSet} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import Sinon = require("sinon");
+import {Stub} from "TestHelpers";
 
 describe("TutorPasswordRecovery", () => {
-  let sendEmailStub: Sinon.SinonStub<Parameters<typeof EmailUtils.sendEmail>, ReturnType<typeof EmailUtils.sendEmail>>;
+  let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
 
   beforeEach(() => {
     sendEmailStub = Sinon.stub(EmailUtils, "sendEmail");
