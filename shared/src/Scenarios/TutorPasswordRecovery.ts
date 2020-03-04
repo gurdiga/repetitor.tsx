@@ -4,7 +4,7 @@ import {UnknownEmailError} from "shared/Model/LoginCheck";
 import {TutorPasswordRecoveryEmailSent} from "shared/Model/TutorPasswordRecovery";
 
 export interface TutorPasswordRecoveryInput {
-  email?: string;
+  email: string | undefined;
 }
 
 export type TutorPasswordRecoveryResult = TutorPasswordRecoveryEmailSent | EmailError | UnknownEmailError | SystemError;

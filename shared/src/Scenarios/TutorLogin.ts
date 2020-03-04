@@ -4,8 +4,8 @@ import {PasswordError} from "shared/Model/Password";
 import {LoginCheckSuccess, LoginCheckError} from "shared/Model/LoginCheck";
 
 export interface TutorLoginInput {
-  email?: string;
-  password?: string;
+  email: string | undefined;
+  password: string | undefined;
 }
 
 type InputError = EmailError | PasswordError;
