@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express";
 import * as Rollbar from "rollbar";
-import {requireEnvVar} from "Utils/Env";
+import {requireEnvVar, isTestEnvironment} from "Utils/Env";
 
 const rollbar = new Rollbar({
   accessToken: requireEnvVar("APP_ROLLBAR_POST_SERVER_ITEM_TOKEN"),
@@ -21,5 +21,9 @@ export function errorLoggingMiddleware(
 }
 
 export function logError(...args: any[]): void {
+  if (isTestEnvironment()) {
+    console.error(...args);
+  }
+
   rollbar.error(...args);
 }
