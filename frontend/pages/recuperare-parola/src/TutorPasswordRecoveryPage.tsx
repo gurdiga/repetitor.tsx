@@ -2,7 +2,7 @@ import {PageLayout} from "frontend/shared/PageLayout";
 import * as React from "react";
 import {PageProps} from "shared/Utils/PageProps";
 import {Form} from "frontend/shared/Components/Form";
-import {initialFieldValue, ValidatedValue} from "shared/Utils/Validation";
+import {ValidatedValue} from "shared/Utils/Validation";
 import {ServerResponse, placeholderServerResponse, runScenario, ResponseState} from "frontend/shared/ScenarioRunner";
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {UserEmailValidationRules, emailErrorMessages} from "shared/Model/Email";
@@ -11,38 +11,40 @@ import {TutorPasswordRecoveryPropName} from "shared/Model/TutorPasswordRecovery"
 import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
 
-export function TutorPasswordRecoveryPage(_props: PageProps) {
-  const [email, updateEmail] = React.useState(initialFieldValue);
+export function TutorPasswordRecoveryPage(props: PageProps) {
+  const [email, updateEmail] = React.useState(getEmailFromProps(props));
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
     <PageLayout title="Recuperarea parolei">
-      <Form
-        fields={[
-          <TextField
-            id="email"
-            label="Adresa de email"
-            value={email.value}
-            inputType="email"
-            onValueChange={updateEmail}
-            validationRules={UserEmailValidationRules}
-            showValidationMessage={shouldShowValidationMessage}
-            validationMessages={emailErrorMessages}
-            autoFocus={true}
-          />,
-        ]}
-        actionButtons={[
-          <SubmitButton
-            label="Autentifică"
-            onClick={async () => {
-              toggleValidationMessage(true);
-              return await maybeSubmitForm({email});
-            }}
-          />,
-        ]}
-      />
+      {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
+        <Form
+          fields={[
+            <TextField
+              id="email"
+              label="Adresa de email"
+              value={email.value}
+              inputType="email"
+              onValueChange={updateEmail}
+              validationRules={UserEmailValidationRules}
+              showValidationMessage={shouldShowValidationMessage}
+              validationMessages={emailErrorMessages}
+              autoFocus={true}
+            />,
+          ]}
+          actionButtons={[
+            <SubmitButton
+              label="Recuperează parola"
+              onClick={async () => {
+                toggleValidationMessage(true);
+                return await maybeSubmitForm({email});
+              }}
+            />,
+          ]}
+        />
+      )}
       {serverResponse.shouldShow && (
         <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
       )}
@@ -56,8 +58,7 @@ export function TutorPasswordRecoveryPage(_props: PageProps) {
       return;
     }
 
-    const response = await runScenario("TutorPasswordRecovery", {});
-
+    const response = await runScenario("TutorPasswordRecovery", {email: fields.email.value});
     let responseState: ResponseState;
     let responseText: string;
 
@@ -81,8 +82,6 @@ export function TutorPasswordRecoveryPage(_props: PageProps) {
         [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
-        break;
       case "TransportError":
       case "ServerError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.error];
@@ -98,5 +97,30 @@ export function TutorPasswordRecoveryPage(_props: PageProps) {
       responseText,
       shouldShow: true,
     });
+  }
+}
+
+function getEmailFromProps(props: PageProps): ValidatedValue<string> {
+  if (!props.isAuthenticated) {
+    return {
+      value: "",
+      isValid: false,
+    };
+  } else {
+    const {email} = props;
+
+    if (email) {
+      return {
+        value: email,
+        isValid: true,
+      };
+    } else {
+      console.error("Email is missing on page props even if authenticated.");
+
+      return {
+        value: "",
+        isValid: false,
+      };
+    }
   }
 }
