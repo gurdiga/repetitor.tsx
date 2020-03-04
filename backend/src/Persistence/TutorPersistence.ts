@@ -103,11 +103,9 @@ export async function createTutorPasswordRecoveryToken(userId: number): Promise<
   const timestamp = Date.now();
 
   try {
-    // TODO: add table
-    // TODO: purge expired tokens
     await runQuery({
       sql: `
-            INSERT INTO users(userId, token, timestamp)
+            INSERT INTO passsword_recovery_tokens (userId, token, timestamp)
             VALUES(?, ?, ?)
            `,
       params: [userId, token, timestamp],
