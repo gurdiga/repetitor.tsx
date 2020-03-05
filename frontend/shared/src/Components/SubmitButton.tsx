@@ -8,11 +8,23 @@ interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLB
 }
 
 export function SubmitButton(props: Props) {
-  const {label, className, ...rest} = props;
+  const {label, onClick, className, ...rest} = props;
+  const [isDisabled, toggleDisabled] = React.useState(false);
 
   return (
-    <button type="submit" {...rest} className={classes(SubmitButtonCss.Button, className)}>
+    <button
+      type="submit"
+      disabled={isDisabled}
+      onClick={handleClick}
+      {...rest}
+      className={classes(SubmitButtonCss.Button, className)}
+    >
       {props.label}
     </button>
   );
+
+  async function handleClick() {
+    toggleDisabled(true);
+    await onClick().finally(() => toggleDisabled(false));
+  }
 }
