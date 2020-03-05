@@ -1,4 +1,3 @@
-import * as debug from "debug";
 import * as mysql from "mysql";
 import {requireEnvVar} from "Utils/Env";
 
@@ -31,10 +30,6 @@ export const connectionPool = mysql.createPool({
 });
 
 export function runQuery(query: ParametrizedQuery): Promise<Result> {
-  const log = debug(`app:runQuery`);
-
-  log({query});
-
   return new Promise<Result>((resolve, reject) => {
     connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, result, _fields) {
       if (error) {
