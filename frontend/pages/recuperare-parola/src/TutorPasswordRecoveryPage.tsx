@@ -12,7 +12,7 @@ import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
 
 export function TutorPasswordRecoveryPage(props: PageProps) {
-  const [email, updateEmail] = React.useState(getEmailFromProps(props));
+  const [email, updateEmail] = React.useState(getEmailFromPageProps(props));
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
@@ -90,8 +90,6 @@ export function TutorPasswordRecoveryPage(props: PageProps) {
         assertNever(response);
     }
 
-    // TODO: Tell the user we’ve sent the recovery email.
-
     setServerResponse({
       responseState,
       responseText,
@@ -100,15 +98,15 @@ export function TutorPasswordRecoveryPage(props: PageProps) {
   }
 }
 
-function getEmailFromProps(props: PageProps): ValidatedValue<string> {
-  if (!props.isAuthenticated) {
+function getEmailFromPageProps(props: PageProps): ValidatedValue<string> {
+  const {isAuthenticated, email} = props;
+
+  if (!isAuthenticated) {
     return {
       value: "",
       isValid: false,
     };
   } else {
-    const {email} = props;
-
     if (email) {
       return {
         value: email,

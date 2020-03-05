@@ -31,17 +31,19 @@ describe("<TutorLoginPage/>", () => {
 
   context("when not logged in already", () => {
     describe("form", () => {
+      let form: Wrapper<typeof Form>;
+
       before(() => {
         wrapper = shallow(<TutorLoginPage isAuthenticated={false} />);
+        form = wrapper.find(Form);
       });
 
       it("renders a form with the appropriate fields", () => {
-        const form = wrapper.find(Form);
         const {
-          fields: [emailFiled, passwordField],
+          fields: [emailField, passwordField],
         } = form.props();
 
-        expectProps<typeof TextField>("email field", emailFiled, {
+        expectProps<typeof TextField>("email field", emailField, {
           autoFocus: true,
           validationRules: UserEmailValidationRules,
         });
@@ -52,7 +54,7 @@ describe("<TutorLoginPage/>", () => {
       });
 
       it("renders the appropriate action buttons", () => {
-        const submitButton = wrapper.find(Form).props().actionButtons[0];
+        const [submitButton] = form.prop("actionButtons");
 
         expectProps<typeof SubmitButton>("submit button", submitButton, {
           label: "Autentifică",
@@ -218,7 +220,7 @@ describe("<TutorLoginPage/>", () => {
           isValid: true,
         });
 
-        const submitButton = wrapper.find(Form).props().actionButtons[0];
+        const [submitButton] = wrapper.find(Form).props().actionButtons;
 
         return submitButton.props.onClick();
       }
