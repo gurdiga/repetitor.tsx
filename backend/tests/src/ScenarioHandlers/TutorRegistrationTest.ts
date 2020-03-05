@@ -5,6 +5,7 @@ import {stubExport} from "TestHelpers";
 import {RowSet, runQuery, DataRow} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import {hashString} from "Utils/StringUtils";
+import {TutorCreationSuccess} from "shared/Model/Tutor";
 
 describe("TutorRegistration", () => {
   stubExport(EmailUtils, "sendEmail", before, after);
@@ -39,20 +40,21 @@ describe("TutorRegistration", () => {
 
     context("happy path", () => {
       let row: DataRow;
+      let result: TutorCreationSuccess;
 
       beforeEach(async () => {
         session = {userId: undefined};
-        TutorRegistration(params, session);
-
-        const {rows} = (await runQuery({sql: "SELECT * FROM users", params: []})) as RowSet;
-        row = rows[0];
+        result = (await TutorRegistration(params, session)) as TutorCreationSuccess;
       });
 
       afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
 
-      it("adds the appropriate row to the users table", () => {
+      it("adds the appropriate row to the users table", async () => {
+        const {rows} = (await runQuery({sql: "SELECT * FROM users", params: []})) as RowSet;
+        row = rows[0];
+
         if (!row) {
-          expect(row).to.exist;
+          expect(row, "row in the table").to.exist;
           return;
         }
 
@@ -64,8 +66,8 @@ describe("TutorRegistration", () => {
       });
 
       it("initializes the session", () => {
-        expect(session.userId, "sets the usedIs on the session accordingly").to.equal(row.id);
-        expect(session.email, "sets the email on the session accordingly").to.equal(row.email);
+        expect(session.userId, "sets the usedIs on the session accordingly").to.equal(result.id);
+        expect(session.email, "sets the email on the session accordingly").to.equal(params.email);
       });
     });
 
