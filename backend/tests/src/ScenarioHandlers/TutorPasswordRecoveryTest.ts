@@ -17,6 +17,8 @@ describe("TutorPasswordRecovery", () => {
     sendEmailStub.restore();
   });
 
+  afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
+
   it("validates the email", async () => {
     let email = "";
     expect(await TutorPasswordRecovery({email})).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});

@@ -6,6 +6,7 @@ import {RowSet, runQuery, DataRow} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import {hashString} from "Utils/StringUtils";
 import {TutorCreationSuccess} from "shared/Model/Tutor";
+import * as Logging from "Utils/Logging";
 
 describe("TutorRegistration", () => {
   stubExport(EmailUtils, "sendEmail", before, after);
@@ -15,8 +16,9 @@ describe("TutorRegistration", () => {
       it("throws with the appropriate error message", async () => {
         const session = {userId: undefined};
         const params = {email: "", password: "secret", fullName: "John DOE"};
+        const result = await TutorRegistration(params, session);
 
-        await expect(TutorRegistration(params, session)).to.eventually.deep.equal({
+        expect(result).to.deep.equal({
           kind: "EmailError",
           errorCode: "REQUIRED",
         });
@@ -25,8 +27,9 @@ describe("TutorRegistration", () => {
       it("throws with the appropriate error message", async () => {
         const session = {userId: undefined};
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
+        const result = await TutorRegistration(params, session);
 
-        await expect(TutorRegistration(params, session)).to.eventually.deep.equal({
+        expect(result).to.deep.equal({
           kind: "PasswordError",
           errorCode: "REQUIRED",
         });
@@ -72,11 +75,16 @@ describe("TutorRegistration", () => {
     });
 
     context("when there is already a user like that", () => {
-      before(() => TutorRegistration(params, session));
-      after(() => runQuery({sql: "DELETE FROM users", params: []}));
+      // Silence this: ER_DUP_ENTRY "Duplicate entry 'some@email.com' for key 'email'"
+      stubExport(Logging, "logError", before, after); // Silence
+
+      beforeEach(() => TutorRegistration(params, session));
+      afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("trows with an appropriate error message", async () => {
-        await expect(TutorRegistration(params, session)).to.eventually.deep.equal({
+        const result = await TutorRegistration(params, session);
+
+        expect(result).to.deep.equal({
           kind: "ModelError",
           errorCode: "EMAIL_TAKEN",
         });

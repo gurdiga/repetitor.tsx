@@ -55,5 +55,5 @@ describe("TutorLogin", () => {
     expect(session.userId).to.equal(userId);
   });
 
-  afterEach(async () => await runQuery({sql: "DELETE FROM users", params: []}));
+  afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
 });
