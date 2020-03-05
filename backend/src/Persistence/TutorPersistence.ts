@@ -2,7 +2,6 @@ import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/Model/L
 import {TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
 import {DbError, SystemError} from "shared/Model/Utils";
 import {runQuery, InsertResult, RowSet} from "Utils/Db";
-import {logError} from "Utils/Logging";
 import {EmailExists, RecoveryToken} from "shared/Model/TutorPasswordRecovery";
 import {genRandomString} from "Utils/StringUtils";
 
@@ -27,8 +26,6 @@ export async function createTutor(
       case "ER_DUP_ENTRY":
         return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
       default:
-        logError("DbError", error);
-
         return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
     }
   }
@@ -63,8 +60,6 @@ export async function checkLoginInfo(
       return {kind: "UnknownEmailError"};
     }
   } catch (error) {
-    logError("DbError", error);
-
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -92,8 +87,6 @@ export async function checkIfEmailExists(email: string): Promise<EmailExists | U
       return {kind: "UnknownEmailError"};
     }
   } catch (error) {
-    logError("DbError", error);
-
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -116,8 +109,6 @@ export async function createTutorPasswordRecoveryToken(userId: number): Promise<
       token,
     };
   } catch (error) {
-    logError(error);
-
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }

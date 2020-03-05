@@ -1,5 +1,6 @@
 import * as mysql from "mysql";
 import {requireEnvVar} from "Utils/Env";
+import {logError} from "Utils/Logging";
 
 export interface DataRow {
   [fieldName: string]: any;
@@ -33,6 +34,7 @@ export function runQuery(query: ParametrizedQuery): Promise<Result> {
   return new Promise<Result>((resolve, reject) => {
     connectionPool.query({sql: query.sql, values: query.params, timeout: 20000}, function(error, result, _fields) {
       if (error) {
+        logError(error);
         reject(error);
       } else {
         if ("insertId" in result) {
