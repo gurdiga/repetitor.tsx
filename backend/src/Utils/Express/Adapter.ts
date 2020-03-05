@@ -13,7 +13,7 @@ const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 
 type HttpRequest = Pick<express.Request, "path" | "body" | "csrfToken" | "session">;
-type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
+type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set" | "redirect">;
 
 export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
   const {scenarioName, scenarioInput} = req.body;
@@ -116,6 +116,11 @@ const htmlTemplate = `<!DOCTYPE html>
 `;
 
 export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
+  if (!req.path.endsWith("/")) {
+    res.redirect(301, `${req.path}/`);
+    return;
+  }
+
   let pagePathName = req.path.replace(/^\/|\/$/g, ""); // strip the slashes on both ends
 
   if (pagePathName === "") {

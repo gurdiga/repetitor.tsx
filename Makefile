@@ -7,12 +7,13 @@ test: test-backend test-frontend
 
 test-backend: node_modules
 	@set -e
-	shopt -s globstar # This is required for something/**/*Test.ts to work properly (?!)
 	source .env.test
 	DEBUG=app:none \
 	TS_NODE_PROJECT=backend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
-	~/.nvm/nvm-exec node_modules/.bin/mocha \
+	~/.nvm/nvm-exec \
+	node --no-deprecation `# avoid "DeprecationWarning: OutgoingMessage.prototype._headers is deprecated" caused by timed-out` \
+	node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
 		--reporter dot \
@@ -156,6 +157,7 @@ l: lint
 
 migrate:
 	@set -e
+	if [ "$$NODE_ENV" ]; then source .env.$$NODE_ENV else source .env; fi
 	db-migrate $${DIRECTION:-up} \
 		--verbose \
 		--env $$NODE_ENV \
@@ -170,10 +172,10 @@ mdown:
 
 migration:
 	@set -e
-	if [ "$$ENV" ]; then source .env.$$ENV else source .env; fi
+	if [ "$$NODE_ENV" ]; then source .env.$$NODE_ENV else source .env; fi
 	read -p "Migration title: " MIGRATION_TITLE
 	db-migrate create $$MIGRATION_TITLE \
-		--env $${ENV:-development} \
+		--env $${NODE_ENV:-development} \
 		--config backend/migrations/config.json \
 		--migrations-dir backend/migrations
 

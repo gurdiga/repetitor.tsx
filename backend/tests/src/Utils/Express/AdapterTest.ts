@@ -57,8 +57,8 @@ describe("Express integration", () => {
   <script>
     requirejs.config({
       paths: {
-  "react": "/vendor_modules/react-16.12.0",
-  "react-dom": "/vendor_modules/react-dom-16.12.0",
+  "react": "/vendor_modules/react-16.13.0",
+  "react-dom": "/vendor_modules/react-dom-16.13.0",
   "typestyle": "/vendor_modules/typestyle-2.0.4",
   "csx": "/vendor_modules/csx-10.0.1",
   "csstips": "/vendor_modules/csstips-1.2.0",
@@ -127,8 +127,8 @@ describe("Express integration", () => {
   describe("serving of vendor modules", () => {
     it("correctly computes the golden samples", () => {
       expect(versionedVendorModulePaths).to.deep.equal({
-        "react-16.12.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
-        "react-dom-16.12.0.js":
+        "react-16.13.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
+        "react-dom-16.13.0.js":
           "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react-dom/umd/react-dom.production.min.js",
         "typestyle-2.0.4.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/typestyle/umd/typestyle.min.js",
         "csx-10.0.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csx/umd/csx.min.js",
@@ -138,8 +138,8 @@ describe("Express integration", () => {
       });
 
       expect(webPathsForVendorModules).to.deep.equal({
-        react: `/vendor_modules/react-16.12.0`,
-        "react-dom": `/vendor_modules/react-dom-16.12.0`,
+        react: `/vendor_modules/react-16.13.0`,
+        "react-dom": `/vendor_modules/react-dom-16.13.0`,
         typestyle: `/vendor_modules/typestyle-2.0.4`,
         csx: `/vendor_modules/csx-10.0.1`,
         csstips: `/vendor_modules/csstips-1.2.0`,
@@ -185,7 +185,7 @@ describe("Express integration", () => {
   });
 
   it("responds with 404 on non-existend paths", async () => {
-    res = await agent.get("/nonexistent");
+    res = await agent.get("/nonexistent/");
 
     expect(res).to.be.text;
     expect(res).to.have.status(404);
@@ -207,6 +207,11 @@ describe("Express integration", () => {
     ];
 
     expect(middlewareNames).to.include.members(expectedMiddlewareNames);
+  });
+
+  it("adds a trailing slash when missing", async () => {
+    res = await agent.get("/recuperare-parola");
+    expect(res).to.redirectTo(/\/recuperare-parola\/$/);
   });
 
   function stripMilliseconds(d: Date): string {
