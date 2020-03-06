@@ -1,12 +1,12 @@
 import {expect} from "chai";
-import {TutorPasswordRecovery} from "ScenarioHandlers/TutorPasswordRecovery";
+import {TutorPasswordReset} from "ScenarioHandlers/TutorPasswordReset";
 import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
 import {runQuery, RowSet} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import Sinon = require("sinon");
 import {Stub} from "TestHelpers";
 
-describe("TutorPasswordRecovery", () => {
+describe("TutorPasswordReset", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
 
   beforeEach(() => {
@@ -21,17 +21,17 @@ describe("TutorPasswordRecovery", () => {
 
   it("validates the email", async () => {
     let email = "";
-    expect(await TutorPasswordRecovery({email})).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
+    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
 
     email = "42";
-    expect(await TutorPasswordRecovery({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
+    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
 
     email = "invalid@email";
-    expect(await TutorPasswordRecovery({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
+    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
   });
 
   it("tells when the email is not recognized", async () => {
-    expect(await TutorPasswordRecovery({email: "some@email.com"})).to.deep.equal({kind: "UnknownEmailError"});
+    expect(await TutorPasswordReset({email: "some@email.com"})).to.deep.equal({kind: "UnknownEmailError"});
   });
 
   it("succeeds when the email is recognized", async () => {
@@ -40,12 +40,12 @@ describe("TutorPasswordRecovery", () => {
     await TutorRegistration({fullName: "Joe DOE", email, password: "secret"}, {});
     sendEmailStub.resetHistory(); // ignore the registration email
 
-    expect(await TutorPasswordRecovery({email})).to.deep.equal({kind: "TutorPasswordRecoveryEmailSent"});
+    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
     expect(await doesTokenExist(email), "token created").to.be.true;
-    expect(hasSentTheRecoveryEmail(email), "has sent the email").to.be.true;
+    expect(hasSentTheResetEmail(email), "has sent the email").to.be.true;
   });
 
-  function hasSentTheRecoveryEmail(email: string): boolean {
+  function hasSentTheResetEmail(email: string): boolean {
     return sendEmailStub.calledOnceWith(email, "Recuperarea parolei în Repetitor.md", Sinon.match.string);
   }
 
@@ -53,8 +53,8 @@ describe("TutorPasswordRecovery", () => {
     const {rows} = (await runQuery({
       sql: `
         SELECT token
-        FROM passsword_recovery_tokens
-        LEFT JOIN users ON passsword_recovery_tokens.userId = users.id
+        FROM passsword_reset_tokens
+        LEFT JOIN users ON passsword_reset_tokens.userId = users.id
         WHERE users.email = ?
         `,
       params: [email],

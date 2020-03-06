@@ -64,7 +64,7 @@ function renderLoginForm() {
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={passwordErrorMessages}
             info={
-              <a className={LostPasswordLink} href={PagePath.TutorPasswordRecovery}>
+              <a className={LostPasswordLink} href={PagePath.TutorPasswordReset}>
                 Recuperarea parolei
               </a>
             }

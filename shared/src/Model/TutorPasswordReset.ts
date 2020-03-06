@@ -1,17 +1,17 @@
-import {TutorPasswordRecoveryInput} from "shared/Scenarios/TutorPasswordRecovery";
+import {TutorPasswordResetInput} from "shared/Scenarios/TutorPasswordReset";
 import {validateWithRules} from "shared/Utils/Validation";
 import {UserEmailValidationRules, EmailError} from "shared/Model/Email";
 import {DataProps} from "shared/Model/Utils";
 
-export interface TutorPasswordRecovery {
-  kind: "TutorPasswordRecovery";
+export interface TutorPasswordReset {
+  kind: "TutorPasswordReset";
   email: string;
 }
 
-export type TutorPasswordRecoveryPropName = keyof DataProps<TutorPasswordRecovery>;
+export type TutorPasswordResetPropName = keyof DataProps<TutorPasswordReset>;
 
-export interface TutorPasswordRecoveryEmailSent {
-  kind: "TutorPasswordRecoveryEmailSent";
+export interface TutorPasswordResetEmailSent {
+  kind: "TutorPasswordResetEmailSent";
 }
 
 export type EmailExists = {
@@ -20,14 +20,12 @@ export type EmailExists = {
   fullName: string;
 };
 
-export type RecoveryToken = {
-  kind: "RecoveryToken";
+export type PasswordResetToken = {
+  kind: "PasswordResetToken";
   token: string;
 };
 
-export function makeTutorPasswordRecoveryFromInput(
-  input: TutorPasswordRecoveryInput
-): TutorPasswordRecovery | EmailError {
+export function makeTutorPasswordResetFromInput(input: TutorPasswordResetInput): TutorPasswordReset | EmailError {
   const emailValidationResult = validateWithRules(input.email, UserEmailValidationRules);
 
   if (emailValidationResult.kind === "Invalid") {
@@ -35,7 +33,7 @@ export function makeTutorPasswordRecoveryFromInput(
   }
 
   return {
-    kind: "TutorPasswordRecovery",
+    kind: "TutorPasswordReset",
     email: emailValidationResult.value,
   };
 }

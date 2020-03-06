@@ -2,7 +2,7 @@ import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/Model/L
 import {TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
 import {DbError, SystemError} from "shared/Model/Utils";
 import {runQuery, InsertResult, RowSet} from "Utils/Db";
-import {EmailExists, RecoveryToken} from "shared/Model/TutorPasswordRecovery";
+import {EmailExists, PasswordResetToken} from "shared/Model/TutorPasswordReset";
 import {genRandomString} from "Utils/StringUtils";
 
 export async function createTutor(
@@ -91,21 +91,21 @@ export async function checkIfEmailExists(email: string): Promise<EmailExists | U
   }
 }
 
-export async function createTutorPasswordRecoveryToken(userId: number): Promise<RecoveryToken | DbError> {
+export async function createTutorPasswordResetToken(userId: number): Promise<PasswordResetToken | DbError> {
   const token = genRandomString(16);
   const timestamp = Date.now();
 
   try {
     await runQuery({
       sql: `
-            INSERT INTO passsword_recovery_tokens (userId, token, timestamp)
+            INSERT INTO passsword_reset_tokens (userId, token, timestamp)
             VALUES(?, ?, ?)
            `,
       params: [userId, token, timestamp],
     });
 
     return {
-      kind: "RecoveryToken",
+      kind: "PasswordResetToken",
       token,
     };
   } catch (error) {

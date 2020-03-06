@@ -7,18 +7,18 @@ import {ServerResponse, placeholderServerResponse, runScenario, ResponseState} f
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {UserEmailValidationRules, emailErrorMessages} from "shared/Model/Email";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import {TutorPasswordRecoveryPropName} from "shared/Model/TutorPasswordRecovery";
+import {TutorPasswordResetPropName} from "shared/Model/TutorPasswordReset";
 import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
 
-export function TutorPasswordRecoveryPage(props: PageProps) {
+export function TutorPasswordResetPage(props: PageProps) {
   const [email, updateEmail] = React.useState(getEmailFromPageProps(props));
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
-    <PageLayout title="Recuperarea parolei">
+    <PageLayout title="Resetarea parolei">
       {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
         <Form
           fields={[
@@ -51,19 +51,19 @@ export function TutorPasswordRecoveryPage(props: PageProps) {
     </PageLayout>
   );
 
-  async function maybeSubmitForm(fields: Record<TutorPasswordRecoveryPropName, ValidatedValue<string>>): Promise<void> {
+  async function maybeSubmitForm(fields: Record<TutorPasswordResetPropName, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some(f => !f.isValid);
 
     if (anyInvalidField) {
       return;
     }
 
-    const response = await runScenario("TutorPasswordRecovery", {email: fields.email.value});
+    const response = await runScenario("TutorPasswordReset", {email: fields.email.value});
     let responseState: ResponseState;
     let responseText: string;
 
     switch (response.kind) {
-      case "TutorPasswordRecoveryEmailSent":
+      case "TutorPasswordResetEmailSent":
         [responseState, responseText] = [
           ResponseState.ReceivedSuccess,
           "Am trimis un mesaj cu instrucțiuni de recuperare a parolei.",
