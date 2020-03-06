@@ -46,7 +46,7 @@ describe("TutorPasswordReset", () => {
   });
 
   function hasSentTheResetEmail(email: string): boolean {
-    return sendEmailStub.calledOnceWith(email, "Recuperarea parolei în Repetitor.md", Sinon.match.string);
+    return sendEmailStub.calledOnceWith(email, "Resetarea parolei în Repetitor.md", Sinon.match.string);
   }
 
   async function doesTokenExist(email: string): Promise<boolean> {

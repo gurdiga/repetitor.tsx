@@ -67,7 +67,7 @@ describe("<TutorPasswordResetPage/>", () => {
         const [submitButton] = wrapper.find(Form).props().actionButtons;
 
         expectProps<typeof SubmitButton>("submit button", submitButton, {
-          label: "Recuperează parola",
+          label: "Trimite instrucțiuni",
         });
       });
 

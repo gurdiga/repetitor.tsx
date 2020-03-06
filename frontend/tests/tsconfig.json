@@ -7,7 +7,7 @@
     "../pages/home/src",
     "../pages/autentificare-repetitor/src",
     "../pages/inregistrare-repetitor/src",
-    "../pages/recuperare-parola/src"
+    "../pages/resetare-parola/src"
   ],
   "compilerOptions": {
     "module": "commonjs",
@@ -18,7 +18,7 @@
         "src/*",
         "../pages/autentificare-repetitor/src/*",
         "../pages/inregistrare-repetitor/src/*",
-        "../pages/recuperare-parola/src/*",
+        "../pages/resetare-parola/src/*",
         "../pages/home/src/*"
       ],
       "shared/*": ["../../shared/src/*"],

@@ -210,8 +210,8 @@ describe("Express integration", () => {
   });
 
   it("adds a trailing slash when missing", async () => {
-    res = await agent.get("/recuperare-parola");
-    expect(res).to.redirectTo(/\/recuperare-parola\/$/);
+    res = await agent.get("/resetare-parola");
+    expect(res).to.redirectTo(/\/resetare-parola\/$/);
   });
 
   function stripMilliseconds(d: Date): string {

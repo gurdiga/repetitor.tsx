@@ -37,7 +37,7 @@ export async function TutorPasswordReset(input: Scenario["Input"]): Promise<Scen
 }
 
 function sendTutorPasswordResetEmail(email: string, fullName: string, userId: number, token: string): void {
-  const subject = `Recuperarea parolei în ${requireEnvVar("APP_NAME")}`;
+  const subject = `Resetarea parolei în ${requireEnvVar("APP_NAME")}`;
   const html = getMessage(fullName, userId, token);
 
   sendEmail(email, subject, html);
@@ -45,7 +45,7 @@ function sendTutorPasswordResetEmail(email: string, fullName: string, userId: nu
 
 function getMessage(fullName: string, userId: number, token: string): string {
   // TODO: Move PageNavigation to shared and use it here.
-  const passwordResetLink = `/recuperare-parola?token=${token}&userId=${userId}`;
+  const passwordResetLink = `/resetare-parola?token=${token}&userId=${userId}`;
 
   return `
     Dragă ${fullName},

@@ -36,7 +36,7 @@ export function TutorPasswordResetPage(props: PageProps) {
           ]}
           actionButtons={[
             <SubmitButton
-              label="Recuperează parola"
+              label="Trimite instrucțiuni"
               onClick={async () => {
                 toggleValidationMessage(true);
                 return await maybeSubmitForm({email});
@@ -66,7 +66,7 @@ export function TutorPasswordResetPage(props: PageProps) {
       case "TutorPasswordResetEmailSent":
         [responseState, responseText] = [
           ResponseState.ReceivedSuccess,
-          "Am trimis un mesaj cu instrucțiuni de recuperare a parolei.",
+          "Am trimis un mesaj cu instrucțiuni de resetare a parolei.",
         ];
         break;
       case "EmailError":

@@ -2,7 +2,7 @@ export enum PagePath {
   Home = "/",
   TutorRegistration = "/inregistrare-repetitor/",
   TutorLogin = "/autentificare-repetitor/",
-  TutorPasswordReset = "/recuperare-parola/",
+  TutorPasswordReset = "/resetare-parola/",
 }
 
 export function navigateToPage(pagePath: PagePath): void {
