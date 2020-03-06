@@ -132,10 +132,18 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const session = (req.session as any) as UserSession;
     const pageProps = pagePropsFromSession(session);
 
-    const html = htmlTemplate
-      .replace("MAIN_MODULE_PATH", requireModulePath)
-      .replace("CSRF_TOKEN", req.csrfToken())
-      .replace("PAGE_PROPS", JSON.stringify(pageProps, null, "  "));
+    const html =
+      htmlTemplate
+        .replace("MAIN_MODULE_PATH", requireModulePath)
+        .replace("CSRF_TOKEN", req.csrfToken())
+        .replace("PAGE_PROPS", JSON.stringify(pageProps, null, "  ")) +
+      `<!-- ${JSON.stringify(
+        Object.keys(process.env)
+          .filter(v => v.startsWith("HEROKU_"))
+          .map(v => [v, process.env[v]]),
+        null,
+        "  "
+      )} -->`;
 
     if (isTestEnvironment()) {
       // To use in tests.
