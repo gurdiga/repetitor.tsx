@@ -156,8 +156,8 @@ lint:
 l: lint
 
 migrate:
-	@set -e
-	if [ "$$NODE_ENV" ]; then source .env.$$NODE_ENV else source .env; fi
+	@set -ex
+	if [ ! "$$NODE_ENV" ] || [ "$$NODE_ENV" == "development" ]; then source .env; else source .env.$$NODE_ENV; fi
 	db-migrate $${DIRECTION:-up} \
 		--verbose \
 		--env $$NODE_ENV \
@@ -172,7 +172,7 @@ mdown:
 
 migration:
 	@set -e
-	if [ "$$NODE_ENV" ]; then source .env.$$NODE_ENV else source .env; fi
+	if [ ! "$$NODE_ENV" ] || [ "$$NODE_ENV" == "development" ]; then source .env; else source .env.$$NODE_ENV; fi
 	read -p "Migration title: " MIGRATION_TITLE
 	db-migrate create $$MIGRATION_TITLE \
 		--env $${NODE_ENV:-development} \
@@ -183,7 +183,7 @@ mnew: migration
 
 sql:
 	@set -e
-	if [ "$$NODE_ENV" ]; then source .env.$$NODE_ENV else source .env; fi
+	if [ ! "$$NODE_ENV" ] || [ "$$NODE_ENV" == "development" ]; then source .env; else source .env.$$NODE_ENV; fi
 	mysql --host $$APP_DB_HOST --user $$APP_DB_USER --password=$$APP_DB_PASSWORD $$APP_DB_NAME
 
 h-env:
