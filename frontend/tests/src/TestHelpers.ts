@@ -39,7 +39,7 @@ export function expectToRenderSnapshot(testFileName: string, wrapper: Wrapper<an
   const snapshotContent = wrapper.debug();
 
   if (fs.existsSync(snapshotFile)) {
-    const assertionMessage = `Snapshot file: ${snapshotFile}`;
+    const assertionMessage = `Snapshot file: [ ${snapshotFile} ]`;
     expect(fs.readFileSync(snapshotFile, "utf8"), assertionMessage).to.equal(snapshotContent);
   } else {
     fs.writeFileSync(snapshotFile, snapshotContent);
