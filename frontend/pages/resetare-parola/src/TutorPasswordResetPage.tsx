@@ -19,6 +19,10 @@ export function TutorPasswordResetPage(props: PageProps) {
 
   return (
     <PageLayout title="Resetarea parolei">
+      <p>
+        Pentru a reseta parola, introduceți adresa de email pe care ați folosit-o la înregistare. Veți primi un mesaj cu
+        instrucțiuni.
+      </p>
       {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
         <Form
           fields={[
