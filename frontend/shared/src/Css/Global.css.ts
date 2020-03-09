@@ -1,5 +1,5 @@
 import {normalize, setupPage} from "csstips";
-import {ResetCss} from "frontend/shared/Css/Reset.css";
+import {cssRule} from "typestyle";
 
 const rootElementSelector = "#root";
 
@@ -10,6 +10,24 @@ export namespace GlobalCss {
     setupPage(rootElementSelector);
 
     // App styles
-    ResetCss.rules(rootElementSelector);
+    setDefaultFontFamily(rootElementSelector);
   }
+}
+
+function setDefaultFontFamily(rootElementSelector: string) {
+  cssRule(rootElementSelector, {
+    fontFamily: [
+      "sans-serif",
+      "'Helvetica Neue'",
+      "'Droid Sans'",
+      "'Fira Sans'",
+      "Cantarell",
+      "Ubuntu",
+      "Oxygen",
+      "Roboto",
+      "'Segoe UI'",
+      "BlinkMacSystemFont",
+      "-apple-system",
+    ],
+  });
 }
