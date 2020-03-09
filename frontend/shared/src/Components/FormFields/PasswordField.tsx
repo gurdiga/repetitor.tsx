@@ -6,6 +6,7 @@ import {PasswordGenerator} from "frontend/shared/PasswordGenerator";
 import * as React from "react";
 import {getValidationErrorCode} from "shared/Utils/Validation";
 import {TextFieldCss} from "frontend/shared/Components/FormFields/TextField.css";
+import {Label} from "frontend/shared/Components/FormFields/Label";
 
 interface Props extends FormField.CommonProps {
   hasGenerateButton?: boolean;
@@ -41,7 +42,7 @@ export function PasswordField(props: Props) {
 
   return (
     <>
-      <label htmlFor={id}>{label}:</label>
+      <Label htmlFor={id}>{label}:</Label>
 
       <span className={PasswordFieldCss.InputContainer}>
         <input

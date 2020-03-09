@@ -3,6 +3,6 @@ import {style} from "typestyle";
 import {em} from "csx";
 
 export namespace TextFieldCss {
-  export const Input = style(InputCss.InputStyle);
-  export const Info = style({fontSize: em(0.75), margin: 0});
+  export const Input = style({$debugName: "Input"}, InputCss.Input);
+  export const Info = style({$debugName: "Info", fontSize: em(0.75), margin: 0});
 }

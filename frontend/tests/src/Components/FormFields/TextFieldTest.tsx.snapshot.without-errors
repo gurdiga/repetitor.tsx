@@ -1,10 +1,10 @@
 <Fragment>
-  <label htmlFor="firstName">
+  <Label htmlFor="firstName">
     First name
     :
-  </label>
-  <input type="text" id="firstName" autoFocus={false} value="" onInput={[Function]} className="frq3ztx" />
-  <p className="f1h3qb4v">
+  </Label>
+  <input type="text" id="firstName" autoFocus={false} value="" onInput={[Function]} className="Input_f5ffsu7" />
+  <p className="Info_f1h3qb4v">
     Va fi afișat pe pagina dumneavoastră de profil
   </p>
 </Fragment>

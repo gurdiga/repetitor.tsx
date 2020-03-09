@@ -10,3 +10,9 @@ export namespace UtilsCss {
     },
   });
 }
+
+export const removeListStyle: NestedCSSProperties = {
+  margin: 0,
+  padding: 0,
+  listStyleType: "none",
+};

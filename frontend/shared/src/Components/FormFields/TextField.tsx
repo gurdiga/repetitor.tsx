@@ -4,6 +4,7 @@ import {ValidationMessage} from "frontend/shared/Components/FormFields/Validatio
 import {FormValidation} from "frontend/shared/FormValidation";
 import * as React from "react";
 import {getValidationErrorCode} from "shared/Utils/Validation";
+import {Label} from "frontend/shared/Components/FormFields/Label";
 
 interface Props extends FormField.CommonProps {
   inputType?: InputType;
@@ -22,7 +23,7 @@ export function TextField(props: Props) {
 
   return (
     <>
-      <label htmlFor={id}>{label}:</label>
+      <Label htmlFor={id}>{label}:</Label>
       <input
         type={inputType || "text"}
         id={id}

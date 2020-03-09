@@ -11,7 +11,7 @@ export namespace PasswordFieldCss {
 
   const eyeSize = em(2);
 
-  export const Input = style(InputCss.InputStyle, {
+  export const Input = style(InputCss.Input, {
     $debugName: "Input",
     width: percent(100),
     fontFamily: "monospace",
