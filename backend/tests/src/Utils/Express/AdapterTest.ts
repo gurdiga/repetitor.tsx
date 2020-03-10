@@ -71,7 +71,7 @@ describe("Express integration", () => {
       requirejs(["frontend/pages/home/src/Main"], function(page) {
         page.main({
   "isAuthenticated": false
-});
+}, location.search);
       });
     });
   </script>

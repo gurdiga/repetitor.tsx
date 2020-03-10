@@ -108,7 +108,7 @@ const htmlTemplate = `<!DOCTYPE html>
 
     requirejs(["bundle"], function() {
       requirejs(["MAIN_MODULE_PATH"], function(page) {
-        page.main(PAGE_PROPS);
+        page.main(PAGE_PROPS, location.search);
       });
     });
   </script>
