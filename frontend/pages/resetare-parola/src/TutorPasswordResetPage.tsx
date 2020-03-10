@@ -11,6 +11,7 @@ import {TutorPasswordResetPropName} from "shared/Model/TutorPasswordReset";
 import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
 import {QueryStringParams} from "frontend/shared/Utils/QueryStringParams";
+import {Spinner} from "frontend/shared/Components/Spinner";
 
 interface TutorPasswordResetPageProps extends PageProps {
   params: QueryStringParams;
@@ -114,8 +115,18 @@ function renderStep1(props: PageProps) {
 }
 
 function renderStep2(token: string) {
+  /**
+   * TODO:
+   * - Show a spinner
+   * - make a request to verify the token
+   *
+   * */
+
   return (
     <>
+      <div>before</div>
+      <Spinner />
+      <div>after</div>
       <p>token: {token}</p>
     </>
   );
