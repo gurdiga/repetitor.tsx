@@ -4,6 +4,7 @@ SHELL=bash
 default: test-backend
 
 test: test-backend test-frontend
+t: test
 
 test-backend: node_modules
 	@set -e
@@ -20,6 +21,7 @@ test-backend: node_modules
 		--file backend/tests/src/TestHelpers.ts \
 		--exit `# this is related to chai-http hanging Mocha` \
 		$${FILES:-'backend/tests/**/*Test.ts'}
+tb: test-backend
 
 test-frontend: node_modules
 	@set -e
@@ -31,6 +33,7 @@ test-frontend: node_modules
 		--reporter dot \
 		--file frontend/tests/src/TestHelpers.ts \
 		$${FILES:-'frontend/tests/**/*Test.ts?'}
+tf: test-frontend
 
 c: build
 .PHONY: build
