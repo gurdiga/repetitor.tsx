@@ -17,7 +17,7 @@ describe("<TutorPasswordResetPage/>", () => {
   let wrapper: Wrapper<typeof TutorPasswordResetPage>;
 
   beforeEach(() => {
-    wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} />);
+    wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
   });
 
   context("when form is not yet submitted", () => {
@@ -35,7 +35,7 @@ describe("<TutorPasswordResetPage/>", () => {
         const email = "some@email.com";
 
         beforeEach(() => {
-          wrapper = shallow(<TutorPasswordResetPage isAuthenticated={true} email={email} />);
+          wrapper = shallow(<TutorPasswordResetPage isAuthenticated={true} email={email} params={{}} />);
         });
 
         it("renders text field pre-fileld with the email of authenticated user", () => {
@@ -106,7 +106,7 @@ describe("<TutorPasswordResetPage/>", () => {
         });
 
         function submitEmailValue(emailValue: ValidatedValue<string>) {
-          const wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} />);
+          const wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
           const formProps = () => wrapper.find(Form).props();
           const emailField: Comp<typeof TextField> = formProps().fields[0];
 
@@ -126,7 +126,7 @@ describe("<TutorPasswordResetPage/>", () => {
 
   context("after submitting the form", () => {
     beforeEach(() => {
-      wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} />);
+      wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
     });
 
     context("when server fulfills the request", () => {

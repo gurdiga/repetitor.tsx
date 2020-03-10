@@ -10,15 +10,26 @@ import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 import {TutorPasswordResetPropName} from "shared/Model/TutorPasswordReset";
 import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
+import {QueryStringParams} from "frontend/shared/Utils/QueryStringParams";
 
-export function TutorPasswordResetPage(props: PageProps) {
+interface TutorPasswordResetPageProps extends PageProps {
+  params: QueryStringParams;
+}
+
+export function TutorPasswordResetPage(props: TutorPasswordResetPageProps) {
+  const {token} = props.params;
+
+  return <PageLayout title="Resetarea parolei">{token ? renderStep2(token) : renderStep1(props)}</PageLayout>;
+}
+
+function renderStep1(props: PageProps) {
   const [email, updateEmail] = React.useState(getEmailFromPageProps(props));
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
   return (
-    <PageLayout title="Resetarea parolei">
+    <>
       <p>
         Pentru a reseta parola, introduceți adresa de email pe care ați folosit-o la înregistare. Veți primi un mesaj cu
         instrucțiuni.
@@ -52,7 +63,7 @@ export function TutorPasswordResetPage(props: PageProps) {
       {serverResponse.shouldShow && (
         <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
       )}
-    </PageLayout>
+    </>
   );
 
   async function maybeSubmitForm(fields: Record<TutorPasswordResetPropName, ValidatedValue<string>>): Promise<void> {
@@ -100,6 +111,14 @@ export function TutorPasswordResetPage(props: PageProps) {
       shouldShow: true,
     });
   }
+}
+
+function renderStep2(token: string) {
+  return (
+    <>
+      <p>token: {token}</p>
+    </>
+  );
 }
 
 function getEmailFromPageProps(props: PageProps): ValidatedValue<string> {
