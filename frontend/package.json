@@ -16,7 +16,7 @@
     "react": "16.13.0",
     "react-dom": "16.13.0",
     "requirejs": "^2.3.6",
-    "rollbar": "^2.14.4",
+    "rollbar": "2.15.0",
     "typestyle": "^2.0.4"
   }
 }

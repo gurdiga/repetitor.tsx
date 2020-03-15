@@ -15,7 +15,7 @@
   },
   "repository": "github:user/repo",
   "devDependencies": {
-    "@types/chai": "4.2.10",
+    "@types/chai": "4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "7.0.2",
     "@types/sinon": "7.5.2",
@@ -23,11 +23,11 @@
     "chai-as-promised": "^7.1.1",
     "mocha": "7.1.0",
     "nodemon": "^2.0.2",
-    "sinon": "9.0.0"
+    "sinon": "9.0.1"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "2.22.0",
-    "@typescript-eslint/parser": "2.22.0",
+    "@typescript-eslint/eslint-plugin": "2.23.0",
+    "@typescript-eslint/parser": "2.23.0",
     "db-migrate": "0.11.6",
     "db-migrate-mysql": "2.1.1",
     "eslint": "^6.8.0",
