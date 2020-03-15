@@ -9,7 +9,7 @@ export interface ValidatedValue<V extends UserValue = UserValue> {
   isValid: boolean;
 }
 
-export const initialFieldValue: ValidatedValue<string> = {
+export const emptyFieldValue: ValidatedValue<string> = {
   value: "",
   isValid: false,
 };

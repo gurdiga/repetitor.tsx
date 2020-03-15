@@ -31,9 +31,10 @@ export namespace PasswordFieldCss {
     position: "absolute",
     transform: "translateX(-115%)",
     transition: "opacity 0.5s 0.25s",
+    opacity: 0.2,
     $nest: {
       "&:hover": {
-        opacity: 0.1,
+        opacity: 0.8,
       },
     },
   });

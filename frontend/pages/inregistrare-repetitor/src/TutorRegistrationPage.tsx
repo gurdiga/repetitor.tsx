@@ -16,7 +16,7 @@ import {assertNever} from "shared/Utils/Language";
 import {PageProps} from "shared/Utils/PageProps";
 import {
   ErrorMessages,
-  initialFieldValue,
+  emptyFieldValue,
   UserValue,
   ValidatedValue,
   ValidationMessages,
@@ -41,9 +41,9 @@ function renderAlreadyLoggedState() {
 }
 
 function renderLoginForm() {
-  const [fullName, updateFullName] = React.useState(initialFieldValue);
-  const [email, updateEmail] = React.useState(initialFieldValue);
-  const [password, updatePassword] = React.useState(initialFieldValue);
+  const [fullName, updateFullName] = React.useState(emptyFieldValue);
+  const [email, updateEmail] = React.useState(emptyFieldValue);
+  const [password, updatePassword] = React.useState(emptyFieldValue);
   const [hasAcceptUserLicenceAgreement, acceptUserLicenceAgreement] = React.useState(userLicenceAgreementInitialValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);

@@ -11,7 +11,7 @@ import {passwordErrorMessages, UserPasswordValidationRules} from "shared/Model/P
 import {dbErrorMessages} from "shared/Model/Utils";
 import {TutorLoginInput} from "shared/Scenarios/TutorLogin";
 import {assertNever} from "shared/Utils/Language";
-import {initialFieldValue, ValidatedValue} from "shared/Utils/Validation";
+import {emptyFieldValue, ValidatedValue} from "shared/Utils/Validation";
 import {PageProps} from "shared/Utils/PageProps";
 import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
 import {LostPasswordLink} from "TutorLoginPage.css";
@@ -34,8 +34,8 @@ function renderAlreadyLoggedState() {
 }
 
 function renderLoginForm() {
-  const [email, updateEmail] = React.useState(initialFieldValue);
-  const [password, updatePassword] = React.useState(initialFieldValue);
+  const [email, updateEmail] = React.useState(emptyFieldValue);
+  const [password, updatePassword] = React.useState(emptyFieldValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);

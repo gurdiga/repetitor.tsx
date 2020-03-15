@@ -3,7 +3,9 @@ SHELL=bash
 
 default: test-backend
 
-test: test-backend test-frontend
+test:
+	make test-backend
+	make test-frontend
 t: test
 
 test-backend: node_modules
@@ -39,7 +41,7 @@ c: build
 .PHONY: build
 build: node_modules
 	~/.nvm/nvm-exec \
-	node_modules/.bin/tsc --build
+	node_modules/.bin/tsc --build -v
 
 watch: node_modules
 	~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w \

@@ -3,12 +3,12 @@ import {validateWithRules} from "shared/Utils/Validation";
 import {UserEmailValidationRules, EmailError} from "shared/Model/Email";
 import {DataProps} from "shared/Model/Utils";
 
-export interface TutorPasswordResetRequest {
-  kind: "TutorPasswordResetRequest";
+export interface TutorPasswordResetStep1 {
+  kind: "TutorPasswordResetRequest"; // TODO: rename to TutorPasswordResetStep1
   email: string;
 }
 
-export type TutorPasswordResetPropName = keyof DataProps<TutorPasswordResetRequest>;
+export type TutorPasswordResetStep1PropName = keyof DataProps<TutorPasswordResetStep1>;
 
 export interface TutorPasswordResetEmailSent {
   kind: "TutorPasswordResetEmailSent";
@@ -27,7 +27,7 @@ export type PasswordResetToken = {
 
 export function makeTutorPasswordResetRequestFromInput(
   input: TutorPasswordResetStep1Input
-): TutorPasswordResetRequest | EmailError {
+): TutorPasswordResetStep1 | EmailError {
   const emailValidationResult = validateWithRules(input.email, UserEmailValidationRules);
 
   if (emailValidationResult.kind === "Invalid") {

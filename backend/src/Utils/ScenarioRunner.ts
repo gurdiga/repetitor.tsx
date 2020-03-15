@@ -11,6 +11,7 @@ import {
   SessionAlteringScenarioName,
 } from "shared/ScenarioRegistry";
 import {TutorPasswordResetStep1} from "ScenarioHandlers/TutorPasswordResetStep1";
+import {TutorPasswordResetStep2} from "ScenarioHandlers/TutorPasswordResetStep2";
 
 const simpleScenarioHandlers: Record<SimpleScenarioName, SimpleScenarioHandler<any, any>> = {
   TestScenario,
@@ -21,6 +22,7 @@ const sessionAlteringScenarioHandlers: Record<SessionAlteringScenarioName, Sessi
   TutorRegistration,
   TutorLogin,
   Logout,
+  TutorPasswordResetStep2,
 };
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
