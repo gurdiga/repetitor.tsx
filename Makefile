@@ -71,38 +71,10 @@ edit:
 open:
 	open http://localhost:$(PORT)
 
-update:
-	@set -e
-	make --no-print-directory package.json-dirs \
-	| while read dir; do ( \
-		cd $$dir; \
-		~/.nvm/nvm-exec npm outdated \
-		| tail -n +2 \
-		| cut -f1 -d' ' \
-		| xargs -I{} ~/.nvm/nvm-exec npm install {}@latest; \
-	) done
-	make clean build test
-	echo -e "
-		Maybe do this:\n
-		git add package.json package-lock.json
-		git commit -am 'NPM packages update'
-	"
-
-outdated:
-	@set -e
-	make --no-print-directory package.json-dirs \
-	| while read dir; do ( \
-			echo "Checking for outdated packages in $$dir">>/dev/stderr; \
-			cd $$dir; \
-			~/.nvm/nvm-exec npm outdated; \
-	) done
-
-package.json-dirs:
-	@set -e
-	find . \
-		! -path '*/node_modules/*' \
-		-name package.json \
-	| xargs dirname
+npm-update:
+	npm --depth 9999 update
+	(cd backend && npm --depth 9999 update)
+	(cd frontend && npm --depth 9999 update)
 
 node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules backend/node_modules
 backend/node_modules: backend/package.json
