@@ -2,7 +2,7 @@ import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/Model/L
 import {TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
 import {DbError, SystemError} from "shared/Model/Utils";
 import {runQuery, InsertResult, RowSet} from "Utils/Db";
-import {EmailExists, PasswordResetToken} from "shared/Model/TutorPasswordReset";
+import {EmailExists, PasswordResetToken} from "shared/Model/TutorPasswordResetStep1";
 import {genRandomString} from "Utils/StringUtils";
 
 export async function createTutor(

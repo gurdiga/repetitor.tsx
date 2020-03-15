@@ -7,7 +7,7 @@ import {ServerResponse, placeholderServerResponse, runScenario, ResponseState} f
 import {TextField} from "frontend/shared/Components/FormFields/TextField";
 import {UserEmailValidationRules, emailErrorMessages} from "shared/Model/Email";
 import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import {TutorPasswordResetPropName} from "shared/Model/TutorPasswordReset";
+import {TutorPasswordResetPropName} from "shared/Model/TutorPasswordResetStep1";
 import {assertNever} from "shared/Utils/Language";
 import {dbErrorMessages} from "shared/Model/Utils";
 import {QueryStringParams} from "frontend/shared/Utils/QueryStringParams";
@@ -74,7 +74,7 @@ function renderStep1(props: PageProps) {
       return;
     }
 
-    const response = await runScenario("TutorPasswordReset", {email: fields.email.value});
+    const response = await runScenario("TutorPasswordResetStep1", {email: fields.email.value});
     let responseState: ResponseState;
     let responseText: string;
 

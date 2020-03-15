@@ -1,12 +1,12 @@
 import {expect} from "chai";
-import {TutorPasswordReset} from "ScenarioHandlers/TutorPasswordReset";
+import {TutorPasswordResetStep1} from "ScenarioHandlers/TutorPasswordResetStep1";
 import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
 import {runQuery, RowSet} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import Sinon = require("sinon");
 import {Stub} from "TestHelpers";
 
-describe("TutorPasswordReset", () => {
+describe("TutorPasswordResetStep1", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
 
   beforeEach(() => {
@@ -21,17 +21,17 @@ describe("TutorPasswordReset", () => {
 
   it("validates the email", async () => {
     let email = "";
-    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
+    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
 
     email = "42";
-    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
+    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
 
     email = "invalid@email";
-    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
+    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
   });
 
   it("tells when the email is not recognized", async () => {
-    expect(await TutorPasswordReset({email: "some@email.com"})).to.deep.equal({kind: "UnknownEmailError"});
+    expect(await TutorPasswordResetStep1({email: "some@email.com"})).to.deep.equal({kind: "UnknownEmailError"});
   });
 
   it("succeeds when the email is recognized", async () => {
@@ -40,7 +40,7 @@ describe("TutorPasswordReset", () => {
     await TutorRegistration({fullName: "Joe DOE", email, password: "secret"}, {});
     sendEmailStub.resetHistory(); // ignore the registration email
 
-    expect(await TutorPasswordReset({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
+    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
     expect(await doesTokenExist(email), "token created").to.be.true;
     expect(hasSentTheResetEmail(email), "has sent the email").to.be.true;
   });
