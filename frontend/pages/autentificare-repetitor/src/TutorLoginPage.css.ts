@@ -1,7 +1,7 @@
 import {style} from "typestyle";
 
-export const LostPasswordLink = style({
-  $debugName: "LostPasswordLink",
+export const ResetPasswordLinkContainer = style({
+  $debugName: "ResetPasswordLinkContainer",
   fontSize: "smaller",
   textAlign: "right",
 });

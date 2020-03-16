@@ -14,7 +14,7 @@ import {assertNever} from "shared/Utils/Language";
 import {emptyFieldValue, ValidatedValue} from "shared/Utils/Validation";
 import {PageProps} from "shared/Utils/PageProps";
 import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
-import {LostPasswordLink} from "TutorLoginPage.css";
+import {ResetPasswordLinkContainer} from "TutorLoginPage.css";
 
 export function TutorLoginPage(props: PageProps) {
   return (
@@ -64,9 +64,9 @@ function renderLoginForm() {
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={passwordErrorMessages}
             info={
-              <a className={LostPasswordLink} href={PagePath.TutorPasswordReset}>
-                Resetare parolă
-              </a>
+              <div className={ResetPasswordLinkContainer}>
+                <a href={PagePath.TutorPasswordReset}>Resetare parolă</a>
+              </div>
             }
           />,
         ]}
