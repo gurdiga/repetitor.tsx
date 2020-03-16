@@ -34,7 +34,16 @@ export type PasswordResetTokenUnknownError = {
   kind: "PasswordResetTokenUnknownError";
 };
 
-export function TutorPasswordResetStep2RequestFromInput(
+export type PasswordResetTokenVerified = {
+  kind: "PasswordResetTokenVerified";
+  userId: number;
+};
+
+export type PurgedExpiredTokens = {
+  kind: "PurgedExpiredTokens";
+};
+
+export function makeTutorPasswordResetStep2RequestFromInput(
   input: TutorPasswordResetStep2Input
 ): TutorPasswordResetStep2Request | PasswordResetTokenError | PasswordError {
   const tokenValidationResult = validateWithRules(input.token, PasswordResetTokenValidationRules);
@@ -43,15 +52,15 @@ export function TutorPasswordResetStep2RequestFromInput(
     return {kind: "PasswordResetTokenError", errorCode: tokenValidationResult.validationErrorCode};
   }
 
-  const passwordValidationResult = validateWithRules(input.token, UserPasswordValidationRules);
+  const newPasswordValidationResult = validateWithRules(input.newPassword, UserPasswordValidationRules);
 
-  if (passwordValidationResult.kind === "Invalid") {
-    return {kind: "PasswordError", errorCode: passwordValidationResult.validationErrorCode};
+  if (newPasswordValidationResult.kind === "Invalid") {
+    return {kind: "PasswordError", errorCode: newPasswordValidationResult.validationErrorCode};
   }
 
   return {
     kind: "TutorPasswordResetStep2Request",
     token: tokenValidationResult.value,
-    newPassword: passwordValidationResult.value,
+    newPassword: newPasswordValidationResult.value,
   };
 }

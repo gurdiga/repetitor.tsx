@@ -14,7 +14,7 @@ export function genRandomString(length: number): string {
     .slice(0, length);
 }
 
-interface StorablePassword {
+export interface StorablePassword {
   salt: string;
   passwordHash: string;
 }

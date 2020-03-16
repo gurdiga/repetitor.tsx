@@ -193,6 +193,9 @@ function renderStep2(tokenString: string) {
           "Tokenul este expirat. Mai încercați odată resetarea parolei de la început.",
         ];
         break;
+      case "PasswordError":
+        [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
+        break;
       case "PasswordResetTokenError":
         [responseState, responseText] = [ResponseState.ReceivedError, tokenErrorMessages[response.errorCode]];
         break;

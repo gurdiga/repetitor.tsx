@@ -29,23 +29,23 @@ export async function TutorPasswordResetStep1(input: Scenario["Input"]): Promise
 
   const {token} = resetTokenCreationResult;
 
-  sendTutorPasswordResetEmail(email, fullName, userId, token);
+  sendTutorPasswordResetEmail(email, fullName, token);
 
   return {
     kind: "TutorPasswordResetEmailSent",
   };
 }
 
-function sendTutorPasswordResetEmail(email: string, fullName: string, userId: number, token: string): void {
+function sendTutorPasswordResetEmail(email: string, fullName: string, token: string): void {
   const subject = `Resetarea parolei în ${requireEnvVar("APP_NAME")}`;
-  const html = getMessage(fullName, userId, token);
+  const html = getMessage(fullName, token);
 
   sendEmail(email, subject, html);
 }
 
-function getMessage(fullName: string, userId: number, token: string): string {
+function getMessage(fullName: string, token: string): string {
   // TODO: Move PageNavigation to shared and use it here.
-  const passwordResetLink = `/resetare-parola?token=${token}&userId=${userId}`;
+  const passwordResetLink = `/resetare-parola?token=${token}`;
 
   return `
     Dragă ${fullName},

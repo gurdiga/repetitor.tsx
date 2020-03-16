@@ -3,7 +3,13 @@ import {TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
 import {DbError, SystemError} from "shared/Model/Utils";
 import {runQuery, InsertResult, RowSet} from "Utils/Db";
 import {EmailExists, PasswordResetToken} from "shared/Model/TutorPasswordResetStep1";
-import {genRandomString} from "Utils/StringUtils";
+import {genRandomString, StorablePassword} from "Utils/StringUtils";
+import {
+  PasswordResetTokenUnknownError,
+  TutorPasswordResetSuccess,
+  PasswordResetTokenVerified,
+  PurgedExpiredTokens,
+} from "shared/Model/TutorPasswordResetStep2";
 
 export async function createTutor(
   fullName: string,
@@ -91,8 +97,10 @@ export async function checkIfEmailExists(email: string): Promise<EmailExists | U
   }
 }
 
+const PASSWORD_RESET_TOKEN_LENGTH = 16;
+
 export async function createTutorPasswordResetToken(userId: number): Promise<PasswordResetToken | DbError> {
-  const token = genRandomString(16);
+  const token = genRandomString(PASSWORD_RESET_TOKEN_LENGTH);
   const timestamp = Date.now();
 
   try {
@@ -108,6 +116,94 @@ export async function createTutorPasswordResetToken(userId: number): Promise<Pas
       kind: "PasswordResetToken",
       token,
     };
+  } catch (error) {
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+export async function resetTutorPassword(
+  token: string,
+  storablePassword: StorablePassword
+): Promise<TutorPasswordResetSuccess | PasswordResetTokenUnknownError | DbError> {
+  const tokenVerificationResult = await verifyToken(token);
+
+  if (tokenVerificationResult.kind !== "PasswordResetTokenVerified") {
+    return tokenVerificationResult;
+  }
+
+  const {userId} = tokenVerificationResult;
+
+  return await resetPassword(userId, storablePassword);
+}
+
+async function resetPassword(
+  userId: number,
+  storablePassword: StorablePassword
+): Promise<TutorPasswordResetSuccess | DbError> {
+  const {passwordHash, salt} = storablePassword;
+
+  try {
+    await runQuery({
+      sql: `
+            UPDATE users
+            SET
+              password_hash = ?,
+              password_salt = ?
+            WHERE id = ?
+          `,
+      params: [passwordHash, salt, userId],
+    });
+
+    return {kind: "TutorPasswordResetSuccess"};
+  } catch (error) {
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+async function verifyToken(
+  token: string
+): Promise<PasswordResetTokenUnknownError | PasswordResetTokenVerified | DbError> {
+  await purgeExpiredTokens();
+
+  try {
+    const result = (await runQuery({
+      sql: `
+            SELECT userId
+            FROM passsword_reset_tokens
+            WHERE token = ?
+          `,
+      params: [token.slice(0, PASSWORD_RESET_TOKEN_LENGTH)],
+    })) as RowSet;
+
+    const row = result.rows[0];
+
+    if (!row) {
+      return {kind: "PasswordResetTokenUnknownError"};
+    }
+
+    return {
+      kind: "PasswordResetTokenVerified",
+      userId: row.userId,
+    };
+  } catch (error) {
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
+  const hour = 3600 * 1000;
+  const expirationTimestamp = Date.now() - 1 * hour;
+
+  try {
+    await runQuery({
+      sql: `
+            DELETE FROM passsword_reset_tokens
+            WHERE timestamp < ?
+          `,
+      params: [expirationTimestamp],
+    });
+
+    return {kind: "PurgedExpiredTokens"};
   } catch (error) {
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
