@@ -131,6 +131,8 @@ export async function resetTutorPassword(
     return tokenVerificationResult;
   }
 
+  await deleteToken(token);
+
   const {userId} = tokenVerificationResult;
 
   return await resetPassword(userId, storablePassword);
@@ -201,6 +203,22 @@ async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
             WHERE timestamp < ?
           `,
       params: [expirationTimestamp],
+    });
+
+    return {kind: "PurgedExpiredTokens"};
+  } catch (error) {
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+async function deleteToken(token: string): Promise<PurgedExpiredTokens | DbError> {
+  try {
+    await runQuery({
+      sql: `
+            DELETE FROM passsword_reset_tokens
+            WHERE token = ?
+          `,
+      params: [token.slice(0, PASSWORD_RESET_TOKEN_LENGTH)],
     });
 
     return {kind: "PurgedExpiredTokens"};
