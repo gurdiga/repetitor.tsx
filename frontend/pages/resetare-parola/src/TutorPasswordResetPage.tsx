@@ -37,10 +37,12 @@ function renderStep1(props: PageProps) {
 
   return (
     <>
-      <p>
-        Pentru a reseta parola, introduceți adresa de email pe care ați folosit-o la înregistare. Veți primi un mesaj cu
-        instrucțiuni.
-      </p>
+      {!serverResponse.shouldShow && (
+        <p>
+          Pentru a reseta parola, introduceți adresa de email pe care ați folosit-o la înregistare. Veți primi un mesaj
+          cu instrucțiuni.
+        </p>
+      )}
       {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
         <Form
           fields={[
@@ -90,7 +92,7 @@ function renderStep1(props: PageProps) {
       case "TutorPasswordResetEmailSent":
         [responseState, responseText] = [
           ResponseState.ReceivedSuccess,
-          "Am trimis un mesaj cu instrucțiuni de resetare a parolei.",
+          `Verificați cutia poștală ${fields.email.value}. Am trimis un mesaj cu instrucțiuni de resetare a parolei.`,
         ];
         break;
       case "EmailError":
