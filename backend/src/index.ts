@@ -20,6 +20,9 @@ export const app = express()
   .use(compression())
   .use(express.json())
   .use(cors())
+  .get("/googlefc7b36d4439b3ef2.html", (_req, res) => {
+    res.send("google-site-verification: googlefc7b36d4439b3ef2.html");
+  })
   .get("/.well-known/security.txt", sendSecurityTxt)
   .get(`${VENDOR_MODULE_PREFIX}:vendorModuleFileName`, (req, res) => {
     sendVendorModule(req.params.vendorModuleFileName, res);
