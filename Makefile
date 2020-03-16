@@ -3,13 +3,12 @@ SHELL=bash
 
 default: test-backend
 
-test:
-	make test-backend
-	make test-frontend
+test: test-backend test-frontend
 t: test
 
 test-backend: node_modules
 	@set -e
+	printf "\nRunning backend tests:\n"
 	source .env.test
 	DEBUG=app:none \
 	TS_NODE_PROJECT=backend/tests/tsconfig.json \
@@ -27,6 +26,7 @@ tb: test-backend
 
 test-frontend: node_modules
 	@set -e
+	printf "\nRunning frontend tests:\n"
 	TS_NODE_PROJECT=frontend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
 	~/.nvm/nvm-exec node_modules/.bin/mocha \
