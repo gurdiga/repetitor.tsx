@@ -133,7 +133,7 @@ lint:
 l: lint
 
 migrate:
-	@set -ex
+	@set -e
 	if [ ! "$$NODE_ENV" ] || [ "$$NODE_ENV" == "development" ]; then source .env; else source .env.$$NODE_ENV; fi
 	db-migrate $${DIRECTION:-up} \
 		--verbose \

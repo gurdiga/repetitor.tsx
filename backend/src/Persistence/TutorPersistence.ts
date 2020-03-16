@@ -106,7 +106,7 @@ export async function createTutorPasswordResetToken(userId: number): Promise<Pas
   try {
     await runQuery({
       sql: `
-            INSERT INTO passsword_reset_tokens (userId, token, timestamp)
+            INSERT INTO passsword_reset_tokens (user_id, token, timestamp)
             VALUES(?, ?, ?)
            `,
       params: [userId, token, timestamp],

@@ -54,7 +54,7 @@ describe("TutorPasswordResetStep1", () => {
       sql: `
         SELECT token
         FROM passsword_reset_tokens
-        LEFT JOIN users ON passsword_reset_tokens.userId = users.id
+        LEFT JOIN users ON passsword_reset_tokens.user_id = users.id
         WHERE users.email = ?
         `,
       params: [email],
