@@ -10,6 +10,7 @@ import {
   PasswordResetTokenVerified,
   PurgedExpiredTokens,
 } from "shared/Model/TutorPasswordResetStep2";
+import {logError} from "Utils/Logging";
 
 export async function createTutor(
   fullName: string,
@@ -32,6 +33,7 @@ export async function createTutor(
       case "ER_DUP_ENTRY":
         return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
       default:
+        logError(error);
         return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
     }
   }
@@ -66,6 +68,7 @@ export async function checkLoginInfo(
       return {kind: "UnknownEmailError"};
     }
   } catch (error) {
+    logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -93,6 +96,7 @@ export async function checkIfEmailExists(email: string): Promise<EmailExists | U
       return {kind: "UnknownEmailError"};
     }
   } catch (error) {
+    logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -117,6 +121,7 @@ export async function createTutorPasswordResetToken(userId: number): Promise<Pas
       token,
     };
   } catch (error) {
+    logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -158,6 +163,7 @@ async function resetPassword(
 
     return {kind: "TutorPasswordResetSuccess"};
   } catch (error) {
+    logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -188,6 +194,7 @@ async function verifyToken(
       userId: row.userId,
     };
   } catch (error) {
+    logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -207,6 +214,7 @@ async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
 
     return {kind: "PurgedExpiredTokens"};
   } catch (error) {
+    logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
@@ -223,6 +231,7 @@ async function deleteToken(token: string): Promise<PurgedExpiredTokens | DbError
 
     return {kind: "PurgedExpiredTokens"};
   } catch (error) {
+    logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
