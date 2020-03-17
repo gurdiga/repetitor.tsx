@@ -15,13 +15,13 @@ export function genRandomString(length: number): string {
 }
 
 export interface StorablePassword {
-  salt: string;
+  passwordSalt: string;
   passwordHash: string;
 }
 
 export function getStorablePassword(password: string): StorablePassword {
-  const salt = genRandomString(100);
-  const passwordHash = hashString(password, salt);
+  const passwordSalt = genRandomString(100);
+  const passwordHash = hashString(password, passwordSalt);
 
-  return {salt, passwordHash};
+  return {passwordSalt, passwordHash};
 }

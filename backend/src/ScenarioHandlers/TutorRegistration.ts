@@ -16,7 +16,7 @@ export async function TutorRegistration(input: Scenario["Input"], session: UserS
   }
 
   const {fullName, email, password} = result;
-  const {salt, passwordHash} = getStorablePassword(password);
+  const {passwordSalt: salt, passwordHash} = getStorablePassword(password);
 
   const createTutorResult = await createTutor(fullName, email, passwordHash, salt);
 

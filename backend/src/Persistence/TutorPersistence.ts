@@ -147,7 +147,7 @@ async function resetPassword(
   userId: number,
   storablePassword: StorablePassword
 ): Promise<TutorPasswordResetSuccess | DbError> {
-  const {passwordHash, salt} = storablePassword;
+  const {passwordHash, passwordSalt: salt} = storablePassword;
 
   try {
     await runQuery({
