@@ -192,7 +192,7 @@ function renderStep2(tokenString: string) {
       case "PasswordResetTokenUnknownError":
         [responseState, responseText] = [
           ResponseState.ReceivedError,
-          "Tokenul este expirat. Mai încercați odată resetarea parolei de la început.",
+          "Sesiunea de resetare a parolei a expirat. Mai încercați odată resetarea parolei de la început.",
         ];
         break;
       case "PasswordError":

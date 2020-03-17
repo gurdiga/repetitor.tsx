@@ -46,16 +46,23 @@ export type PurgedExpiredTokens = {
 export function makeTutorPasswordResetStep2RequestFromInput(
   input: TutorPasswordResetStep2Input
 ): TutorPasswordResetStep2Request | PasswordResetTokenError | PasswordError {
-  const tokenValidationResult = validateWithRules(input.token, PasswordResetTokenValidationRules);
+  const {token, newPassword} = input;
+  const tokenValidationResult = validateWithRules(token, PasswordResetTokenValidationRules);
 
   if (tokenValidationResult.kind === "Invalid") {
-    return {kind: "PasswordResetTokenError", errorCode: tokenValidationResult.validationErrorCode};
+    return {
+      kind: "PasswordResetTokenError",
+      errorCode: tokenValidationResult.validationErrorCode,
+    };
   }
 
-  const newPasswordValidationResult = validateWithRules(input.newPassword, UserPasswordValidationRules);
+  const newPasswordValidationResult = validateWithRules(newPassword, UserPasswordValidationRules);
 
   if (newPasswordValidationResult.kind === "Invalid") {
-    return {kind: "PasswordError", errorCode: newPasswordValidationResult.validationErrorCode};
+    return {
+      kind: "PasswordError",
+      errorCode: newPasswordValidationResult.validationErrorCode,
+    };
   }
 
   return {
