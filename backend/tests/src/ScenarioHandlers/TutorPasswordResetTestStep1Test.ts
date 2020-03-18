@@ -42,12 +42,13 @@ describe("TutorPasswordResetStep1", () => {
 
     expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
     expect(await doesTokenExist(email), "token created").to.be.true;
-    expect(hasSentTheResetEmail(email), "has sent the email").to.be.true;
-  });
 
-  function hasSentTheResetEmail(email: string): boolean {
-    return sendEmailStub.calledOnceWith(email, "Resetarea parolei în Repetitor.md", Sinon.match.string);
-  }
+    const {args} = sendEmailStub.firstCall;
+
+    expect(args[0], "notification email address").to.equal(email);
+    expect(args[1], "notification email subject").to.contain("Resetarea parolei");
+    expect(args[2], "notification email body").to.contain("/resetare-parola?token=");
+  });
 
   async function doesTokenExist(email: string): Promise<boolean> {
     const {rows} = (await runQuery({
