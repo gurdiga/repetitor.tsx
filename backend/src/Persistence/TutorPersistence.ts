@@ -176,7 +176,7 @@ async function verifyToken(
   try {
     const result = (await runQuery({
       sql: `
-            SELECT userId
+            SELECT user_id
             FROM passsword_reset_tokens
             WHERE token = ?
           `,

@@ -5,6 +5,7 @@ import {runQuery, RowSet} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import Sinon = require("sinon");
 import {Stub, truncateTable} from "TestHelpers";
+import {getTokenForEmail} from "ScenarioHandlers/Helpers";
 
 describe("TutorPasswordResetStep1", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
@@ -41,7 +42,7 @@ describe("TutorPasswordResetStep1", () => {
     sendEmailStub.resetHistory(); // ignore the registration email
 
     expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
-    expect(await doesTokenExist(email), "token created").to.be.true;
+    expect(await getTokenForEmail(email), "token created").to.exist;
 
     const {args} = sendEmailStub.firstCall;
 
@@ -49,18 +50,4 @@ describe("TutorPasswordResetStep1", () => {
     expect(args[1], "notification email subject").to.contain("Resetarea parolei");
     expect(args[2], "notification email body").to.contain("/resetare-parola?token=");
   });
-
-  async function doesTokenExist(email: string): Promise<boolean> {
-    const {rows} = (await runQuery({
-      sql: `
-        SELECT token
-        FROM passsword_reset_tokens
-        LEFT JOIN users ON passsword_reset_tokens.user_id = users.id
-        WHERE users.email = ?
-        `,
-      params: [email],
-    })) as RowSet;
-
-    return rows.length > 0;
-  }
 });
