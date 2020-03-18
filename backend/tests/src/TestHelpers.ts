@@ -21,13 +21,13 @@ after(async () => {
 
 async function truncateAllTables(): Promise<void> {
   const {rows} = (await runQuery({sql: "SHOW TABLES", params: []})) as RowSet;
-  const operations = rows
-    .map(row => Object.values(row)[0])
-    .map(tableName => {
-      return runQuery({sql: "TRUNCATE TABLE ??", params: [tableName]});
-    });
+  const operations = rows.map(row => Object.values(row)[0]).map(truncateTable);
 
   await Promise.all(operations);
+}
+
+export async function truncateTable(tableName: string) {
+  return runQuery({sql: "TRUNCATE TABLE ??", params: [tableName]});
 }
 
 export interface AssertionParams {

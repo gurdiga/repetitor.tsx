@@ -4,7 +4,7 @@ import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
 import {runQuery, RowSet} from "Utils/Db";
 import * as EmailUtils from "Utils/EmailUtils";
 import Sinon = require("sinon");
-import {Stub} from "TestHelpers";
+import {Stub, truncateTable} from "TestHelpers";
 
 describe("TutorPasswordResetStep1", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
@@ -17,7 +17,7 @@ describe("TutorPasswordResetStep1", () => {
     sendEmailStub.restore();
   });
 
-  afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
+  afterEach(() => truncateTable("users"));
 
   it("validates the email", async () => {
     let email = "";
