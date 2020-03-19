@@ -199,9 +199,11 @@ async function verifyToken(
   }
 }
 
+const hour = 3600 * 1000;
+export const TOKEN_EXPIRATION_TIME = 1 * hour;
+
 async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
-  const hour = 3600 * 1000;
-  const expirationTimestamp = Date.now() - 1 * hour;
+  const expirationTimestamp = Date.now() - TOKEN_EXPIRATION_TIME;
 
   try {
     await runQuery({
