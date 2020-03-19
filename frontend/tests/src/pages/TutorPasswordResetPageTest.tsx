@@ -11,16 +11,18 @@ import {Stub, Wrapper, expectProps, expectToRenderSnapshot, Comp} from "TestHelp
 import {PageLayout} from "frontend/shared/PageLayout";
 import {UserEmailValidationRules} from "shared/Model/Email";
 import {ValidatedValue} from "shared/Utils/Validation";
+import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
+import {UserPasswordValidationRules, passwordErrorMessages} from "shared/Model/Password";
 
 describe("<TutorPasswordResetPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
   let wrapper: Wrapper<typeof TutorPasswordResetPage>;
 
-  beforeEach(() => {
-    wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
-  });
-
   describe("step 1", () => {
+    beforeEach(() => {
+      wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
+    });
+
     context("when form is not yet submitted", () => {
       it("renders a form in the page layout", () => {
         const layout = wrapper.find(PageLayout);
@@ -189,8 +191,43 @@ describe("<TutorPasswordResetPage/>", () => {
   });
 
   describe("step 2", () => {
-    it("runs", () => {
-      expect(TutorPasswordResetPage).to.exist;
+    let form: Wrapper<typeof Form>;
+
+    beforeEach(() => {
+      wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{token: "C0FFEE42"}} />);
+      form = wrapper.find(Form);
+    });
+
+    context("before submitting the form", () => {
+      it("renders a call to action text and a form", () => {
+        const p = wrapper.find("p");
+
+        expect(p.debug()).to.contain("Introduceți parola nouă");
+        expect(form.exists()).to.be.true;
+      });
+
+      describe("form structure", () => {
+        it("has a password field for the new password", () => {
+          const [passwordField] = form.props().fields;
+
+          expectProps<typeof PasswordField>("password field", passwordField, {
+            label: "Parola nouă",
+            hasGenerateButton: true,
+            autoFocus: true,
+            validationRules: UserPasswordValidationRules,
+            validationMessages: passwordErrorMessages,
+            value: "",
+          });
+        });
+
+        it("has a submit button", () => {
+          const [submitButton] = form.props().actionButtons;
+
+          expectProps<typeof SubmitButton>("submit button", submitButton, {
+            label: "Resetează",
+          });
+        });
+      });
     });
   });
 });
