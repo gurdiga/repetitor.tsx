@@ -132,7 +132,7 @@ describe("<TutorPasswordResetPage/>", () => {
         wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
       });
 
-      context("when server fulfills the request", () => {
+      context("happy path", () => {
         beforeEach(async () => {
           runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({kind: "TutorPasswordResetEmailSent"});
           await submitValidForm();
@@ -153,7 +153,7 @@ describe("<TutorPasswordResetPage/>", () => {
         });
       });
 
-      context("when server responds with an error", () => {
+      context("unhappy path", () => {
         beforeEach(async () => {
           runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({kind: "UnknownEmailError"});
           await submitValidForm();
@@ -226,6 +226,18 @@ describe("<TutorPasswordResetPage/>", () => {
           expectProps<typeof SubmitButton>("submit button", submitButton, {
             label: "Resetează",
           });
+        });
+      });
+    });
+
+    it("renders the snapshot", () => {
+      expectToRenderSnapshot(__filename, wrapper, "step2");
+    });
+
+    describe("form submission", () => {
+      describe("happy path", () => {
+        it("runs", () => {
+          expect(form).to.exist;
         });
       });
     });
