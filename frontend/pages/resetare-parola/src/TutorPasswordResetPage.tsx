@@ -135,32 +135,34 @@ function renderStep2(tokenString: string) {
 
   return (
     <>
-      <p>Introduceți parola nouă.</p>
       {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
-        <Form
-          fields={[
-            <PasswordField
-              id="new-password"
-              label="Parola nouă"
-              value={newPassword.value}
-              hasGenerateButton={true}
-              onValueChange={updateNewPassword}
-              validationRules={UserPasswordValidationRules}
-              showValidationMessage={shouldShowValidationMessage}
-              validationMessages={passwordErrorMessages}
-              autoFocus={true}
-            />,
-          ]}
-          actionButtons={[
-            <SubmitButton
-              label="Resetează"
-              onClick={async () => {
-                toggleValidationMessage(true);
-                return await maybeSubmitForm({newPassword, token});
-              }}
-            />,
-          ]}
-        />
+        <>
+          <p>Introduceți parola nouă.</p>
+          <Form
+            fields={[
+              <PasswordField
+                id="new-password"
+                label="Parola nouă"
+                value={newPassword.value}
+                hasGenerateButton={true}
+                onValueChange={updateNewPassword}
+                validationRules={UserPasswordValidationRules}
+                showValidationMessage={shouldShowValidationMessage}
+                validationMessages={passwordErrorMessages}
+                autoFocus={true}
+              />,
+            ]}
+            actionButtons={[
+              <SubmitButton
+                label="Resetează"
+                onClick={async () => {
+                  toggleValidationMessage(true);
+                  return await maybeSubmitForm({newPassword, token});
+                }}
+              />,
+            ]}
+          />
+        </>
       )}
       {serverResponse.shouldShow && (
         <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>

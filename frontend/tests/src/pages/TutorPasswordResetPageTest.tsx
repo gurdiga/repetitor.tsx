@@ -74,14 +74,12 @@ describe("<TutorPasswordResetPage/>", () => {
           });
         });
 
-        describe("submission", () => {
+        describe("form submission", () => {
           beforeEach(() => {
             runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario");
           });
 
-          afterEach(() => {
-            runScenarioStub.restore();
-          });
+          afterEach(() => runScenarioStub.restore());
 
           context("when the email is valid", () => {
             beforeEach(() => {
@@ -98,9 +96,11 @@ describe("<TutorPasswordResetPage/>", () => {
           });
 
           context("when the email is NOT valid", () => {
-            submitEmailValue({
-              value: "email@example",
-              isValid: false,
+            beforeEach(() => {
+              submitEmailValue({
+                value: "email@example",
+                isValid: false,
+              });
             });
 
             it("does NOT submit the form", () => {
@@ -134,15 +134,15 @@ describe("<TutorPasswordResetPage/>", () => {
 
       context("happy path", () => {
         beforeEach(async () => {
-          runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({kind: "TutorPasswordResetEmailSent"});
+          runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({
+            kind: "TutorPasswordResetEmailSent",
+          });
           await submitValidForm();
 
           expect(runScenarioStub.called, "called runScenario").to.be.true;
         });
 
-        afterEach(() => {
-          runScenarioStub.restore();
-        });
+        afterEach(() => runScenarioStub.restore());
 
         it("renders the success message", () => {
           expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
@@ -161,9 +161,7 @@ describe("<TutorPasswordResetPage/>", () => {
           expect(runScenarioStub.called, "called runScenario").to.be.true;
         });
 
-        afterEach(() => {
-          runScenarioStub.restore();
-        });
+        afterEach(() => runScenarioStub.restore());
 
         it("renders the error message", () => {
           expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
@@ -231,15 +229,114 @@ describe("<TutorPasswordResetPage/>", () => {
     });
 
     it("renders the snapshot", () => {
-      expectToRenderSnapshot(__filename, wrapper, "step2");
+      expectToRenderSnapshot(__filename, wrapper, "step2.initial");
     });
 
     describe("form submission", () => {
       describe("happy path", () => {
-        it("runs", () => {
-          expect(form).to.exist;
+        beforeEach(async () => {
+          runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({
+            kind: "TutorPasswordResetSuccess",
+          });
+
+          await submitNewPassword({
+            value: "something",
+            isValid: true,
+          });
+        });
+
+        afterEach(() => runScenarioStub.restore());
+
+        it("submits the form", () => {
+          expect(runScenarioStub.called, "called runScenario").to.be.true;
+        });
+
+        it("renders the success message", () => {
+          expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
+        });
+
+        it("renders the snapshot", () => {
+          expectToRenderSnapshot(__filename, wrapper, "step2.server-success");
         });
       });
+
+      context("when the password is NOT valid", () => {
+        beforeEach(() => {
+          runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario");
+
+          submitNewPassword({
+            value: "",
+            isValid: false,
+          });
+        });
+
+        afterEach(() => runScenarioStub.restore());
+
+        it("does NOT submit the form", () => {
+          expect(runScenarioStub.called, "called runScenario").to.be.false;
+        });
+      });
+
+      context("unhappy path", () => {
+        context("app response", () => {
+          beforeEach(async () => {
+            runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({
+              kind: "PasswordResetTokenUnknownError",
+            });
+
+            await submitNewPassword({
+              value: "something",
+              isValid: true,
+            });
+          });
+
+          afterEach(() => runScenarioStub.restore());
+
+          it("renders the error message", () => {
+            expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
+          });
+
+          it("renders the snapshot", () => {
+            expectToRenderSnapshot(__filename, wrapper, "step2.server-error");
+          });
+        });
+
+        context("network error", () => {
+          beforeEach(async () => {
+            runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({
+              kind: "TransportError",
+              error: "Network error",
+            });
+
+            await submitNewPassword({
+              value: "something",
+              isValid: true,
+            });
+          });
+
+          afterEach(() => runScenarioStub.restore());
+
+          it("renders the error message", () => {
+            expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
+          });
+
+          it("renders the snapshot", () => {
+            expectToRenderSnapshot(__filename, wrapper, "step2.network-error");
+          });
+        });
+      });
+
+      function submitNewPassword(fieldValue: ValidatedValue<string>): void {
+        wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{token: "C0FFEE42"}} />);
+        const formProps = () => wrapper.find(Form).props();
+        const newPasswordField: Comp<typeof TextField> = formProps().fields[0];
+
+        newPasswordField.props.onValueChange(fieldValue);
+
+        const [submitButton] = formProps().actionButtons;
+
+        return submitButton.props.onClick();
+      }
     });
   });
 });
