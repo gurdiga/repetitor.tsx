@@ -7,6 +7,7 @@ export namespace PasswordFieldCss {
   export const InputContainer = style({
     $debugName: "InputContainer",
     position: "relative",
+    width: em(20),
   });
 
   const eyeSize = em(2);
@@ -48,5 +49,6 @@ export namespace PasswordFieldCss {
     position: "absolute",
     right: 0,
     transform: "translateY(-115%)",
+    cursor: "pointer",
   });
 }
