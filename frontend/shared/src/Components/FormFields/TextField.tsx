@@ -1,10 +1,10 @@
-import {FormField} from "frontend/shared/Components/FormFields/FormField";
-import {TextFieldCss} from "frontend/shared/Components/FormFields/TextField.css";
-import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
-import {FormValidation} from "frontend/shared/FormValidation";
+import {FormField} from "frontend/shared/src/Components/FormFields/FormField";
+import {TextFieldCss} from "frontend/shared/src/Components/FormFields/TextField.css";
+import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
+import {FormValidation} from "frontend/shared/src/FormValidation";
 import * as React from "react";
-import {getValidationErrorCode} from "shared/Utils/Validation";
-import {Label} from "frontend/shared/Components/FormFields/Label";
+import {getValidationErrorCode} from "shared/src/Utils/Validation";
+import {Label} from "frontend/shared/src/Components/FormFields/Label";
 
 interface Props extends FormField.CommonProps {
   inputType?: InputType;

@@ -3,11 +3,18 @@ import * as compression from "compression";
 import * as express from "express";
 import * as helmet from "helmet";
 import * as csurf from "csurf";
-import {handlePost, sendPageBundle, sendPageHtml, sendVendorModule, sendSecurityTxt} from "Utils/Express/Adapter";
-import {VENDOR_MODULE_PREFIX} from "Utils/Express/Adapter";
-import {session} from "Utils/Express/Session";
-import {requireNumericEnvVar} from "Utils/Env";
-import {errorLoggingMiddleware} from "Utils/Logging";
+import {
+  handlePost,
+  sendPageBundle,
+  sendPageHtml,
+  sendVendorModule,
+  sendSecurityTxt,
+  sendSharedBundle,
+} from "backend/src/Utils/Express/Adapter";
+import {VENDOR_MODULE_PREFIX} from "backend/src/Utils/Express/Adapter";
+import {session} from "backend/src/Utils/Express/Session";
+import {requireNumericEnvVar} from "backend/src/Utils/Env";
+import {errorLoggingMiddleware} from "backend/src/Utils/Logging";
 
 const csrfProtection = csurf();
 
@@ -26,6 +33,9 @@ export const app = express()
   .get("/.well-known/security.txt", sendSecurityTxt)
   .get(`${VENDOR_MODULE_PREFIX}:vendorModuleFileName`, (req, res) => {
     sendVendorModule(req.params.vendorModuleFileName, res);
+  })
+  .get(["/frontend/shared/bundle.js", "/shared/bundle.js"], (req, res) => {
+    sendSharedBundle(req.path, res);
   })
   .get(["/bundle.js", "/:pagePathName/bundle.js"], (req, res) => {
     sendPageBundle(req.params.pagePathName, res);

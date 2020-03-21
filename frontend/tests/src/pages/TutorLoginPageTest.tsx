@@ -1,17 +1,17 @@
 import {shallow} from "enzyme";
-import {Form} from "frontend/shared/Components/Form";
-import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
-import {TextField} from "frontend/shared/Components/FormFields/TextField";
-import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
+import {Form} from "frontend/shared/src/Components/Form";
+import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
+import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
-import {UserEmailValidationRules} from "shared/Model/Email";
-import {UserPasswordValidationRules} from "shared/Model/Password";
-import {expectProps, expectToRenderSnapshot, Stub, Wrapper, Comp} from "TestHelpers";
-import {TutorLoginPage} from "TutorLoginPage";
+import {UserEmailValidationRules} from "shared/src/Model/Email";
+import {UserPasswordValidationRules} from "shared/src/Model/Password";
+import {expectProps, expectToRenderSnapshot, Stub, Wrapper, Comp} from "frontend/tests/src/TestHelpers";
+import {TutorLoginPage} from "frontend/pages/autentificare-repetitor/src/TutorLoginPage";
 import {expect} from "chai";
 import Sinon = require("sinon");
-import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
+import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";
 
 describe("<TutorLoginPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;

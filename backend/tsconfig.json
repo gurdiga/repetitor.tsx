@@ -1,14 +1,10 @@
 {
   "extends": "../tsconfig-base.json",
-  "include": ["src", "../shared/src"],
   "references": [{"path": "../shared"}],
+  "include": ["src"],
   "compilerOptions": {
-    "outDir": "build",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["src/*"],
-      "shared/*": ["../shared/src/*"]
-    },
+    "outFile": "build/bundle.js",
+    "baseUrl": "..",
     "target": "es2018",
     "lib": ["dom", "es2018"]
   }

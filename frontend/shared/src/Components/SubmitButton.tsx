@@ -1,4 +1,4 @@
-import {SubmitButtonCss} from "frontend/shared/Components/SubmitButton.css";
+import {SubmitButtonCss} from "frontend/shared/src/Components/SubmitButton.css";
 import * as React from "react";
 import {classes} from "typestyle";
 

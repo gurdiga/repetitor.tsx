@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {Logout} from "ScenarioHandlers/Logout";
+import {Logout} from "backend/src/ScenarioHandlers/Logout";
 
 describe("Logout", () => {
   it("removes userId from the session", async () => {

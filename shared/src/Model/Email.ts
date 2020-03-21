@@ -1,4 +1,4 @@
-import {ValidationMessages, PredicateFn, UserValue} from "shared/Utils/Validation";
+import {ValidationMessages, PredicateFn, UserValue} from "shared/src/Utils/Validation";
 
 export type EmailError = {
   kind: "EmailError";

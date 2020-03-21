@@ -1,5 +1,5 @@
-import {ScenarioRegistry} from "shared/ScenarioRegistry";
-import {UserSession} from "shared/Model/UserSession";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
+import {UserSession} from "shared/src/Model/UserSession";
 
 type Scenario = ScenarioRegistry["Logout"];
 

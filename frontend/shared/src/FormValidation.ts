@@ -1,4 +1,4 @@
-import {validateWithRules, ValidatedValue, ValidationRules} from "shared/Utils/Validation";
+import {validateWithRules, ValidatedValue, ValidationRules} from "shared/src/Utils/Validation";
 
 export namespace FormValidation {
   export type ValueChangeHandler = (value: ValidatedValue<string>) => void;

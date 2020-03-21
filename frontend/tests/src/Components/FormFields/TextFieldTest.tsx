@@ -1,9 +1,9 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
 import * as React from "react";
-import {TextField} from "frontend/shared/Components/FormFields/TextField";
-import {PredicateFn, UserValue, ValidationMessages} from "shared/Utils/Validation";
-import {expectToRenderSnapshot, Wrapper} from "TestHelpers";
+import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
+import {PredicateFn, UserValue, ValidationMessages} from "shared/src/Utils/Validation";
+import {expectToRenderSnapshot, Wrapper} from "frontend/tests/src/TestHelpers";
 
 type SampleErrorCode = "REQUIRED" | "TOO_SHORT" | "TOO_LONG";
 

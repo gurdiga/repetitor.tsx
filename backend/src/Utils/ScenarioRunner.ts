@@ -1,7 +1,7 @@
-import {TestScenario} from "ScenarioHandlers/TestScenario";
-import {TutorLogin} from "ScenarioHandlers/TutorLogin";
-import {Logout} from "ScenarioHandlers/Logout";
-import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
+import {TestScenario} from "backend/src/ScenarioHandlers/TestScenario";
+import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
+import {Logout} from "backend/src/ScenarioHandlers/Logout";
+import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
 import {
   ScenarioHandler,
   ScenarioName,
@@ -9,9 +9,9 @@ import {
   SimpleScenarioHandler,
   SimpleScenarioName,
   SessionAlteringScenarioName,
-} from "shared/ScenarioRegistry";
-import {TutorPasswordResetStep1} from "ScenarioHandlers/TutorPasswordResetStep1";
-import {TutorPasswordResetStep2} from "ScenarioHandlers/TutorPasswordResetStep2";
+} from "shared/src/ScenarioRegistry";
+import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswordResetStep1";
+import {TutorPasswordResetStep2} from "backend/src/ScenarioHandlers/TutorPasswordResetStep2";
 
 const simpleScenarioHandlers: Record<SimpleScenarioName, SimpleScenarioHandler<any, any>> = {
   TestScenario,

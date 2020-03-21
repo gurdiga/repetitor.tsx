@@ -1,23 +1,28 @@
-import {PageLayout} from "frontend/shared/PageLayout";
-import * as React from "react";
-import {PageProps} from "shared/Utils/PageProps";
-import {Form} from "frontend/shared/Components/Form";
-import {ValidatedValue, emptyFieldValue, validateWithRules} from "shared/Utils/Validation";
-import {ServerResponse, placeholderServerResponse, runScenario, ResponseState} from "frontend/shared/ScenarioRunner";
-import {TextField} from "frontend/shared/Components/FormFields/TextField";
-import {UserEmailValidationRules, emailErrorMessages} from "shared/Model/Email";
-import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import {TutorPasswordResetStep1PropName} from "shared/Model/TutorPasswordResetStep1";
-import {assertNever} from "shared/Utils/Language";
-import {dbErrorMessages} from "shared/Model/Utils";
-import {QueryStringParams} from "frontend/shared/Utils/QueryStringParams";
+import {Form} from "frontend/shared/src/Components/Form";
+import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
+import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import {PageLayout} from "frontend/shared/src/PageLayout";
 import {
+  placeholderServerResponse,
+  ResponseState,
+  runScenario,
+  ServerResponse,
+} from "frontend/shared/src/ScenarioRunner";
+import {QueryStringParams} from "frontend/shared/src/Utils/QueryStringParams";
+import * as React from "react";
+import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
+import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {TutorPasswordResetStep1PropName} from "shared/src/Model/TutorPasswordResetStep1";
+import {
+  PasswordResetTokenValidationRules,
   tokenErrorMessages,
   TutorPasswordResetStep2PropName,
-  PasswordResetTokenValidationRules,
-} from "shared/Model/TutorPasswordResetStep2";
-import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
-import {UserPasswordValidationRules, passwordErrorMessages} from "shared/Model/Password";
+} from "shared/src/Model/TutorPasswordResetStep2";
+import {dbErrorMessages} from "shared/src/Model/Utils";
+import {assertNever} from "shared/src/Utils/Language";
+import {PageProps} from "shared/src/Utils/PageProps";
+import {emptyFieldValue, ValidatedValue, validateWithRules} from "shared/src/Utils/Validation";
 
 interface TutorPasswordResetPageProps extends PageProps {
   params: QueryStringParams;

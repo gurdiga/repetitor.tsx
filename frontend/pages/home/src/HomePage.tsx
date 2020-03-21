@@ -1,6 +1,6 @@
-import {PageLayout} from "frontend/shared/PageLayout";
+import {PageLayout} from "frontend/shared/src/PageLayout";
 import * as React from "react";
-import {PageProps} from "shared/Utils/PageProps";
+import {PageProps} from "shared/src/Utils/PageProps";
 
 export function HomePage(props: PageProps) {
   return (

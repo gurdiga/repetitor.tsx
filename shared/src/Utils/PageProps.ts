@@ -1,4 +1,4 @@
-import {UserSession} from "shared/Model/UserSession";
+import {UserSession} from "shared/src/Model/UserSession";
 
 export interface PageProps {
   isAuthenticated: boolean;

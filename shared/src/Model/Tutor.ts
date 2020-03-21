@@ -1,8 +1,8 @@
-import {TutorRegistrationInput} from "shared/Scenarios/TutorRegistration";
-import {PredicateFn, UserValue, validateWithRules} from "shared/Utils/Validation";
-import {DataProps} from "shared/Model/Utils";
-import {EmailError, UserEmailValidationRules} from "shared/Model/Email";
-import {PasswordError, UserPasswordValidationRules} from "shared/Model/Password";
+import {TutorRegistrationInput} from "shared/src/Scenarios/TutorRegistration";
+import {PredicateFn, UserValue, validateWithRules} from "shared/src/Utils/Validation";
+import {DataProps} from "shared/src/Model/Utils";
+import {EmailError, UserEmailValidationRules} from "shared/src/Model/Email";
+import {PasswordError, UserPasswordValidationRules} from "shared/src/Model/Password";
 
 export interface Tutor {
   kind: "User";

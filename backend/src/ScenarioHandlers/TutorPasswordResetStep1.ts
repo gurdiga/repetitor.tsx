@@ -1,8 +1,8 @@
-import {ScenarioRegistry} from "shared/ScenarioRegistry";
-import {makeTutorPasswordResetRequestFromInput} from "shared/Model/TutorPasswordResetStep1";
-import {checkIfEmailExists, createTutorPasswordResetToken} from "Persistence/TutorPersistence";
-import {sendEmail} from "Utils/EmailUtils";
-import {requireEnvVar} from "Utils/Env";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
+import {makeTutorPasswordResetRequestFromInput} from "shared/src/Model/TutorPasswordResetStep1";
+import {checkIfEmailExists, createTutorPasswordResetToken} from "backend/src/Persistence/TutorPersistence";
+import {sendEmail} from "backend/src/Utils/EmailUtils";
+import {requireEnvVar} from "backend/src/Utils/Env";
 
 type Scenario = ScenarioRegistry["TutorPasswordResetStep1"];
 

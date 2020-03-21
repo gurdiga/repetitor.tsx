@@ -1,10 +1,10 @@
-import {CheckboxCss} from "frontend/shared/Components/FormFields/Checkbox.css";
+import {CheckboxCss} from "frontend/shared/src/Components/FormFields/Checkbox.css";
 import * as React from "react";
 import {classes} from "typestyle";
-import {FormField} from "frontend/shared/Components/FormFields/FormField";
-import {FormValidation} from "frontend/shared/FormValidation";
-import {getValidationErrorCode} from "shared/Utils/Validation";
-import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
+import {FormField} from "frontend/shared/src/Components/FormFields/FormField";
+import {FormValidation} from "frontend/shared/src/FormValidation";
+import {getValidationErrorCode} from "shared/src/Utils/Validation";
+import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
 
 interface Props extends FormField.CommonProps {
   checked?: never; // Will use "value" instead

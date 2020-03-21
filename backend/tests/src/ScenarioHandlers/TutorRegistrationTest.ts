@@ -1,12 +1,12 @@
 import {expect} from "chai";
-import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
-import {UserSession} from "shared/Model/UserSession";
-import {stubExport} from "TestHelpers";
-import {RowSet, runQuery, DataRow} from "Utils/Db";
-import * as EmailUtils from "Utils/EmailUtils";
-import {hashString} from "Utils/StringUtils";
-import {TutorCreationSuccess} from "shared/Model/Tutor";
-import * as Logging from "Utils/Logging";
+import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {UserSession} from "shared/src/Model/UserSession";
+import {stubExport} from "backend/tests/src/TestHelpers";
+import {RowSet, runQuery, DataRow} from "backend/src/Utils/Db";
+import * as EmailUtils from "backend/src/Utils/EmailUtils";
+import {hashString} from "backend/src/Utils/StringUtils";
+import {TutorCreationSuccess} from "shared/src/Model/Tutor";
+import * as Logging from "backend/src/Utils/Logging";
 
 describe("TutorRegistration", () => {
   stubExport(EmailUtils, "sendEmail", before, after);

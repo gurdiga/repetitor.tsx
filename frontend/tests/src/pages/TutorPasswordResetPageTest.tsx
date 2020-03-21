@@ -1,18 +1,18 @@
 import {shallow} from "enzyme";
-import {Form} from "frontend/shared/Components/Form";
-import {TextField} from "frontend/shared/Components/FormFields/TextField";
-import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
+import {Form} from "frontend/shared/src/Components/Form";
+import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
-import {TutorPasswordResetPage} from "TutorPasswordResetPage";
+import {TutorPasswordResetPage} from "frontend/pages/resetare-parola/src/TutorPasswordResetPage";
 import {expect} from "chai";
 import Sinon = require("sinon");
-import {Stub, Wrapper, expectProps, expectToRenderSnapshot, Comp} from "TestHelpers";
-import {PageLayout} from "frontend/shared/PageLayout";
-import {UserEmailValidationRules} from "shared/Model/Email";
-import {ValidatedValue} from "shared/Utils/Validation";
-import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
-import {UserPasswordValidationRules, passwordErrorMessages} from "shared/Model/Password";
+import {Stub, Wrapper, expectProps, expectToRenderSnapshot, Comp} from "frontend/tests/src/TestHelpers";
+import {PageLayout} from "frontend/shared/src/PageLayout";
+import {UserEmailValidationRules} from "shared/src/Model/Email";
+import {ValidatedValue} from "shared/src/Utils/Validation";
+import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
+import {UserPasswordValidationRules, passwordErrorMessages} from "shared/src/Model/Password";
 
 describe("<TutorPasswordResetPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;

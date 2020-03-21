@@ -1,5 +1,5 @@
-import {SystemError} from "shared/Model/Utils";
-import {TutorPropError, TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
+import {SystemError} from "shared/src/Model/Utils";
+import {TutorPropError, TutorModelError, TutorCreationSuccess} from "shared/src/Model/Tutor";
 
 export interface TutorRegistrationInput {
   fullName: string | undefined;

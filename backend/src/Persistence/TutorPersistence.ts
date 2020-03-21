@@ -1,16 +1,16 @@
-import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/Model/LoginCheck";
-import {TutorModelError, TutorCreationSuccess} from "shared/Model/Tutor";
-import {DbError, SystemError} from "shared/Model/Utils";
-import {runQuery, InsertResult, RowSet} from "Utils/Db";
-import {EmailExists, PasswordResetToken} from "shared/Model/TutorPasswordResetStep1";
-import {genRandomString, StorablePassword} from "Utils/StringUtils";
+import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/src/Model/LoginCheck";
+import {TutorModelError, TutorCreationSuccess} from "shared/src/Model/Tutor";
+import {DbError, SystemError} from "shared/src/Model/Utils";
+import {runQuery, InsertResult, RowSet} from "backend/src/Utils/Db";
+import {EmailExists, PasswordResetToken} from "shared/src/Model/TutorPasswordResetStep1";
+import {genRandomString, StorablePassword} from "backend/src/Utils/StringUtils";
 import {
   PasswordResetTokenUnknownError,
   TutorPasswordResetSuccess,
   PasswordResetTokenVerified,
   PurgedExpiredTokens,
-} from "shared/Model/TutorPasswordResetStep2";
-import {logError} from "Utils/Logging";
+} from "shared/src/Model/TutorPasswordResetStep2";
+import {logError} from "backend/src/Utils/Logging";
 
 export async function createTutor(
   fullName: string,

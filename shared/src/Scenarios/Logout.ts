@@ -1,4 +1,4 @@
-import {UnexpectedError} from "shared/Model/Utils";
+import {UnexpectedError} from "shared/src/Model/Utils";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface LogoutInput {}

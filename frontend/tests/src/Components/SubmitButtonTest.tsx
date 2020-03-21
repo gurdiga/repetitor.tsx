@@ -1,9 +1,9 @@
-import {shallow} from "enzyme";
-import * as React from "react";
 import {expect} from "chai";
+import {shallow} from "enzyme";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import {expectToRenderSnapshot, Wrapper} from "frontend/tests/src/TestHelpers";
+import * as React from "react";
 import Sinon = require("sinon");
-import {Wrapper, expectToRenderSnapshot} from "TestHelpers";
-import {SubmitButton} from "frontend/shared/Components/SubmitButton";
 
 describe("<SubmitButton/>", () => {
   let onClick: Sinon.SinonStub;

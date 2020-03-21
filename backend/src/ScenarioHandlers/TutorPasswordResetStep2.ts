@@ -1,7 +1,7 @@
-import {ScenarioRegistry} from "shared/ScenarioRegistry";
-import {makeTutorPasswordResetStep2RequestFromInput} from "shared/Model/TutorPasswordResetStep2";
-import {resetTutorPassword} from "Persistence/TutorPersistence";
-import {getStorablePassword} from "Utils/StringUtils";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
+import {makeTutorPasswordResetStep2RequestFromInput} from "shared/src/Model/TutorPasswordResetStep2";
+import {resetTutorPassword} from "backend/src/Persistence/TutorPersistence";
+import {getStorablePassword} from "backend/src/Utils/StringUtils";
 
 type Scenario = ScenarioRegistry["TutorPasswordResetStep2"];
 

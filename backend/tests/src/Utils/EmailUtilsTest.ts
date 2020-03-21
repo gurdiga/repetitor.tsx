@@ -1,4 +1,4 @@
-import {transporter} from "Utils/EmailUtils";
+import {transporter} from "backend/src/Utils/EmailUtils";
 
 describe("EmailUtils", () => {
   it("can connect", function() {

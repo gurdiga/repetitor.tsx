@@ -1,6 +1,6 @@
 import * as mysql from "mysql";
-import {requireEnvVar} from "Utils/Env";
-import {logError} from "Utils/Logging";
+import {requireEnvVar} from "backend/src/Utils/Env";
+import {logError} from "backend/src/Utils/Logging";
 
 export interface DataRow {
   [fieldName: string]: any;

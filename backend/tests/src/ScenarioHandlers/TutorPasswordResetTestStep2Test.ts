@@ -1,14 +1,14 @@
 import {expect} from "chai";
-import {Stub, truncateTable, truncateTables} from "TestHelpers";
-import * as EmailUtils from "Utils/EmailUtils";
+import {Stub, truncateTables} from "backend/tests/src/TestHelpers";
+import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import Sinon = require("sinon");
-import {TutorPasswordResetStep2} from "ScenarioHandlers/TutorPasswordResetStep2";
-import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
-import {TutorPasswordResetStep1} from "ScenarioHandlers/TutorPasswordResetStep1";
-import {runQuery, RowSet} from "Utils/Db";
-import {getTokenForEmail} from "ScenarioHandlers/Helpers";
-import {ScenarioRegistry} from "shared/ScenarioRegistry";
-import {TOKEN_EXPIRATION_TIME} from "Persistence/TutorPersistence";
+import {TutorPasswordResetStep2} from "backend/src/ScenarioHandlers/TutorPasswordResetStep2";
+import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswordResetStep1";
+import {runQuery, RowSet} from "backend/src/Utils/Db";
+import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
+import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/TutorPersistence";
 
 describe("TutorPasswordResetStep2", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;

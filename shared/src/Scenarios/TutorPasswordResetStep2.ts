@@ -2,9 +2,9 @@ import {
   PasswordResetTokenError,
   PasswordResetTokenUnknownError,
   TutorPasswordResetSuccess,
-} from "shared/Model/TutorPasswordResetStep2";
-import {SystemError} from "shared/Model/Utils";
-import {PasswordError} from "shared/Model/Password";
+} from "shared/src/Model/TutorPasswordResetStep2";
+import {SystemError} from "shared/src/Model/Utils";
+import {PasswordError} from "shared/src/Model/Password";
 
 export interface TutorPasswordResetStep2Input {
   token: string | undefined;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {SpinnerCss} from "frontend/shared/Components/Spinner.css";
+import {SpinnerCss} from "frontend/shared/src/Components/Spinner.css";
 
 export function Spinner() {
   return (

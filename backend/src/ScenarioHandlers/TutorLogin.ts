@@ -1,8 +1,8 @@
-import {checkLoginInfo} from "Persistence/TutorPersistence";
-import {makeLoginCkeckFromLoginInput} from "shared/Model/LoginCheck";
-import {ScenarioRegistry} from "shared/ScenarioRegistry";
-import {hashString} from "Utils/StringUtils";
-import {UserSession} from "shared/Model/UserSession";
+import {checkLoginInfo} from "backend/src/Persistence/TutorPersistence";
+import {makeLoginCkeckFromLoginInput} from "shared/src/Model/LoginCheck";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
+import {hashString} from "backend/src/Utils/StringUtils";
+import {UserSession} from "shared/src/Model/UserSession";
 
 type Scenario = ScenarioRegistry["TutorLogin"];
 

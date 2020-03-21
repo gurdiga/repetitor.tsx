@@ -1,10 +1,10 @@
-import {getStorablePassword} from "../Utils/StringUtils";
-import {createTutor} from "../Persistence/TutorPersistence";
-import {makeTutorFromRegistrationFormInput} from "shared/Model/Tutor";
-import {ScenarioRegistry} from "shared/ScenarioRegistry";
-import {UserSession} from "shared/Model/UserSession";
-import {sendEmail} from "Utils/EmailUtils";
-import {requireEnvVar} from "Utils/Env";
+import {getStorablePassword} from "backend/src/Utils/StringUtils";
+import {createTutor} from "backend/src/Persistence/TutorPersistence";
+import {makeTutorFromRegistrationFormInput} from "shared/src/Model/Tutor";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
+import {UserSession} from "shared/src/Model/UserSession";
+import {sendEmail} from "backend/src/Utils/EmailUtils";
+import {requireEnvVar} from "backend/src/Utils/Env";
 
 type Scenario = ScenarioRegistry["TutorRegistration"];
 

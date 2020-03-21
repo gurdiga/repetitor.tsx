@@ -1,6 +1,6 @@
-import {PageLayoutCss} from "frontend/shared/Css/PageLayout.css";
-import {TopNavigation} from "frontend/shared/TopNavigation";
-import {UtilsCss} from "frontend/shared/Css/Utils.css";
+import {PageLayoutCss} from "frontend/shared/src/Css/PageLayout.css";
+import {UtilsCss} from "frontend/shared/src/Css/Utils.css";
+import {TopNavigation} from "frontend/shared/src/TopNavigation";
 import * as React from "react";
 import {classes} from "typestyle";
 

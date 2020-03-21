@@ -1,11 +1,11 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
-import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
-import {PasswordFieldCss} from "frontend/shared/Components/FormFields/PasswordField.css";
-import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
+import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
+import {PasswordFieldCss} from "frontend/shared/src/Components/FormFields/PasswordField.css";
+import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
 import * as React from "react";
-import {passwordErrorMessages, UserPasswordValidationRules} from "shared/Model/Password";
-import {expectProps, expectToRenderSnapshot, HtmlWrapper, Wrapper} from "TestHelpers";
+import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {expectProps, expectToRenderSnapshot, HtmlWrapper, Wrapper} from "frontend/tests/src/TestHelpers";
 
 describe("<PasswordField/>", () => {
   const defaultProps = {

@@ -1,20 +1,25 @@
-import {Form} from "frontend/shared/Components/Form";
-import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
-import {TextField} from "frontend/shared/Components/FormFields/TextField";
-import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import {PageLayout} from "frontend/shared/PageLayout";
-import {navigateToPage, PagePath} from "frontend/shared/PageNavigation";
-import {placeholderServerResponse, ResponseState, runScenario, ServerResponse} from "frontend/shared/ScenarioRunner";
+import {ResetPasswordLinkContainer} from "frontend/pages/autentificare-repetitor/src/TutorLoginPage.css";
+import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";
+import {Form} from "frontend/shared/src/Components/Form";
+import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
+import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import {PageLayout} from "frontend/shared/src/PageLayout";
+import {navigateToPage, PagePath} from "frontend/shared/src/PageNavigation";
+import {
+  placeholderServerResponse,
+  ResponseState,
+  runScenario,
+  ServerResponse,
+} from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
-import {emailErrorMessages, UserEmailValidationRules} from "shared/Model/Email";
-import {passwordErrorMessages, UserPasswordValidationRules} from "shared/Model/Password";
-import {dbErrorMessages} from "shared/Model/Utils";
-import {TutorLoginInput} from "shared/Scenarios/TutorLogin";
-import {assertNever} from "shared/Utils/Language";
-import {emptyFieldValue, ValidatedValue} from "shared/Utils/Validation";
-import {PageProps} from "shared/Utils/PageProps";
-import {AlreadyLoggedIn} from "frontend/shared/Components/AlreadyLoggedIn";
-import {ResetPasswordLinkContainer} from "TutorLoginPage.css";
+import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
+import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {dbErrorMessages} from "shared/src/Model/Utils";
+import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
+import {assertNever} from "shared/src/Utils/Language";
+import {PageProps} from "shared/src/Utils/PageProps";
+import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
 
 export function TutorLoginPage(props: PageProps) {
   return (

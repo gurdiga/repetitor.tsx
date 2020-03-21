@@ -1,5 +1,5 @@
-import {FormValidation} from "frontend/shared/FormValidation";
-import {ValidationRules} from "shared/Utils/Validation";
+import {FormValidation} from "frontend/shared/src/FormValidation";
+import {ValidationRules} from "shared/src/Utils/Validation";
 
 export namespace FormField {
   export interface CommonProps extends React.InputHTMLAttributes<HTMLInputElement> {

@@ -1,5 +1,5 @@
 import {expect, use} from "chai";
-import {connectionPool, runQuery, RowSet} from "../../src/Utils/Db";
+import {connectionPool, runQuery, RowSet} from "backend/src/Utils/Db";
 import Sinon = require("sinon");
 
 use(require("chai-as-promised"));

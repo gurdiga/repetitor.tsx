@@ -1,12 +1,12 @@
-import {FormField} from "frontend/shared/Components/FormFields/FormField";
-import {PasswordFieldCss} from "frontend/shared/Components/FormFields/PasswordField.css";
-import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
-import {FormValidation} from "frontend/shared/FormValidation";
-import {PasswordGenerator} from "frontend/shared/PasswordGenerator";
+import {FormField} from "frontend/shared/src/Components/FormFields/FormField";
+import {PasswordFieldCss} from "frontend/shared/src/Components/FormFields/PasswordField.css";
+import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
+import {FormValidation} from "frontend/shared/src/FormValidation";
+import {PasswordGenerator} from "frontend/shared/src/PasswordGenerator";
 import * as React from "react";
-import {getValidationErrorCode} from "shared/Utils/Validation";
-import {TextFieldCss} from "frontend/shared/Components/FormFields/TextField.css";
-import {Label} from "frontend/shared/Components/FormFields/Label";
+import {getValidationErrorCode} from "shared/src/Utils/Validation";
+import {TextFieldCss} from "frontend/shared/src/Components/FormFields/TextField.css";
+import {Label} from "frontend/shared/src/Components/FormFields/Label";
 
 interface Props extends FormField.CommonProps {
   hasGenerateButton?: boolean;

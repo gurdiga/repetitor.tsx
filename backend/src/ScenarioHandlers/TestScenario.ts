@@ -1,6 +1,6 @@
-import {runQuery, RowSet} from "Utils/Db";
-import {ScenarioRegistry} from "shared/ScenarioRegistry";
-import {logError} from "Utils/Logging";
+import {runQuery, RowSet} from "backend/src/Utils/Db";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
+import {logError} from "backend/src/Utils/Logging";
 
 type Scenario = ScenarioRegistry["TestScenario"];
 

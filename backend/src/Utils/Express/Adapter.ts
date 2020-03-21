@@ -1,11 +1,11 @@
 import * as express from "express";
 import * as fs from "fs";
 import * as path from "path";
-import {UserSession} from "shared/Model/UserSession";
-import {isTestEnvironment, requireEnvVar} from "Utils/Env";
-import {logError} from "Utils/Logging";
-import {runScenario} from "Utils/ScenarioRunner";
-import {pagePropsFromSession} from "shared/Utils/PageProps";
+import {UserSession} from "shared/src/Model/UserSession";
+import {isTestEnvironment, requireEnvVar} from "backend/src/Utils/Env";
+import {logError} from "backend/src/Utils/Logging";
+import {runScenario} from "backend/src/Utils/ScenarioRunner";
+import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 
 const AppRoot = path.join(__dirname, "../../../..");
 const FrontendPath = `${AppRoot}/frontend`;
@@ -79,6 +79,18 @@ export function sendPageBundle(pagePathName: string | undefined, res: HttpRespon
   }
 }
 
+export const SHARED_BUNDLES = ["/frontend/shared/bundle.js", "/shared/bundle.js"];
+
+export function sendSharedBundle(pathName: string, res: HttpResponse): void {
+  if (SHARED_BUNDLES.includes(pathName)) {
+    const dir = path.dirname(pathName);
+
+    res.sendFile(`${AppRoot}/${dir}/build/bundle.js`);
+  } else {
+    res.sendStatus(404);
+  }
+}
+
 const htmlTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="utf-8" />
@@ -106,7 +118,7 @@ const htmlTemplate = `<!DOCTYPE html>
       paths: ${JSON.stringify(webPathsForVendorModules, null, "  ")}
     });
 
-    requirejs(["bundle"], function() {
+    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "bundle"], function() {
       requirejs(["MAIN_MODULE_PATH"], function(page) {
         page.main(PAGE_PROPS, location.search);
       });

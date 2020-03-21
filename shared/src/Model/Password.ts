@@ -1,4 +1,4 @@
-import {PredicateFn, UserValue, ValidationMessages} from "shared/Utils/Validation";
+import {PredicateFn, UserValue, ValidationMessages} from "shared/src/Utils/Validation";
 
 export type PasswordError = {
   kind: "PasswordError";

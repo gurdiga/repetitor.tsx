@@ -1,8 +1,12 @@
 import * as chai from "chai";
 import {expect} from "chai";
-import {app} from "index";
+import {app} from "backend/src/index";
 import ChaiHttp = require("chai-http");
-import {versionedVendorModulePaths, VENDOR_MODULE_PREFIX, webPathsForVendorModules} from "Utils/Express/Adapter";
+import {
+  versionedVendorModulePaths,
+  VENDOR_MODULE_PREFIX,
+  webPathsForVendorModules,
+} from "backend/src/Utils/Express/Adapter";
 
 describe("Express integration", () => {
   let agent: ChaiHttp.Agent;
@@ -67,7 +71,7 @@ describe("Express integration", () => {
 }
     });
 
-    requirejs(["bundle"], function() {
+    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "bundle"], function() {
       requirejs(["frontend/pages/home/src/Main"], function(page) {
         page.main({
   "isAuthenticated": false

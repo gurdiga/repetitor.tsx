@@ -1,7 +1,7 @@
-import {DataProps} from "shared/Model/Utils";
-import {TutorPasswordResetStep2Input} from "shared/Scenarios/TutorPasswordResetStep2";
-import {UserValue, PredicateFn, ValidationMessages, validateWithRules} from "shared/Utils/Validation";
-import {UserPasswordValidationRules, PasswordError} from "shared/Model/Password";
+import {DataProps} from "shared/src/Model/Utils";
+import {TutorPasswordResetStep2Input} from "shared/src/Scenarios/TutorPasswordResetStep2";
+import {UserValue, PredicateFn, ValidationMessages, validateWithRules} from "shared/src/Utils/Validation";
+import {UserPasswordValidationRules, PasswordError} from "shared/src/Model/Password";
 
 export interface TutorPasswordResetStep2Request {
   kind: "TutorPasswordResetStep2Request";

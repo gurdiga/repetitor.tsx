@@ -1,4 +1,4 @@
-import {runQuery, RowSet} from "Utils/Db";
+import {runQuery, RowSet} from "backend/src/Utils/Db";
 
 export async function getTokenForEmail(email: string): Promise<string> {
   const {rows} = (await runQuery({

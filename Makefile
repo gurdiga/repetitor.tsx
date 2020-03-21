@@ -18,6 +18,7 @@ test-backend: node_modules
 	node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
+		--require amd-loader \
 		--reporter dot \
 		--file backend/tests/src/TestHelpers.ts \
 		--exit `# this is related to chai-http hanging Mocha` \
@@ -32,6 +33,7 @@ test-frontend: node_modules
 	~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
+		--require amd-loader \
 		--reporter dot \
 		--file frontend/tests/src/TestHelpers.ts \
 		$${FILES:-'frontend/tests/**/*Test.ts?'}
@@ -55,13 +57,13 @@ watch: node_modules
 
 start: build
 	@set -e
+	TS_NODE_PROJECT=backend/tsconfig.json \
 	~/.nvm/nvm-exec node_modules/.bin/nodemon \
 		--watch backend/src \
-		--watch shared/src \
-		--ext ts \
 		--watch backend/tsconfig.json \
-		--watch backend/package.json \
+		--watch shared/src \
 		--watch shared/tsconfig.json \
+		--ext ts \
 		--exec 'heroku local'
 
 e: edit

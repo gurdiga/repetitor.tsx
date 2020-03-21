@@ -1,7 +1,7 @@
 import {style} from "typestyle";
 import {verticallySpaced, vertical, horizontal, maxWidth, margin} from "csstips";
 import {em} from "csx";
-import {removeListStyle} from "frontend/shared/Css/Utils.css";
+import {removeListStyle} from "frontend/shared/src/Css/Utils.css";
 
 export namespace FormCss {
   export const FormContainer = style(vertical, {

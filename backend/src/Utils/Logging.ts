@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express";
 import * as Rollbar from "rollbar";
-import {requireEnvVar, isTestEnvironment} from "Utils/Env";
+import {requireEnvVar, isTestEnvironment} from "backend/src/Utils/Env";
 
 const rollbar = new Rollbar({
   accessToken: requireEnvVar("APP_ROLLBAR_POST_SERVER_ITEM_TOKEN"),

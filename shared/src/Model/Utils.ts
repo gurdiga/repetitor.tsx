@@ -1,4 +1,4 @@
-import {ErrorMessages} from "shared/Utils/Validation";
+import {ErrorMessages} from "shared/src/Utils/Validation";
 
 export type Success = {
   kind: "Success";
@@ -23,9 +23,15 @@ export type UnexpectedError = {
 export type DataProps<T> = Omit<T, "kind">;
 
 export function dataProps<SI extends any>(scenarioInput: SI): DataProps<SI> {
-  const entries = Object.entries(scenarioInput).filter(([propName]) => propName === "kind");
+  const result: any = {};
 
-  return Object.fromEntries(entries) as DataProps<SI>;
+  for (const propName in scenarioInput) {
+    if (propName !== "kind") {
+      result[propName] = scenarioInput[propName];
+    }
+  }
+
+  return result as DataProps<SI>;
 }
 
 export type SystemError = DbError | UnexpectedError;

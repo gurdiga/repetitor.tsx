@@ -1,20 +1,23 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
-import {Form} from "frontend/shared/Components/Form";
-import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
-import {PasswordField} from "frontend/shared/Components/FormFields/PasswordField";
-import {TextField} from "frontend/shared/Components/FormFields/TextField";
-import {SubmitButton} from "frontend/shared/Components/SubmitButton";
-import * as ScenarioRunner from "frontend/shared/ScenarioRunner";
-import * as PageNavigation from "frontend/shared/PageNavigation";
+import {
+  TutorRegistrationPage,
+  ulaValidationRules,
+} from "frontend/pages/inregistrare-repetitor/src/TutorRegistrationPage";
+import {Form} from "frontend/shared/src/Components/Form";
+import {Checkbox} from "frontend/shared/src/Components/FormFields/Checkbox";
+import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
+import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import * as PageNavigation from "frontend/shared/src/PageNavigation";
+import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
+import {Comp, expectProps, expectToRenderSnapshot, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
 import {describe, it} from "mocha";
 import * as React from "react";
-import {TutorRegistrationPage, ulaValidationRules} from "TutorRegistrationPage";
-import {UserEmailValidationRules} from "shared/Model/Email";
-import {UserPasswordValidationRules} from "shared/Model/Password";
-import {TutorFullNameValidationRules} from "shared/Model/Tutor";
+import {UserEmailValidationRules} from "shared/src/Model/Email";
+import {UserPasswordValidationRules} from "shared/src/Model/Password";
+import {TutorFullNameValidationRules} from "shared/src/Model/Tutor";
 import {stub} from "sinon";
-import {Comp, expectProps, Stub, Wrapper, expectToRenderSnapshot} from "TestHelpers";
 
 describe("<TutorRegistrationPage/>", () => {
   let wrapper: Wrapper<typeof TutorRegistrationPage>;

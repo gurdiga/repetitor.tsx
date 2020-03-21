@@ -1,4 +1,4 @@
-import {InputCss} from "frontend/shared/Components/FormFields/Input.css";
+import {InputCss} from "frontend/shared/src/Components/FormFields/Input.css";
 import {style} from "typestyle";
 import {em} from "csx";
 import {maxWidth} from "csstips";

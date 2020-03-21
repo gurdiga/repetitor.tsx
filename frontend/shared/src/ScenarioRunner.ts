@@ -1,4 +1,4 @@
-import {ScenarioName, ScenarioRegistry} from "shared/ScenarioRegistry";
+import {ScenarioName, ScenarioRegistry} from "shared/src/ScenarioRegistry";
 
 export async function runScenario<SN extends ScenarioName, S extends ScenarioRegistry[SN]>(
   scenarioName: SN,

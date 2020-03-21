@@ -1,6 +1,6 @@
 import {createTransport} from "nodemailer";
-import {requireEnvVar, requireNumericEnvVar, isTestEnvironment, isDevelopmentEnvironment} from "Utils/Env";
-import {logError} from "Utils/Logging";
+import {requireEnvVar, requireNumericEnvVar, isTestEnvironment, isDevelopmentEnvironment} from "backend/src/Utils/Env";
+import {logError} from "backend/src/Utils/Logging";
 
 // Exported for tests only.
 export const transporter = createTransport({

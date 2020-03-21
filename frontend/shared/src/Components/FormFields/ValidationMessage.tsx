@@ -1,4 +1,4 @@
-import {ValidationMessageCss} from "frontend/shared/Components/FormFields/ValidationMessage.css";
+import {ValidationMessageCss} from "frontend/shared/src/Components/FormFields/ValidationMessage.css";
 import * as React from "react";
 
 interface Props {

@@ -1,11 +1,10 @@
 import {expect} from "chai";
-import {TutorPasswordResetStep1} from "ScenarioHandlers/TutorPasswordResetStep1";
-import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
-import {runQuery, RowSet} from "Utils/Db";
-import * as EmailUtils from "Utils/EmailUtils";
+import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswordResetStep1";
+import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import Sinon = require("sinon");
-import {Stub, truncateTable} from "TestHelpers";
-import {getTokenForEmail} from "ScenarioHandlers/Helpers";
+import {Stub, truncateTable} from "backend/tests/src/TestHelpers";
+import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
 
 describe("TutorPasswordResetStep1", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;

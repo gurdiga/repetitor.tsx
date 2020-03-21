@@ -1,6 +1,5 @@
 import {expect} from "chai";
-import * as Sinon from "sinon";
-import {runScenario} from "Utils/ScenarioRunner";
+import {runScenario} from "backend/src/Utils/ScenarioRunner";
 
 describe("runScenario", () => {
   const scenarioInput = {};

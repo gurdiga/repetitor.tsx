@@ -1,4 +1,4 @@
-import {FormCss} from "frontend/shared/Components/Form.css";
+import {FormCss} from "frontend/shared/src/Components/Form.css";
 import * as React from "react";
 
 interface Props {

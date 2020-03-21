@@ -1,6 +1,6 @@
-import {PageRendering} from "frontend/shared/PageRendering";
-import {TutorLoginPage} from "TutorLoginPage";
-import {PageProps} from "shared/Utils/PageProps";
+import {PageRendering} from "frontend/shared/src/PageRendering";
+import {TutorLoginPage} from "frontend/pages/autentificare-repetitor/src/TutorLoginPage";
+import {PageProps} from "shared/src/Utils/PageProps";
 
 export function main(pageProps: PageProps): void {
   PageRendering.renderPage(TutorLoginPage, pageProps);

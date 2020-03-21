@@ -1,5 +1,5 @@
 import * as React from "react";
-import {LabelCss} from "frontend/shared/Components/FormFields/Label.css";
+import {LabelCss} from "frontend/shared/src/Components/FormFields/Label.css";
 
 interface Props extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 

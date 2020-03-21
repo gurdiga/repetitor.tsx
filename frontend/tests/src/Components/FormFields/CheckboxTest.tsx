@@ -1,10 +1,10 @@
 import * as React from "react";
 import {expect} from "chai";
 import {shallow} from "enzyme";
-import {Checkbox} from "frontend/shared/Components/FormFields/Checkbox";
-import {PredicateFn} from "shared/Utils/Validation";
-import {ValidationMessage} from "frontend/shared/Components/FormFields/ValidationMessage";
-import {Wrapper} from "TestHelpers";
+import {Checkbox} from "frontend/shared/src/Components/FormFields/Checkbox";
+import {PredicateFn} from "shared/src/Utils/Validation";
+import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
+import {Wrapper} from "frontend/tests/src/TestHelpers";
 
 type ValidationErrorCodes = "ONE" | "TWO" | "THREE";
 

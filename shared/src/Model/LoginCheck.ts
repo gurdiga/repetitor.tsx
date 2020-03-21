@@ -1,9 +1,9 @@
-import {DataProps} from "shared/Model/Utils";
-import {TutorLoginInput} from "shared/Scenarios/TutorLogin";
-import {EmailError, UserEmailValidationRules} from "shared/Model/Email";
-import {PasswordError, UserPasswordValidationRules} from "shared/Model/Password";
-import {validateWithRules, PredicateFn} from "shared/Utils/Validation";
-import {UserSession} from "shared/Model/UserSession";
+import {DataProps} from "shared/src/Model/Utils";
+import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
+import {EmailError, UserEmailValidationRules} from "shared/src/Model/Email";
+import {PasswordError, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {validateWithRules, PredicateFn} from "shared/src/Utils/Validation";
+import {UserSession} from "shared/src/Model/UserSession";
 
 export interface LoginCheck {
   kind: "LoginCheck";

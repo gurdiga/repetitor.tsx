@@ -1,7 +1,7 @@
-import {TutorPasswordResetStep1Input} from "shared/Scenarios/TutorPasswordResetStep1";
-import {validateWithRules} from "shared/Utils/Validation";
-import {UserEmailValidationRules, EmailError} from "shared/Model/Email";
-import {DataProps} from "shared/Model/Utils";
+import {TutorPasswordResetStep1Input} from "shared/src/Scenarios/TutorPasswordResetStep1";
+import {validateWithRules} from "shared/src/Utils/Validation";
+import {UserEmailValidationRules, EmailError} from "shared/src/Model/Email";
+import {DataProps} from "shared/src/Model/Utils";
 
 export interface TutorPasswordResetStep1 {
   kind: "TutorPasswordResetRequest"; // TODO: rename to TutorPasswordResetStep1

@@ -1,7 +1,7 @@
-import {SystemError} from "shared/Model/Utils";
-import {EmailError} from "shared/Model/Email";
-import {PasswordError} from "shared/Model/Password";
-import {LoginCheckSuccess, LoginCheckError} from "shared/Model/LoginCheck";
+import {SystemError} from "shared/src/Model/Utils";
+import {EmailError} from "shared/src/Model/Email";
+import {PasswordError} from "shared/src/Model/Password";
+import {LoginCheckSuccess, LoginCheckError} from "shared/src/Model/LoginCheck";
 
 export interface TutorLoginInput {
   email: string | undefined;

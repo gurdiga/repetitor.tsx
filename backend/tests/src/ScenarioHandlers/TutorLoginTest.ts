@@ -1,9 +1,9 @@
 import {expect} from "chai";
-import {TutorLogin} from "ScenarioHandlers/TutorLogin";
-import {TutorRegistration} from "ScenarioHandlers/TutorRegistration";
-import {runQuery} from "Utils/Db";
-import {stubExport} from "TestHelpers";
-import * as EmailUtils from "Utils/EmailUtils";
+import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
+import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {runQuery} from "backend/src/Utils/Db";
+import {stubExport} from "backend/tests/src/TestHelpers";
+import * as EmailUtils from "backend/src/Utils/EmailUtils";
 
 describe("TutorLogin", () => {
   const session = {userId: undefined};
