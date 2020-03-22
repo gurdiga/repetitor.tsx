@@ -13,6 +13,7 @@ test-backend: node_modules
 	DEBUG=app:none \
 	TS_NODE_PROJECT=backend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
+	TS_NODE_SCOPE=true \
 	~/.nvm/nvm-exec \
 	node --no-deprecation `# avoid "DeprecationWarning: OutgoingMessage.prototype._headers is deprecated" caused by timed-out` \
 	node_modules/.bin/mocha \
@@ -30,6 +31,7 @@ test-frontend: node_modules
 	printf "\nRunning frontend tests:\n"
 	TS_NODE_PROJECT=frontend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
+	TS_NODE_SCOPE=true \
 	~/.nvm/nvm-exec node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
