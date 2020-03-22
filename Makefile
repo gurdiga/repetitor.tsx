@@ -43,13 +43,12 @@ test-frontend: node_modules
 tf: test-frontend
 
 c: build
-.PHONY: build
 build: node_modules
 	~/.nvm/nvm-exec \
 	node_modules/.bin/tsc --build -v
 
 watch: node_modules
-	~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w \
+	@~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w \
 	| tee >( \
 		while read ln; do \
 			if echo "$${ln}" | grep -q "Found 0 errors. Watching for file changes."; then \
@@ -109,24 +108,6 @@ $(NODE_BINARY_PATH):
 	@echo "Install nvm from here: https://github.com/nvm-sh/nvm"
 	exit 1
 
-service:
-	@echo -e "
-		Here are the instructions to set up a Systemd service:\n
-		* tweak backend/repetitor.service
-		* copy it to /etc/systemd/user/
-		* run systemctl enable /etc/systemd/user/repetitor.service
-		* run systemctl start repetitor
-		* run systemctl status repetitor
-	"
-
-deploy:
-	@set -e
-	test -n "$$TAG" || { echo "TAG env var is not set\n"; exit 1; }
-	git archive \
-		--format tgz \
-		$(TAG) \
-	| ssh root@forum.homeschooling.md "cd /var/www/repetitor && tar fxz -"
-
 pre-commit:
 	TEST_EMAIL_UTILS=yes \
 	time make --no-print-directory lint clean build test
@@ -164,8 +145,6 @@ migration:
 		--env $${NODE_ENV:-development} \
 		--config backend/migrations/config.json \
 		--migrations-dir backend/migrations
-
-mnew: migration
 
 sql:
 	@set -e
