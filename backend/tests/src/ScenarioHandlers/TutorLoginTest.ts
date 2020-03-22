@@ -1,12 +1,12 @@
 import {expect} from "chai";
 import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
 import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
-import {runQuery} from "backend/src/Utils/Db";
 import {stubExport} from "backend/tests/src/TestHelpers";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
+import {UserSession} from "shared/src/Model/UserSession";
 
 describe("TutorLogin", () => {
-  const session = {userId: undefined};
+  const session: UserSession = {userId: undefined};
 
   stubExport(EmailUtils, "sendEmail", before, after);
 
@@ -39,7 +39,7 @@ describe("TutorLogin", () => {
   });
 
   it("tells when both the email and password match, and sets userId on the session", async () => {
-    const session = {userId: undefined};
+    const session: UserSession = {userId: undefined};
     const email = "some@email.com";
     const password = "secret";
 
@@ -53,5 +53,6 @@ describe("TutorLogin", () => {
 
     expect(result).to.deep.equal({kind: "LoginCheckSuccess"});
     expect(session.userId).to.equal(userId);
+    expect(session.email).to.equal(email);
   });
 });

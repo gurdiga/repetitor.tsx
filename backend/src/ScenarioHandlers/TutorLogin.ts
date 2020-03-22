@@ -18,6 +18,7 @@ export async function TutorLogin(input: Scenario["Input"], session: UserSession)
 
   if (loginCheckResult.kind === "LoginCheckInfo") {
     session.userId = loginCheckResult.userId;
+    session.email = email;
 
     return {
       kind: "LoginCheckSuccess",
