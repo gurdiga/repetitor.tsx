@@ -126,24 +126,7 @@ export async function createTutorPasswordResetToken(userId: number): Promise<Pas
   }
 }
 
-export async function resetTutorPassword(
-  token: string,
-  storablePassword: StorablePassword
-): Promise<TutorPasswordResetSuccess | PasswordResetTokenUnknownError | DbError> {
-  const tokenVerificationResult = await verifyToken(token);
-
-  if (tokenVerificationResult.kind !== "PasswordResetTokenVerified") {
-    return tokenVerificationResult;
-  }
-
-  await deleteToken(token);
-
-  const {userId} = tokenVerificationResult;
-
-  return await resetPassword(userId, storablePassword);
-}
-
-async function resetPassword(
+export async function resetPassword(
   userId: number,
   storablePassword: StorablePassword
 ): Promise<TutorPasswordResetSuccess | DbError> {
@@ -168,17 +151,18 @@ async function resetPassword(
   }
 }
 
-async function verifyToken(
+export async function verifyToken(
   token: string
-): Promise<PasswordResetTokenUnknownError | PasswordResetTokenVerified | DbError> {
+): Promise<PasswordResetTokenVerified | PasswordResetTokenUnknownError | DbError> {
   await purgeExpiredTokens();
 
   try {
     const result = (await runQuery({
       sql: `
-            SELECT user_id
-            FROM passsword_reset_tokens
-            WHERE token = ?
+            SELECT users.id, users.email, users.full_name
+            FROM users
+            LEFT JOIN passsword_reset_tokens ON passsword_reset_tokens.user_id = users.id
+            WHERE passsword_reset_tokens.token = ?
           `,
       params: [token.slice(0, PASSWORD_RESET_TOKEN_LENGTH)],
     })) as RowSet;
@@ -191,7 +175,9 @@ async function verifyToken(
 
     return {
       kind: "PasswordResetTokenVerified",
-      userId: row.userId,
+      userId: row.id,
+      email: row.email,
+      fullName: row.full_name,
     };
   } catch (error) {
     logError(error);
@@ -221,7 +207,7 @@ async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
   }
 }
 
-async function deleteToken(token: string): Promise<PurgedExpiredTokens | DbError> {
+export async function deleteToken(token: string): Promise<PurgedExpiredTokens | DbError> {
   try {
     await runQuery({
       sql: `

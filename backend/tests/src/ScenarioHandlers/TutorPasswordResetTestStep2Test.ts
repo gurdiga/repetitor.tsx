@@ -7,20 +7,15 @@ import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration"
 import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswordResetStep1";
 import {runQuery, RowSet} from "backend/src/Utils/Db";
 import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
-import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/TutorPersistence";
+import {requireEnvVar} from "backend/src/Utils/Env";
+import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
 
 describe("TutorPasswordResetStep2", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
 
-  beforeEach(() => {
-    sendEmailStub = Sinon.stub(EmailUtils, "sendEmail");
-  });
-
-  afterEach(() => {
-    sendEmailStub.restore();
-  });
-
+  beforeEach(() => (sendEmailStub = Sinon.stub(EmailUtils, "sendEmail")));
+  afterEach(() => sendEmailStub.restore());
   afterEach(() => truncateTables(["users", "passsword_reset_tokens"]));
 
   const email = "some@email.com";
@@ -28,33 +23,38 @@ describe("TutorPasswordResetStep2", () => {
 
   describe("happy path", () => {
     let token: string;
-    let result: ScenarioRegistry["TutorPasswordResetStep2"]["Result"];
     const expiredToken = "EXPIRED";
 
-    before(async () => {
+    beforeEach(async () => {
       await TutorRegistration({fullName: "Joe DOE", email, password: "secret"}, {});
       await TutorPasswordResetStep1({email});
-      await insertExpiredToken(expiredToken);
 
+      await insertExpiredToken(expiredToken);
       expect(await doesTokenExist(expiredToken)).to.be.true;
 
       token = await getTokenForEmail(email);
-      result = await TutorPasswordResetStep2({token, newPassword});
+      expect(token).to.exist;
+
+      sendEmailStub.reset(); // ignore emails from TutorRegistration and TutorPasswordResetStep1
     });
 
-    it("has the successful outcome", async () => {
-      expect(result).to.deep.equal({kind: "TutorPasswordResetSuccess"});
-    });
+    it("works", async () => {
+      expect(await TutorPasswordResetStep2({token, newPassword})).to.deep.equal({kind: "TutorPasswordResetSuccess"});
 
-    it("deletes the token", async () => {
-      token = await getTokenForEmail(email);
-      expect(token).not.to.exist;
-    });
+      expect(await doesTokenExist(token), "deletes the used token").to.be.false;
+      expect(await doesTokenExist(expiredToken), "purges expired tokens").to.be.false;
 
-    it("purges the expired tokens", async () => {
-      const doesExpiredTokenExist = await doesTokenExist(expiredToken);
+      expect(sendEmailStub.calledOnce, "sends notification email").to.be.true;
 
-      expect(doesExpiredTokenExist, "the expired token no longer exist").to.be.false;
+      const {args} = sendEmailStub.firstCall;
+      expect(args[0], "notification email address").to.equal(email);
+      expect(args[1], "notification email subject").to.equal("Parola dumneavoastră a fost resetată");
+      expect(args[2], "notification email body").to.contain(requireEnvVar("APP_URL"));
+
+      expect(await TutorLogin({email, password: newPassword}, {})).to.deep.equal(
+        {kind: "LoginCheckSuccess"},
+        "can log in with the new password"
+      );
     });
 
     async function insertExpiredToken(token: string): Promise<void> {

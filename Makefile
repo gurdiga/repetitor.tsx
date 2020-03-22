@@ -1,7 +1,8 @@
 .ONESHELL:
 SHELL=bash
 
-default: test-backend
+default:
+	make --no-print-directory test-backend FILES=backend/tests/src/ScenarioHandlers/TutorPasswordResetTestStep2Test.ts
 
 test: test-backend test-frontend
 t: test

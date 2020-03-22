@@ -37,6 +37,8 @@ export type PasswordResetTokenUnknownError = {
 export type PasswordResetTokenVerified = {
   kind: "PasswordResetTokenVerified";
   userId: number;
+  email: string;
+  fullName: string;
 };
 
 export type PurgedExpiredTokens = {
