@@ -153,6 +153,8 @@ mup:
 mdown:
 	@make migrate --no-print-directory DIRECTION=down
 
+m mtry: mup mdown
+
 migration:
 	@set -e
 	if [ ! "$$NODE_ENV" ] || [ "$$NODE_ENV" == "development" ]; then source .env; else source .env.$$NODE_ENV; fi
