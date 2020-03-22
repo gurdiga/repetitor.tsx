@@ -23,7 +23,7 @@ connectionPool.on("connection", connection => {
   afterEach(async () => connection.rollback());
 });
 
-export interface AssertionParams {
+interface AssertionParams {
   promise: Promise<any>;
   expectedErrorMessage: string;
 }
@@ -49,20 +49,21 @@ export type Stub<T extends (...args: any) => any> = Sinon.SinonStub<Parameters<T
 export function stubExport<T extends any>(
   module: T,
   functionName: keyof T,
-  before: Mocha.HookFunction,
-  after: Mocha.HookFunction
+  beforeHook: Mocha.HookFunction,
+  afterHook: Mocha.HookFunction
 ): void {
   let exportedFunction: Stub<any>;
 
-  before(() => {
+  beforeHook(() => {
     exportedFunction = Sinon.stub(module, functionName);
   });
 
-  after(() => {
+  afterHook(() => {
     exportedFunction.restore();
   });
 }
 
+// Run ad-hoc queries
 export async function q(sql: string): Promise<any> {
   const result = (await runQuery({sql, params: []})) as RowSet;
 
