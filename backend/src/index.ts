@@ -10,6 +10,7 @@ import {
   sendVendorModule,
   sendSecurityTxt,
   sendSharedBundle,
+  SHARED_BUNDLES,
 } from "backend/src/Utils/Express/Adapter";
 import {VENDOR_MODULE_PREFIX} from "backend/src/Utils/Express/Adapter";
 import {session} from "backend/src/Utils/Express/Session";
@@ -34,7 +35,7 @@ export const app = express()
   .get(`${VENDOR_MODULE_PREFIX}:vendorModuleFileName`, (req, res) => {
     sendVendorModule(req.params.vendorModuleFileName, res);
   })
-  .get(["/frontend/shared/bundle.js", "/shared/bundle.js"], (req, res) => {
+  .get(SHARED_BUNDLES, (req, res) => {
     sendSharedBundle(req.path, res);
   })
   .get(["/bundle.js", "/:pagePathName/bundle.js"], (req, res) => {
