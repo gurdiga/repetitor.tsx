@@ -73,3 +73,9 @@ export function stubExport<T extends any>(
     exportedFunction.restore();
   });
 }
+
+export async function q(sql: string): Promise<any> {
+  const result = (await runQuery({sql, params: []})) as RowSet;
+
+  return result.rows;
+}
