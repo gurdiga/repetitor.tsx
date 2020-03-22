@@ -128,6 +128,7 @@ deploy:
 	| ssh root@forum.homeschooling.md "cd /var/www/repetitor && tar fxz -"
 
 pre-commit:
+	TEST_EMAIL_UTILS=yes \
 	time make --no-print-directory lint clean build test
 pc: pre-commit
 
