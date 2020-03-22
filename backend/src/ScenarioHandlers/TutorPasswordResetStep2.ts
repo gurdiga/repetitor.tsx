@@ -4,10 +4,14 @@ import {verifyToken, deleteToken, resetPassword} from "backend/src/Persistence/T
 import {getStorablePassword} from "backend/src/Utils/StringUtils";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
+import {UserSession} from "shared/src/Model/UserSession";
 
 type Scenario = ScenarioRegistry["TutorPasswordResetStep2"];
 
-export async function TutorPasswordResetStep2(input: Scenario["Input"]): Promise<Scenario["Result"]> {
+export async function TutorPasswordResetStep2(
+  input: Scenario["Input"],
+  session: UserSession
+): Promise<Scenario["Result"]> {
   const inputValidationResult = makeTutorPasswordResetStep2RequestFromInput(input);
 
   if (inputValidationResult.kind !== "TutorPasswordResetStep2Request") {
@@ -27,7 +31,14 @@ export async function TutorPasswordResetStep2(input: Scenario["Input"]): Promise
   await deleteToken(token);
   sendPasswordResetNotificationEmail(email, fullName);
 
-  return await resetPassword(userId, storablePassword);
+  const resetPasswordResult = await resetPassword(userId, storablePassword);
+
+  if (resetPasswordResult.kind === "TutorPasswordResetSuccess") {
+    session.userId = userId;
+    session.email = email;
+  }
+
+  return resetPasswordResult;
 }
 
 function sendPasswordResetNotificationEmail(email: string, fullName: string): void {

@@ -10,6 +10,7 @@ import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
 import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/TutorPersistence";
 import {requireEnvVar} from "backend/src/Utils/Env";
 import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
+import {UserSession} from "shared/src/Model/UserSession";
 
 describe("TutorPasswordResetStep2", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
@@ -19,6 +20,7 @@ describe("TutorPasswordResetStep2", () => {
 
   const email = "some@email.com";
   const newPassword = "secret42";
+  let session: UserSession = {};
 
   describe("happy path", () => {
     let token: string;
@@ -35,10 +37,13 @@ describe("TutorPasswordResetStep2", () => {
       expect(token).to.exist;
 
       sendEmailStub.reset(); // ignore emails from TutorRegistration and TutorPasswordResetStep1
+      session = {};
     });
 
     it("works", async () => {
-      expect(await TutorPasswordResetStep2({token, newPassword})).to.deep.equal({kind: "TutorPasswordResetSuccess"});
+      expect(await TutorPasswordResetStep2({token, newPassword}, session)).to.deep.equal({
+        kind: "TutorPasswordResetSuccess",
+      });
 
       expect(await doesTokenExist(token), "deletes the used token").to.be.false;
       expect(await doesTokenExist(expiredToken), "purges expired tokens").to.be.false;
@@ -49,6 +54,9 @@ describe("TutorPasswordResetStep2", () => {
       expect(args[0], "notification email address").to.equal(email);
       expect(args[1], "notification email subject").to.equal("Parola dumneavoastră a fost resetată");
       expect(args[2], "notification email body").to.contain(requireEnvVar("APP_URL"));
+
+      expect(session.email).to.equal(email);
+      expect(session.userId).to.exist;
 
       expect(await TutorLogin({email, password: newPassword}, {})).to.deep.equal(
         {kind: "LoginCheckSuccess"},
@@ -85,7 +93,7 @@ describe("TutorPasswordResetStep2", () => {
   describe("unhappy path", () => {
     context("when token is missing", () => {
       it("fails appropriately", async () => {
-        const result = await TutorPasswordResetStep2({token: "", newPassword});
+        const result = await TutorPasswordResetStep2({token: "", newPassword}, session);
 
         expect(result).to.deep.equal({
           kind: "PasswordResetTokenError",
@@ -96,7 +104,7 @@ describe("TutorPasswordResetStep2", () => {
 
     context("when password is missing", () => {
       it("fails appropriately", async () => {
-        const result = await TutorPasswordResetStep2({token: "something", newPassword: ""});
+        const result = await TutorPasswordResetStep2({token: "something", newPassword: ""}, session);
 
         expect(result).to.deep.equal({
           kind: "PasswordError",
@@ -107,7 +115,7 @@ describe("TutorPasswordResetStep2", () => {
 
     context("when both token and the new password are present but the token is not registered", () => {
       it("fails appropriately", async () => {
-        const result = await TutorPasswordResetStep2({token: "unregistered", newPassword});
+        const result = await TutorPasswordResetStep2({token: "unregistered", newPassword}, session);
 
         expect(result).to.deep.equal({
           kind: "PasswordResetTokenUnknownError",
