@@ -98,7 +98,10 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta name="csrf_token" content="CSRF_TOKEN" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
-  <script>var environment = "${requireEnvVar("NODE_ENV")}";</script>
+  <script>
+    var environment = "${requireEnvVar("NODE_ENV")}";
+    var version = "${requireEnvVar("HEROKU_SLUG_COMMIT")}";
+  </script>
   <script src="${webPathsForVendorModules["rollbar"]}.js"></script>
   <script>
     rollbar.init({

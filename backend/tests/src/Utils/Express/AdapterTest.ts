@@ -43,7 +43,10 @@ describe("Express integration", () => {
   <meta name="csrf_token" content="${csrfToken}" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
-  <script>var environment = "test";</script>
+  <script>
+    var environment = "test";
+    var version = "HEROKU_SLUG_COMMIT";
+  </script>
   <script src="/vendor_modules/rollbar-2.15.0.js"></script>
   <script>
     rollbar.init({
