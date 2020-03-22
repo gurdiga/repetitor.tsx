@@ -1,6 +1,7 @@
 import {expect, use} from "chai";
 import {connectionPool, runQuery, RowSet} from "backend/src/Utils/Db";
 import Sinon = require("sinon");
+import {PoolConnection} from "mysql";
 
 use(require("chai-as-promised"));
 use(require("chai-http"));
@@ -9,30 +10,18 @@ process.on("unhandledRejection", e => {
   throw e;
 });
 
-after(async () => {
-  await truncateAllTables();
-
-  connectionPool.end(error => {
-    if (error) {
-      console.error("Error when ending connection pool", error);
-    }
+connectionPool.config.connectionLimit = 1;
+connectionPool.on("connection", connection => {
+  beforeEach(() => {
+    connection.beginTransaction(e => {
+      if (e) {
+        throw e;
+      }
+    });
   });
+
+  afterEach(async () => connection.rollback());
 });
-
-async function truncateAllTables(): Promise<void> {
-  const {rows} = (await runQuery({sql: "SHOW TABLES", params: []})) as RowSet;
-  const truncateOperations = rows.map(row => Object.values(row)[0]).map(truncateTable);
-
-  await Promise.all(truncateOperations);
-}
-
-export async function truncateTable(tableName: string) {
-  return runQuery({sql: "TRUNCATE TABLE ??", params: [tableName]});
-}
-
-export async function truncateTables(tableNames: string[]) {
-  return Promise.all(tableNames.map(truncateTable));
-}
 
 export interface AssertionParams {
   promise: Promise<any>;

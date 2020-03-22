@@ -50,8 +50,6 @@ describe("TutorRegistration", () => {
         result = (await TutorRegistration(params, session)) as TutorCreationSuccess;
       });
 
-      afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
-
       it("adds the appropriate row to the users table", async () => {
         const {rows} = (await runQuery({sql: "SELECT * FROM users", params: []})) as RowSet;
         row = rows[0];
@@ -76,10 +74,9 @@ describe("TutorRegistration", () => {
 
     context("when there is already a user like that", () => {
       // Silence this: ER_DUP_ENTRY "Duplicate entry 'some@email.com' for key 'email'"
-      stubExport(Logging, "logError", before, after); // Silence
+      stubExport(Logging, "logError", before, after);
 
       beforeEach(() => TutorRegistration(params, session));
-      afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
 
       it("trows with an appropriate error message", async () => {
         const result = await TutorRegistration(params, session);

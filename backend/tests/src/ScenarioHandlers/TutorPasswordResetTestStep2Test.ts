@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {Stub, truncateTables} from "backend/tests/src/TestHelpers";
+import {Stub} from "backend/tests/src/TestHelpers";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import Sinon = require("sinon");
 import {TutorPasswordResetStep2} from "backend/src/ScenarioHandlers/TutorPasswordResetStep2";
@@ -16,7 +16,6 @@ describe("TutorPasswordResetStep2", () => {
 
   beforeEach(() => (sendEmailStub = Sinon.stub(EmailUtils, "sendEmail")));
   afterEach(() => sendEmailStub.restore());
-  afterEach(() => truncateTables(["users", "passsword_reset_tokens"]));
 
   const email = "some@email.com";
   const newPassword = "secret42";

@@ -1,5 +1,5 @@
 import * as mysql from "mysql";
-import {requireEnvVar} from "backend/src/Utils/Env";
+import {requireEnvVar, isTestEnvironment} from "backend/src/Utils/Env";
 import {logError} from "backend/src/Utils/Logging";
 
 export interface DataRow {

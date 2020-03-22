@@ -3,7 +3,7 @@ import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswor
 import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import Sinon = require("sinon");
-import {Stub, truncateTable} from "backend/tests/src/TestHelpers";
+import {Stub} from "backend/tests/src/TestHelpers";
 import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
 
 describe("TutorPasswordResetStep1", () => {
@@ -16,8 +16,6 @@ describe("TutorPasswordResetStep1", () => {
   afterEach(() => {
     sendEmailStub.restore();
   });
-
-  afterEach(() => truncateTable("users"));
 
   it("validates the email", async () => {
     let email = "";

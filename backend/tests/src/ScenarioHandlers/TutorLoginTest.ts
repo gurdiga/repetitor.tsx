@@ -54,6 +54,4 @@ describe("TutorLogin", () => {
     expect(result).to.deep.equal({kind: "LoginCheckSuccess"});
     expect(session.userId).to.equal(userId);
   });
-
-  afterEach(() => runQuery({sql: "DELETE FROM users", params: []}));
 });
