@@ -45,6 +45,6 @@ describe("TutorPasswordResetStep1", () => {
 
     expect(args[0], "notification email address").to.equal(email);
     expect(args[1], "notification email subject").to.contain("Resetarea parolei");
-    expect(args[2], "notification email body").to.contain("/resetare-parola?token=");
+    expect(args[2], "notification email body").to.contain("/resetare-parola/?token=");
   });
 });

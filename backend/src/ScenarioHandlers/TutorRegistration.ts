@@ -45,10 +45,6 @@ ${requireEnvVar("APP_URL")}/confirmare-email
 După confirmarea adresei de email veți putea primi alte notificări de
 serviciu de la sistemul [${requireEnvVar("APP_NAME")}][1].
 
-Cele bune.
-
-Vlad
-
 [1]: ${requireEnvVar("APP_URL")}
 `
   );

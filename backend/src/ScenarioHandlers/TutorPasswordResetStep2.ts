@@ -5,6 +5,7 @@ import {getStorablePassword} from "backend/src/Utils/StringUtils";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
 import {UserSession} from "shared/src/Model/UserSession";
+import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["TutorPasswordResetStep2"];
 
@@ -45,9 +46,18 @@ function sendPasswordResetNotificationEmail(email: string, fullName: string): vo
   sendEmail(
     email,
     `Parola dumneavoastră a fost resetată`,
-    `Dragă ${fullName},
-
-    Parola dumneavoastră a fost resetată. Puteți intra în aplicație aici: ${requireEnvVar("APP_URL")}.
     `
+Dragă ${fullName},
+
+Vă aducem la cunoștință că parola contului dumneavoastră (${email}) în sistemul
+[${requireEnvVar("APP_NAME")}][1] a fost resetată.
+
+[1]: ${requireEnvVar("APP_URL")}
+
+Dacă nu ați resetat-o dumneavoastră, vă sfătui să o resetați acum urmînd link-ul
+de mai jos:
+
+${requireEnvVar("APP_URL")}/${PagePath.TutorPasswordReset}
+`
   );
 }

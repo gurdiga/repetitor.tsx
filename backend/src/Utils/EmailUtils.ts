@@ -23,6 +23,10 @@ export async function sendEmail(email: string, subject: string, markdown: string
   const html = parseMarkdown(`
 <div style="max-width: 35em">
 ${markdown}
+
+Cele bune.
+
+Vlad
 </div>
   `);
 

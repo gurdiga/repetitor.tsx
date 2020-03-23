@@ -3,6 +3,7 @@ import {makeTutorPasswordResetRequestFromInput} from "shared/src/Model/TutorPass
 import {checkIfEmailExists, createTutorPasswordResetToken} from "backend/src/Persistence/TutorPersistence";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
+import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["TutorPasswordResetStep1"];
 
@@ -37,20 +38,20 @@ export async function TutorPasswordResetStep1(input: Scenario["Input"]): Promise
 }
 
 function sendTutorPasswordResetEmail(email: string, fullName: string, token: string): void {
-  const subject = `Resetarea parolei în ${requireEnvVar("APP_NAME")}`;
-  const html = getMessage(fullName, token);
+  sendEmail(
+    email,
+    `Resetarea parolei în sistemul ${requireEnvVar("APP_NAME")}`,
+    `
+Dragă ${fullName},
 
-  sendEmail(email, subject, html);
-}
+Ați primit acest mesaj pentru că ați inițiat procesul de resetare a
+parolei în sistemul ${requireEnvVar("APP_NAME")}. Dacă nu dumneavoastră
+ați inițiat acest proces, atunci puteți ignore acest mesaj.
 
-function getMessage(fullName: string, token: string): string {
-  // TODO: Move PageNavigation to shared and use it here.
-  const passwordResetLink = `/resetare-parola?token=${token}`;
+Dacă dumneavoastră ați inițiat procesul de resetare a parolei, accesați
+link-ul de mai jos pentru a continua:
 
-  return `
-    Dragă ${fullName},
-
-    Accesați acest link pentru resetarea parolei în ${requireEnvVar("APP_NAME")}:
-    ${passwordResetLink}
-  `;
+${requireEnvVar("APP_URL")}/${PagePath.TutorPasswordReset}?token=${token}
+  `
+  );
 }
