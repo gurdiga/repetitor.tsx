@@ -4,7 +4,7 @@ import {verifyToken, deleteToken, resetPassword} from "backend/src/Persistence/T
 import {getStorablePassword} from "backend/src/Utils/StringUtils";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
-import {UserSession} from "shared/src/Model/UserSession";
+import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["TutorPasswordResetStep2"];
@@ -35,8 +35,10 @@ export async function TutorPasswordResetStep2(
   const resetPasswordResult = await resetPassword(userId, storablePassword);
 
   if (resetPasswordResult.kind === "TutorPasswordResetSuccess") {
-    session.userId = userId;
-    session.email = email;
+    initializeUserSession(session, {
+      userId,
+      email,
+    });
   }
 
   return resetPasswordResult;

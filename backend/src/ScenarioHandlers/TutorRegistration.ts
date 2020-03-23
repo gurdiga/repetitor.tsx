@@ -2,7 +2,7 @@ import {getStorablePassword} from "backend/src/Utils/StringUtils";
 import {createTutor} from "backend/src/Persistence/TutorPersistence";
 import {makeTutorFromRegistrationFormInput} from "shared/src/Model/Tutor";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {UserSession} from "shared/src/Model/UserSession";
+import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
 
@@ -21,8 +21,10 @@ export async function TutorRegistration(input: Scenario["Input"], session: UserS
   const createTutorResult = await createTutor(fullName, email, passwordHash, salt);
 
   if (createTutorResult.kind === "TutorCreationSuccess") {
-    session.userId = createTutorResult.id;
-    session.email = email;
+    initializeUserSession(session, {
+      userId: createTutorResult.id,
+      email,
+    });
   }
 
   sendWelcomeMessage(fullName, email);

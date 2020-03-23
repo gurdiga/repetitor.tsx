@@ -2,7 +2,7 @@ import {checkLoginInfo} from "backend/src/Persistence/TutorPersistence";
 import {makeLoginCkeckFromLoginInput} from "shared/src/Model/LoginCheck";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {hashString} from "backend/src/Utils/StringUtils";
-import {UserSession} from "shared/src/Model/UserSession";
+import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 
 type Scenario = ScenarioRegistry["TutorLogin"];
 
@@ -17,8 +17,10 @@ export async function TutorLogin(input: Scenario["Input"], session: UserSession)
   const loginCheckResult = await checkLoginInfo(email, password, hashString);
 
   if (loginCheckResult.kind === "LoginCheckInfo") {
-    session.userId = loginCheckResult.userId;
-    session.email = email;
+    initializeUserSession(session, {
+      userId: loginCheckResult.userId,
+      email,
+    });
 
     return {
       kind: "LoginCheckSuccess",
