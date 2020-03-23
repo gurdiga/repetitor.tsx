@@ -185,8 +185,8 @@ export async function verifyToken(
   }
 }
 
-const hour = 3600 * 1000;
-export const TOKEN_EXPIRATION_TIME = 1 * hour;
+export const PASSWORD_RESET_EXPIRATION_HOURS = 1;
+export const TOKEN_EXPIRATION_TIME = PASSWORD_RESET_EXPIRATION_HOURS * 3600 * 1000;
 
 async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
   const expirationTimestamp = Date.now() - TOKEN_EXPIRATION_TIME;
