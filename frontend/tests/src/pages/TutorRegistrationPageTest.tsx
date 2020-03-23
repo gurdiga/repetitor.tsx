@@ -18,6 +18,7 @@ import {UserEmailValidationRules} from "shared/src/Model/Email";
 import {UserPasswordValidationRules} from "shared/src/Model/Password";
 import {TutorFullNameValidationRules} from "shared/src/Model/Tutor";
 import {stub} from "sinon";
+import {PagePath} from "shared/src/Utils/PagePath";
 
 describe("<TutorRegistrationPage/>", () => {
   let wrapper: Wrapper<typeof TutorRegistrationPage>;
@@ -118,7 +119,7 @@ describe("<TutorRegistrationPage/>", () => {
         });
 
         it("navigates to the home page", () => {
-          expect(navigateToPageStub.calledWith(PageNavigation.PagePath.Home)).to.be.true;
+          expect(navigateToPageStub.calledWith(PagePath.Home)).to.be.true;
         });
       });
 

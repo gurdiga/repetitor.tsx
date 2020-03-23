@@ -1,9 +1,4 @@
-export enum PagePath {
-  Home = "/",
-  TutorRegistration = "/inregistrare-repetitor/",
-  TutorLogin = "/autentificare-repetitor/",
-  TutorPasswordReset = "/resetare-parola/",
-}
+import {PagePath} from "shared/src/Utils/PagePath";
 
 export function navigateToPage(pagePath: PagePath): void {
   location.assign(pagePath);

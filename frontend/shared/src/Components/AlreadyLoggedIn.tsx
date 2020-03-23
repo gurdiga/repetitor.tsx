@@ -1,7 +1,8 @@
 import * as React from "react";
 import {runScenario} from "frontend/shared/src/ScenarioRunner";
-import {navigateToPage, PagePath} from "frontend/shared/src/PageNavigation";
+import {navigateToPage} from "frontend/shared/src/PageNavigation";
 import {assertNever} from "shared/src/Utils/Language";
+import {PagePath} from "shared/src/Utils/PagePath";
 
 export function AlreadyLoggedIn(props: React.ComponentProps<any>) {
   const [logoutError, setLogoutError] = React.useState("");

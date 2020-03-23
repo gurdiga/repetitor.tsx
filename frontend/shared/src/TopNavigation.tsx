@@ -1,6 +1,6 @@
 import * as React from "react";
 import {TopNavigationCss} from "frontend/shared/src/TopNavigation.css";
-import {PagePath} from "frontend/shared/src/PageNavigation";
+import {PagePath} from "shared/src/Utils/PagePath";
 
 export function TopNavigation() {
   return (

@@ -5,7 +5,7 @@ import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordF
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
-import {navigateToPage, PagePath} from "frontend/shared/src/PageNavigation";
+import {navigateToPage} from "frontend/shared/src/PageNavigation";
 import {
   placeholderServerResponse,
   ResponseState,
@@ -20,6 +20,7 @@ import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
+import {PagePath} from "shared/src/Utils/PagePath";
 
 export function TutorLoginPage(props: PageProps) {
   return (
