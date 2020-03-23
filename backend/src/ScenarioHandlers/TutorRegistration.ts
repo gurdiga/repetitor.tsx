@@ -31,21 +31,25 @@ export async function TutorRegistration(input: Scenario["Input"], session: UserS
 }
 
 function sendWelcomeMessage(fullName: string, email: string) {
-  const subject = `Bine ați venit la ${requireEnvVar("APP_NAME")}`;
-  const html = getMessage(fullName);
+  return sendEmail(
+    email,
+    `Bine ați venit la ${requireEnvVar("APP_NAME")}`,
+    `
+Dragă ${fullName},
 
-  sendEmail(email, subject, html);
-}
+Ați primit acest mesaj pentru că v-ați înregistrat în sistemul [${requireEnvVar("APP_NAME")}][1].
+Dați click pe link-ul de mai jos pentru a vă confirma adresa de email:
 
-function getMessage(name: string): string {
-  // TODO: Make this good after the confirmation link is up.
-  const emailConfirmationLink = "/confirmare-repetitor"; // TODO: get the real link
+${requireEnvVar("APP_URL")}/confirmare-email
 
-  return `
-    Welcome ${name}!
+După confirmarea adresei de email veți putea primi alte notificări de
+serviciu de la sistemul [${requireEnvVar("APP_NAME")}][1].
 
-    Please click this link to confirm your email address.
+Cele bune.
 
-    ${emailConfirmationLink}
-  `;
+Vlad
+
+[1]: ${requireEnvVar("APP_URL")}
+`
+  );
 }

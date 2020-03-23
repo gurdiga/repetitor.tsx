@@ -1,6 +1,7 @@
 import {createTransport} from "nodemailer";
 import {requireEnvVar, requireNumericEnvVar, isTestEnvironment, isDevelopmentEnvironment} from "backend/src/Utils/Env";
 import {logError} from "backend/src/Utils/Logging";
+import {parseMarkdown} from "backend/src/Utils/Markdown";
 
 // Exported for tests only.
 export const transporter = createTransport({
@@ -18,7 +19,13 @@ export const transporter = createTransport({
 
 const emailConfirmationMessageSenderAddress = requireEnvVar("APP_EMAIL_CONFIRMATION_MESSAGE_SENDER_ADDRESS");
 
-export async function sendEmail(email: string, subject: string, html: string): Promise<void> {
+export async function sendEmail(email: string, subject: string, markdown: string): Promise<void> {
+  const html = parseMarkdown(`
+<div style="max-width: 35em">
+${markdown}
+</div>
+  `);
+
   const mail = {
     from: emailConfirmationMessageSenderAddress,
     to: email,
