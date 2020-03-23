@@ -5,6 +5,7 @@
     "module": "amd",
     "moduleResolution": "node",
     "rootDir": ".",
+    "allowSyntheticDefaultImports": false,
 
     /* Strict Type-Checking Options */
     "strict": true,
