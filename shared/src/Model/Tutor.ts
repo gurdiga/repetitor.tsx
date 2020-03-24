@@ -4,14 +4,14 @@ import {DataProps} from "shared/src/Model/Utils";
 import {EmailError, UserEmailValidationRules} from "shared/src/Model/Email";
 import {PasswordError, UserPasswordValidationRules} from "shared/src/Model/Password";
 
-export interface Tutor {
-  kind: "User";
+export interface TutorRegistrationRequest {
+  kind: "TutorRegistrationRequest";
   fullName: string;
   email: string;
   password: string;
 }
 
-export type TutorPropName = keyof DataProps<Tutor>;
+export type TutorPropName = keyof DataProps<TutorRegistrationRequest>;
 
 export const TutorFullNameValidationRules: Record<FullNameValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
@@ -40,9 +40,9 @@ export type TutorCreationSuccess = {
 
 export type UserModelValidationErrorCode = "EMAIL_TAKEN";
 
-export function makeTutorFromRegistrationFormInput(
+export function makeTutorRegistrationRequestFromInput(
   input: TutorRegistrationInput
-): Tutor | TutorPropError | TutorModelError {
+): TutorRegistrationRequest | TutorPropError | TutorModelError {
   const fullNameValidationResult = validateWithRules(input.fullName, UserValidationRules.fullName);
 
   if (fullNameValidationResult.kind === "Invalid") {
@@ -62,7 +62,7 @@ export function makeTutorFromRegistrationFormInput(
   }
 
   return {
-    kind: "User",
+    kind: "TutorRegistrationRequest",
     fullName: fullNameValidationResult.value,
     email: emailValidationResult.value,
     password: passwordValidationResult.value,
