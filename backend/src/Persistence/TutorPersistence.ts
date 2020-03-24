@@ -16,15 +16,16 @@ export async function createTutor(
   fullName: string,
   email: string,
   passwordHash: string,
-  salt: string
+  salt: string,
+  emailConfirmationToken: string
 ): Promise<TutorCreationSuccess | TutorModelError | DbError> {
   try {
     const result = (await runQuery({
       sql: `
-            INSERT INTO users(email, password_hash, password_salt, full_name)
-            VALUES(?, ?, ?, ?)
+            INSERT INTO users(email, password_hash, password_salt, full_name, email_confirmation_token, is_email_confirmed)
+            VALUES(?, ?, ?, ?, ?, false)
           `,
-      params: [email, passwordHash, salt, fullName],
+      params: [email, passwordHash, salt, fullName, emailConfirmationToken],
     })) as InsertResult;
 
     return {kind: "TutorCreationSuccess", id: result.insertId};
