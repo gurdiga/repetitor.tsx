@@ -51,8 +51,8 @@ Dați click pe link-ul de mai jos pentru a vă confirma adresa de email:
 
 ${requireEnvVar("APP_URL")}${PagePath.EmailConfirmation}?token=${emailConfirmationToken}
 
-După confirmarea adresei de email veți putea primi alte notificări de
-serviciu de la sistemul [${requireEnvVar("APP_NAME")}][1].
+După confirmarea adresei de email, vă veți putea autentifica în sistem, și veți putea primi
+notificări de serviciu.
 
 [1]: ${requireEnvVar("APP_URL")}
 `
