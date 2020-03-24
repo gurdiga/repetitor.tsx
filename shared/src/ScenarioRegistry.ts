@@ -11,9 +11,15 @@ import {
   TutorPasswordResetStep2Input,
   TutorPasswordResetStep2Result,
 } from "shared/src/Scenarios/TutorPasswordResetStep2";
+import {EmailConfirmationInput, EmailConfirmationResult} from "shared/src/Scenarios/EmailConfirmation";
 
 export type SimpleScenarioName = "TestScenario" | "TutorPasswordResetStep1";
-export type SessionAlteringScenarioName = "TutorRegistration" | "TutorLogin" | "Logout" | "TutorPasswordResetStep2";
+export type SessionAlteringScenarioName =
+  | "TutorRegistration"
+  | "TutorLogin"
+  | "Logout"
+  | "TutorPasswordResetStep2"
+  | "EmailConfirmation";
 
 export interface ScenarioRegistry {
   TutorRegistration: {
@@ -39,6 +45,10 @@ export interface ScenarioRegistry {
   TutorPasswordResetStep2: {
     Input: TutorPasswordResetStep2Input;
     Result: TutorPasswordResetStep2Result;
+  };
+  EmailConfirmation: {
+    Input: EmailConfirmationInput;
+    Result: EmailConfirmationResult;
   };
 }
 
