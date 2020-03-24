@@ -11,7 +11,7 @@ export async function verifyEmailConfirmationToken(
       sql: `
             SELECT id, email
             FROM users
-            WHERE email_verification_token = ?
+            WHERE email_confirmation_token = ?
            `,
       params: [token],
     })) as RowSet;
