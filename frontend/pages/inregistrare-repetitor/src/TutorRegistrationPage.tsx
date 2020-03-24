@@ -28,6 +28,7 @@ import {
   ValidationRules,
 } from "shared/src/Utils/Validation";
 import {PagePath} from "shared/src/Utils/PagePath";
+import {AlertMessage, AlertType} from "frontend/shared/src/Components/AlertMessage";
 
 export function TutorRegistrationPage(props: PageProps) {
   return (
@@ -54,6 +55,10 @@ function renderLoginForm() {
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const shouldShowServerResponse =
+    serverResponse.shouldShow &&
+    (serverResponse.responseState === ResponseState.ReceivedError ||
+      serverResponse.responseState === ResponseState.ReceivedSuccess);
 
   return (
     <>
@@ -114,11 +119,26 @@ function renderLoginForm() {
           />,
         ]}
       />
-      {serverResponse.shouldShow && (
-        <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
-      )}
+      {serverResponse.shouldShow &&
+        (serverResponse.responseState === ResponseState.ReceivedError ||
+          serverResponse.responseState === ResponseState.ReceivedSuccess) && (
+          <AlertMessage type={getAlertTypeFromResponseState(serverResponse.responseState)}>
+            {serverResponse.responseText}
+          </AlertMessage>
+        )}
     </>
   );
+
+  function getAlertTypeFromResponseState(
+    responseState: ResponseState.ReceivedError | ResponseState.ReceivedSuccess
+  ): AlertType {
+    switch (responseState) {
+      case ResponseState.ReceivedError:
+        return "error";
+      case ResponseState.ReceivedSuccess:
+        return "success";
+    }
+  }
 
   async function maybeSubmitForm(
     fields: Record<TutorPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
@@ -151,15 +171,13 @@ function renderLoginForm() {
       case "PasswordError":
         [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
         break;
-      case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
-        break;
       case "ModelError":
         [responseState, responseText] = [ResponseState.ReceivedError, modelErrorMessages[response.errorCode]];
         break;
-      case "UnexpectedError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+      case "DbError":
+        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
         break;
+      case "UnexpectedError":
       case "ServerError":
       case "TransportError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.error];

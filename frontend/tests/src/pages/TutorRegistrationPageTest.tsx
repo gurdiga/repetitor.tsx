@@ -19,6 +19,7 @@ import {UserPasswordValidationRules} from "shared/src/Model/Password";
 import {TutorFullNameValidationRules} from "shared/src/Model/Tutor";
 import {stub} from "sinon";
 import {PagePath} from "shared/src/Utils/PagePath";
+import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 
 describe("<TutorRegistrationPage/>", () => {
   let wrapper: Wrapper<typeof TutorRegistrationPage>;
@@ -115,7 +116,7 @@ describe("<TutorRegistrationPage/>", () => {
 
         it("submits the field values to the backend", () => {
           expect(runScenarioStub.called).to.be.true;
-          expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
+          expect(wrapper.find("AlertMessage[type='success']").exists(), "success message").to.be.true;
         });
 
         it("navigates to the home page", () => {
@@ -201,7 +202,7 @@ describe("<TutorRegistrationPage/>", () => {
 
         it("submits the form and displays the error message", () => {
           expect(runScenarioStub.called).to.be.true;
-          expect(wrapper.find(".server-response-received-error").exists()).to.be.true;
+          expect(wrapper.find("AlertMessage[type='error']").exists()).to.be.true;
         });
       });
     });
