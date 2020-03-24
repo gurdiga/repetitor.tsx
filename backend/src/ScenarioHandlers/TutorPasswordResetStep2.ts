@@ -59,7 +59,7 @@ Vă aducem la cunoștință că parola contului dumneavoastră (${email}) în si
 Dacă nu ați resetat-o dumneavoastră, vă sfătui să o resetați acum urmînd link-ul
 de mai jos:
 
-${requireEnvVar("APP_URL")}/${PagePath.TutorPasswordReset}
+${requireEnvVar("APP_URL")}${PagePath.TutorPasswordReset}
 `
   );
 }

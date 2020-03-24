@@ -57,7 +57,7 @@ ați inițiat acest proces, atunci puteți ignore acest mesaj.
 Dacă dumneavoastră ați inițiat procesul de resetare a parolei, accesați
 link-ul de mai jos pentru a continua:
 
-${requireEnvVar("APP_URL")}/${PagePath.TutorPasswordReset}?token=${token}
+${requireEnvVar("APP_URL")}${PagePath.TutorPasswordReset}?token=${token}
 
 Acest link va expira ${expirationTime}, dar puteți oricînd începe
 procesul de la început dacă nu reușiți.
