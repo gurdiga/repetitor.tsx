@@ -177,9 +177,14 @@ describe("Express integration", () => {
     });
   });
 
-  describe("serving of page bundles", () => {
+  describe("serving of app bundles", () => {
     it("serves the ones that exis", async () => {
-      ["/bundle-VERSION.js", "/autentificare/bundle-VERSION.js"].forEach(async bundle => {
+      [
+        "/shared/bundle-VERSION.js",
+        "/frontend/shared/bundle-VERSION.js",
+        "/bundle-VERSION.js",
+        "/autentificare/bundle-VERSION.js",
+      ].forEach(async bundle => {
         res = await agent.get(bundle);
 
         expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
