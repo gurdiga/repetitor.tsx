@@ -45,7 +45,6 @@ describe("Express integration", () => {
   <title>Loading…</title>
   <script>
     var environment = "test";
-    var version = "HEROKU_SLUG_COMMIT";
   </script>
   <script src="/vendor_modules/rollbar-2.15.0.js"></script>
   <script>
@@ -75,7 +74,11 @@ describe("Express integration", () => {
 }
     });
 
-    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "/home/bundle.js"], function() {
+    var sharedBundles = ["/frontend/shared/bundle-VERSION.js","/shared/bundle-VERSION.js"];
+    var pageBundle = "/home/bundle-VERSION.js";
+    var appBundles = sharedBundles.concat([pageBundle]);
+
+    requirejs(appBundles, function() {
       requirejs(["frontend/pages/home/src/Main"], function(page) {
         page.main({
   "isAuthenticated": false
@@ -176,16 +179,17 @@ describe("Express integration", () => {
 
   describe("serving of page bundles", () => {
     it("serves the ones that exis", async () => {
-      ["/bundle.js", "/autentificare/bundle.js"].forEach(async bundle => {
+      ["/bundle-VERSION.js", "/autentificare/bundle-VERSION.js"].forEach(async bundle => {
         res = await agent.get(bundle);
 
         expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
+        expect(res, "caches them indefinitely").to.have.header("cache-control", "public, max-age=31536000");
         expect(res).to.have.status(200);
       });
     });
 
     it("responds with 404 for the ones that do not exist", async () => {
-      res = await agent.get("/nonexistent/bundle.js");
+      res = await agent.get("/nonexistent/bundle-VERSION.js");
 
       expect(res).to.be.text;
       expect(res).to.have.status(404);

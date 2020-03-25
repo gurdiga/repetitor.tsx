@@ -54,11 +54,13 @@ export const versionedVendorModulePaths = vendorModuleNames.reduce((acc, moduleN
   return acc;
 }, {} as Record<string, string>);
 
+const cacheForever = {maxAge: "1000 days"};
+
 export function sendVendorModule(vendorModuleFileName: string, res: HttpResponse): void {
   const vendorModuleFilePath = versionedVendorModulePaths[vendorModuleFileName];
 
   if (vendorModuleFilePath) {
-    res.sendFile(vendorModuleFilePath, {maxAge: "1000 days"});
+    res.sendFile(vendorModuleFilePath, cacheForever);
   } else {
     res.sendStatus(404);
   }
@@ -73,19 +75,21 @@ export function sendPageBundle(pagePathName: string | undefined, res: HttpRespon
   }
 
   if (PagePathNames.includes(pagePathName)) {
-    res.sendFile(`${PagesRoot}/${pagePathName}/build/bundle.js`);
+    res.sendFile(`${PagesRoot}/${pagePathName}/build/bundle.js`, cacheForever);
   } else {
     res.sendStatus(404);
   }
 }
 
-export const SHARED_BUNDLES = ["/frontend/shared/bundle.js", "/shared/bundle.js"];
+export const SHARED_BUNDLES = ["/frontend/shared/bundle-VERSION.js", "/shared/bundle-VERSION.js"].map(path =>
+  path.replace(/VERSION/, requireEnvVar("HEROKU_SLUG_COMMIT"))
+);
 
 export function sendSharedBundle(pathName: string, res: HttpResponse): void {
   if (SHARED_BUNDLES.includes(pathName)) {
     const dir = path.dirname(pathName);
 
-    res.sendFile(`${AppRoot}/${dir}/build/bundle.js`);
+    res.sendFile(`${AppRoot}/${dir}/build/bundle.js`, cacheForever);
   } else {
     res.sendStatus(404);
   }
@@ -100,7 +104,6 @@ const htmlTemplate = `<!DOCTYPE html>
   <title>Loading…</title>
   <script>
     var environment = "${requireEnvVar("NODE_ENV")}";
-    var version = "${requireEnvVar("HEROKU_SLUG_COMMIT")}";
   </script>
   <script src="${webPathsForVendorModules["rollbar"]}.js"></script>
   <script>
@@ -122,7 +125,11 @@ const htmlTemplate = `<!DOCTYPE html>
       paths: ${JSON.stringify(webPathsForVendorModules, null, "  ")}
     });
 
-    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "/PAGE_PATH_NAME/bundle.js"], function() {
+    var sharedBundles = ${JSON.stringify(SHARED_BUNDLES)};
+    var pageBundle = "/PAGE_PATH_NAME/bundle-${requireEnvVar("HEROKU_SLUG_COMMIT")}.js";
+    var appBundles = sharedBundles.concat([pageBundle]);
+
+    requirejs(appBundles, function() {
       requirejs(["MAIN_MODULE_PATH"], function(page) {
         page.main(PAGE_PROPS, location.search);
       });

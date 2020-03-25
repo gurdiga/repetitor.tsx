@@ -38,7 +38,7 @@ export const app = express()
   .get(SHARED_BUNDLES, (req, res) => {
     sendSharedBundle(req.path, res);
   })
-  .get(["/bundle.js", "/:pagePathName/bundle.js"], (req, res) => {
+  .get(["/bundle-*.js", "/:pagePathName/bundle-*.js"], (req, res) => {
     sendPageBundle(req.params.pagePathName, res);
   })
   .get("*", csrfProtection, sendPageHtml)
