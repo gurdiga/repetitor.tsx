@@ -3,9 +3,8 @@
   "references": [
     {"path": "../../shared"},
     {"path": "../../frontend/shared"},
-    {"path": "../../frontend/pages/home"},
     {"path": "../../frontend/pages/autentificare"},
-    {"path": "../../frontend/pages/inregistrare-repetitor"},
+    {"path": "../../frontend/pages/inregistrare"},
     {"path": "../../frontend/pages/resetare-parola"}
   ],
   "include": ["src"],

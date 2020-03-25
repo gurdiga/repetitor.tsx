@@ -6,10 +6,10 @@
     {"path": "./backend/tests"},
     {"path": "./frontend/shared"},
     {"path": "./frontend/tests"},
-    {"path": "./frontend/pages/home"},
     {"path": "./frontend/pages/autentificare"},
-    {"path": "./frontend/pages/inregistrare-repetitor"},
     {"path": "./frontend/pages/confirmare-email"},
+    {"path": "./frontend/pages/home"},
+    {"path": "./frontend/pages/inregistrare"},
     {"path": "./frontend/pages/resetare-parola"}
   ]
 }

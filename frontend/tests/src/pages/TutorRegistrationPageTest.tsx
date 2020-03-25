@@ -1,9 +1,6 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
-import {
-  TutorRegistrationPage,
-  UlaValidationRules,
-} from "frontend/pages/inregistrare-repetitor/src/TutorRegistrationPage";
+import {TutorRegistrationPage, UlaValidationRules} from "frontend/pages/inregistrare/src/TutorRegistrationPage";
 import {Form} from "frontend/shared/src/Components/Form";
 import {Checkbox} from "frontend/shared/src/Components/FormFields/Checkbox";
 import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
