@@ -4,7 +4,7 @@
     {"path": "../../shared"},
     {"path": "../../frontend/shared"},
     {"path": "../../frontend/pages/home"},
-    {"path": "../../frontend/pages/autentificare-repetitor"},
+    {"path": "../../frontend/pages/autentificare"},
     {"path": "../../frontend/pages/inregistrare-repetitor"},
     {"path": "../../frontend/pages/resetare-parola"}
   ],

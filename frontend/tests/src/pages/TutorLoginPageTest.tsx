@@ -8,7 +8,7 @@ import * as React from "react";
 import {UserEmailValidationRules} from "shared/src/Model/Email";
 import {UserPasswordValidationRules} from "shared/src/Model/Password";
 import {expectProps, expectToRenderSnapshot, Stub, Wrapper, Comp} from "frontend/tests/src/TestHelpers";
-import {TutorLoginPage} from "frontend/pages/autentificare-repetitor/src/TutorLoginPage";
+import {TutorLoginPage} from "frontend/pages/autentificare/src/TutorLoginPage";
 import {expect} from "chai";
 import Sinon = require("sinon");
 import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";

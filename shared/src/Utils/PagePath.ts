@@ -1,7 +1,7 @@
 export enum PagePath {
   Home = "/",
+  TutorLogin = "/autentificare",
   TutorRegistration = "/inregistrare-repetitor",
-  TutorLogin = "/autentificare-repetitor",
   TutorPasswordReset = "/resetare-parola",
   EmailConfirmation = "/confirmare-email",
 }

@@ -176,7 +176,7 @@ describe("Express integration", () => {
 
   describe("serving of page bundles", () => {
     it("serves the ones that exis", async () => {
-      ["/bundle.js", "/autentificare-repetitor/bundle.js"].forEach(async bundle => {
+      ["/bundle.js", "/autentificare/bundle.js"].forEach(async bundle => {
         res = await agent.get(bundle);
 
         expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");

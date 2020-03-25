@@ -1,4 +1,4 @@
-import {ResetPasswordLinkContainer} from "frontend/pages/autentificare-repetitor/src/TutorLoginPage.css";
+import {ResetPasswordLinkContainer} from "frontend/pages/autentificare/src/TutorLoginPage.css";
 import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";
 import {Form} from "frontend/shared/src/Components/Form";
 import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
