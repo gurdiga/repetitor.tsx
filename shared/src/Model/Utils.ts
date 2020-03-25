@@ -9,7 +9,7 @@ export type DbError = {
   errorCode: DbErrorCode;
 };
 
-export const dbErrorMessages: ErrorMessages<DbErrorCode> = {
+export const DbErrorMessages: ErrorMessages<DbErrorCode> = {
   GENERIC_DB_ERROR: "Eroare neprevăzută de bază de date",
 };
 

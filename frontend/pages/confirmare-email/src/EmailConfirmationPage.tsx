@@ -15,7 +15,7 @@ import {
   ServerResponse,
   placeholderServerResponse,
 } from "frontend/shared/src/ScenarioRunner";
-import {dbErrorMessages} from "shared/src/Model/Utils";
+import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 
 interface Props extends PageProps {
@@ -72,7 +72,7 @@ function renderTokenVerificationView(token: string) {
         [responseState, responseText] = [ResponseState.ReceivedError, "Token necunoscut"];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "TransportError":

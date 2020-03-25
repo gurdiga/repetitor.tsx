@@ -2,7 +2,7 @@ import {expect} from "chai";
 import {shallow} from "enzyme";
 import {
   TutorRegistrationPage,
-  ulaValidationRules,
+  UlaValidationRules,
 } from "frontend/pages/inregistrare-repetitor/src/TutorRegistrationPage";
 import {Form} from "frontend/shared/src/Components/Form";
 import {Checkbox} from "frontend/shared/src/Components/FormFields/Checkbox";
@@ -51,7 +51,7 @@ describe("<TutorRegistrationPage/>", () => {
 
       expectProps<typeof Checkbox>("accepts terms of use checkbox", ulaCheckbox, {
         value: "off",
-        validationRules: ulaValidationRules,
+        validationRules: UlaValidationRules,
       });
     });
 

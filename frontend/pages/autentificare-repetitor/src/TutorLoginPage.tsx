@@ -15,7 +15,7 @@ import {
 import * as React from "react";
 import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
 import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
-import {dbErrorMessages} from "shared/src/Model/Utils";
+import {DbErrorMessages} from "shared/src/Model/Utils";
 import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
@@ -127,7 +127,7 @@ function renderLoginForm() {
         [responseState, responseText] = [ResponseState.ReceivedError, "Parola este incorectă"];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
         [responseState, responseText] = [ResponseState.ReceivedError, response.error];

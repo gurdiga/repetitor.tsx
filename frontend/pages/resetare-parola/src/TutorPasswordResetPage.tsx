@@ -19,7 +19,7 @@ import {
   tokenErrorMessages,
   TutorPasswordResetStep2PropName,
 } from "shared/src/Model/TutorPasswordResetStep2";
-import {dbErrorMessages} from "shared/src/Model/Utils";
+import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {emptyFieldValue, ValidatedValue, validateWithRules} from "shared/src/Utils/Validation";
@@ -110,7 +110,7 @@ function renderStep1(props: PageProps) {
         ];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "TransportError":
@@ -209,7 +209,7 @@ function renderStep2(tokenString: string) {
         [responseState, responseText] = [ResponseState.ReceivedError, tokenErrorMessages[response.errorCode]];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "TransportError":

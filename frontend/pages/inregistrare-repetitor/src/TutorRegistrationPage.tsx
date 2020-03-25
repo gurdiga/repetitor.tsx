@@ -16,7 +16,7 @@ import * as React from "react";
 import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
 import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
 import {TutorFullNameValidationRules, TutorPropName, UserModelValidationErrorCode} from "shared/src/Model/Tutor";
-import {dbErrorMessages} from "shared/src/Model/Utils";
+import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {
@@ -51,7 +51,7 @@ function renderLoginForm() {
   const [fullName, updateFullName] = React.useState(emptyFieldValue);
   const [email, updateEmail] = React.useState(emptyFieldValue);
   const [password, updatePassword] = React.useState(emptyFieldValue);
-  const [hasAcceptUserLicenceAgreement, acceptUserLicenceAgreement] = React.useState(userLicenceAgreementInitialValue);
+  const [hasAcceptUserLicenceAgreement, acceptUserLicenceAgreement] = React.useState(UlaInitialValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
@@ -72,7 +72,7 @@ function renderLoginForm() {
             onValueChange={updateFullName}
             validationRules={TutorFullNameValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={fullNameErrorMessages}
+            validationMessages={FullNameErrorMessages}
             info="Va fi afișat pe pagina dumneavoastră de profil"
           />,
           <TextField
@@ -99,9 +99,9 @@ function renderLoginForm() {
             id="userLicenceAgreement"
             value={hasAcceptUserLicenceAgreement.value}
             onValueChange={acceptUserLicenceAgreement}
-            validationRules={ulaValidationRules}
+            validationRules={UlaValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={ulaErrorMessages}
+            validationMessages={UlaErrorMessages}
             label={
               <>
                 Sunt de acord cu <a href="/conditii">condițiile de utilizare</a>
@@ -163,7 +163,7 @@ function renderLoginForm() {
         [responseState, responseText] = [ResponseState.ReceivedSuccess, "Înregistrat."];
         break;
       case "FullNameError":
-        [responseState, responseText] = [ResponseState.ReceivedError, fullNameErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, FullNameErrorMessages[response.errorCode]];
         break;
       case "EmailError":
         [responseState, responseText] = [ResponseState.ReceivedError, emailErrorMessages[response.errorCode]];
@@ -172,10 +172,10 @@ function renderLoginForm() {
         [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
         break;
       case "ModelError":
-        [responseState, responseText] = [ResponseState.ReceivedError, modelErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, UserModelErrorMessages[response.errorCode]];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "ServerError":
@@ -198,29 +198,29 @@ function renderLoginForm() {
   }
 }
 
-const userLicenceAgreementInitialValue: ValidatedValue<string> = {
-  value: "off",
-  isValid: false,
-};
-
-const fullNameErrorMessages: ValidationMessages<typeof TutorFullNameValidationRules> = {
+const FullNameErrorMessages: ValidationMessages<typeof TutorFullNameValidationRules> = {
   REQUIRED: "Numele deplin lipsește",
   TOO_SHORT: "Numele este prea scurt",
   TOO_LONG: "Numele este prea lung",
 };
 
-const modelErrorMessages: ErrorMessages<UserModelValidationErrorCode> = {
+const UserModelErrorMessages: ErrorMessages<UserModelValidationErrorCode> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
+};
+
+const UlaInitialValue: ValidatedValue<string> = {
+  value: "off",
+  isValid: false,
 };
 
 // This is not included in UserValidationRules because it’s only used on the
 // front-end.
 type RequireAcceptance = "REQUIRE_ACCEPTANCE";
 
-export const ulaValidationRules: ValidationRules<RequireAcceptance> = {
+export const UlaValidationRules: ValidationRules<RequireAcceptance> = {
   REQUIRE_ACCEPTANCE: (value: UserValue) => value === "on",
 };
 
-const ulaErrorMessages: ErrorMessages<RequireAcceptance> = {
+const UlaErrorMessages: ErrorMessages<RequireAcceptance> = {
   REQUIRE_ACCEPTANCE: "Este necesar să acceptați condițiile de utilizare",
 };
