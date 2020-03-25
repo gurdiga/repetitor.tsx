@@ -26,8 +26,8 @@ export async function verifyEmailConfirmationToken(
       sql: `
               UPDATE users
               SET
-                is_email_confirmed = 1,
-              WHERE email_verification_token = ?
+                is_email_confirmed = 1
+              WHERE email_confirmation_token = ?
             `,
       params: [token],
     });
