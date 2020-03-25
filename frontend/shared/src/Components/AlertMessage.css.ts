@@ -13,7 +13,7 @@ export namespace AlertMessageCss {
   export const Info = style({
     $debugName: "Info",
     color: "#004085",
-    backgroundColor: "#004085",
+    backgroundColor: "#cce5ff",
     borderColor: "#b8daff",
     ...alertLayout,
   });
