@@ -122,7 +122,7 @@ const htmlTemplate = `<!DOCTYPE html>
       paths: ${JSON.stringify(webPathsForVendorModules, null, "  ")}
     });
 
-    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "bundle"], function() {
+    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "/PAGE_PATH_NAME/bundle.js"], function() {
       requirejs(["MAIN_MODULE_PATH"], function(page) {
         page.main(PAGE_PROPS, location.search);
       });
@@ -132,11 +132,6 @@ const htmlTemplate = `<!DOCTYPE html>
 `;
 
 export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
-  if (!req.path.endsWith("/")) {
-    res.redirect(301, `${req.path}/`);
-    return;
-  }
-
   let pagePathName = req.path.replace(/^\/|\/$/g, ""); // strip the slashes on both ends
 
   if (pagePathName === "") {
@@ -149,6 +144,7 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
     const pageProps = pagePropsFromSession(session);
 
     const html = htmlTemplate
+      .replace("PAGE_PATH_NAME", pagePathName)
       .replace("MAIN_MODULE_PATH", requireModulePath)
       .replace("CSRF_TOKEN", req.csrfToken())
       .replace("PAGE_PROPS", JSON.stringify(pageProps, null, "  "));

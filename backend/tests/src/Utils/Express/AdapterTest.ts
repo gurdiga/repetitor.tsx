@@ -75,7 +75,7 @@ describe("Express integration", () => {
 }
     });
 
-    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "bundle"], function() {
+    requirejs(["/shared/bundle.js", "/frontend/shared/bundle.js", "/home/bundle.js"], function() {
       requirejs(["frontend/pages/home/src/Main"], function(page) {
         page.main({
   "isAuthenticated": false
@@ -215,11 +215,6 @@ describe("Express integration", () => {
     ];
 
     expect(middlewareNames).to.include.members(expectedMiddlewareNames);
-  });
-
-  it("adds a trailing slash when missing", async () => {
-    res = await agent.get("/resetare-parola");
-    expect(res).to.redirectTo(/\/resetare-parola\/$/);
   });
 
   function stripMilliseconds(d: Date): string {
