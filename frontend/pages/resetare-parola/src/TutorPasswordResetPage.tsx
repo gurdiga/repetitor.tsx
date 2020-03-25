@@ -24,11 +24,11 @@ import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {emptyFieldValue, ValidatedValue, validateWithRules} from "shared/src/Utils/Validation";
 
-interface TutorPasswordResetPageProps extends PageProps {
+interface Props extends PageProps {
   params: QueryStringParams;
 }
 
-export function TutorPasswordResetPage(props: TutorPasswordResetPageProps) {
+export function TutorPasswordResetPage(props: Props) {
   const {token} = props.params;
 
   return <PageLayout title="Resetarea parolei">{token ? renderStep2(token) : renderStep1(props)}</PageLayout>;

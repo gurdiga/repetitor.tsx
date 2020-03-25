@@ -1,5 +1,5 @@
 import {
-  EmailConfirmationTokenMissingError,
+  EmailConfirmationTokenValidationError,
   EmailConfirmationTokenUnrecognizedError,
   EmailConfirmed,
 } from "shared/src/Model/EmailConfirmation";
@@ -11,6 +11,6 @@ export interface EmailConfirmationInput {
 
 export type EmailConfirmationResult =
   | EmailConfirmed
-  | EmailConfirmationTokenMissingError
+  | EmailConfirmationTokenValidationError
   | EmailConfirmationTokenUnrecognizedError
   | SystemError;

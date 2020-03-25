@@ -8,6 +8,7 @@
     {"path": "./frontend/tests"},
     {"path": "./frontend/pages/home"},
     {"path": "./frontend/pages/inregistrare-repetitor"},
+    {"path": "./frontend/pages/confirmare-email"},
     {"path": "./frontend/pages/autentificare-repetitor"},
     {"path": "./frontend/pages/resetare-parola"}
   ]

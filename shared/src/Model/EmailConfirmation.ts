@@ -12,15 +12,18 @@ export interface EmailConfirmationRequest {
   token: string;
 }
 
-export interface EmailConfirmationTokenMissingError {
-  kind: "EmailConfirmationTokenMissingError";
+export interface EmailConfirmationTokenValidationError {
+  kind: "EmailConfirmationTokenValidationError";
+  errorCode: EmailConfirmationTokenValidationErrorCode;
 }
 
 export interface EmailConfirmationTokenUnrecognizedError {
   kind: "EmailConfirmationTokenUnrecognizedError";
 }
 
-export const EmailConfirmationTokenValidationRules: Record<"REQUIRED", PredicateFn> = {
+export type EmailConfirmationTokenValidationErrorCode = "REQUIRED";
+
+export const EmailConfirmationTokenValidationRules: Record<EmailConfirmationTokenValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
 };
 
@@ -30,13 +33,14 @@ export const EmailConfirmationTokenErrorMessages: ValidationMessages<typeof Emai
 
 export function makeEmailConfirmationRequestFromInput(
   input: EmailConfirmationInput
-): EmailConfirmationRequest | EmailConfirmationTokenMissingError {
+): EmailConfirmationRequest | EmailConfirmationTokenValidationError {
   const {token} = input;
   const tokenValidationResult = validateWithRules(token, EmailConfirmationTokenValidationRules);
 
   if (tokenValidationResult.kind === "Invalid") {
     return {
-      kind: "EmailConfirmationTokenMissingError",
+      kind: "EmailConfirmationTokenValidationError",
+      errorCode: tokenValidationResult.validationErrorCode,
     };
   }
 
