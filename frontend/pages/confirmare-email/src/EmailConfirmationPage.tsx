@@ -9,6 +9,14 @@ import {
 } from "shared/src/Model/EmailConfirmation";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {validateWithRules} from "shared/src/Utils/Validation";
+import {
+  ResponseState,
+  runScenario,
+  ServerResponse,
+  placeholderServerResponse,
+} from "frontend/shared/src/ScenarioRunner";
+import {dbErrorMessages} from "shared/src/Model/Utils";
+import {assertNever} from "shared/src/Utils/Language";
 
 interface Props extends PageProps {
   params: QueryStringParams;
@@ -28,7 +36,59 @@ export function EmailConfirmationPage(props: Props) {
 }
 
 function renderTokenVerificationView(token: string) {
-  return `Verifying token: ${token}`;
+  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+
+  if (serverResponse.responseState === ResponseState.NotYetSent) {
+    confirmEmailWithToken(token);
+
+    return <AlertMessage type="info">Verificare token…</AlertMessage>;
+  } else if (serverResponse.responseState === ResponseState.ReceivedSuccess) {
+    return <AlertMessage type="success">{serverResponse.responseText}</AlertMessage>;
+  } else if (serverResponse.responseState === ResponseState.ReceivedError) {
+    return <AlertMessage type="error">{serverResponse.responseText}</AlertMessage>;
+  } else {
+    assertNever(serverResponse.responseState);
+  }
+
+  async function confirmEmailWithToken(token: string) {
+    const response = await runScenario("EmailConfirmation", {
+      token,
+    });
+
+    let responseState: ResponseState;
+    let responseText: string;
+
+    switch (response.kind) {
+      case "EmailConfirmed":
+        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Confirmare reușită. Vă mulțumim!"];
+        break;
+      case "EmailConfirmationTokenValidationError":
+        [responseState, responseText] = [
+          ResponseState.ReceivedError,
+          EmailConfirmationTokenErrorMessages[response.errorCode],
+        ];
+        break;
+      case "EmailConfirmationTokenUnrecognizedError":
+        [responseState, responseText] = [ResponseState.ReceivedError, "Token necunoscut"];
+        break;
+      case "DbError":
+        [responseState, responseText] = [ResponseState.ReceivedError, dbErrorMessages[response.errorCode]];
+        break;
+      case "UnexpectedError":
+      case "TransportError":
+      case "ServerError":
+        [responseState, responseText] = [ResponseState.ReceivedError, `Eroare: ${response.error}`];
+        break;
+      default:
+        assertNever(response);
+    }
+
+    setServerResponse({
+      responseState,
+      responseText,
+      shouldShow: true,
+    });
+  }
 }
 
 function renderTokenInvalidView(validationErrorCode: EmailConfirmationTokenValidationErrorCode) {
