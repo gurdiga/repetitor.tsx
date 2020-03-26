@@ -1,12 +1,12 @@
+import {app} from "backend/src/index";
+import {
+  VENDOR_MODULE_PREFIX,
+  VersionedVendorModulePaths,
+  VendorModulesWebPaths,
+} from "backend/src/Utils/Express/VendorModules";
 import * as chai from "chai";
 import {expect} from "chai";
-import {app} from "backend/src/index";
 import ChaiHttp = require("chai-http");
-import {
-  versionedVendorModulePaths,
-  VENDOR_MODULE_PREFIX,
-  webPathsForVendorModules,
-} from "backend/src/Utils/Express/Adapter";
 
 describe("Express integration", () => {
   let agent: ChaiHttp.Agent;
@@ -137,7 +137,7 @@ describe("Express integration", () => {
 
   describe("serving of vendor modules", () => {
     it("correctly computes the golden samples", () => {
-      expect(versionedVendorModulePaths).to.deep.equal({
+      expect(VersionedVendorModulePaths).to.deep.equal({
         "react-16.13.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
         "react-dom-16.13.0.js":
           "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react-dom/umd/react-dom.production.min.js",
@@ -148,7 +148,7 @@ describe("Express integration", () => {
         "rollbar-2.15.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/rollbar/dist/rollbar.umd.min.js",
       });
 
-      expect(webPathsForVendorModules).to.deep.equal({
+      expect(VendorModulesWebPaths).to.deep.equal({
         react: `/vendor_modules/react-16.13.0`,
         "react-dom": `/vendor_modules/react-dom-16.13.0`,
         typestyle: `/vendor_modules/typestyle-2.0.4`,
@@ -160,7 +160,7 @@ describe("Express integration", () => {
     });
 
     it("serves the ones that exis", () => {
-      Object.keys(versionedVendorModulePaths).forEach(async module => {
+      Object.keys(VersionedVendorModulePaths).forEach(async module => {
         res = await agent.get(`${VENDOR_MODULE_PREFIX}${module}`);
 
         expect(res).to.have.status(200);
