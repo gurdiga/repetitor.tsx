@@ -8,7 +8,6 @@ import {runScenario} from "backend/src/Utils/ScenarioRunner";
 import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 
 const AppRoot = path.join(__dirname, "../../../..");
-const FrontendPath = `${AppRoot}/frontend`;
 const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
 
@@ -26,7 +25,7 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
   }
 }
 
-const frontendNodeModulesPath = `${FrontendPath}/node_modules`;
+const frontendNodeModulesPath = `${AppRoot}/frontend/node_modules`;
 const vendorModulePaths: Record<string, string> = {
   react: `${frontendNodeModulesPath}/react/umd/react.production.min.js`,
   "react-dom": `${frontendNodeModulesPath}/react-dom/umd/react-dom.production.min.js`,
@@ -37,7 +36,7 @@ const vendorModulePaths: Record<string, string> = {
   rollbar: `${frontendNodeModulesPath}/rollbar/dist/rollbar.umd.min.js`,
 };
 const vendorModuleNames = Object.keys(vendorModulePaths);
-const frontendDependencies = JSON.parse(fs.readFileSync(`${FrontendPath}/package-lock.json`, "utf8")).dependencies;
+const frontendDependencies = JSON.parse(fs.readFileSync(`${AppRoot}/frontend/package-lock.json`, "utf8")).dependencies;
 const vendorModuleVersions = vendorModuleNames.reduce((acc, moduleName) => {
   acc[moduleName] = frontendDependencies[moduleName].version;
   return acc;
@@ -81,9 +80,8 @@ export function sendPageBundle(pagePathName: string | undefined, res: HttpRespon
   }
 }
 
-export const SHARED_BUNDLES = ["/frontend/shared/bundle-VERSION.js", "/shared/bundle-VERSION.js"].map(path =>
-  path.replace(/VERSION/, requireEnvVar("HEROKU_SLUG_COMMIT"))
-);
+const VERSION = requireEnvVar("HEROKU_SLUG_COMMIT");
+export const SHARED_BUNDLES = [`/frontend/shared/bundle-${VERSION}.js`, `/shared/bundle-${VERSION}.js`];
 
 export function sendSharedBundle(pathName: string, res: HttpResponse): void {
   if (SHARED_BUNDLES.includes(pathName)) {
@@ -126,7 +124,7 @@ const htmlTemplate = `<!DOCTYPE html>
     });
 
     var sharedBundles = ${JSON.stringify(SHARED_BUNDLES)};
-    var pageBundle = "/PAGE_PATH_NAME/bundle-${requireEnvVar("HEROKU_SLUG_COMMIT")}.js";
+    var pageBundle = "/PAGE_PATH_NAME/bundle-${VERSION}.js";
     var appBundles = sharedBundles.concat([pageBundle]);
 
     requirejs(appBundles, function() {
