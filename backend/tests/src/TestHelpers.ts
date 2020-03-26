@@ -64,7 +64,7 @@ export function stubExport<T extends any>(
 }
 
 // Run ad-hoc queries
-export async function q(sql: string): Promise<any> {
+export async function q(sql: string): Promise<any[]> {
   const result = (await runQuery({sql, params: []})) as RowSet;
 
   return result.rows;
