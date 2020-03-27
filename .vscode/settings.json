@@ -5,6 +5,7 @@
   "editor.tabSize": 2,
   "prettier.bracketSpacing": false,
   "files.exclude": {
+    "**/*.snapshot.*": true,
     ".bash_history": true,
     ".viminfo": true,
     ".vimrc": true,
@@ -12,6 +13,7 @@
     "**/node_modules": true
   },
   "search.exclude": {
+    "**/*.snapshot.*": true,
     "**/.bash_history": true,
     "**/build": true,
     "**/package-lock.json": true
