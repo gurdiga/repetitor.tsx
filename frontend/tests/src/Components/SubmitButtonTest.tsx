@@ -1,7 +1,7 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
-import {expectToRenderSnapshot, Wrapper} from "frontend/tests/src/TestHelpers";
+import {expectToRenderSnapshot, Wrapper, sleep} from "frontend/tests/src/TestHelpers";
 import * as React from "react";
 import Sinon = require("sinon");
 
@@ -46,9 +46,5 @@ describe("<SubmitButton/>", () => {
 
   async function wait(ms: number): Promise<void> {
     sleep(ms);
-  }
-
-  function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 });

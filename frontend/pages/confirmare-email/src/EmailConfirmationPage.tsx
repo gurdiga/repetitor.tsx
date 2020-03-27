@@ -51,9 +51,7 @@ function renderTokenVerificationView(token: string) {
   }
 
   async function confirmEmailWithToken(token: string) {
-    const response = await runScenario("EmailConfirmation", {
-      token,
-    });
+    const response = await runScenario("EmailConfirmation", {token});
 
     let responseState: ResponseState;
     let responseText: string;

@@ -2,7 +2,7 @@
 SHELL=bash
 
 default:
-	make --no-print-directory test-backend FILES=backend/tests/src/ScenarioHandlers/EmailConfirmationTest.ts
+	make --no-print-directory test
 
 test: test-backend test-frontend
 t: test
