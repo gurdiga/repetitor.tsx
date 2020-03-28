@@ -35,12 +35,7 @@ export function sendVendorModule(fileName: string, res: HttpResponse): void {
   }
 }
 
-export function sendPageBundle(pagePathName: string | undefined, res: HttpResponse): void {
-  // Home page’s bundle
-  if (pagePathName === undefined) {
-    pagePathName = "home";
-  }
-
+export function sendPageBundle(pagePathName: string, res: HttpResponse): void {
   if (PagePathNames.includes(pagePathName)) {
     res.sendFile(PageBundleFilePaths[pagePathName], cacheForever);
   } else {

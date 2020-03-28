@@ -182,7 +182,7 @@ describe("Express integration", () => {
       [
         "/shared/bundle-VERSION.js",
         "/frontend/shared/bundle-VERSION.js",
-        "/bundle-VERSION.js",
+        "/home/bundle-VERSION.js",
         "/autentificare/bundle-VERSION.js",
       ].forEach(async bundle => {
         res = await agent.get(bundle);
