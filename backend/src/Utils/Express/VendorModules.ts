@@ -7,7 +7,7 @@ const FrontendNodeModulesPath = `${AppRoot}/frontend/node_modules`;
 const FrontendDependencies = JSON.parse(fs.readFileSync(`${AppRoot}/frontend/package-lock.json`, "utf8")).dependencies;
 
 interface VendorModule {
-  importName: string;
+  packageName: string;
   modulePath: string;
   version: string;
   webPath: string;
@@ -21,22 +21,22 @@ const VendorModules = Object.entries({
   csstips: `${FrontendNodeModulesPath}/csstips/umd/csstips.min.js`,
   requirejs: `${FrontendNodeModulesPath}/requirejs/require.js`,
   rollbar: `${FrontendNodeModulesPath}/rollbar/dist/rollbar.umd.min.js`,
-}).map(([importName, modulePath]) => makeVendorModule(importName, modulePath));
+}).map(([packageName, modulePath]) => makeVendorModule(packageName, modulePath));
 
 export const VendorModulesWebPaths = Object.fromEntries(
-  VendorModules.map(({importName, webPath}) => [importName, webPath])
+  VendorModules.map(({packageName, webPath}) => [packageName, webPath])
 );
 
 export const VersionedVendorModulePaths = Object.fromEntries(
-  VendorModules.map(({importName, version, modulePath}) => [`${importName}-${version}.js`, modulePath])
+  VendorModules.map(({packageName, version, modulePath}) => [`${packageName}-${version}.js`, modulePath])
 );
 
-function makeVendorModule(importName: string, modulePath: string): VendorModule {
-  const version = FrontendDependencies[importName].version;
-  const webPath = `${VENDOR_MODULE_PREFIX}${importName}-${version}`;
+function makeVendorModule(packageName: string, modulePath: string): VendorModule {
+  const version = FrontendDependencies[packageName].version;
+  const webPath = `${VENDOR_MODULE_PREFIX}${packageName}-${version}`;
 
   return {
-    importName,
+    packageName,
     modulePath,
     version,
     webPath,
