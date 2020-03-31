@@ -13,10 +13,12 @@ import {
 import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswordResetStep1";
 import {TutorPasswordResetStep2} from "backend/src/ScenarioHandlers/TutorPasswordResetStep2";
 import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
+import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
 
 const simpleScenarioHandlers: Record<SimpleScenarioName, SimpleScenarioHandler<any, any>> = {
   TestScenario,
   TutorPasswordResetStep1,
+  ProfileLoad,
 };
 
 const sessionAlteringScenarioHandlers: Record<SessionAlteringScenarioName, SessionAlteringScenarioHandler<any, any>> = {
