@@ -14,14 +14,6 @@ import {
 import {EmailConfirmationInput, EmailConfirmationResult} from "shared/src/Scenarios/EmailConfirmation";
 import {ProfileLoadInput, ProfileLoadResult} from "shared/src/Scenarios/ProfileLoad";
 
-export type SimpleScenarioName = "TestScenario" | "TutorPasswordResetStep1" | "ProfileLoad";
-export type SessionAlteringScenarioName =
-  | "TutorRegistration"
-  | "TutorLogin"
-  | "Logout"
-  | "TutorPasswordResetStep2"
-  | "EmailConfirmation";
-
 export interface ScenarioRegistry {
   TutorRegistration: {
     Input: TutorRegistrationInput;
@@ -58,7 +50,4 @@ export interface ScenarioRegistry {
 }
 
 export type ScenarioName = keyof ScenarioRegistry;
-export type ScenarioHandler<I, R> = SimpleScenarioHandler<I, R> | SessionAlteringScenarioHandler<I, R>;
-
-export type SimpleScenarioHandler<I, R> = (scenarioInput: I) => Promise<R>;
-export type SessionAlteringScenarioHandler<I, R> = (scenarioInput: I, session: UserSession) => Promise<R>;
+export type ScenarioHandler<I, R> = (scenarioInput: I, session: UserSession) => Promise<R>;
