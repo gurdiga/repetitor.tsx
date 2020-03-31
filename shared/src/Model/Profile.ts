@@ -15,6 +15,10 @@ export type NotAuthenticatedError = {
   kind: "NotAuthenticatedError";
 };
 
+export type ProfileNotFoundError = {
+  kind: "ProfileNotFoundError";
+};
+
 type Link = {
   kind: "Link";
   value: string;
@@ -30,8 +34,41 @@ type PhoneNumber = {
   value: string;
 };
 
-type SocialLink = {
+export type SocialLink = {
   kind: "SocialLink";
   label: string;
   value: Link;
 };
+
+export function makeSocialLink(item: any): SocialLink | undefined {
+  if (item.label && typeof item.label === "string" && item.value && typeof item.value === "string") {
+    const value = makeLink(String(item.value));
+
+    if (value) {
+      return {
+        kind: "SocialLink",
+        label: String(item.label),
+        value,
+      };
+    }
+  }
+
+  return undefined;
+}
+
+function makeLink(input: string): Link | undefined {
+  try {
+    const url = new URL(input);
+
+    if (url.protocol === "http" || url.protocol === "https") {
+      return {
+        kind: "Link",
+        value: url.toString(),
+      };
+    }
+  } catch (error) {
+    // What can I do?
+  }
+
+  return undefined;
+}

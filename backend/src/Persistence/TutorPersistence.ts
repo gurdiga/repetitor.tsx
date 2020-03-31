@@ -1,6 +1,6 @@
 import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/src/Model/LoginCheck";
 import {TutorModelError, TutorCreationSuccess} from "shared/src/Model/Tutor";
-import {DbError, SystemError} from "shared/src/Model/Utils";
+import {DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
 import {runQuery, InsertResult, RowSet} from "backend/src/Utils/Db";
 import {EmailExists, PasswordResetToken} from "shared/src/Model/TutorPasswordResetStep1";
 import {genRandomString, StorablePassword} from "backend/src/Utils/StringUtils";
@@ -11,6 +11,8 @@ import {
   PurgedExpiredTokens,
 } from "shared/src/Model/TutorPasswordResetStep2";
 import {logError} from "backend/src/Utils/Logging";
+import {ProfileLoaded, ProfileNotFoundError, SocialLink, makeSocialLink} from "shared/src/Model/Profile";
+import {parseJsonList} from "backend/src/Utils/SerializationHelpers";
 
 export async function createTutor(
   fullName: string,
@@ -219,6 +221,49 @@ export async function deleteToken(token: string): Promise<PurgedExpiredTokens | 
     });
 
     return {kind: "PurgedExpiredTokens"};
+  } catch (error) {
+    logError(error);
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+export async function loadProfile(
+  userId: number
+): Promise<ProfileLoaded | ProfileNotFoundError | UnexpectedError | DbError> {
+  try {
+    const result = (await runQuery({
+      sql: `
+            SELECT *
+            FROM users
+            WHERE id = ?
+          `,
+      params: [userId],
+    })) as RowSet;
+
+    try {
+      const row = result.rows[0];
+
+      if (row) {
+        return {
+          kind: "ProfileLoaded",
+          fullName: row.full_name,
+          email: row.email,
+          photo: row.photo,
+          phoneNumber: row.phone_number,
+          resume: row.resume,
+          presentationVideo: row.presentation_video,
+          socialLinks: parseJsonList<SocialLink>(row.social_links, makeSocialLink),
+          isPublished: Boolean(row.is_published),
+        };
+      } else {
+        return {
+          kind: "ProfileNotFoundError",
+        };
+      }
+    } catch (error) {
+      logError(error);
+      return {kind: "UnexpectedError", error: "Error loading profile"};
+    }
   } catch (error) {
     logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
