@@ -5,11 +5,9 @@ import {loadProfile} from "backend/src/Persistence/TutorPersistence";
 type Scenario = ScenarioRegistry["ProfileLoad"];
 
 export async function ProfileLoad(_input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
-  if (!session.userId) {
-    return {
-      kind: "NotAuthenticatedError",
-    };
+  if (session.userId) {
+    return loadProfile(session.userId);
+  } else {
+    return {kind: "NotAuthenticatedError"};
   }
-
-  return loadProfile(session.userId);
 }
