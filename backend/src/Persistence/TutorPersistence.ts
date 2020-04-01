@@ -11,8 +11,7 @@ import {
   PurgedExpiredTokens,
 } from "shared/src/Model/TutorPasswordResetStep2";
 import {logError} from "backend/src/Utils/Logging";
-import {ProfileLoaded, ProfileNotFoundError, SocialLink, makeSocialLink} from "shared/src/Model/Profile";
-import {parseJsonList} from "backend/src/Utils/SerializationHelpers";
+import {ProfileLoaded, ProfileNotFoundError} from "shared/src/Model/Profile";
 
 export async function createTutor(
   fullName: string,
@@ -252,7 +251,6 @@ export async function loadProfile(
           phoneNumber: row.phone_number,
           resume: row.resume,
           presentationVideo: row.presentation_video,
-          socialLinks: parseJsonList<SocialLink>(row.social_links, makeSocialLink),
           isPublished: Boolean(row.is_published),
         };
       } else {
