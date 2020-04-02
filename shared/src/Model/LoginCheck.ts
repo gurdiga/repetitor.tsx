@@ -1,7 +1,7 @@
 import {DataProps} from "shared/src/Model/Utils";
 import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
-import {EmailError, UserEmailValidationRules} from "shared/src/Model/Email";
-import {PasswordError, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {EmailError, EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordError, PasswordValidationRules} from "shared/src/Model/Password";
 import {validateWithRules, PredicateFn} from "shared/src/Utils/Validation";
 import {UserSession} from "shared/src/Model/UserSession";
 
@@ -55,6 +55,6 @@ export function makeLoginCkeckFromLoginInput(input: TutorLoginInput): LoginCheck
 }
 
 const LoginCheckValidationRules: Record<LoginCheckPropName, Record<any, PredicateFn>> = {
-  email: UserEmailValidationRules,
-  password: UserPasswordValidationRules,
+  email: EmailValidationRules,
+  password: PasswordValidationRules,
 };

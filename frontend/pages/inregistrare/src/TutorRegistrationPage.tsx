@@ -13,8 +13,8 @@ import {
   ServerResponse,
 } from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
-import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
-import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {
   TutorFullNameValidationRules,
   TutorPropName,
@@ -81,18 +81,18 @@ function renderLoginForm() {
             value={email.value}
             inputType="email"
             onValueChange={updateEmail}
-            validationRules={UserEmailValidationRules}
+            validationRules={EmailValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={emailErrorMessages}
+            validationMessages={EmailErrorMessages}
           />,
           <PasswordField
             id="password"
             label="Parola"
             value={password.value}
             onValueChange={updatePassword}
-            validationRules={UserPasswordValidationRules}
+            validationRules={PasswordValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={passwordErrorMessages}
+            validationMessages={PasswordErrorMessages}
             hasGenerateButton={true}
           />,
           <Checkbox
@@ -166,10 +166,10 @@ function renderLoginForm() {
         [responseState, responseText] = [ResponseState.ReceivedError, FullNameErrorMessages[response.errorCode]];
         break;
       case "EmailError":
-        [responseState, responseText] = [ResponseState.ReceivedError, emailErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, EmailErrorMessages[response.errorCode]];
         break;
       case "PasswordError":
-        [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
       case "ModelError":
         [responseState, responseText] = [ResponseState.ReceivedError, UserModelErrorMessages[response.errorCode]];

@@ -5,8 +5,8 @@ import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
-import {UserEmailValidationRules} from "shared/src/Model/Email";
-import {UserPasswordValidationRules} from "shared/src/Model/Password";
+import {EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordValidationRules} from "shared/src/Model/Password";
 import {expectProps, expectToRenderSnapshot, Stub, Wrapper, Comp} from "frontend/tests/src/TestHelpers";
 import {TutorLoginPage} from "frontend/pages/autentificare/src/TutorLoginPage";
 import {expect} from "chai";
@@ -45,11 +45,11 @@ describe("<TutorLoginPage/>", () => {
 
         expectProps<typeof TextField>("email field", emailField, {
           autoFocus: true,
-          validationRules: UserEmailValidationRules,
+          validationRules: EmailValidationRules,
         });
 
         expectProps<typeof PasswordField>("password field", passwordField, {
-          validationRules: UserPasswordValidationRules,
+          validationRules: PasswordValidationRules,
         });
       });
 

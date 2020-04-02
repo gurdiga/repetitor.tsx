@@ -1,8 +1,8 @@
 import {TutorRegistrationInput} from "shared/src/Scenarios/TutorRegistration";
 import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/src/Utils/Validation";
 import {DataProps} from "shared/src/Model/Utils";
-import {EmailError, UserEmailValidationRules} from "shared/src/Model/Email";
-import {PasswordError, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {EmailError, EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordError, PasswordValidationRules} from "shared/src/Model/Password";
 
 export interface TutorRegistrationRequest {
   kind: "TutorRegistrationRequest";
@@ -77,6 +77,6 @@ export function makeTutorRegistrationRequestFromInput(
 
 const UserValidationRules: Record<TutorPropName, Record<any, PredicateFn>> = {
   fullName: TutorFullNameValidationRules,
-  email: UserEmailValidationRules,
-  password: UserPasswordValidationRules,
+  email: EmailValidationRules,
+  password: PasswordValidationRules,
 };

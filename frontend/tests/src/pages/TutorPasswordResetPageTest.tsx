@@ -9,10 +9,10 @@ import {expect} from "chai";
 import Sinon = require("sinon");
 import {Stub, Wrapper, expectProps, expectToRenderSnapshot, Comp} from "frontend/tests/src/TestHelpers";
 import {PageLayout} from "frontend/shared/src/PageLayout";
-import {UserEmailValidationRules} from "shared/src/Model/Email";
+import {EmailValidationRules} from "shared/src/Model/Email";
 import {ValidatedValue} from "shared/src/Utils/Validation";
 import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
-import {UserPasswordValidationRules, passwordErrorMessages} from "shared/src/Model/Password";
+import {PasswordValidationRules, PasswordErrorMessages} from "shared/src/Model/Password";
 
 describe("<TutorPasswordResetPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
@@ -46,7 +46,7 @@ describe("<TutorPasswordResetPage/>", () => {
 
             expectProps<typeof TextField>("email field", emailField, {
               autoFocus: true,
-              validationRules: UserEmailValidationRules,
+              validationRules: EmailValidationRules,
               inputType: "email",
               value: email,
             });
@@ -59,7 +59,7 @@ describe("<TutorPasswordResetPage/>", () => {
 
             expectProps<typeof TextField>("email field", emailField, {
               autoFocus: true,
-              validationRules: UserEmailValidationRules,
+              validationRules: EmailValidationRules,
               inputType: "email",
               value: "",
             });
@@ -212,8 +212,8 @@ describe("<TutorPasswordResetPage/>", () => {
             label: "Parola nouă",
             hasGenerateButton: true,
             autoFocus: true,
-            validationRules: UserPasswordValidationRules,
-            validationMessages: passwordErrorMessages,
+            validationRules: PasswordValidationRules,
+            validationMessages: PasswordErrorMessages,
             value: "",
           });
         });

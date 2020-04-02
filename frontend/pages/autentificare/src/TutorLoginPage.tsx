@@ -13,8 +13,8 @@ import {
   ServerResponse,
 } from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
-import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
-import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
 import {assertNever} from "shared/src/Utils/Language";
@@ -58,9 +58,9 @@ function renderLoginForm() {
             value={email.value}
             inputType="email"
             onValueChange={updateEmail}
-            validationRules={UserEmailValidationRules}
+            validationRules={EmailValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={emailErrorMessages}
+            validationMessages={EmailErrorMessages}
             autoFocus={true}
           />,
           <PasswordField
@@ -68,9 +68,9 @@ function renderLoginForm() {
             label="Parola"
             value={password.value}
             onValueChange={updatePassword}
-            validationRules={UserPasswordValidationRules}
+            validationRules={PasswordValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={passwordErrorMessages}
+            validationMessages={PasswordErrorMessages}
             info={
               <div className={ResetPasswordLinkContainer}>
                 <a href={PagePath.TutorPasswordReset}>Resetare parolă</a>
@@ -114,10 +114,10 @@ function renderLoginForm() {
         [responseState, responseText] = [ResponseState.ReceivedSuccess, "Autentificat."];
         break;
       case "EmailError":
-        [responseState, responseText] = [ResponseState.ReceivedError, emailErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, EmailErrorMessages[response.errorCode]];
         break;
       case "PasswordError":
-        [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
       case "UnknownEmailError":
         [responseState, responseText] = [

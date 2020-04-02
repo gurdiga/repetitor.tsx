@@ -7,10 +7,10 @@ export type PasswordError = {
 
 export type PasswordValidationErrorCode = "REQUIRED";
 
-export const UserPasswordValidationRules: Record<PasswordValidationErrorCode, PredicateFn> = {
+export const PasswordValidationRules: Record<PasswordValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
 };
 
-export const passwordErrorMessages: ValidationMessages<typeof UserPasswordValidationRules> = {
+export const PasswordErrorMessages: ValidationMessages<typeof PasswordValidationRules> = {
   REQUIRED: "Parola lipsește",
 };

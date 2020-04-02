@@ -4,7 +4,7 @@ import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordF
 import {PasswordFieldCss} from "frontend/shared/src/Components/FormFields/PasswordField.css";
 import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
 import * as React from "react";
-import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {expectProps, expectToRenderSnapshot, HtmlWrapper, Wrapper} from "frontend/tests/src/TestHelpers";
 
 describe("<PasswordField/>", () => {
@@ -12,10 +12,10 @@ describe("<PasswordField/>", () => {
     id: "pass",
     label: "Password please",
     value: "",
-    validationRules: UserPasswordValidationRules,
+    validationRules: PasswordValidationRules,
     onValueChange: () => null,
     showValidationMessage: false,
-    validationMessages: passwordErrorMessages,
+    validationMessages: PasswordErrorMessages,
   };
 
   describe("rendering", () => {
@@ -42,7 +42,7 @@ describe("<PasswordField/>", () => {
       const validationMessage = wrapper.find(ValidationMessage) as Wrapper<typeof ValidationMessage>;
 
       expectProps("validation message", validationMessage, {
-        text: passwordErrorMessages["REQUIRED"],
+        text: PasswordErrorMessages["REQUIRED"],
       });
       expectToRenderSnapshot(__filename, wrapper, "with-validation-message");
     });

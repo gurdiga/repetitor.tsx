@@ -1,7 +1,7 @@
 import {DataProps} from "shared/src/Model/Utils";
 import {TutorPasswordResetStep2Input} from "shared/src/Scenarios/TutorPasswordResetStep2";
 import {UserValue, PredicateFn, ValidationMessages, validateWithRules} from "shared/src/Utils/Validation";
-import {UserPasswordValidationRules, PasswordError} from "shared/src/Model/Password";
+import {PasswordValidationRules, PasswordError} from "shared/src/Model/Password";
 
 export interface TutorPasswordResetStep2Request {
   kind: "TutorPasswordResetStep2Request";
@@ -58,7 +58,7 @@ export function makeTutorPasswordResetStep2RequestFromInput(
     };
   }
 
-  const newPasswordValidationResult = validateWithRules(newPassword, UserPasswordValidationRules);
+  const newPasswordValidationResult = validateWithRules(newPassword, PasswordValidationRules);
 
   if (newPasswordValidationResult.kind === "Invalid") {
     return {

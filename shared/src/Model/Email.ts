@@ -7,12 +7,12 @@ export type EmailError = {
 
 export type EmailValidationErrorCode = "REQUIRED" | "INCORRECT";
 
-export const emailErrorMessages: ValidationMessages<typeof UserEmailValidationRules> = {
+export const EmailErrorMessages: ValidationMessages<typeof EmailValidationRules> = {
   REQUIRED: "Adresa de email lipsește",
   INCORRECT: "Adresa de email este invalidă",
 };
 
-export const UserEmailValidationRules: Record<EmailValidationErrorCode, PredicateFn> = {
+export const EmailValidationRules: Record<EmailValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
   INCORRECT: isSyntacticallyCorrectEmail,
 };

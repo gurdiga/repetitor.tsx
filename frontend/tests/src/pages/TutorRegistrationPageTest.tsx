@@ -11,8 +11,8 @@ import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import {Comp, expectProps, expectToRenderSnapshot, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
 import {describe, it} from "mocha";
 import * as React from "react";
-import {UserEmailValidationRules} from "shared/src/Model/Email";
-import {UserPasswordValidationRules} from "shared/src/Model/Password";
+import {EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordValidationRules} from "shared/src/Model/Password";
 import {TutorFullNameValidationRules} from "shared/src/Model/Tutor";
 import {stub} from "sinon";
 import {PagePath} from "shared/src/Utils/PagePath";
@@ -38,11 +38,11 @@ describe("<TutorRegistrationPage/>", () => {
 
       expectProps<typeof TextField>("email field", emailField, {
         inputType: "email",
-        validationRules: UserEmailValidationRules,
+        validationRules: EmailValidationRules,
       });
 
       expectProps<typeof PasswordField>("password field", passwordField, {
-        validationRules: UserPasswordValidationRules,
+        validationRules: PasswordValidationRules,
       });
 
       expectProps<typeof Checkbox>("accepts terms of use checkbox", ulaCheckbox, {

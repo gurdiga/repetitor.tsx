@@ -5,7 +5,7 @@ import {Form} from "frontend/shared/src/Components/Form";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {emptyFieldValue} from "shared/src/Utils/Validation";
 import {TutorFullNameValidationRules, FullNameErrorMessages} from "shared/src/Model/Tutor";
-import {UserEmailValidationRules, emailErrorMessages} from "shared/src/Model/Email";
+import {EmailValidationRules, EmailErrorMessages} from "shared/src/Model/Email";
 
 export function ProfilePage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -46,9 +46,9 @@ function renderProfileForm() {
             value={email.value}
             inputType="email"
             onValueChange={updateEmail}
-            validationRules={UserEmailValidationRules}
+            validationRules={EmailValidationRules}
             showValidationMessage={shouldShowValidationMessage}
-            validationMessages={emailErrorMessages}
+            validationMessages={EmailErrorMessages}
             disabled={true}
           />,
         ]}

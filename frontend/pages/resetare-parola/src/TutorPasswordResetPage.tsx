@@ -11,8 +11,8 @@ import {
 } from "frontend/shared/src/ScenarioRunner";
 import {QueryStringParams} from "frontend/shared/src/Utils/QueryStringParams";
 import * as React from "react";
-import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
-import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
+import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {TutorPasswordResetStep1PropName} from "shared/src/Model/TutorPasswordResetStep1";
 import {
   PasswordResetTokenValidationRules,
@@ -62,9 +62,9 @@ function renderStep1(props: PageProps) {
               value={email.value}
               inputType="email"
               onValueChange={updateEmail}
-              validationRules={UserEmailValidationRules}
+              validationRules={EmailValidationRules}
               showValidationMessage={shouldShowValidationMessage}
-              validationMessages={emailErrorMessages}
+              validationMessages={EmailErrorMessages}
               autoFocus={true}
             />,
           ]}
@@ -106,7 +106,7 @@ function renderStep1(props: PageProps) {
         ];
         break;
       case "EmailError":
-        [responseState, responseText] = [ResponseState.ReceivedError, emailErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, EmailErrorMessages[response.errorCode]];
         break;
       case "UnknownEmailError":
         [responseState, responseText] = [
@@ -156,9 +156,9 @@ function renderStep2(tokenString: string) {
                 value={newPassword.value}
                 hasGenerateButton={true}
                 onValueChange={updateNewPassword}
-                validationRules={UserPasswordValidationRules}
+                validationRules={PasswordValidationRules}
                 showValidationMessage={shouldShowValidationMessage}
-                validationMessages={passwordErrorMessages}
+                validationMessages={PasswordErrorMessages}
                 autoFocus={true}
               />,
             ]}
@@ -208,7 +208,7 @@ function renderStep2(tokenString: string) {
         ];
         break;
       case "PasswordError":
-        [responseState, responseText] = [ResponseState.ReceivedError, passwordErrorMessages[response.errorCode]];
+        [responseState, responseText] = [ResponseState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
       case "PasswordResetTokenError":
         [responseState, responseText] = [ResponseState.ReceivedError, tokenErrorMessages[response.errorCode]];

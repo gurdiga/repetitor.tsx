@@ -1,6 +1,6 @@
 import {TutorPasswordResetStep1Input} from "shared/src/Scenarios/TutorPasswordResetStep1";
 import {validateWithRules} from "shared/src/Utils/Validation";
-import {UserEmailValidationRules, EmailError} from "shared/src/Model/Email";
+import {EmailValidationRules, EmailError} from "shared/src/Model/Email";
 import {DataProps} from "shared/src/Model/Utils";
 
 export interface TutorPasswordResetStep1 {
@@ -28,7 +28,7 @@ export type PasswordResetToken = {
 export function makeTutorPasswordResetRequestFromInput(
   input: TutorPasswordResetStep1Input
 ): TutorPasswordResetStep1 | EmailError {
-  const emailValidationResult = validateWithRules(input.email, UserEmailValidationRules);
+  const emailValidationResult = validateWithRules(input.email, EmailValidationRules);
 
   if (emailValidationResult.kind === "Invalid") {
     return {kind: "EmailError", errorCode: emailValidationResult.validationErrorCode};
