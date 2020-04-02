@@ -1,4 +1,4 @@
-import {isTestEnvironment, requireEnvVar} from "backend/src/Utils/Env";
+import {isTestEnvironment, requireEnvVar, isDevelopmentEnvironment} from "backend/src/Utils/Env";
 import {AppRoot} from "backend/src/Utils/Express/AppRoot";
 import {PageBundleFilePaths, PagePathNames, RequireModulePaths} from "backend/src/Utils/Express/PagePaths";
 import {VendorModulesWebPaths, VersionedVendorModulePaths} from "backend/src/Utils/Express/VendorModules";
@@ -23,13 +23,13 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
   }
 }
 
-const cacheForever = {maxAge: "1000 days"};
+const cacheParams = isDevelopmentEnvironment() ? {cacheControl: false} : {maxAge: "1000 days"};
 
 export function sendVendorModule(fileName: string, res: HttpResponse): void {
   const vendorModuleFilePath = VersionedVendorModulePaths[fileName];
 
   if (vendorModuleFilePath) {
-    res.sendFile(vendorModuleFilePath, cacheForever);
+    res.sendFile(vendorModuleFilePath, cacheParams);
   } else {
     res.sendStatus(404);
   }
@@ -37,7 +37,7 @@ export function sendVendorModule(fileName: string, res: HttpResponse): void {
 
 export function sendPageBundle(pagePathName: string, res: HttpResponse): void {
   if (PagePathNames.includes(pagePathName)) {
-    res.sendFile(PageBundleFilePaths[pagePathName], cacheForever);
+    res.sendFile(PageBundleFilePaths[pagePathName], cacheParams);
   } else {
     res.sendStatus(404);
   }
@@ -51,7 +51,7 @@ export function sendSharedBundle(pathName: string, res: HttpResponse): void {
     const bundleDir = path.dirname(pathName);
     const bundleFilePath = `${AppRoot}/${bundleDir}/build/bundle.js`;
 
-    res.sendFile(bundleFilePath, cacheForever);
+    res.sendFile(bundleFilePath, cacheParams);
   } else {
     res.sendStatus(404);
   }
