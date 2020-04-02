@@ -248,9 +248,7 @@ export async function loadProfile(
           fullName: row.full_name,
           email: row.email,
           photo: row.photo,
-          phoneNumber: row.phone_number,
           resume: row.resume,
-          presentationVideo: row.presentation_video,
           isPublished: Boolean(row.is_published),
         };
       } else {

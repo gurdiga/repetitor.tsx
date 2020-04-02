@@ -10,6 +10,7 @@
     {"path": "./frontend/pages/confirmare-email"},
     {"path": "./frontend/pages/home"},
     {"path": "./frontend/pages/inregistrare"},
+    {"path": "./frontend/pages/profil"},
     {"path": "./frontend/pages/resetare-parola"}
   ]
 }

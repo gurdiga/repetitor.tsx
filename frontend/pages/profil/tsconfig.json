@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "files": ["src/Main.tsx"],
+  "references": [
+    {"path": "../../../frontend/shared"},
+    {"path": "../../../frontend/pages/autentificare"},
+    {"path": "../../../shared"}
+  ],
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": "../../..",
+    "outFile": "build/bundle.js"
+  }
+}

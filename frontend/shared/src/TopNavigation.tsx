@@ -14,6 +14,11 @@ export function TopNavigation(props: Props) {
       <li>
         <a href={PagePath.Home}>Home</a>
       </li>
+      {isAuthenticated && (
+        <li>
+          <a href={PagePath.Profile}>Profil</a>
+        </li>
+      )}
       {!isAuthenticated && (
         <>
           <li>

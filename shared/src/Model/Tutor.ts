@@ -1,5 +1,5 @@
 import {TutorRegistrationInput} from "shared/src/Scenarios/TutorRegistration";
-import {PredicateFn, UserValue, validateWithRules} from "shared/src/Utils/Validation";
+import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/src/Utils/Validation";
 import {DataProps} from "shared/src/Model/Utils";
 import {EmailError, UserEmailValidationRules} from "shared/src/Model/Email";
 import {PasswordError, UserPasswordValidationRules} from "shared/src/Model/Password";
@@ -17,6 +17,12 @@ export const TutorFullNameValidationRules: Record<FullNameValidationErrorCode, P
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
   TOO_SHORT: (text: UserValue) => !!text && text.trim().length >= 5,
   TOO_LONG: (text: UserValue) => !!text && text.trim().length <= 50,
+};
+
+export const FullNameErrorMessages: ValidationMessages<typeof TutorFullNameValidationRules> = {
+  REQUIRED: "Numele deplin lipsește",
+  TOO_SHORT: "Numele este prea scurt",
+  TOO_LONG: "Numele este prea lung",
 };
 
 export type TutorPropError = FullNameError | EmailError | PasswordError;

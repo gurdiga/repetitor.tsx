@@ -4,9 +4,7 @@ export type ProfileLoaded = {
   fullName: string;
   email: string;
   photo: Link;
-  phoneNumber: PhoneNumber;
   resume: MarkdownDocument;
-  presentationVideo: Link;
   isPublished: boolean;
 };
 
@@ -25,10 +23,5 @@ type Link = {
 
 type MarkdownDocument = {
   kind: "MarkdownDocument";
-  value: string;
-};
-
-type PhoneNumber = {
-  kind: "PhoneNumber";
   value: string;
 };

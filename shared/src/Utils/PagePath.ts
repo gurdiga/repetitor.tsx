@@ -4,4 +4,5 @@ export enum PagePath {
   Home = "/",
   TutorRegistration = "/inregistrare",
   TutorPasswordReset = "/resetare-parola",
+  Profile = "/profil",
 }

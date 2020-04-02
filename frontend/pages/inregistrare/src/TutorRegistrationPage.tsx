@@ -15,18 +15,16 @@ import {
 import * as React from "react";
 import {emailErrorMessages, UserEmailValidationRules} from "shared/src/Model/Email";
 import {passwordErrorMessages, UserPasswordValidationRules} from "shared/src/Model/Password";
-import {TutorFullNameValidationRules, TutorPropName, UserModelValidationErrorCode} from "shared/src/Model/Tutor";
+import {
+  TutorFullNameValidationRules,
+  TutorPropName,
+  UserModelValidationErrorCode,
+  FullNameErrorMessages,
+} from "shared/src/Model/Tutor";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
-import {
-  ErrorMessages,
-  emptyFieldValue,
-  UserValue,
-  ValidatedValue,
-  ValidationMessages,
-  ValidationRules,
-} from "shared/src/Utils/Validation";
+import {ErrorMessages, emptyFieldValue, UserValue, ValidatedValue, ValidationRules} from "shared/src/Utils/Validation";
 import {PagePath} from "shared/src/Utils/PagePath";
 import {AlertMessage, AlertType} from "frontend/shared/src/Components/AlertMessage";
 
@@ -199,12 +197,6 @@ function renderLoginForm() {
     });
   }
 }
-
-const FullNameErrorMessages: ValidationMessages<typeof TutorFullNameValidationRules> = {
-  REQUIRED: "Numele deplin lipsește",
-  TOO_SHORT: "Numele este prea scurt",
-  TOO_LONG: "Numele este prea lung",
-};
 
 const UserModelErrorMessages: ErrorMessages<UserModelValidationErrorCode> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
