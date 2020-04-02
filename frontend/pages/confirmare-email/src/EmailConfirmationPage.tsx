@@ -23,11 +23,12 @@ interface Props extends PageProps {
 }
 
 export function EmailConfirmationPage(props: Props) {
-  const {token} = props.params;
+  const {isAuthenticated, params} = props;
+  const {token} = params;
   const tokenValidationResult = validateWithRules(token, EmailConfirmationTokenValidationRules);
 
   return (
-    <PageLayout title="Confirmare email">
+    <PageLayout {...{title: "Confirmare email", isAuthenticated}}>
       {tokenValidationResult.kind === "Valid"
         ? renderTokenVerificationView(token)
         : renderTokenInvalidView(tokenValidationResult.validationErrorCode)}

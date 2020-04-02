@@ -29,9 +29,14 @@ interface Props extends PageProps {
 }
 
 export function TutorPasswordResetPage(props: Props) {
-  const {token} = props.params;
+  const {isAuthenticated, params} = props;
+  const {token} = params;
 
-  return <PageLayout title="Resetarea parolei">{token ? renderStep2(token) : renderStep1(props)}</PageLayout>;
+  return (
+    <PageLayout {...{title: "Resetarea parolei", isAuthenticated}}>
+      {token ? renderStep2(token) : renderStep1(props)}
+    </PageLayout>
+  );
 }
 
 function renderStep1(props: PageProps) {

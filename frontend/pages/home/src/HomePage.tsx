@@ -3,14 +3,11 @@ import * as React from "react";
 import {PageProps} from "shared/src/Utils/PageProps";
 
 export function HomePage(props: PageProps) {
+  const {isAuthenticated} = props;
+
   return (
-    <PageLayout title="Pagina principală" footerContent={<Footer />}>
+    <PageLayout {...{title: "Pagina principală", isAuthenticated}}>
       <div>HomePage content</div>
-      <pre>{JSON.stringify(props, null, "  ")}</pre>
     </PageLayout>
   );
-}
-
-function Footer() {
-  return <>HomePage footer</>;
 }

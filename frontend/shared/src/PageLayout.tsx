@@ -8,11 +8,14 @@ const DEBUG_LAYOUT = false;
 
 interface Props {
   title: string;
+  isAuthenticated: boolean;
   children?: React.ReactNode;
   footerContent?: React.ReactNode;
 }
 
 export function PageLayout(props: Props) {
+  const {isAuthenticated} = props;
+
   React.useEffect(() => {
     document.title = props.title;
   });
@@ -20,7 +23,7 @@ export function PageLayout(props: Props) {
   return (
     <div className={classes(PageLayoutCss.Wrapper, DEBUG_LAYOUT && UtilsCss.DebugLayout)}>
       <nav>
-        <TopNavigation />
+        <TopNavigation {...{isAuthenticated}} />
       </nav>
       <main className={PageLayoutCss.MainContent}>
         <h1 className={PageLayoutCss.Title}>{props.title}</h1>

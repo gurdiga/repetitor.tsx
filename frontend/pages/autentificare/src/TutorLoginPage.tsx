@@ -23,8 +23,10 @@ import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
 import {PagePath} from "shared/src/Utils/PagePath";
 
 export function TutorLoginPage(props: PageProps) {
+  const {isAuthenticated} = props;
+
   return (
-    <PageLayout title="Autentificare repetitor">
+    <PageLayout {...{title: "Autentificare repetitor", isAuthenticated}}>
       {props.isAuthenticated ? renderAlreadyLoggedState() : renderLoginForm()}
     </PageLayout>
   );

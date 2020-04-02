@@ -1,4 +1,4 @@
-<PageLayout title="Înregistrare repetitor">
+<PageLayout title="Înregistrare repetitor" isAuthenticated={true}>
   <AlreadyLoggedIn>
     <p>
       Deja v-ați înregistrat.

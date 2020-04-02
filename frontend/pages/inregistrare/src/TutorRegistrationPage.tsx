@@ -31,8 +31,10 @@ import {PagePath} from "shared/src/Utils/PagePath";
 import {AlertMessage, AlertType} from "frontend/shared/src/Components/AlertMessage";
 
 export function TutorRegistrationPage(props: PageProps) {
+  const {isAuthenticated} = props;
+
   return (
-    <PageLayout title="Înregistrare repetitor">
+    <PageLayout {...{title: "Înregistrare repetitor", isAuthenticated}}>
       {props.isAuthenticated ? renderAlreadyLoggedState() : renderLoginForm()}
     </PageLayout>
   );
