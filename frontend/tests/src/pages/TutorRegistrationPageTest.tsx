@@ -16,7 +16,6 @@ import {UserPasswordValidationRules} from "shared/src/Model/Password";
 import {TutorFullNameValidationRules} from "shared/src/Model/Tutor";
 import {stub} from "sinon";
 import {PagePath} from "shared/src/Utils/PagePath";
-import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 
 describe("<TutorRegistrationPage/>", () => {
   let wrapper: Wrapper<typeof TutorRegistrationPage>;

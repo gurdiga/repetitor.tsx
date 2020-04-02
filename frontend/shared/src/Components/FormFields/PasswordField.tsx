@@ -29,17 +29,6 @@ export function PasswordField(props: Props) {
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const onGenerateButtonClick = () => {
-    inputRef.current && inputRef.current.focus();
-
-    const generatedPassword = PasswordGenerator.newPassword();
-
-    setValue(generatedPassword);
-    onValueChange({value: generatedPassword, isValid: true});
-    setIsMasked(false);
-    setValidationErrorCode("");
-  };
-
   return (
     <>
       <Label htmlFor={id}>{label}:</Label>
@@ -83,6 +72,17 @@ export function PasswordField(props: Props) {
       {info && (typeof info === "string" ? <p className={TextFieldCss.Info}>{info}</p> : info)}
     </>
   );
+
+  function onGenerateButtonClick() {
+    inputRef.current && inputRef.current.focus();
+
+    const generatedPassword = PasswordGenerator.newPassword();
+
+    setValue(generatedPassword);
+    onValueChange({value: generatedPassword, isValid: true});
+    setIsMasked(false);
+    setValidationErrorCode("");
+  }
 }
 
 // https://thenounproject.com/term/eye/140036/

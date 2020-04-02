@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig-base.json",
   "files": ["src/Main.tsx"],
-  "references": [{"path": "../../shared"}, {"path": "../../../shared"}],
+  "references": [{"path": "../../../shared"}, {"path": "../../../frontend/shared"}],
   "include": ["src"],
   "compilerOptions": {
     "baseUrl": "../../..",
