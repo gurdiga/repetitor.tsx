@@ -64,9 +64,9 @@ describe("Express integration", () => {
   <script>
     requirejs.config({
       paths: {
-  "react": "/vendor_modules/react-16.13.0",
-  "react-dom": "/vendor_modules/react-dom-16.13.0",
-  "typestyle": "/vendor_modules/typestyle-2.0.4",
+  "react": "/vendor_modules/react-16.13.1",
+  "react-dom": "/vendor_modules/react-dom-16.13.1",
+  "typestyle": "/vendor_modules/typestyle-2.1.0",
   "csx": "/vendor_modules/csx-10.0.1",
   "csstips": "/vendor_modules/csstips-1.2.0",
   "requirejs": "/vendor_modules/requirejs-2.3.6",
@@ -138,10 +138,10 @@ describe("Express integration", () => {
   describe("serving of vendor modules", () => {
     it("correctly computes the golden samples", () => {
       expect(VersionedVendorModulePaths).to.deep.equal({
-        "react-16.13.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
-        "react-dom-16.13.0.js":
+        "react-16.13.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
+        "react-dom-16.13.1.js":
           "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react-dom/umd/react-dom.production.min.js",
-        "typestyle-2.0.4.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/typestyle/umd/typestyle.min.js",
+        "typestyle-2.1.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/typestyle/umd/typestyle.min.js",
         "csx-10.0.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csx/umd/csx.min.js",
         "csstips-1.2.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csstips/umd/csstips.min.js",
         "requirejs-2.3.6.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/requirejs/require.js",
@@ -149,9 +149,9 @@ describe("Express integration", () => {
       });
 
       expect(VendorModulesWebPaths).to.deep.equal({
-        react: `/vendor_modules/react-16.13.0`,
-        "react-dom": `/vendor_modules/react-dom-16.13.0`,
-        typestyle: `/vendor_modules/typestyle-2.0.4`,
+        react: `/vendor_modules/react-16.13.1`,
+        "react-dom": `/vendor_modules/react-dom-16.13.1`,
+        typestyle: `/vendor_modules/typestyle-2.1.0`,
         csx: `/vendor_modules/csx-10.0.1`,
         csstips: `/vendor_modules/csstips-1.2.0`,
         rollbar: "/vendor_modules/rollbar-2.15.0",

@@ -18,7 +18,7 @@
     "@types/chai": "4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "7.0.2",
-    "@types/sinon": "7.5.2",
+    "@types/sinon": "9.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "7.1.1",
@@ -26,8 +26,8 @@
     "sinon": "9.0.1"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "2.23.0",
-    "@typescript-eslint/parser": "2.23.0",
+    "@typescript-eslint/eslint-plugin": "2.26.0",
+    "@typescript-eslint/parser": "2.26.0",
     "amd-loader": "0.0.8",
     "db-migrate": "0.11.6",
     "db-migrate-mysql": "2.1.1",
