@@ -1,23 +1,24 @@
-import {PageLayout} from "frontend/shared/src/PageLayout";
-import * as React from "react";
-import {PageProps} from "shared/src/Utils/PageProps";
-import {Form} from "frontend/shared/src/Components/Form";
-import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
-import {emptyFieldValue} from "shared/src/Utils/Validation";
-import {TutorFullNameValidationRules, FullNameErrorMessages} from "shared/src/Model/Tutor";
-import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
-import {
-  runScenario,
-  ResponseState,
-  ServerResponse,
-  placeholderServerResponse,
-  EmptyScenarioInput,
-} from "frontend/shared/src/ScenarioRunner";
-import {assertNever} from "shared/src/Utils/Language";
-import {DbErrorMessages} from "shared/src/Model/Utils";
-import {ProfileLoaded} from "shared/src/Model/Profile";
 import {AlertMessage, getAlertTypeForServerResponseState} from "frontend/shared/src/Components/AlertMessage";
+import {Form} from "frontend/shared/src/Components/Form";
+import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
+import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {Spinner} from "frontend/shared/src/Components/Spinner";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import {PageLayout} from "frontend/shared/src/PageLayout";
+import {
+  EmptyScenarioInput,
+  placeholderServerResponse,
+  ResponseState,
+  runScenario,
+  ServerResponse,
+} from "frontend/shared/src/ScenarioRunner";
+import * as React from "react";
+import {ProfileLoaded} from "shared/src/Model/Profile";
+import {FullNameErrorMessages, TutorFullNameValidationRules} from "shared/src/Model/Tutor";
+import {DbErrorMessages} from "shared/src/Model/Utils";
+import {assertNever} from "shared/src/Utils/Language";
+import {PageProps} from "shared/src/Utils/PageProps";
+import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
 
 export function ProfilePage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -66,13 +67,71 @@ function renderProfileForm() {
             id="email"
             label="Adresa de email"
             value={email.value}
-            additionalControls={<button>Change the email.</button>}
+            additionalControls={<button type="button">Change the email.</button>}
           />,
         ]}
-        actionButtons={[]}
+        actionButtons={[
+          <SubmitButton
+            label="Actualizează profil"
+            onClick={async () => {
+              console.log("onClick");
+              toggleValidationMessage(true);
+              await maybeSubmitForm({fullName});
+            }}
+          />,
+        ]}
       />
     </>
   );
+
+  async function maybeSubmitForm(fields: Record<"fullName", ValidatedValue<string>>): Promise<void> {
+    const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
+
+    if (anyInvalidField) {
+      return;
+    }
+
+    const response = await runScenario("ProfileUpdate", {
+      fullName: fields.fullName.value,
+    });
+
+    let responseState: ResponseState;
+    let responseText: string;
+
+    switch (response.kind) {
+      case "ProfileUpdated":
+        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Profilul a fost actualizat."];
+        break;
+      case "FullNameError":
+        [responseState, responseText] = [ResponseState.ReceivedError, FullNameErrorMessages[response.errorCode]];
+        break;
+      case "NotAuthenticatedError":
+        [responseState, responseText] = [
+          ResponseState.ReceivedError,
+          "Pentru a vă vedea profilul trebuie să fiți autentificat.",
+        ];
+        break;
+      case "ProfileNotFoundError":
+        [responseState, responseText] = [ResponseState.ReceivedError, "Nu am găsit profilul."];
+        break;
+      case "DbError":
+        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        break;
+      case "UnexpectedError":
+      case "ServerError":
+      case "TransportError":
+        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        break;
+      default:
+        assertNever(response);
+    }
+
+    setServerResponse({
+      responseState,
+      responseText,
+      shouldShow: true,
+    });
+  }
 
   async function loadProfileInfo(): Promise<void> {
     const response = await runScenario("ProfileLoad", EmptyScenarioInput);
