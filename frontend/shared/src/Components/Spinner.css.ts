@@ -3,7 +3,7 @@ import {margin} from "csstips";
 import {px} from "csx";
 
 export namespace SpinnerCss {
-  const color = "green";
+  const color = "lightgrey";
 
   export const Container = style({
     $debugName: "Container",

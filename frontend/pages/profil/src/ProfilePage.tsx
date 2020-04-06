@@ -11,10 +11,13 @@ import {
   ResponseState,
   ServerResponse,
   placeholderServerResponse,
+  EmptyScenarioInput,
 } from "frontend/shared/src/ScenarioRunner";
 import {assertNever} from "shared/src/Utils/Language";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {ProfileLoaded} from "shared/src/Model/Profile";
+import {AlertMessage, getAlertTypeForServerResponseState} from "frontend/shared/src/Components/AlertMessage";
+import {Spinner} from "frontend/shared/src/Components/Spinner";
 
 export function ProfilePage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -36,10 +39,16 @@ function renderProfileForm() {
 
   if (!isProfileInfoLoaded) {
     loadProfileInfo();
+    return <Spinner />;
   }
 
   return (
     <>
+      {serverResponse.shouldShow && (
+        <AlertMessage type={getAlertTypeForServerResponseState(serverResponse.responseState)}>
+          {serverResponse.responseText}
+        </AlertMessage>
+      )}
       <pre>TODO: Add avatar.</pre>
       <Form
         fields={[
@@ -66,7 +75,7 @@ function renderProfileForm() {
   );
 
   async function loadProfileInfo(): Promise<void> {
-    const response = await runScenario("ProfileLoad", {});
+    const response = await runScenario("ProfileLoad", EmptyScenarioInput);
 
     let responseState: ResponseState;
     let responseText: string;
@@ -100,7 +109,7 @@ function renderProfileForm() {
     setServerResponse({
       responseState,
       responseText,
-      shouldShow: true,
+      shouldShow: responseState !== ResponseState.ReceivedSuccess,
     });
   }
 

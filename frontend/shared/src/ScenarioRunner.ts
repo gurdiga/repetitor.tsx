@@ -48,6 +48,8 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
   }
 }
 
+export const EmptyScenarioInput = {};
+
 export interface ServerResponse {
   responseState: ResponseState;
   responseText: string;
