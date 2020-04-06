@@ -6,6 +6,7 @@ import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {emptyFieldValue} from "shared/src/Utils/Validation";
 import {TutorFullNameValidationRules, FullNameErrorMessages} from "shared/src/Model/Tutor";
 import {EmailValidationRules, EmailErrorMessages} from "shared/src/Model/Email";
+import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
 
 export function ProfilePage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -40,16 +41,11 @@ function renderProfileForm() {
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={FullNameErrorMessages}
           />,
-          <TextField
+          <DisplayOnlyField
             id="email"
             label="Adresa de email"
             value={email.value}
-            inputType="email"
-            onValueChange={updateEmail}
-            validationRules={EmailValidationRules}
-            showValidationMessage={shouldShowValidationMessage}
-            validationMessages={EmailErrorMessages}
-            disabled={true}
+            info={<button>Change the email address carefully.</button>}
           />,
         ]}
         actionButtons={[]}
