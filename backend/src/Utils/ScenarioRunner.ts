@@ -7,11 +7,13 @@ import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswor
 import {TutorPasswordResetStep2} from "backend/src/ScenarioHandlers/TutorPasswordResetStep2";
 import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
 import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
+import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   TestScenario,
   TutorPasswordResetStep1,
   ProfileLoad,
+  ProfileUpdate,
   TutorRegistration,
   TutorLogin,
   Logout,

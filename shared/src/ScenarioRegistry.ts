@@ -13,6 +13,7 @@ import {
 } from "shared/src/Scenarios/TutorPasswordResetStep2";
 import {EmailConfirmationInput, EmailConfirmationResult} from "shared/src/Scenarios/EmailConfirmation";
 import {ProfileLoadInput, ProfileLoadResult} from "shared/src/Scenarios/ProfileLoad";
+import {ProfileUpdateInput, ProfileUpdateResult} from "shared/src/Scenarios/ProfileUpdate";
 
 export interface ScenarioRegistry {
   TutorRegistration: {
@@ -46,6 +47,10 @@ export interface ScenarioRegistry {
   ProfileLoad: {
     Input: ProfileLoadInput;
     Result: ProfileLoadResult;
+  };
+  ProfileUpdate: {
+    Input: ProfileUpdateInput;
+    Result: ProfileUpdateResult;
   };
 }
 

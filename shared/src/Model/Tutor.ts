@@ -27,7 +27,7 @@ export const FullNameErrorMessages: ValidationMessages<typeof TutorFullNameValid
 
 export type TutorPropError = FullNameError | EmailError | PasswordError;
 
-type FullNameError = {
+export type FullNameError = {
   kind: "FullNameError";
   errorCode: FullNameValidationErrorCode;
 };

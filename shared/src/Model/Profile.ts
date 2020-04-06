@@ -8,6 +8,10 @@ export type ProfileLoaded = {
   isPublished: boolean;
 };
 
+export type ProfileUpdated = {
+  kind: "ProfileUpdated";
+};
+
 export type NotAuthenticatedError = {
   kind: "NotAuthenticatedError";
 };
