@@ -5,8 +5,16 @@ import {Form} from "frontend/shared/src/Components/Form";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {emptyFieldValue} from "shared/src/Utils/Validation";
 import {TutorFullNameValidationRules, FullNameErrorMessages} from "shared/src/Model/Tutor";
-import {EmailValidationRules, EmailErrorMessages} from "shared/src/Model/Email";
 import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
+import {
+  runScenario,
+  ResponseState,
+  ServerResponse,
+  placeholderServerResponse,
+} from "frontend/shared/src/ScenarioRunner";
+import {assertNever} from "shared/src/Utils/Language";
+import {DbErrorMessages} from "shared/src/Model/Utils";
+import {ProfileLoaded} from "shared/src/Model/Profile";
 
 export function ProfilePage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -23,8 +31,12 @@ function renderProfileForm() {
   const [email, updateEmail] = React.useState(emptyFieldValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
+  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const [isProfileInfoLoaded, setProfileInfoLoaded] = React.useState(false);
 
-  // TODO: Load profile info.
+  if (!isProfileInfoLoaded) {
+    loadProfileInfo();
+  }
 
   return (
     <>
@@ -45,13 +57,58 @@ function renderProfileForm() {
             id="email"
             label="Adresa de email"
             value={email.value}
-            additionalControls={<button>Change the email address carefully.</button>}
+            additionalControls={<button>Change the email.</button>}
           />,
         ]}
         actionButtons={[]}
       />
     </>
   );
+
+  async function loadProfileInfo(): Promise<void> {
+    const response = await runScenario("ProfileLoad", {});
+
+    let responseState: ResponseState;
+    let responseText: string;
+
+    switch (response.kind) {
+      case "ProfileLoaded":
+        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Profile loaded."];
+        receiveProfileInfo(response);
+        break;
+      case "NotAuthenticatedError":
+        [responseState, responseText] = [
+          ResponseState.ReceivedError,
+          "Pentru a vă vedea profilul trebuie să fiți autentificat.",
+        ];
+        break;
+      case "ProfileNotFoundError":
+        [responseState, responseText] = [ResponseState.ReceivedError, "Nu am găsit profilul."];
+        break;
+      case "DbError":
+        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        break;
+      case "UnexpectedError":
+      case "TransportError":
+      case "ServerError":
+        [responseState, responseText] = [ResponseState.ReceivedError, `Eroare: ${response.error}`];
+        break;
+      default:
+        assertNever(response);
+    }
+
+    setServerResponse({
+      responseState,
+      responseText,
+      shouldShow: true,
+    });
+  }
+
+  function receiveProfileInfo(profileInfo: ProfileLoaded): void {
+    updateFullName({value: profileInfo.fullName, isValid: true});
+    updateEmail({value: profileInfo.email, isValid: true});
+    setProfileInfoLoaded(true);
+  }
 }
 
 // TODO: Extract to /frontend/shared and use it in other similar circumstances.
