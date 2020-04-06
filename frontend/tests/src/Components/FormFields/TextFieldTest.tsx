@@ -43,7 +43,7 @@ describe("<TextField/>", () => {
       onValueChange: () => null,
       showValidationMessage: false,
       validationMessages: sampleErrorMessages,
-      info: "Va fi afișat pe pagina dumneavoastră de profil",
+      additionalControls: "Va fi afișat pe pagina dumneavoastră de profil",
     };
 
     return shallow(<TextField {...{...props, ...propOverrides}} />);

@@ -4,10 +4,10 @@ import {TextFieldCss} from "frontend/shared/src/Components/FormFields/TextField.
 import * as React from "react";
 import {DisplayOnlyFieldCss} from "frontend/shared/src/Components/FormFields/DisplayOnlyField.css";
 
-interface Props extends Pick<FormField.CommonProps, "id" | "label" | "value" | "info"> {}
+interface Props extends Pick<FormField.CommonProps, "id" | "label" | "value" | "additionalControls"> {}
 
 export function DisplayOnlyField(props: Props) {
-  const {id, label, value, info} = props;
+  const {id, label, value, additionalControls} = props;
 
   return (
     <>
@@ -20,7 +20,12 @@ export function DisplayOnlyField(props: Props) {
         <code className={DisplayOnlyFieldCss.Value}>[No value?]</code>
       )}
 
-      {info && (typeof info === "string" ? <p className={TextFieldCss.Info}>{info}</p> : info)}
+      {additionalControls &&
+        (typeof additionalControls === "string" ? (
+          <p className={TextFieldCss.Info}>{additionalControls}</p>
+        ) : (
+          additionalControls
+        ))}
     </>
   );
 }

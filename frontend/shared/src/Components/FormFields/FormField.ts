@@ -10,6 +10,6 @@ export namespace FormField {
     onValueChange: FormValidation.ValueChangeHandler;
     showValidationMessage: boolean;
     validationMessages: Record<string, string>;
-    info?: string | React.ReactElement;
+    additionalControls?: string | React.ReactElement;
   }
 }

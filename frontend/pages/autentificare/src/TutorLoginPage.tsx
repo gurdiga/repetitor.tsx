@@ -71,7 +71,7 @@ function renderLoginForm() {
             validationRules={PasswordValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={PasswordErrorMessages}
-            info={
+            additionalControls={
               <div className={ResetPasswordLinkContainer}>
                 <a href={PagePath.TutorPasswordReset}>Resetare parolă</a>
               </div>
@@ -95,7 +95,7 @@ function renderLoginForm() {
   );
 
   async function maybeSubmitForm(fields: Record<keyof TutorLoginInput, ValidatedValue<string>>): Promise<void> {
-    const anyInvalidField = Object.values(fields).some(f => !f.isValid);
+    const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
     if (anyInvalidField) {
       return;

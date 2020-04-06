@@ -73,7 +73,7 @@ function renderLoginForm() {
             validationRules={TutorFullNameValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={FullNameErrorMessages}
-            info="Va fi afișat pe pagina dumneavoastră de profil"
+            additionalControls="Va fi afișat pe pagina dumneavoastră de profil"
           />,
           <TextField
             id="email"
@@ -143,7 +143,7 @@ function renderLoginForm() {
   async function maybeSubmitForm(
     fields: Record<TutorPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
   ): Promise<void> {
-    const anyInvalidField = Object.values(fields).some(f => !f.isValid);
+    const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
     if (anyInvalidField) {
       return;

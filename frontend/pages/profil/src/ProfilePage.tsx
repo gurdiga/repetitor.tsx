@@ -45,7 +45,7 @@ function renderProfileForm() {
             id="email"
             label="Adresa de email"
             value={email.value}
-            info={<button>Change the email address carefully.</button>}
+            additionalControls={<button>Change the email address carefully.</button>}
           />,
         ]}
         actionButtons={[]}

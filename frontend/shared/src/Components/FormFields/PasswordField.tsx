@@ -14,7 +14,7 @@ interface Props extends FormField.CommonProps {
 
 export function PasswordField(props: Props) {
   const {id, label, value: initialValue, onValueChange, showValidationMessage, validationRules, autoFocus} = props;
-  const {validationMessages, hasGenerateButton, info} = props;
+  const {validationMessages, hasGenerateButton, additionalControls: info} = props;
 
   const [value, setValue] = React.useState(initialValue);
   const [isMasked, setIsMasked] = React.useState(true);
