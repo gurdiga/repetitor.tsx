@@ -8,6 +8,4 @@ export interface TutorLoginInput {
   password: string | undefined;
 }
 
-type InputError = EmailError | PasswordError;
-
-export type TutorLoginResult = LoginCheckSuccess | InputError | LoginCheckError | SystemError;
+export type TutorLoginResult = LoginCheckSuccess | EmailError | PasswordError | LoginCheckError | SystemError;
