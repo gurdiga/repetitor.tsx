@@ -10,11 +10,11 @@ export async function ProfileUpdate(input: Scenario["Input"], session: UserSessi
     return {kind: "NotAuthenticatedError"};
   }
 
-  const profileUpdateRequestMakingResult = makeProfileUpdateRequestFromInput(input);
+  const result = makeProfileUpdateRequestFromInput(input);
 
-  if (profileUpdateRequestMakingResult.kind !== "ProfileUpdateRequest") {
-    return profileUpdateRequestMakingResult;
+  if (result.kind !== "ProfileUpdateRequest") {
+    return result;
   }
 
-  return updateProfile(session.userId, profileUpdateRequestMakingResult.fullName);
+  return updateProfile(session.userId, result.fullName);
 }
