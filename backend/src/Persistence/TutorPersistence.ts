@@ -1,7 +1,7 @@
 import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/src/Model/LoginCheck";
 import {TutorModelError, TutorCreationSuccess} from "shared/src/Model/Tutor";
 import {DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
-import {runQuery, InsertResult, RowSet} from "backend/src/Utils/Db";
+import {runQuery, StatementResult, RowSet} from "backend/src/Utils/Db";
 import {EmailExists, PasswordResetToken} from "shared/src/Model/TutorPasswordResetStep1";
 import {genRandomString, StorablePassword} from "backend/src/Utils/StringUtils";
 import {
@@ -11,7 +11,7 @@ import {
   PurgedExpiredTokens,
 } from "shared/src/Model/TutorPasswordResetStep2";
 import {logError} from "backend/src/Utils/Logging";
-import {ProfileLoaded, ProfileNotFoundError} from "shared/src/Model/Profile";
+import {ProfileLoaded, ProfileNotFoundError, ProfileUpdated} from "shared/src/Model/Profile";
 
 export async function createTutor(
   fullName: string,
@@ -27,7 +27,7 @@ export async function createTutor(
             VALUES(?, ?, ?, ?, ?, false)
           `,
       params: [email, passwordHash, salt, fullName, emailConfirmationToken],
-    })) as InsertResult;
+    })) as StatementResult;
 
     return {kind: "TutorCreationSuccess", id: result.insertId};
   } catch (error) {
@@ -252,13 +252,46 @@ export async function loadProfile(
           isPublished: Boolean(row.is_published),
         };
       } else {
-        return {
-          kind: "ProfileNotFoundError",
-        };
+        return {kind: "ProfileNotFoundError"};
       }
     } catch (error) {
       logError(error);
       return {kind: "UnexpectedError", error: "Error loading profile"};
+    }
+  } catch (error) {
+    logError(error);
+    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
+  }
+}
+
+export async function updateProfile(
+  userId: number,
+  fullName: string
+): Promise<ProfileUpdated | ProfileNotFoundError | UnexpectedError | DbError> {
+  try {
+    const result = (await runQuery({
+      sql: `
+            UPDATE users
+            SET
+              full_name = ?
+            WHERE id = ?
+          `,
+      params: [fullName, userId],
+    })) as StatementResult;
+
+    try {
+      const {affectedRows} = result;
+
+      // I assume that users.id has a unique constraint, and there can only be
+      // 1 or 0 records with a given ID.
+      if (affectedRows === 1) {
+        return {kind: "ProfileUpdated"};
+      } else {
+        return {kind: "ProfileNotFoundError"};
+      }
+    } catch (error) {
+      logError(error);
+      return {kind: "UnexpectedError", error: error.message};
     }
   } catch (error) {
     logError(error);

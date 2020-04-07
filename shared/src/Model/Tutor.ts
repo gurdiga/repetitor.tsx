@@ -75,7 +75,7 @@ export function makeTutorRegistrationRequestFromInput(
   };
 }
 
-const UserValidationRules: Record<TutorPropName, Record<any, PredicateFn>> = {
+export const UserValidationRules: Record<TutorPropName, Record<any, PredicateFn>> = {
   fullName: TutorFullNameValidationRules,
   email: EmailValidationRules,
   password: PasswordValidationRules,
