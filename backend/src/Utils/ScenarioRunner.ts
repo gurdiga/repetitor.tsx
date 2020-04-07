@@ -11,14 +11,14 @@ import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   TestScenario,
-  TutorPasswordResetStep1,
-  ProfileLoad,
-  ProfileUpdate,
   TutorRegistration,
+  EmailConfirmation,
   TutorLogin,
   Logout,
+  TutorPasswordResetStep1,
   TutorPasswordResetStep2,
-  EmailConfirmation,
+  ProfileLoad,
+  ProfileUpdate,
 };
 
 export async function runScenario(scenarioName?: string, scenarioInput: any = {}, session?: any): Promise<any> {

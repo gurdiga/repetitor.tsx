@@ -17,14 +17,11 @@ export async function TutorLogin(input: Scenario["Input"], session: UserSession)
   const loginCheckResult = await checkLoginInfo(email, password, hashString);
 
   if (loginCheckResult.kind === "LoginCheckInfo") {
-    initializeUserSession(session, {
-      userId: loginCheckResult.userId,
-      email,
-    });
+    const {userId} = loginCheckResult;
 
-    return {
-      kind: "LoginCheckSuccess",
-    };
+    initializeUserSession(session, {userId, email});
+
+    return {kind: "LoginCheckSuccess"};
   } else {
     return loginCheckResult;
   }

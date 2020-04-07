@@ -28,11 +28,7 @@ describe("EmailConfirmation", () => {
     });
 
     it("reports success and initializes the user session", () => {
-      expect(result, "result").to.deep.equal({
-        kind: "EmailConfirmed",
-        userId,
-        email,
-      });
+      expect(result, "result").to.deep.equal({kind: "EmailConfirmed", userId, email});
 
       expect(session.userId, "session userId").to.equal(userId);
       expect(session.email, "session email").to.equal(email);

@@ -35,10 +35,7 @@ export async function TutorPasswordResetStep2(
   const resetPasswordResult = await resetPassword(userId, storablePassword);
 
   if (resetPasswordResult.kind === "TutorPasswordResetSuccess") {
-    initializeUserSession(session, {
-      userId,
-      email,
-    });
+    initializeUserSession(session, {userId, email});
   }
 
   return resetPasswordResult;

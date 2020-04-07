@@ -12,7 +12,8 @@ export async function EmailConfirmation(input: Scenario["Input"], session: UserS
     return result;
   }
 
-  const emailConfirmationTokenVerificationResult = await verifyEmailConfirmationToken(result.token);
+  const {token} = result;
+  const emailConfirmationTokenVerificationResult = await verifyEmailConfirmationToken(token);
 
   if (emailConfirmationTokenVerificationResult.kind !== "EmailConfirmed") {
     return emailConfirmationTokenVerificationResult;
@@ -20,10 +21,7 @@ export async function EmailConfirmation(input: Scenario["Input"], session: UserS
 
   const {userId, email} = emailConfirmationTokenVerificationResult;
 
-  initializeUserSession(session, {
-    userId,
-    email,
-  });
+  initializeUserSession(session, {userId, email});
 
   return emailConfirmationTokenVerificationResult;
 }

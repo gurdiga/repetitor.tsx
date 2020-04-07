@@ -95,10 +95,7 @@ describe("TutorPasswordResetStep2", () => {
       it("fails appropriately", async () => {
         const result = await TutorPasswordResetStep2({token: "", newPassword}, session);
 
-        expect(result).to.deep.equal({
-          kind: "PasswordResetTokenError",
-          errorCode: "REQUIRED",
-        });
+        expect(result).to.deep.equal({kind: "PasswordResetTokenError", errorCode: "REQUIRED"});
       });
     });
 
@@ -106,10 +103,7 @@ describe("TutorPasswordResetStep2", () => {
       it("fails appropriately", async () => {
         const result = await TutorPasswordResetStep2({token: "something", newPassword: ""}, session);
 
-        expect(result).to.deep.equal({
-          kind: "PasswordError",
-          errorCode: "REQUIRED",
-        });
+        expect(result).to.deep.equal({kind: "PasswordError", errorCode: "REQUIRED"});
       });
     });
 
@@ -117,9 +111,7 @@ describe("TutorPasswordResetStep2", () => {
       it("fails appropriately", async () => {
         const result = await TutorPasswordResetStep2({token: "unregistered", newPassword}, session);
 
-        expect(result).to.deep.equal({
-          kind: "PasswordResetTokenUnknownError",
-        });
+        expect(result).to.deep.equal({kind: "PasswordResetTokenUnknownError"});
       });
     });
   });

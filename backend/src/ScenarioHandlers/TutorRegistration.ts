@@ -9,6 +9,8 @@ import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["TutorRegistration"];
 
+const EMAIL_CONFIRMATION_TOKEN_LENGTH = 16;
+
 export async function TutorRegistration(input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
   const result = makeTutorRegistrationRequestFromInput(input);
 
@@ -18,14 +20,11 @@ export async function TutorRegistration(input: Scenario["Input"], session: UserS
 
   const {fullName, email, password} = result;
   const {passwordSalt: salt, passwordHash} = getStorablePassword(password);
-  const emailConfirmationToken = createEmailConfirmationToken();
+  const emailConfirmationToken = genRandomString(EMAIL_CONFIRMATION_TOKEN_LENGTH);
   const createTutorResult = await createTutor(fullName, email, passwordHash, salt, emailConfirmationToken);
 
   if (createTutorResult.kind === "TutorCreationSuccess") {
-    initializeUserSession(session, {
-      userId: createTutorResult.id,
-      email,
-    });
+    initializeUserSession(session, {userId: createTutorResult.id, email});
   }
 
   sendWelcomeMessage(fullName, email, emailConfirmationToken);
@@ -33,14 +32,8 @@ export async function TutorRegistration(input: Scenario["Input"], session: UserS
   return createTutorResult;
 }
 
-const EMAIL_CONFIRMATION_TOKEN_LENGTH = 16;
-
-function createEmailConfirmationToken(): string {
-  return genRandomString(EMAIL_CONFIRMATION_TOKEN_LENGTH);
-}
-
 function sendWelcomeMessage(fullName: string, email: string, emailConfirmationToken: string) {
-  return sendEmail(
+  sendEmail(
     email,
     `Bine ați venit la ${requireEnvVar("APP_NAME")}`,
     `

@@ -18,10 +18,7 @@ describe("TutorRegistration", () => {
         const params = {email: "", password: "secret", fullName: "John DOE"};
         const result = await TutorRegistration(params, session);
 
-        expect(result).to.deep.equal({
-          kind: "EmailError",
-          errorCode: "REQUIRED",
-        });
+        expect(result).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
       });
 
       it("throws with the appropriate error message", async () => {
@@ -29,10 +26,7 @@ describe("TutorRegistration", () => {
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
         const result = await TutorRegistration(params, session);
 
-        expect(result).to.deep.equal({
-          kind: "PasswordError",
-          errorCode: "REQUIRED",
-        });
+        expect(result).to.deep.equal({kind: "PasswordError", errorCode: "REQUIRED"});
       });
     });
   });
@@ -81,10 +75,7 @@ describe("TutorRegistration", () => {
       it("trows with an appropriate error message", async () => {
         const result = await TutorRegistration(params, session);
 
-        expect(result).to.deep.equal({
-          kind: "ModelError",
-          errorCode: "EMAIL_TAKEN",
-        });
+        expect(result).to.deep.equal({kind: "ModelError", errorCode: "EMAIL_TAKEN"});
       });
     });
   });

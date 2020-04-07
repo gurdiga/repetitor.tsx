@@ -36,9 +36,7 @@ export async function TutorPasswordResetStep1(input: Scenario["Input"]): Promise
 
   sendTutorPasswordResetEmail(email, fullName, token);
 
-  return {
-    kind: "TutorPasswordResetEmailSent",
-  };
+  return {kind: "TutorPasswordResetEmailSent"};
 }
 
 function sendTutorPasswordResetEmail(email: string, fullName: string, token: string): void {

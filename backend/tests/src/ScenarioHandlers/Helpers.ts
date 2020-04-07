@@ -11,5 +11,5 @@ export async function getTokenForEmail(email: string): Promise<string> {
     params: [email],
   })) as RowSet;
 
-  return rows[0] && rows[0].token;
+  return rows[0]?.token;
 }

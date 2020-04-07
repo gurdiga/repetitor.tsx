@@ -118,10 +118,7 @@ export async function createTutorPasswordResetToken(userId: number): Promise<Pas
       params: [userId, token, timestamp],
     });
 
-    return {
-      kind: "PasswordResetToken",
-      token,
-    };
+    return {kind: "PasswordResetToken", token};
   } catch (error) {
     logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
