@@ -23,7 +23,7 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
   }
 }
 
-const cacheParams = isDevelopmentEnvironment() ? {cacheControl: false} : {maxAge: "1000 days"};
+const cacheParams = isDevelopmentEnvironment() ? {cacheControl: true} : {maxAge: "1000 days"};
 
 export function sendVendorModule(fileName: string, res: HttpResponse): void {
   const vendorModuleFilePath = VersionedVendorModulePaths[fileName];
