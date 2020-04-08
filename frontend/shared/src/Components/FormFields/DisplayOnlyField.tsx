@@ -24,7 +24,7 @@ export function DisplayOnlyField(props: Props) {
         (typeof additionalControls === "string" ? (
           <p className={TextFieldCss.Info}>{additionalControls}</p>
         ) : (
-          additionalControls
+          <div>{additionalControls}</div>
         ))}
     </>
   );

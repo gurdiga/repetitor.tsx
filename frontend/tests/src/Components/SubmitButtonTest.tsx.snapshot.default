@@ -1,3 +1,0 @@
-<button type="submit" disabled={false} onClick={[Function: handleClick]} className="f45h">
-  Submit
-</button>
