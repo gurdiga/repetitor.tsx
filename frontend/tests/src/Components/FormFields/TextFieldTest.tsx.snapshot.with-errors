@@ -3,7 +3,7 @@
     First name
     :
   </Label>
-  <input type="text" id="firstName" autoFocus={false} value="" onInput={[Function]} className="Input_fz2n9dn" />
+  <input type="text" id="firstName" onInput={[Function]} value="" autoFocus={[undefined]} readOnly={[undefined]} className="Input_fz2n9dn" />
   <ValidationMessage text="Numele lipsește" />
   <p className="Info_f1h3qb4v">
     Va fi afișat pe pagina dumneavoastră de profil

@@ -40,6 +40,7 @@ export function TutorPasswordResetPage(props: Props) {
 }
 
 function renderStep1(props: PageProps) {
+  const {isAuthenticated} = props;
   const [email, updateEmail] = React.useState(getEmailFromPageProps(props));
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
@@ -47,11 +48,15 @@ function renderStep1(props: PageProps) {
 
   return (
     <>
-      {!serverResponse.shouldShow && (
-        <p>
-          Pentru a reseta parola, introduceți adresa de email pe care ați folosit-o la înregistare. Veți primi un mesaj
-          cu instrucțiuni.
-        </p>
+      {isAuthenticated ? (
+        <p>Veți primi un mesaj cu instrucțiuni pe adresa dumneavoastră de email.</p>
+      ) : (
+        !serverResponse.shouldShow && (
+          <p>
+            Pentru a reseta parola, introduceți adresa de email pe care ați folosit-o la înregistare. Veți primi un
+            mesaj cu instrucțiuni.
+          </p>
+        )
       )}
       {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
         <Form
@@ -66,6 +71,7 @@ function renderStep1(props: PageProps) {
               showValidationMessage={shouldShowValidationMessage}
               validationMessages={EmailErrorMessages}
               autoFocus={true}
+              readOnly={isAuthenticated}
             />,
           ]}
           actionButtons={[
@@ -88,7 +94,7 @@ function renderStep1(props: PageProps) {
   async function maybeSubmitForm(
     fields: Record<TutorPasswordResetStep1PropName, ValidatedValue<string>>
   ): Promise<void> {
-    const anyInvalidField = Object.values(fields).some(f => !f.isValid);
+    const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
     if (anyInvalidField) {
       return;
@@ -183,7 +189,7 @@ function renderStep2(tokenString: string) {
   async function maybeSubmitForm(
     fields: Record<TutorPasswordResetStep2PropName, ValidatedValue<string>>
   ): Promise<void> {
-    const anyInvalidField = Object.values(fields).some(f => !f.isValid);
+    const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
     if (anyInvalidField) {
       return;

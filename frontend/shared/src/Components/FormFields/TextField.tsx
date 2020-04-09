@@ -14,18 +14,8 @@ interface Props extends FormField.CommonProps {
 type InputType = "text" | "email";
 
 export function TextField(props: Props) {
-  const {
-    validationRules,
-    onValueChange,
-    id,
-    autoFocus,
-    inputType,
-    label,
-    showValidationMessage,
-    value,
-    additionalControls,
-  } = props;
-  const {validationMessages} = props;
+  const {id, label, value, autoFocus, inputType: type = "text", readOnly} = props;
+  const {validationRules, validationMessages, showValidationMessage, additionalControls, onValueChange} = props;
 
   const initialValidationErrorCode = getValidationErrorCode(value, validationRules);
   const [validationErrorCode, setValidationErrorCode] = React.useState(initialValidationErrorCode);
@@ -34,14 +24,7 @@ export function TextField(props: Props) {
   return (
     <>
       <Label htmlFor={id}>{label}:</Label>
-      <input
-        type={inputType || "text"}
-        id={id}
-        autoFocus={!!autoFocus}
-        value={value}
-        onInput={onInput}
-        className={TextFieldCss.Input}
-      />
+      <input {...{type, id, onInput, value, autoFocus, readOnly}} className={TextFieldCss.Input} />
       {showValidationMessage && validationErrorCode && (
         <ValidationMessage text={validationMessages[validationErrorCode]} />
       )}

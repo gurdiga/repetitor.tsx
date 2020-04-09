@@ -6,6 +6,6 @@ export namespace DisplayOnlyFieldCss {
     $debugName: "Value",
     backgroundColor: "lightgray",
     width: em(17),
-    padding: em(0.25),
+    padding: "calc(0.25em + 3px)", // To align with input; 3px is input’s border-width
   });
 }

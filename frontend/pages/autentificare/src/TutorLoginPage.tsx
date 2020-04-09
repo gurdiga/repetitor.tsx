@@ -1,4 +1,3 @@
-import {ResetPasswordLinkContainer} from "frontend/pages/autentificare/src/TutorLoginPage.css";
 import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";
 import {Form} from "frontend/shared/src/Components/Form";
 import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
@@ -21,6 +20,7 @@ import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
 import {PagePath} from "shared/src/Utils/PagePath";
+import {ResetPasswordLink} from "frontend/shared/src/Components/ResetPasswordLink";
 
 export function TutorLoginPage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -71,11 +71,7 @@ function renderLoginForm() {
             validationRules={PasswordValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={PasswordErrorMessages}
-            additionalControls={
-              <div className={ResetPasswordLinkContainer}>
-                <a href={PagePath.TutorPasswordReset}>Resetare parolă</a>
-              </div>
-            }
+            additionalControls={<ResetPasswordLink />}
           />,
         ]}
         actionButtons={[

@@ -20,6 +20,7 @@ import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
 import {SecondaryButton} from "frontend/shared/src/Components/SecondaryButton";
+import {ResetPasswordLink} from "frontend/shared/src/Components/ResetPasswordLink";
 
 export function ProfilePage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -68,16 +69,19 @@ function renderProfileForm() {
             id="email"
             label="Adresa de email"
             value={email.value}
-            additionalControls={
-              <SecondaryButton label="Change the email" onClick={() => new Promise(() => alert("click"))} />
-            }
+            additionalControls={<SecondaryButton label="Schimbă" onClick={() => new Promise(() => alert("click"))} />}
+          />,
+          <DisplayOnlyField
+            id="password"
+            label="Parola"
+            value="****************"
+            additionalControls={<ResetPasswordLink />}
           />,
         ]}
         actionButtons={[
           <SubmitButton
             label="Actualizează profil"
             onClick={async () => {
-              console.log("onClick");
               toggleValidationMessage(true);
               await maybeSubmitForm({fullName});
             }}
