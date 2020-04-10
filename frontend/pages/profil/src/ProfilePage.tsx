@@ -38,10 +38,12 @@ function renderProfileForm() {
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
-  const [isProfileInfoLoaded, setProfileInfoLoaded] = React.useState(false);
 
-  if (!isProfileInfoLoaded) {
+  React.useEffect(() => {
     loadProfileInfo();
+  }, []);
+
+  if (serverResponse.responseState === ResponseState.NotYetSent) {
     return <Spinner />;
   }
 
@@ -182,7 +184,6 @@ function renderProfileForm() {
   function receiveProfileInfo(profileInfo: ProfileLoaded): void {
     updateFullName({value: profileInfo.fullName, isValid: true});
     updateEmail({value: profileInfo.email, isValid: true});
-    setProfileInfoLoaded(true);
   }
 }
 
