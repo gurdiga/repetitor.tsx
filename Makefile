@@ -76,9 +76,9 @@ open:
 	open http://localhost:$(PORT)
 
 npm-update:
-	npm --depth 9999 update
-	(cd backend && npm --depth 9999 update)
-	(cd frontend && npm --depth 9999 update)
+	npm --depth 9 update
+	(cd backend && npm --depth 9 update)
+	(cd frontend && npm --depth 9 update)
 
 npm-outdated:
 	npm outdated
