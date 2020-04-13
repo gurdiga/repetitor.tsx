@@ -13,7 +13,7 @@ import {describe, it} from "mocha";
 import * as React from "react";
 import {EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordValidationRules} from "shared/src/Model/Password";
-import {FullNameValidationRules} from "shared/src/Model/Tutor";
+import {FullNameValidationRules} from "shared/src/Model/Account";
 import {stub} from "sinon";
 import {PagePath} from "shared/src/Utils/PagePath";
 

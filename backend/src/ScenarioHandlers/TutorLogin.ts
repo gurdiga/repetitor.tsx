@@ -1,4 +1,4 @@
-import {checkLoginInfo} from "backend/src/Persistence/TutorPersistence";
+import {checkLoginInfo} from "backend/src/Persistence/AccountPersistence";
 import {makeLoginCkeckFromLoginInput} from "shared/src/Model/LoginCheck";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {hashString} from "backend/src/Utils/StringUtils";

@@ -1,6 +1,6 @@
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {UserSession} from "shared/src/Model/UserSession";
-import {loadProfile} from "backend/src/Persistence/TutorPersistence";
+import {loadProfile} from "backend/src/Persistence/AccountPersistence";
 
 type Scenario = ScenarioRegistry["ProfileLoad"];
 

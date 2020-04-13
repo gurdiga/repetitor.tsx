@@ -1,6 +1,6 @@
 import {getStorablePassword, genRandomString} from "backend/src/Utils/StringUtils";
-import {createTutor} from "backend/src/Persistence/TutorPersistence";
-import {makeRegistrationRequestFromInput} from "shared/src/Model/Tutor";
+import {createTutor} from "backend/src/Persistence/AccountPersistence";
+import {makeRegistrationRequestFromInput} from "shared/src/Model/Account";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 import {sendEmail} from "backend/src/Utils/EmailUtils";

@@ -1,5 +1,5 @@
 import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/src/Model/LoginCheck";
-import {AccountModelError, AccountCreationSuccess} from "shared/src/Model/Tutor";
+import {AccountModelError, AccountCreationSuccess} from "shared/src/Model/Account";
 import {DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
 import {runQuery, StatementResult, RowSet} from "backend/src/Utils/Db";
 import {EmailExists, PasswordResetToken} from "shared/src/Model/PasswordResetStep1";
@@ -105,7 +105,7 @@ export async function checkIfEmailExists(email: string): Promise<EmailExists | U
 
 const PASSWORD_RESET_TOKEN_LENGTH = 16;
 
-export async function createTutorPasswordResetToken(userId: number): Promise<PasswordResetToken | DbError> {
+export async function createPasswordResetToken(userId: number): Promise<PasswordResetToken | DbError> {
   const token = genRandomString(PASSWORD_RESET_TOKEN_LENGTH);
   const timestamp = Date.now();
 

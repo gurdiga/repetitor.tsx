@@ -7,7 +7,7 @@ import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
 import {runQuery, RowSet} from "backend/src/Utils/Db";
 import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
-import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/TutorPersistence";
+import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/AccountPersistence";
 import {requireEnvVar} from "backend/src/Utils/Env";
 import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
 import {UserSession} from "shared/src/Model/UserSession";

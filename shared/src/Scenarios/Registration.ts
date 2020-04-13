@@ -1,5 +1,5 @@
 import {SystemError} from "shared/src/Model/Utils";
-import {AccountPropError, AccountModelError, AccountCreationSuccess} from "shared/src/Model/Tutor";
+import {AccountPropError, AccountModelError, AccountCreationSuccess} from "shared/src/Model/Account";
 
 export interface RegistrationInput {
   fullName: string | undefined;

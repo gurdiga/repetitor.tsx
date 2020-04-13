@@ -14,7 +14,7 @@ import {
 } from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
 import {ProfileLoaded} from "shared/src/Model/Profile";
-import {FullNameErrorMessages, FullNameValidationRules} from "shared/src/Model/Tutor";
+import {FullNameErrorMessages, FullNameValidationRules} from "shared/src/Model/Account";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";

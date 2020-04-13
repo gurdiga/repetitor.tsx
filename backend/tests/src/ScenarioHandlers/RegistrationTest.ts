@@ -5,7 +5,7 @@ import {stubExport} from "backend/tests/src/TestHelpers";
 import {RowSet, runQuery, DataRow} from "backend/src/Utils/Db";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import {hashString} from "backend/src/Utils/StringUtils";
-import {AccountCreationSuccess} from "shared/src/Model/Tutor";
+import {AccountCreationSuccess} from "shared/src/Model/Account";
 import * as Logging from "backend/src/Utils/Logging";
 
 describe("Registration", () => {

@@ -1,6 +1,6 @@
 import {ProfileUpdateInput} from "shared/src/Scenarios/ProfileUpdate";
 import {validateWithRules} from "shared/src/Utils/Validation";
-import {UserValidationRules, FullNameError} from "shared/src/Model/Tutor";
+import {UserValidationRules, FullNameError} from "shared/src/Model/Account";
 
 // Reference: https://beta.workflowy.com/#/8634d2e2a7e4
 export type ProfileLoaded = {

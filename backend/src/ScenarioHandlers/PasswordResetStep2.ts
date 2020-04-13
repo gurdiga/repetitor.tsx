@@ -1,6 +1,6 @@
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {makePasswordResetStep2RequestFromInput} from "shared/src/Model/PasswordResetStep2";
-import {verifyToken, deleteToken, resetPassword} from "backend/src/Persistence/TutorPersistence";
+import {verifyToken, deleteToken, resetPassword} from "backend/src/Persistence/AccountPersistence";
 import {getStorablePassword} from "backend/src/Utils/StringUtils";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";

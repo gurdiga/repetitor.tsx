@@ -15,7 +15,7 @@ import {
   AccountPropName,
   AccountModelValidationErrorCode,
   FullNameErrorMessages,
-} from "shared/src/Model/Tutor";
+} from "shared/src/Model/Account";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";

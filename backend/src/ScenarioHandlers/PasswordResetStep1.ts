@@ -2,9 +2,9 @@ import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {makePasswordResetRequestFromInput} from "shared/src/Model/PasswordResetStep1";
 import {
   checkIfEmailExists,
-  createTutorPasswordResetToken,
+  createPasswordResetToken,
   PASSWORD_RESET_EXPIRATION_HOURS,
-} from "backend/src/Persistence/TutorPersistence";
+} from "backend/src/Persistence/AccountPersistence";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
 import {PagePath} from "shared/src/Utils/PagePath";
@@ -26,7 +26,7 @@ export async function PasswordResetStep1(input: Scenario["Input"]): Promise<Scen
   }
 
   const {userId, fullName} = emailCheckResult;
-  const resetTokenCreationResult = await createTutorPasswordResetToken(userId);
+  const resetTokenCreationResult = await createPasswordResetToken(userId);
 
   if (resetTokenCreationResult.kind !== "PasswordResetToken") {
     return resetTokenCreationResult;
