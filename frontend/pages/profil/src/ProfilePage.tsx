@@ -41,11 +41,11 @@ function renderProfileForm() {
   const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   if (serverResponse.requestState === RequestState.NotYetSent) {
-    loadProfileInfo();
     setServerResponse({
       requestState: RequestState.Sent,
       statusText: "",
     });
+    loadProfileInfo();
 
     return <Spinner />;
   }
