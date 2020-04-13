@@ -4,7 +4,7 @@ import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
-import {TutorPasswordResetPage} from "frontend/pages/resetare-parola/src/TutorPasswordResetPage";
+import {PasswordResetPage} from "frontend/pages/resetare-parola/src/PasswordResetPage";
 import {expect} from "chai";
 import Sinon = require("sinon");
 import {Stub, Wrapper, expectProps, expectToRenderSnapshot, Comp} from "frontend/tests/src/TestHelpers";
@@ -14,13 +14,13 @@ import {ValidatedValue} from "shared/src/Utils/Validation";
 import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
 import {PasswordValidationRules, PasswordErrorMessages} from "shared/src/Model/Password";
 
-describe("<TutorPasswordResetPage/>", () => {
+describe("<PasswordResetPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
-  let wrapper: Wrapper<typeof TutorPasswordResetPage>;
+  let wrapper: Wrapper<typeof PasswordResetPage>;
 
   describe("step 1", () => {
     beforeEach(() => {
-      wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
+      wrapper = shallow(<PasswordResetPage isAuthenticated={false} params={{}} />);
     });
 
     context("when form is not yet submitted", () => {
@@ -38,7 +38,7 @@ describe("<TutorPasswordResetPage/>", () => {
           const email = "some@email.com";
 
           beforeEach(() => {
-            wrapper = shallow(<TutorPasswordResetPage isAuthenticated={true} email={email} params={{}} />);
+            wrapper = shallow(<PasswordResetPage isAuthenticated={true} email={email} params={{}} />);
           });
 
           it("renders text field pre-fileld with the email of authenticated user", () => {
@@ -109,7 +109,7 @@ describe("<TutorPasswordResetPage/>", () => {
           });
 
           function submitEmailValue(emailValue: ValidatedValue<string>) {
-            const wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
+            const wrapper = shallow(<PasswordResetPage isAuthenticated={false} params={{}} />);
             const formProps = () => wrapper.find(Form).props();
             const emailField: Comp<typeof TextField> = formProps().fields[0];
 
@@ -129,7 +129,7 @@ describe("<TutorPasswordResetPage/>", () => {
 
     context("after submitting the form", () => {
       beforeEach(() => {
-        wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{}} />);
+        wrapper = shallow(<PasswordResetPage isAuthenticated={false} params={{}} />);
       });
 
       context("happy path", () => {
@@ -192,7 +192,7 @@ describe("<TutorPasswordResetPage/>", () => {
     let form: Wrapper<typeof Form>;
 
     beforeEach(() => {
-      wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{token: "C0FFEE42"}} />);
+      wrapper = shallow(<PasswordResetPage isAuthenticated={false} params={{token: "C0FFEE42"}} />);
       form = wrapper.find(Form);
     });
 
@@ -236,7 +236,7 @@ describe("<TutorPasswordResetPage/>", () => {
       describe("happy path", () => {
         beforeEach(async () => {
           runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({
-            kind: "TutorPasswordResetSuccess",
+            kind: "PasswordResetSuccess",
           });
 
           await submitNewPassword({
@@ -327,7 +327,7 @@ describe("<TutorPasswordResetPage/>", () => {
       });
 
       function submitNewPassword(fieldValue: ValidatedValue<string>): void {
-        wrapper = shallow(<TutorPasswordResetPage isAuthenticated={false} params={{token: "C0FFEE42"}} />);
+        wrapper = shallow(<PasswordResetPage isAuthenticated={false} params={{token: "C0FFEE42"}} />);
         const formProps = () => wrapper.find(Form).props();
         const newPasswordField: Comp<typeof TextField> = formProps().fields[0];
 

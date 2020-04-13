@@ -47,6 +47,8 @@ build: node_modules
 	~/.nvm/nvm-exec \
 	node_modules/.bin/tsc --build -v
 
+cc: clean build
+
 watch: node_modules
 	@~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w \
 	| tee >( \

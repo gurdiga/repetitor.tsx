@@ -1,18 +1,18 @@
 import {
   PasswordResetTokenError,
   PasswordResetTokenUnknownError,
-  TutorPasswordResetSuccess,
-} from "shared/src/Model/TutorPasswordResetStep2";
+  PasswordResetSuccess,
+} from "shared/src/Model/PasswordResetStep2";
 import {SystemError} from "shared/src/Model/Utils";
 import {PasswordError} from "shared/src/Model/Password";
 
-export interface TutorPasswordResetStep2Input {
+export interface PasswordResetStep2Input {
   token: string | undefined;
   newPassword: string | undefined;
 }
 
-export type TutorPasswordResetStep2Result =
-  | TutorPasswordResetSuccess
+export type PasswordResetStep2Result =
+  | PasswordResetSuccess
   | PasswordResetTokenError
   | PasswordResetTokenUnknownError
   | PasswordError

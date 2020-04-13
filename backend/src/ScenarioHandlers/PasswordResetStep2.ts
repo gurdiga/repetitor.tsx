@@ -1,5 +1,5 @@
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {makeTutorPasswordResetStep2RequestFromInput} from "shared/src/Model/TutorPasswordResetStep2";
+import {makePasswordResetStep2RequestFromInput} from "shared/src/Model/PasswordResetStep2";
 import {verifyToken, deleteToken, resetPassword} from "backend/src/Persistence/TutorPersistence";
 import {getStorablePassword} from "backend/src/Utils/StringUtils";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
@@ -7,15 +7,15 @@ import {requireEnvVar} from "backend/src/Utils/Env";
 import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 import {PagePath} from "shared/src/Utils/PagePath";
 
-type Scenario = ScenarioRegistry["TutorPasswordResetStep2"];
+type Scenario = ScenarioRegistry["PasswordResetStep2"];
 
-export async function TutorPasswordResetStep2(
+export async function PasswordResetStep2(
   input: Scenario["Input"],
   session: UserSession
 ): Promise<Scenario["Result"]> {
-  const inputValidationResult = makeTutorPasswordResetStep2RequestFromInput(input);
+  const inputValidationResult = makePasswordResetStep2RequestFromInput(input);
 
-  if (inputValidationResult.kind !== "TutorPasswordResetStep2Request") {
+  if (inputValidationResult.kind !== "PasswordResetStep2Request") {
     return inputValidationResult;
   }
 
@@ -34,7 +34,7 @@ export async function TutorPasswordResetStep2(
 
   const resetPasswordResult = await resetPassword(userId, storablePassword);
 
-  if (resetPasswordResult.kind === "TutorPasswordResetSuccess") {
+  if (resetPasswordResult.kind === "PasswordResetSuccess") {
     initializeUserSession(session, {userId, email});
   }
 

@@ -8,12 +8,12 @@ import {QueryStringParams} from "frontend/shared/src/Utils/QueryStringParams";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
-import {TutorPasswordResetStep1PropName} from "shared/src/Model/TutorPasswordResetStep1";
+import {PasswordResetStep1PropName} from "shared/src/Model/PasswordResetStep1";
 import {
   PasswordResetTokenValidationRules,
   tokenErrorMessages,
-  TutorPasswordResetStep2PropName,
-} from "shared/src/Model/TutorPasswordResetStep2";
+  PasswordResetStep2PropName,
+} from "shared/src/Model/PasswordResetStep2";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
@@ -23,7 +23,7 @@ interface Props extends PageProps {
   params: QueryStringParams;
 }
 
-export function TutorPasswordResetPage(props: Props) {
+export function PasswordResetPage(props: Props) {
   const {isAuthenticated, params} = props;
   const {token} = params;
 
@@ -87,16 +87,14 @@ function renderStep1(props: PageProps) {
     </>
   );
 
-  async function maybeSubmitForm(
-    fields: Record<TutorPasswordResetStep1PropName, ValidatedValue<string>>
-  ): Promise<void> {
+  async function maybeSubmitForm(fields: Record<PasswordResetStep1PropName, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
     if (anyInvalidField) {
       return;
     }
 
-    const response = await runScenario("TutorPasswordResetStep1", {email: fields.email.value});
+    const response = await runScenario("PasswordResetStep1", {email: fields.email.value});
     let requestState: RequestState;
     let statusText: string;
 
@@ -180,16 +178,14 @@ function renderStep2(tokenString: string) {
     </>
   );
 
-  async function maybeSubmitForm(
-    fields: Record<TutorPasswordResetStep2PropName, ValidatedValue<string>>
-  ): Promise<void> {
+  async function maybeSubmitForm(fields: Record<PasswordResetStep2PropName, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
     if (anyInvalidField) {
       return;
     }
 
-    const response = await runScenario("TutorPasswordResetStep2", {
+    const response = await runScenario("PasswordResetStep2", {
       token: fields.token.value,
       newPassword: fields.newPassword.value,
     });
@@ -198,7 +194,7 @@ function renderStep2(tokenString: string) {
     let statusText: string;
 
     switch (response.kind) {
-      case "TutorPasswordResetSuccess":
+      case "PasswordResetSuccess":
         [requestState, statusText] = [RequestState.ReceivedSuccess, "Parola a fost resetată cu succes."];
         break;
       case "PasswordResetTokenUnknownError":

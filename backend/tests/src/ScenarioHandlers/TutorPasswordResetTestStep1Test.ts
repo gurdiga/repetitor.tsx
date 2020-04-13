@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswordResetStep1";
+import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
 import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import Sinon = require("sinon");
@@ -19,17 +19,17 @@ describe("TutorPasswordResetStep1", () => {
 
   it("validates the email", async () => {
     let email = "";
-    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
+    expect(await PasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
 
     email = "42";
-    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
+    expect(await PasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
 
     email = "invalid@email";
-    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
+    expect(await PasswordResetStep1({email})).to.deep.equal({kind: "EmailError", errorCode: "INCORRECT"});
   });
 
   it("tells when the email is not recognized", async () => {
-    expect(await TutorPasswordResetStep1({email: "some@email.com"})).to.deep.equal({kind: "UnknownEmailError"});
+    expect(await PasswordResetStep1({email: "some@email.com"})).to.deep.equal({kind: "UnknownEmailError"});
   });
 
   it("succeeds when the email is recognized", async () => {
@@ -38,7 +38,7 @@ describe("TutorPasswordResetStep1", () => {
     await TutorRegistration({fullName: "Joe DOE", email, password: "secret"}, {});
     sendEmailStub.resetHistory(); // ignore the registration email
 
-    expect(await TutorPasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
+    expect(await PasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
     expect(await getTokenForEmail(email), "token created").to.exist;
 
     const {args} = sendEmailStub.firstCall;

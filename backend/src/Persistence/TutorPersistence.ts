@@ -2,14 +2,14 @@ import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/src/Mod
 import {TutorModelError, TutorCreationSuccess} from "shared/src/Model/Tutor";
 import {DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
 import {runQuery, StatementResult, RowSet} from "backend/src/Utils/Db";
-import {EmailExists, PasswordResetToken} from "shared/src/Model/TutorPasswordResetStep1";
+import {EmailExists, PasswordResetToken} from "shared/src/Model/PasswordResetStep1";
 import {genRandomString, StorablePassword} from "backend/src/Utils/StringUtils";
 import {
   PasswordResetTokenUnknownError,
-  TutorPasswordResetSuccess,
+  PasswordResetSuccess,
   PasswordResetTokenVerified,
   PurgedExpiredTokens,
-} from "shared/src/Model/TutorPasswordResetStep2";
+} from "shared/src/Model/PasswordResetStep2";
 import {logError} from "backend/src/Utils/Logging";
 import {ProfileLoaded, ProfileNotFoundError, ProfileUpdated} from "shared/src/Model/Profile";
 
@@ -128,7 +128,7 @@ export async function createTutorPasswordResetToken(userId: number): Promise<Pas
 export async function resetPassword(
   userId: number,
   storablePassword: StorablePassword
-): Promise<TutorPasswordResetSuccess | DbError> {
+): Promise<PasswordResetSuccess | DbError> {
   const {passwordHash, passwordSalt: salt} = storablePassword;
 
   try {
@@ -143,7 +143,7 @@ export async function resetPassword(
       params: [passwordHash, salt, userId],
     });
 
-    return {kind: "TutorPasswordResetSuccess"};
+    return {kind: "PasswordResetSuccess"};
   } catch (error) {
     logError(error);
     return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};

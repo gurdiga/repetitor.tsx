@@ -1,18 +1,18 @@
 import {DataProps} from "shared/src/Model/Utils";
-import {TutorPasswordResetStep2Input} from "shared/src/Scenarios/TutorPasswordResetStep2";
+import {PasswordResetStep2Input} from "shared/src/Scenarios/PasswordResetStep2";
 import {UserValue, PredicateFn, ValidationMessages, validateWithRules} from "shared/src/Utils/Validation";
 import {PasswordValidationRules, PasswordError} from "shared/src/Model/Password";
 
-export interface TutorPasswordResetStep2Request {
-  kind: "TutorPasswordResetStep2Request";
+export interface PasswordResetStep2Request {
+  kind: "PasswordResetStep2Request";
   token: string;
   newPassword: string;
 }
 
-export type TutorPasswordResetStep2PropName = keyof DataProps<TutorPasswordResetStep2Request>;
+export type PasswordResetStep2PropName = keyof DataProps<PasswordResetStep2Request>;
 
-export interface TutorPasswordResetSuccess {
-  kind: "TutorPasswordResetSuccess";
+export interface PasswordResetSuccess {
+  kind: "PasswordResetSuccess";
 }
 
 export type PasswordResetTokenError = {
@@ -45,9 +45,9 @@ export type PurgedExpiredTokens = {
   kind: "PurgedExpiredTokens";
 };
 
-export function makeTutorPasswordResetStep2RequestFromInput(
-  input: TutorPasswordResetStep2Input
-): TutorPasswordResetStep2Request | PasswordResetTokenError | PasswordError {
+export function makePasswordResetStep2RequestFromInput(
+  input: PasswordResetStep2Input
+): PasswordResetStep2Request | PasswordResetTokenError | PasswordError {
   const {token, newPassword} = input;
   const tokenValidationResult = validateWithRules(token, PasswordResetTokenValidationRules);
 
@@ -68,7 +68,7 @@ export function makeTutorPasswordResetStep2RequestFromInput(
   }
 
   return {
-    kind: "TutorPasswordResetStep2Request",
+    kind: "PasswordResetStep2Request",
     token: tokenValidationResult.value,
     newPassword: newPasswordValidationResult.value,
   };

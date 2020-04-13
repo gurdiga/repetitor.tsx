@@ -3,8 +3,8 @@ import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
 import {Logout} from "backend/src/ScenarioHandlers/Logout";
 import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
 import {ScenarioHandler, ScenarioName} from "shared/src/ScenarioRegistry";
-import {TutorPasswordResetStep1} from "backend/src/ScenarioHandlers/TutorPasswordResetStep1";
-import {TutorPasswordResetStep2} from "backend/src/ScenarioHandlers/TutorPasswordResetStep2";
+import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
+import {PasswordResetStep2} from "backend/src/ScenarioHandlers/PasswordResetStep2";
 import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
 import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
 import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
@@ -15,8 +15,8 @@ const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   EmailConfirmation,
   TutorLogin,
   Logout,
-  TutorPasswordResetStep1,
-  TutorPasswordResetStep2,
+  PasswordResetStep1,
+  PasswordResetStep2,
   ProfileLoad,
   ProfileUpdate,
 };

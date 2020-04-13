@@ -1,5 +1,5 @@
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {makeTutorPasswordResetRequestFromInput} from "shared/src/Model/TutorPasswordResetStep1";
+import {makePasswordResetRequestFromInput} from "shared/src/Model/PasswordResetStep1";
 import {
   checkIfEmailExists,
   createTutorPasswordResetToken,
@@ -9,10 +9,10 @@ import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
 import {PagePath} from "shared/src/Utils/PagePath";
 
-type Scenario = ScenarioRegistry["TutorPasswordResetStep1"];
+type Scenario = ScenarioRegistry["PasswordResetStep1"];
 
-export async function TutorPasswordResetStep1(input: Scenario["Input"]): Promise<Scenario["Result"]> {
-  const result = makeTutorPasswordResetRequestFromInput(input);
+export async function PasswordResetStep1(input: Scenario["Input"]): Promise<Scenario["Result"]> {
+  const result = makePasswordResetRequestFromInput(input);
 
   if (result.kind !== "TutorPasswordResetRequest") {
     return result;
