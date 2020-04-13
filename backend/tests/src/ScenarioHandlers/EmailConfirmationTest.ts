@@ -4,7 +4,7 @@ import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import {UserSession} from "shared/src/Model/UserSession";
 import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {Registration} from "backend/src/ScenarioHandlers/Registration";
 
 describe("EmailConfirmation", () => {
   const session: UserSession = {userId: undefined};
@@ -17,7 +17,7 @@ describe("EmailConfirmation", () => {
     const email = "some@email.com";
 
     beforeEach(async () => {
-      await TutorRegistration({fullName: "Joe DOE", email, password: "secret"}, session);
+      await Registration({fullName: "Joe DOE", email, password: "secret"}, session);
       userId = session.userId!;
       expect(userId).to.exist;
 

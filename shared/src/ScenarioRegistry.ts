@@ -1,4 +1,4 @@
-import {TutorRegistrationInput, TutorRegistrationResult} from "shared/src/Scenarios/TutorRegistration";
+import {RegistrationInput, RegistrationResult} from "shared/src/Scenarios/Registration";
 import {TestScenarioInput, TestScenarioResult} from "shared/src/Scenarios/TestScenario";
 import {TutorLoginInput, TutorLoginResult} from "shared/src/Scenarios/TutorLogin";
 import {UserSession} from "shared/src/Model/UserSession";
@@ -16,9 +16,9 @@ import {ProfileLoadInput, ProfileLoadResult} from "shared/src/Scenarios/ProfileL
 import {ProfileUpdateInput, ProfileUpdateResult} from "shared/src/Scenarios/ProfileUpdate";
 
 export interface ScenarioRegistry {
-  TutorRegistration: {
-    Input: TutorRegistrationInput;
-    Result: TutorRegistrationResult;
+  Registration: {
+    Input: RegistrationInput;
+    Result: RegistrationResult;
   };
   TutorLogin: {
     Input: TutorLoginInput;

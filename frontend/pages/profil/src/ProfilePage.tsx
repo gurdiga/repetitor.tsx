@@ -14,7 +14,7 @@ import {
 } from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
 import {ProfileLoaded} from "shared/src/Model/Profile";
-import {FullNameErrorMessages, TutorFullNameValidationRules} from "shared/src/Model/Tutor";
+import {FullNameErrorMessages, FullNameValidationRules} from "shared/src/Model/Tutor";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
@@ -66,7 +66,7 @@ function renderProfileForm() {
             label="Nume deplin"
             value={fullName.value}
             onValueChange={updateFullName}
-            validationRules={TutorFullNameValidationRules}
+            validationRules={FullNameValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={FullNameErrorMessages}
           />,

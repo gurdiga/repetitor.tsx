@@ -1,0 +1,10 @@
+<PageLayout title="Înregistrare repetitor" isAuthenticated={true}>
+  <AlreadyLoggedIn>
+    <p>
+      Deja v-ați înregistrat.
+    </p>
+    <p>
+      Dacă doriți să vă dezautentifcați, apăsați pe acest buton:
+    </p>
+  </AlreadyLoggedIn>
+</PageLayout>

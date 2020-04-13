@@ -1,12 +1,12 @@
 import {expect} from "chai";
 import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
-import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import Sinon = require("sinon");
 import {Stub} from "backend/tests/src/TestHelpers";
 import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
 
-describe("TutorPasswordResetStep1", () => {
+describe("PasswordResetStep1", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
 
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe("TutorPasswordResetStep1", () => {
   it("succeeds when the email is recognized", async () => {
     const email = "some@email.com";
 
-    await TutorRegistration({fullName: "Joe DOE", email, password: "secret"}, {});
+    await Registration({fullName: "Joe DOE", email, password: "secret"}, {});
     sendEmailStub.resetHistory(); // ignore the registration email
 
     expect(await PasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});

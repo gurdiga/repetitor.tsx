@@ -1,31 +1,31 @@
-import {TutorRegistrationInput} from "shared/src/Scenarios/TutorRegistration";
+import {RegistrationInput} from "shared/src/Scenarios/Registration";
 import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/src/Utils/Validation";
 import {DataProps} from "shared/src/Model/Utils";
 import {EmailError, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordError, PasswordValidationRules} from "shared/src/Model/Password";
 
-export interface TutorRegistrationRequest {
-  kind: "TutorRegistrationRequest";
+export interface RegistrationRequest {
+  kind: "RegistrationRequest";
   fullName: string;
   email: string;
   password: string;
 }
 
-export type TutorPropName = keyof DataProps<TutorRegistrationRequest>;
+export type AccountPropName = keyof DataProps<RegistrationRequest>;
 
-export const TutorFullNameValidationRules: Record<FullNameValidationErrorCode, PredicateFn> = {
+export const FullNameValidationRules: Record<FullNameValidationErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
   TOO_SHORT: (text: UserValue) => !!text && text.trim().length >= 5,
   TOO_LONG: (text: UserValue) => !!text && text.trim().length <= 50,
 };
 
-export const FullNameErrorMessages: ValidationMessages<typeof TutorFullNameValidationRules> = {
+export const FullNameErrorMessages: ValidationMessages<typeof FullNameValidationRules> = {
   REQUIRED: "Numele deplin lipsește",
   TOO_SHORT: "Numele este prea scurt",
   TOO_LONG: "Numele este prea lung",
 };
 
-export type TutorPropError = FullNameError | EmailError | PasswordError;
+export type AccountPropError = FullNameError | EmailError | PasswordError;
 
 export type FullNameError = {
   kind: "FullNameError";
@@ -34,21 +34,21 @@ export type FullNameError = {
 
 export type FullNameValidationErrorCode = "REQUIRED" | "TOO_SHORT" | "TOO_LONG";
 
-export type TutorModelError = {
-  kind: "ModelError";
-  errorCode: UserModelValidationErrorCode;
+export type AccountModelError = {
+  kind: "AccountModelError";
+  errorCode: AccountModelValidationErrorCode;
 };
 
-export type TutorCreationSuccess = {
-  kind: "TutorCreationSuccess";
+export type AccountCreationSuccess = {
+  kind: "AccountCreationSuccess";
   id: number;
 };
 
-export type UserModelValidationErrorCode = "EMAIL_TAKEN";
+export type AccountModelValidationErrorCode = "EMAIL_TAKEN";
 
-export function makeTutorRegistrationRequestFromInput(
-  input: TutorRegistrationInput
-): TutorRegistrationRequest | TutorPropError | TutorModelError {
+export function makeRegistrationRequestFromInput(
+  input: RegistrationInput
+): RegistrationRequest | AccountPropError | AccountModelError {
   const fullNameValidationResult = validateWithRules(input.fullName, UserValidationRules.fullName);
 
   if (fullNameValidationResult.kind === "Invalid") {
@@ -68,15 +68,15 @@ export function makeTutorRegistrationRequestFromInput(
   }
 
   return {
-    kind: "TutorRegistrationRequest",
+    kind: "RegistrationRequest",
     fullName: fullNameValidationResult.value,
     email: emailValidationResult.value,
     password: passwordValidationResult.value,
   };
 }
 
-export const UserValidationRules: Record<TutorPropName, Record<any, PredicateFn>> = {
-  fullName: TutorFullNameValidationRules,
+export const UserValidationRules: Record<AccountPropName, Record<any, PredicateFn>> = {
+  fullName: FullNameValidationRules,
   email: EmailValidationRules,
   password: PasswordValidationRules,
 };

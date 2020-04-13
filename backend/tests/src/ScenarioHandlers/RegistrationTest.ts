@@ -1,14 +1,14 @@
 import {expect} from "chai";
-import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {UserSession} from "shared/src/Model/UserSession";
 import {stubExport} from "backend/tests/src/TestHelpers";
 import {RowSet, runQuery, DataRow} from "backend/src/Utils/Db";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import {hashString} from "backend/src/Utils/StringUtils";
-import {TutorCreationSuccess} from "shared/src/Model/Tutor";
+import {AccountCreationSuccess} from "shared/src/Model/Tutor";
 import * as Logging from "backend/src/Utils/Logging";
 
-describe("TutorRegistration", () => {
+describe("Registration", () => {
   stubExport(EmailUtils, "sendEmail", before, after);
 
   describe("parameter validation", () => {
@@ -16,7 +16,7 @@ describe("TutorRegistration", () => {
       it("throws with the appropriate error message", async () => {
         const session = {userId: undefined};
         const params = {email: "", password: "secret", fullName: "John DOE"};
-        const result = await TutorRegistration(params, session);
+        const result = await Registration(params, session);
 
         expect(result).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
       });
@@ -24,7 +24,7 @@ describe("TutorRegistration", () => {
       it("throws with the appropriate error message", async () => {
         const session = {userId: undefined};
         const params = {email: "some@email.com", password: "", fullName: "John DOE"};
-        const result = await TutorRegistration(params, session);
+        const result = await Registration(params, session);
 
         expect(result).to.deep.equal({kind: "PasswordError", errorCode: "REQUIRED"});
       });
@@ -37,11 +37,11 @@ describe("TutorRegistration", () => {
 
     context("happy path", () => {
       let row: DataRow;
-      let result: TutorCreationSuccess;
+      let result: AccountCreationSuccess;
 
       beforeEach(async () => {
         session = {userId: undefined};
-        result = (await TutorRegistration(params, session)) as TutorCreationSuccess;
+        result = (await Registration(params, session)) as AccountCreationSuccess;
       });
 
       it("adds the appropriate row to the users table", async () => {
@@ -70,12 +70,12 @@ describe("TutorRegistration", () => {
       // Silence this: ER_DUP_ENTRY "Duplicate entry 'some@email.com' for key 'email'"
       stubExport(Logging, "logError", before, after);
 
-      beforeEach(() => TutorRegistration(params, session));
+      beforeEach(() => Registration(params, session));
 
       it("trows with an appropriate error message", async () => {
-        const result = await TutorRegistration(params, session);
+        const result = await Registration(params, session);
 
-        expect(result).to.deep.equal({kind: "ModelError", errorCode: "EMAIL_TAKEN"});
+        expect(result).to.deep.equal({kind: "AccountModelError", errorCode: "EMAIL_TAKEN"});
       });
     });
   });

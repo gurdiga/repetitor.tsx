@@ -1,11 +1,11 @@
 import {expect} from "chai";
 import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
-import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {stubExport} from "backend/tests/src/TestHelpers";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import {UserSession} from "shared/src/Model/UserSession";
 
-describe("TutorLogin", () => {
+describe("Login", () => {
   const session: UserSession = {userId: undefined};
 
   stubExport(EmailUtils, "sendEmail", before, after);
@@ -31,7 +31,7 @@ describe("TutorLogin", () => {
   it("tells when the password does not match", async () => {
     const email = "some@email.com";
 
-    await TutorRegistration({fullName: "Joe DOE", email, password: "secret;"}, session);
+    await Registration({fullName: "Joe DOE", email, password: "secret;"}, session);
 
     const result = await TutorLogin({email, password: "12345"}, session);
 
@@ -43,7 +43,7 @@ describe("TutorLogin", () => {
     const email = "some@email.com";
     const password = "secret";
 
-    await TutorRegistration({fullName: "Joe DOE", email, password}, session);
+    await Registration({fullName: "Joe DOE", email, password}, session);
 
     const {userId} = session;
 

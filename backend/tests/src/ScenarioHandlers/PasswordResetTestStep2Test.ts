@@ -3,7 +3,7 @@ import {Stub} from "backend/tests/src/TestHelpers";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import Sinon = require("sinon");
 import {PasswordResetStep2} from "backend/src/ScenarioHandlers/PasswordResetStep2";
-import {TutorRegistration} from "backend/src/ScenarioHandlers/TutorRegistration";
+import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
 import {runQuery, RowSet} from "backend/src/Utils/Db";
 import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
@@ -12,7 +12,7 @@ import {requireEnvVar} from "backend/src/Utils/Env";
 import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
 import {UserSession} from "shared/src/Model/UserSession";
 
-describe("TutorPasswordResetStep2", () => {
+describe("PasswordResetStep2", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
 
   beforeEach(() => (sendEmailStub = Sinon.stub(EmailUtils, "sendEmail")));
@@ -27,7 +27,7 @@ describe("TutorPasswordResetStep2", () => {
     const expiredToken = "EXPIRED";
 
     beforeEach(async () => {
-      await TutorRegistration({fullName: "Joe DOE", email, password: "secret"}, {});
+      await Registration({fullName: "Joe DOE", email, password: "secret"}, {});
       await PasswordResetStep1({email});
 
       await insertExpiredToken(expiredToken);

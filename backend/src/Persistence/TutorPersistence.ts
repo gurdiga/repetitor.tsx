@@ -1,5 +1,5 @@
 import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/src/Model/LoginCheck";
-import {TutorModelError, TutorCreationSuccess} from "shared/src/Model/Tutor";
+import {AccountModelError, AccountCreationSuccess} from "shared/src/Model/Tutor";
 import {DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
 import {runQuery, StatementResult, RowSet} from "backend/src/Utils/Db";
 import {EmailExists, PasswordResetToken} from "shared/src/Model/PasswordResetStep1";
@@ -19,7 +19,7 @@ export async function createTutor(
   passwordHash: string,
   salt: string,
   emailConfirmationToken: string
-): Promise<TutorCreationSuccess | TutorModelError | DbError> {
+): Promise<AccountCreationSuccess | AccountModelError | DbError> {
   try {
     const result = (await runQuery({
       sql: `
@@ -29,11 +29,11 @@ export async function createTutor(
       params: [email, passwordHash, salt, fullName, emailConfirmationToken],
     })) as StatementResult;
 
-    return {kind: "TutorCreationSuccess", id: result.insertId};
+    return {kind: "AccountCreationSuccess", id: result.insertId};
   } catch (error) {
     switch (error.code) {
       case "ER_DUP_ENTRY":
-        return {kind: "ModelError", errorCode: "EMAIL_TAKEN"};
+        return {kind: "AccountModelError", errorCode: "EMAIL_TAKEN"};
       default:
         logError(error);
         return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};

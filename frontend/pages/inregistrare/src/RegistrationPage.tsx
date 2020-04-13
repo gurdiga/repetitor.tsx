@@ -11,9 +11,9 @@ import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {
-  TutorFullNameValidationRules,
-  TutorPropName,
-  UserModelValidationErrorCode,
+  FullNameValidationRules,
+  AccountPropName,
+  AccountModelValidationErrorCode,
   FullNameErrorMessages,
 } from "shared/src/Model/Tutor";
 import {DbErrorMessages} from "shared/src/Model/Utils";
@@ -23,7 +23,7 @@ import {ErrorMessages, emptyFieldValue, UserValue, ValidatedValue, ValidationRul
 import {PagePath} from "shared/src/Utils/PagePath";
 import {AlertMessage, AlertType} from "frontend/shared/src/Components/AlertMessage";
 
-export function TutorRegistrationPage(props: PageProps) {
+export function RegistrationPage(props: PageProps) {
   const {isAuthenticated} = props;
 
   return (
@@ -66,7 +66,7 @@ function renderLoginForm() {
             label="Nume deplin"
             value={fullName.value}
             onValueChange={updateFullName}
-            validationRules={TutorFullNameValidationRules}
+            validationRules={FullNameValidationRules}
             showValidationMessage={shouldShowValidationMessage}
             validationMessages={FullNameErrorMessages}
             additionalControls="Va fi afișat pe pagina dumneavoastră de profil"
@@ -137,7 +137,7 @@ function renderLoginForm() {
   }
 
   async function maybeSubmitForm(
-    fields: Record<TutorPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
+    fields: Record<AccountPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
   ): Promise<void> {
     const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
@@ -145,7 +145,7 @@ function renderLoginForm() {
       return;
     }
 
-    const response = await runScenario("TutorRegistration", {
+    const response = await runScenario("Registration", {
       fullName: fields.fullName.value,
       email: fields.email.value,
       password: fields.password.value,
@@ -155,7 +155,7 @@ function renderLoginForm() {
     let statusText: string;
 
     switch (response.kind) {
-      case "TutorCreationSuccess":
+      case "AccountCreationSuccess":
         [requestState, statusText] = [RequestState.ReceivedSuccess, "Înregistrat."];
         break;
       case "FullNameError":
@@ -167,8 +167,8 @@ function renderLoginForm() {
       case "PasswordError":
         [requestState, statusText] = [RequestState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
-      case "ModelError":
-        [requestState, statusText] = [RequestState.ReceivedError, UserModelErrorMessages[response.errorCode]];
+      case "AccountModelError":
+        [requestState, statusText] = [RequestState.ReceivedError, AccountModelErrorMessages[response.errorCode]];
         break;
       case "DbError":
         [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
@@ -194,7 +194,7 @@ function renderLoginForm() {
   }
 }
 
-const UserModelErrorMessages: ErrorMessages<UserModelValidationErrorCode> = {
+const AccountModelErrorMessages: ErrorMessages<AccountModelValidationErrorCode> = {
   EMAIL_TAKEN: "Există deja un cont cu această adresă de email",
 };
 

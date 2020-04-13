@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
-import {TutorRegistrationPage, UlaValidationRules} from "frontend/pages/inregistrare/src/TutorRegistrationPage";
+import {RegistrationPage, UlaValidationRules} from "frontend/pages/inregistrare/src/RegistrationPage";
 import {Form} from "frontend/shared/src/Components/Form";
 import {Checkbox} from "frontend/shared/src/Components/FormFields/Checkbox";
 import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
@@ -13,16 +13,16 @@ import {describe, it} from "mocha";
 import * as React from "react";
 import {EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordValidationRules} from "shared/src/Model/Password";
-import {TutorFullNameValidationRules} from "shared/src/Model/Tutor";
+import {FullNameValidationRules} from "shared/src/Model/Tutor";
 import {stub} from "sinon";
 import {PagePath} from "shared/src/Utils/PagePath";
 
-describe("<TutorRegistrationPage/>", () => {
-  let wrapper: Wrapper<typeof TutorRegistrationPage>;
+describe("<RegistrationPage/>", () => {
+  let wrapper: Wrapper<typeof RegistrationPage>;
 
   context("when the user is not yet authenticated", () => {
     before(() => {
-      wrapper = shallow(<TutorRegistrationPage isAuthenticated={false} />);
+      wrapper = shallow(<RegistrationPage isAuthenticated={false} />);
     });
 
     it("renders a form with the appropriate fields", () => {
@@ -33,7 +33,7 @@ describe("<TutorRegistrationPage/>", () => {
 
       expectProps<typeof TextField>("name field", nameField, {
         autoFocus: true,
-        validationRules: TutorFullNameValidationRules,
+        validationRules: FullNameValidationRules,
       });
 
       expectProps<typeof TextField>("email field", emailField, {
@@ -68,7 +68,7 @@ describe("<TutorRegistrationPage/>", () => {
       let navigateToPageStub: Stub<typeof PageNavigation.navigateToPage>;
 
       beforeEach(() => {
-        runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "TutorCreationSuccess", id: 42});
+        runScenarioStub = stub(ScenarioRunner, "runScenario").resolves({kind: "AccountCreationSuccess", id: 42});
         navigateToPageStub = stub(PageNavigation, "navigateToPage");
       });
 
@@ -204,7 +204,7 @@ describe("<TutorRegistrationPage/>", () => {
     });
 
     function getSubmitButton(
-      wrapper: Wrapper<typeof TutorRegistrationPage>
+      wrapper: Wrapper<typeof RegistrationPage>
     ): React.ReactElement<React.ComponentProps<typeof SubmitButton>> {
       return wrapper.find(Form).props().actionButtons[0];
     }
@@ -212,13 +212,13 @@ describe("<TutorRegistrationPage/>", () => {
 
   describe("snapshots", () => {
     it("renders the authenticated state", () => {
-      const wrapper = shallow(<TutorRegistrationPage isAuthenticated={true} />);
+      const wrapper = shallow(<RegistrationPage isAuthenticated={true} />);
 
       expectToRenderSnapshot(__filename, wrapper, "authenticated");
     });
 
     it("renders the unauthenticated state", () => {
-      const wrapper = shallow(<TutorRegistrationPage isAuthenticated={false} />);
+      const wrapper = shallow(<RegistrationPage isAuthenticated={false} />);
 
       expectToRenderSnapshot(__filename, wrapper, "unauthenticated");
     });
