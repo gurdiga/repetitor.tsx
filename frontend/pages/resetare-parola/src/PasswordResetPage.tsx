@@ -3,7 +3,7 @@ import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordF
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
-import {placeholderServerResponse, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
+import {placeholderServerRequest, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import {QueryStringParams} from "frontend/shared/src/Utils/QueryStringParams";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
@@ -40,7 +40,7 @@ function renderStep1(props: PageProps) {
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
+  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerRequest);
 
   return (
     <>
@@ -123,10 +123,7 @@ function renderStep1(props: PageProps) {
         assertNever(response);
     }
 
-    setServerResponse({
-      requestState: requestState,
-      statusText: statusText,
-    });
+    setServerResponse({requestState, statusText});
     toggleServerRequestState(true);
   }
 }
@@ -139,11 +136,11 @@ function renderStep2(tokenString: string) {
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
+  const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
   return (
     <>
-      {serverResponse.requestState !== RequestState.ReceivedSuccess && (
+      {serverRequest.requestState !== RequestState.ReceivedSuccess && (
         <>
           <p>Introduceți parola nouă.</p>
           <Form
@@ -173,7 +170,7 @@ function renderStep2(tokenString: string) {
         </>
       )}
       {shouldShowServerRequestState && (
-        <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
+        <p className={`server-response-${serverRequest.requestState}`}>{serverRequest.statusText}</p>
       )}
     </>
   );
@@ -221,10 +218,7 @@ function renderStep2(tokenString: string) {
         assertNever(response);
     }
 
-    setServerResponse({
-      requestState: requestState,
-      statusText: statusText,
-    });
+    setServerRequest({requestState, statusText});
     toggleServerRequestState(true);
   }
 }

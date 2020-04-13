@@ -5,7 +5,7 @@ import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
 import {navigateToPage} from "frontend/shared/src/PageNavigation";
-import {placeholderServerResponse, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
+import {placeholderServerRequest, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
@@ -42,7 +42,7 @@ function renderLoginForm() {
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
+  const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
   return (
     <>
@@ -81,7 +81,7 @@ function renderLoginForm() {
         ]}
       />
       {shouldShowServerRequestState && (
-        <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
+        <p className={`server-response-${serverRequest.requestState}`}>{serverRequest.statusText}</p>
       )}
     </>
   );
@@ -135,10 +135,7 @@ function renderLoginForm() {
       navigateToPage(PagePath.Home);
     }
 
-    setServerResponse({
-      requestState: requestState,
-      statusText: statusText,
-    });
+    setServerRequest({requestState, statusText});
     toggleServerRequestState(true);
   }
 }

@@ -6,7 +6,7 @@ import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
 import {navigateToPage} from "frontend/shared/src/PageNavigation";
-import {placeholderServerResponse, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
+import {placeholderServerRequest, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
@@ -21,7 +21,7 @@ import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {ErrorMessages, emptyFieldValue, UserValue, ValidatedValue, ValidationRules} from "shared/src/Utils/Validation";
 import {PagePath} from "shared/src/Utils/PagePath";
-import {AlertMessage, AlertType} from "frontend/shared/src/Components/AlertMessage";
+import {AlertMessage, AlertType, getAlertTypeForRequestState} from "frontend/shared/src/Components/AlertMessage";
 
 export function RegistrationPage(props: PageProps) {
   const {isAuthenticated} = props;
@@ -50,11 +50,7 @@ function renderLoginForm() {
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
-  const shouldShowServerResponse =
-    shouldShowServerRequestState &&
-    (serverResponse.requestState === RequestState.ReceivedError ||
-      serverResponse.requestState === RequestState.ReceivedSuccess);
+  const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
   return (
     <>
@@ -116,25 +112,14 @@ function renderLoginForm() {
         ]}
       />
       {shouldShowServerRequestState &&
-        (serverResponse.requestState === RequestState.ReceivedError ||
-          serverResponse.requestState === RequestState.ReceivedSuccess) && (
-          <AlertMessage type={getAlertTypeFromResponseState(serverResponse.requestState)}>
-            {serverResponse.statusText}
+        (serverRequest.requestState === RequestState.ReceivedError ||
+          serverRequest.requestState === RequestState.ReceivedSuccess) && (
+          <AlertMessage type={getAlertTypeForRequestState(serverRequest.requestState)}>
+            {serverRequest.statusText}
           </AlertMessage>
         )}
     </>
   );
-
-  function getAlertTypeFromResponseState(
-    requestState: RequestState.ReceivedError | RequestState.ReceivedSuccess
-  ): AlertType {
-    switch (requestState) {
-      case RequestState.ReceivedError:
-        return "error";
-      case RequestState.ReceivedSuccess:
-        return "success";
-    }
-  }
 
   async function maybeSubmitForm(
     fields: Record<AccountPropName | "hasAcceptUserLicenceAgreement", ValidatedValue<string>>
@@ -186,10 +171,7 @@ function renderLoginForm() {
       navigateToPage(PagePath.Home);
     }
 
-    setServerResponse({
-      requestState: requestState,
-      statusText: statusText,
-    });
+    setServerRequest({requestState, statusText});
     toggleServerRequestState(true);
   }
 }

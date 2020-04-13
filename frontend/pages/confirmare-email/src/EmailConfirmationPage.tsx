@@ -9,7 +9,7 @@ import {
 } from "shared/src/Model/EmailConfirmation";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {validateWithRules} from "shared/src/Utils/Validation";
-import {RequestState, runScenario, ServerRequest, placeholderServerResponse} from "frontend/shared/src/ScenarioRunner";
+import {RequestState, runScenario, ServerRequest, placeholderServerRequest} from "frontend/shared/src/ScenarioRunner";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 
@@ -32,18 +32,18 @@ export function EmailConfirmationPage(props: Props) {
 }
 
 function renderTokenVerificationView(token: string) {
-  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
+  const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
-  if (serverResponse.requestState === RequestState.NotYetSent || serverResponse.requestState === RequestState.Sent) {
+  if (serverRequest.requestState === RequestState.NotYetSent || serverRequest.requestState === RequestState.Sent) {
     confirmEmailWithToken(token);
 
     return <AlertMessage type="info">Verificare token…</AlertMessage>;
-  } else if (serverResponse.requestState === RequestState.ReceivedSuccess) {
-    return <AlertMessage type="success">{serverResponse.statusText}</AlertMessage>;
-  } else if (serverResponse.requestState === RequestState.ReceivedError) {
-    return <AlertMessage type="error">{serverResponse.statusText}</AlertMessage>;
+  } else if (serverRequest.requestState === RequestState.ReceivedSuccess) {
+    return <AlertMessage type="success">{serverRequest.statusText}</AlertMessage>;
+  } else if (serverRequest.requestState === RequestState.ReceivedError) {
+    return <AlertMessage type="error">{serverRequest.statusText}</AlertMessage>;
   } else {
-    assertNever(serverResponse.requestState);
+    assertNever(serverRequest.requestState);
   }
 
   async function confirmEmailWithToken(token: string) {
@@ -77,10 +77,7 @@ function renderTokenVerificationView(token: string) {
         assertNever(response);
     }
 
-    setServerResponse({
-      requestState: requestState,
-      statusText: statusText,
-    });
+    setServerRequest({requestState, statusText});
   }
 }
 

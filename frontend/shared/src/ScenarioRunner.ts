@@ -62,7 +62,7 @@ export enum RequestState {
   ReceivedError = "received-error",
 }
 
-export const placeholderServerResponse: ServerRequest = {
+export const placeholderServerRequest: ServerRequest = {
   requestState: RequestState.NotYetSent,
   statusText: "",
 };

@@ -1,4 +1,4 @@
-import {AlertMessage, getAlertTypeForServerResponseState} from "frontend/shared/src/Components/AlertMessage";
+import {AlertMessage, getAlertTypeForRequestState} from "frontend/shared/src/Components/AlertMessage";
 import {Form} from "frontend/shared/src/Components/Form";
 import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
@@ -7,7 +7,7 @@ import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
 import {
   EmptyScenarioInput,
-  placeholderServerResponse,
+  placeholderServerRequest,
   RequestState,
   runScenario,
   ServerRequest,
@@ -38,10 +38,10 @@ function renderProfileForm() {
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
+  const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
-  if (serverResponse.requestState === RequestState.NotYetSent) {
-    setServerResponse({
+  if (serverRequest.requestState === RequestState.NotYetSent) {
+    setServerRequest({
       requestState: RequestState.Sent,
       statusText: "",
     });
@@ -53,8 +53,8 @@ function renderProfileForm() {
   return (
     <>
       {shouldShowServerRequestState && (
-        <AlertMessage type={getAlertTypeForServerResponseState(serverResponse.requestState)}>
-          {serverResponse.statusText}
+        <AlertMessage type={getAlertTypeForRequestState(serverRequest.requestState)}>
+          {serverRequest.statusText}
         </AlertMessage>
       )}
       <pre>TODO: Add avatar.</pre>
@@ -138,10 +138,7 @@ function renderProfileForm() {
         assertNever(response);
     }
 
-    setServerResponse({
-      requestState: requestState,
-      statusText: statusText,
-    });
+    setServerRequest({requestState, statusText});
     toggleServerRequestState(true);
   }
 
@@ -177,10 +174,7 @@ function renderProfileForm() {
         assertNever(response);
     }
 
-    setServerResponse({
-      requestState: requestState,
-      statusText: statusText,
-    });
+    setServerRequest({requestState, statusText});
     toggleServerRequestState(requestState !== RequestState.ReceivedSuccess);
   }
 
