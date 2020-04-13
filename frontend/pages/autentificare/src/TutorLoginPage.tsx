@@ -5,12 +5,7 @@ import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
 import {navigateToPage} from "frontend/shared/src/PageNavigation";
-import {
-  placeholderServerResponse,
-  ResponseState,
-  runScenario,
-  ServerResponse,
-} from "frontend/shared/src/ScenarioRunner";
+import {placeholderServerResponse, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
@@ -46,7 +41,7 @@ function renderLoginForm() {
   const [password, updatePassword] = React.useState(emptyFieldValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   return (
     <>
@@ -85,7 +80,7 @@ function renderLoginForm() {
         ]}
       />
       {serverResponse.shouldShow && (
-        <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
+        <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
       )}
     </>
   );
@@ -102,49 +97,46 @@ function renderLoginForm() {
       password: fields.password.value,
     });
 
-    let responseState: ResponseState;
-    let responseText: string;
+    let requestState: RequestState;
+    let statusText: string;
 
     switch (response.kind) {
       case "LoginCheckSuccess":
-        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Autentificat."];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Autentificat."];
         break;
       case "EmailError":
-        [responseState, responseText] = [ResponseState.ReceivedError, EmailErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, EmailErrorMessages[response.errorCode]];
         break;
       case "PasswordError":
-        [responseState, responseText] = [ResponseState.ReceivedError, PasswordErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
       case "UnknownEmailError":
-        [responseState, responseText] = [
-          ResponseState.ReceivedError,
-          "Adresa de email nu este înregistrată în sistem.",
-        ];
+        [requestState, statusText] = [RequestState.ReceivedError, "Adresa de email nu este înregistrată în sistem."];
         break;
       case "IncorrectPasswordError":
-        [responseState, responseText] = [ResponseState.ReceivedError, "Parola este incorectă"];
+        [requestState, statusText] = [RequestState.ReceivedError, "Parola este incorectă"];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        [requestState, statusText] = [RequestState.ReceivedError, response.error];
         break;
       case "TransportError":
       case "ServerError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        [requestState, statusText] = [RequestState.ReceivedError, response.error];
         break;
       default:
         assertNever(response);
     }
 
-    if (responseState === ResponseState.ReceivedSuccess) {
+    if (requestState === RequestState.ReceivedSuccess) {
       navigateToPage(PagePath.Home);
     }
 
     setServerResponse({
-      responseState,
-      responseText,
+      requestState: requestState,
+      statusText: statusText,
       shouldShow: true,
     });
   }

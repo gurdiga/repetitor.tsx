@@ -50,22 +50,22 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
 
 export const EmptyScenarioInput = {};
 
-export interface ServerResponse {
-  responseState: ResponseState;
-  responseText: string;
+export interface ServerRequest {
+  requestState: RequestState;
+  statusText: string;
   shouldShow: boolean;
 }
 
-export enum ResponseState {
+export enum RequestState {
   NotYetSent = "not-yet-sent",
   Sent = "sent",
   ReceivedSuccess = "received-success",
   ReceivedError = "received-error",
 }
 
-export const placeholderServerResponse: ServerResponse = {
-  responseState: ResponseState.NotYetSent,
-  responseText: "",
+export const placeholderServerResponse: ServerRequest = {
+  requestState: RequestState.NotYetSent,
+  statusText: "",
   shouldShow: false,
 };
 

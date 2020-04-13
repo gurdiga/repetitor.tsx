@@ -6,12 +6,7 @@ import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
 import {navigateToPage} from "frontend/shared/src/PageNavigation";
-import {
-  placeholderServerResponse,
-  ResponseState,
-  runScenario,
-  ServerResponse,
-} from "frontend/shared/src/ScenarioRunner";
+import {placeholderServerResponse, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
@@ -54,11 +49,11 @@ function renderLoginForm() {
   const [hasAcceptUserLicenceAgreement, acceptUserLicenceAgreement] = React.useState(UlaInitialValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
   const shouldShowServerResponse =
     serverResponse.shouldShow &&
-    (serverResponse.responseState === ResponseState.ReceivedError ||
-      serverResponse.responseState === ResponseState.ReceivedSuccess);
+    (serverResponse.requestState === RequestState.ReceivedError ||
+      serverResponse.requestState === RequestState.ReceivedSuccess);
 
   return (
     <>
@@ -120,22 +115,22 @@ function renderLoginForm() {
         ]}
       />
       {serverResponse.shouldShow &&
-        (serverResponse.responseState === ResponseState.ReceivedError ||
-          serverResponse.responseState === ResponseState.ReceivedSuccess) && (
-          <AlertMessage type={getAlertTypeFromResponseState(serverResponse.responseState)}>
-            {serverResponse.responseText}
+        (serverResponse.requestState === RequestState.ReceivedError ||
+          serverResponse.requestState === RequestState.ReceivedSuccess) && (
+          <AlertMessage type={getAlertTypeFromResponseState(serverResponse.requestState)}>
+            {serverResponse.statusText}
           </AlertMessage>
         )}
     </>
   );
 
   function getAlertTypeFromResponseState(
-    responseState: ResponseState.ReceivedError | ResponseState.ReceivedSuccess
+    requestState: RequestState.ReceivedError | RequestState.ReceivedSuccess
   ): AlertType {
-    switch (responseState) {
-      case ResponseState.ReceivedError:
+    switch (requestState) {
+      case RequestState.ReceivedError:
         return "error";
-      case ResponseState.ReceivedSuccess:
+      case RequestState.ReceivedSuccess:
         return "success";
     }
   }
@@ -155,44 +150,44 @@ function renderLoginForm() {
       password: fields.password.value,
     });
 
-    let responseState: ResponseState;
-    let responseText: string;
+    let requestState: RequestState;
+    let statusText: string;
 
     switch (response.kind) {
       case "TutorCreationSuccess":
-        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Înregistrat."];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Înregistrat."];
         break;
       case "FullNameError":
-        [responseState, responseText] = [ResponseState.ReceivedError, FullNameErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, FullNameErrorMessages[response.errorCode]];
         break;
       case "EmailError":
-        [responseState, responseText] = [ResponseState.ReceivedError, EmailErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, EmailErrorMessages[response.errorCode]];
         break;
       case "PasswordError":
-        [responseState, responseText] = [ResponseState.ReceivedError, PasswordErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
       case "ModelError":
-        [responseState, responseText] = [ResponseState.ReceivedError, UserModelErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, UserModelErrorMessages[response.errorCode]];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "ServerError":
       case "TransportError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        [requestState, statusText] = [RequestState.ReceivedError, response.error];
         break;
       default:
         assertNever(response);
     }
 
-    if (responseState === ResponseState.ReceivedSuccess) {
+    if (requestState === RequestState.ReceivedSuccess) {
       navigateToPage(PagePath.Home);
     }
 
     setServerResponse({
-      responseState,
-      responseText,
+      requestState: requestState,
+      statusText: statusText,
       shouldShow: true,
     });
   }

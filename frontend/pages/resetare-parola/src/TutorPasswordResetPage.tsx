@@ -3,12 +3,7 @@ import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordF
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {PageLayout} from "frontend/shared/src/PageLayout";
-import {
-  placeholderServerResponse,
-  ResponseState,
-  runScenario,
-  ServerResponse,
-} from "frontend/shared/src/ScenarioRunner";
+import {placeholderServerResponse, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import {QueryStringParams} from "frontend/shared/src/Utils/QueryStringParams";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
@@ -44,7 +39,7 @@ function renderStep1(props: PageProps) {
   const [email, updateEmail] = React.useState(getEmailFromPageProps(props));
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   return (
     <>
@@ -58,7 +53,7 @@ function renderStep1(props: PageProps) {
           </p>
         )
       )}
-      {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
+      {serverResponse.requestState !== RequestState.ReceivedSuccess && (
         <Form
           fields={[
             <TextField
@@ -86,7 +81,7 @@ function renderStep1(props: PageProps) {
         />
       )}
       {serverResponse.shouldShow && (
-        <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
+        <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
       )}
     </>
   );
@@ -101,40 +96,37 @@ function renderStep1(props: PageProps) {
     }
 
     const response = await runScenario("TutorPasswordResetStep1", {email: fields.email.value});
-    let responseState: ResponseState;
-    let responseText: string;
+    let requestState: RequestState;
+    let statusText: string;
 
     switch (response.kind) {
       case "TutorPasswordResetEmailSent":
-        [responseState, responseText] = [
-          ResponseState.ReceivedSuccess,
+        [requestState, statusText] = [
+          RequestState.ReceivedSuccess,
           `Verificați cutia poștală ${fields.email.value}. Am trimis un mesaj cu instrucțiuni de resetare a parolei.`,
         ];
         break;
       case "EmailError":
-        [responseState, responseText] = [ResponseState.ReceivedError, EmailErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, EmailErrorMessages[response.errorCode]];
         break;
       case "UnknownEmailError":
-        [responseState, responseText] = [
-          ResponseState.ReceivedError,
-          "Adresa de email nu este înregistrată în sistem.",
-        ];
+        [requestState, statusText] = [RequestState.ReceivedError, "Adresa de email nu este înregistrată în sistem."];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "TransportError":
       case "ServerError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        [requestState, statusText] = [RequestState.ReceivedError, response.error];
         break;
       default:
         assertNever(response);
     }
 
     setServerResponse({
-      responseState,
-      responseText,
+      requestState: requestState,
+      statusText: statusText,
       shouldShow: true,
     });
   }
@@ -147,11 +139,11 @@ function renderStep2(tokenString: string) {
   const token = {value: tokenString, isValid: tokenValidationResult.kind === "Valid"};
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   return (
     <>
-      {serverResponse.responseState !== ResponseState.ReceivedSuccess && (
+      {serverResponse.requestState !== RequestState.ReceivedSuccess && (
         <>
           <p>Introduceți parola nouă.</p>
           <Form
@@ -181,7 +173,7 @@ function renderStep2(tokenString: string) {
         </>
       )}
       {serverResponse.shouldShow && (
-        <p className={`server-response-${serverResponse.responseState}`}>{serverResponse.responseText}</p>
+        <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
       )}
     </>
   );
@@ -200,40 +192,40 @@ function renderStep2(tokenString: string) {
       newPassword: fields.newPassword.value,
     });
 
-    let responseState: ResponseState;
-    let responseText: string;
+    let requestState: RequestState;
+    let statusText: string;
 
     switch (response.kind) {
       case "TutorPasswordResetSuccess":
-        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Parola a fost resetată cu succes."];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Parola a fost resetată cu succes."];
         break;
       case "PasswordResetTokenUnknownError":
-        [responseState, responseText] = [
-          ResponseState.ReceivedError,
+        [requestState, statusText] = [
+          RequestState.ReceivedError,
           "Sesiunea de resetare a parolei a expirat. Mai încercați odată resetarea parolei de la început.",
         ];
         break;
       case "PasswordError":
-        [responseState, responseText] = [ResponseState.ReceivedError, PasswordErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
       case "PasswordResetTokenError":
-        [responseState, responseText] = [ResponseState.ReceivedError, tokenErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, tokenErrorMessages[response.errorCode]];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "TransportError":
       case "ServerError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        [requestState, statusText] = [RequestState.ReceivedError, response.error];
         break;
       default:
         assertNever(response);
     }
 
     setServerResponse({
-      responseState,
-      responseText,
+      requestState: requestState,
+      statusText: statusText,
       shouldShow: true,
     });
   }

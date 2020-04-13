@@ -9,12 +9,7 @@ import {
 } from "shared/src/Model/EmailConfirmation";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {validateWithRules} from "shared/src/Utils/Validation";
-import {
-  ResponseState,
-  runScenario,
-  ServerResponse,
-  placeholderServerResponse,
-} from "frontend/shared/src/ScenarioRunner";
+import {RequestState, runScenario, ServerRequest, placeholderServerResponse} from "frontend/shared/src/ScenarioRunner";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 
@@ -37,57 +32,54 @@ export function EmailConfirmationPage(props: Props) {
 }
 
 function renderTokenVerificationView(token: string) {
-  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
-  if (
-    serverResponse.responseState === ResponseState.NotYetSent ||
-    serverResponse.responseState === ResponseState.Sent
-  ) {
+  if (serverResponse.requestState === RequestState.NotYetSent || serverResponse.requestState === RequestState.Sent) {
     confirmEmailWithToken(token);
 
     return <AlertMessage type="info">Verificare token…</AlertMessage>;
-  } else if (serverResponse.responseState === ResponseState.ReceivedSuccess) {
-    return <AlertMessage type="success">{serverResponse.responseText}</AlertMessage>;
-  } else if (serverResponse.responseState === ResponseState.ReceivedError) {
-    return <AlertMessage type="error">{serverResponse.responseText}</AlertMessage>;
+  } else if (serverResponse.requestState === RequestState.ReceivedSuccess) {
+    return <AlertMessage type="success">{serverResponse.statusText}</AlertMessage>;
+  } else if (serverResponse.requestState === RequestState.ReceivedError) {
+    return <AlertMessage type="error">{serverResponse.statusText}</AlertMessage>;
   } else {
-    assertNever(serverResponse.responseState);
+    assertNever(serverResponse.requestState);
   }
 
   async function confirmEmailWithToken(token: string) {
     const response = await runScenario("EmailConfirmation", {token});
 
-    let responseState: ResponseState;
-    let responseText: string;
+    let requestState: RequestState;
+    let statusText: string;
 
     switch (response.kind) {
       case "EmailConfirmed":
-        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Confirmare reușită. Vă mulțumim!"];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Confirmare reușită. Vă mulțumim!"];
         break;
       case "EmailConfirmationTokenValidationError":
-        [responseState, responseText] = [
-          ResponseState.ReceivedError,
+        [requestState, statusText] = [
+          RequestState.ReceivedError,
           EmailConfirmationTokenErrorMessages[response.errorCode],
         ];
         break;
       case "EmailConfirmationTokenUnrecognizedError":
-        [responseState, responseText] = [ResponseState.ReceivedError, "Token necunoscut"];
+        [requestState, statusText] = [RequestState.ReceivedError, "Token necunoscut"];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "TransportError":
       case "ServerError":
-        [responseState, responseText] = [ResponseState.ReceivedError, `Eroare: ${response.error}`];
+        [requestState, statusText] = [RequestState.ReceivedError, `Eroare: ${response.error}`];
         break;
       default:
         assertNever(response);
     }
 
     setServerResponse({
-      responseState,
-      responseText,
+      requestState: requestState,
+      statusText: statusText,
       shouldShow: true,
     });
   }

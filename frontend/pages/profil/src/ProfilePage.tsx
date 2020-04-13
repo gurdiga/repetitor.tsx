@@ -8,9 +8,9 @@ import {PageLayout} from "frontend/shared/src/PageLayout";
 import {
   EmptyScenarioInput,
   placeholderServerResponse,
-  ResponseState,
+  RequestState,
   runScenario,
-  ServerResponse,
+  ServerRequest,
 } from "frontend/shared/src/ScenarioRunner";
 import * as React from "react";
 import {ProfileLoaded} from "shared/src/Model/Profile";
@@ -37,13 +37,13 @@ function renderProfileForm() {
   const [email, updateEmail] = React.useState(emptyFieldValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
-  const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
+  const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
-  if (serverResponse.responseState === ResponseState.NotYetSent) {
+  if (serverResponse.requestState === RequestState.NotYetSent) {
     loadProfileInfo();
     setServerResponse({
-      responseState: ResponseState.Sent,
-      responseText: "",
+      requestState: RequestState.Sent,
+      statusText: "",
       shouldShow: false,
     });
 
@@ -53,8 +53,8 @@ function renderProfileForm() {
   return (
     <>
       {serverResponse.shouldShow && (
-        <AlertMessage type={getAlertTypeForServerResponseState(serverResponse.responseState)}>
-          {serverResponse.responseText}
+        <AlertMessage type={getAlertTypeForServerResponseState(serverResponse.requestState)}>
+          {serverResponse.statusText}
         </AlertMessage>
       )}
       <pre>TODO: Add avatar.</pre>
@@ -107,40 +107,40 @@ function renderProfileForm() {
       fullName: fields.fullName.value,
     });
 
-    let responseState: ResponseState;
-    let responseText: string;
+    let requestState: RequestState;
+    let statusText: string;
 
     switch (response.kind) {
       case "ProfileUpdated":
-        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Profilul a fost actualizat."];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Profilul a fost actualizat."];
         break;
       case "FullNameError":
-        [responseState, responseText] = [ResponseState.ReceivedError, FullNameErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, FullNameErrorMessages[response.errorCode]];
         break;
       case "NotAuthenticatedError":
-        [responseState, responseText] = [
-          ResponseState.ReceivedError,
+        [requestState, statusText] = [
+          RequestState.ReceivedError,
           "Pentru a vă vedea profilul trebuie să fiți autentificat.",
         ];
         break;
       case "ProfileNotFoundError":
-        [responseState, responseText] = [ResponseState.ReceivedError, "Nu am găsit profilul."];
+        [requestState, statusText] = [RequestState.ReceivedError, "Nu am găsit profilul."];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "ServerError":
       case "TransportError":
-        [responseState, responseText] = [ResponseState.ReceivedError, response.error];
+        [requestState, statusText] = [RequestState.ReceivedError, response.error];
         break;
       default:
         assertNever(response);
     }
 
     setServerResponse({
-      responseState,
-      responseText,
+      requestState: requestState,
+      statusText: statusText,
       shouldShow: true,
     });
   }
@@ -148,39 +148,39 @@ function renderProfileForm() {
   async function loadProfileInfo(): Promise<void> {
     const response = await runScenario("ProfileLoad", EmptyScenarioInput);
 
-    let responseState: ResponseState;
-    let responseText: string;
+    let requestState: RequestState;
+    let statusText: string;
 
     switch (response.kind) {
       case "ProfileLoaded":
-        [responseState, responseText] = [ResponseState.ReceivedSuccess, "Profile loaded."];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Profile loaded."];
         receiveProfileInfo(response);
         break;
       case "NotAuthenticatedError":
-        [responseState, responseText] = [
-          ResponseState.ReceivedError,
+        [requestState, statusText] = [
+          RequestState.ReceivedError,
           "Pentru a vă vedea profilul trebuie să fiți autentificat.",
         ];
         break;
       case "ProfileNotFoundError":
-        [responseState, responseText] = [ResponseState.ReceivedError, "Nu am găsit profilul."];
+        [requestState, statusText] = [RequestState.ReceivedError, "Nu am găsit profilul."];
         break;
       case "DbError":
-        [responseState, responseText] = [ResponseState.ReceivedError, DbErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
       case "UnexpectedError":
       case "TransportError":
       case "ServerError":
-        [responseState, responseText] = [ResponseState.ReceivedError, `Eroare: ${response.error}`];
+        [requestState, statusText] = [RequestState.ReceivedError, `Eroare: ${response.error}`];
         break;
       default:
         assertNever(response);
     }
 
     setServerResponse({
-      responseState,
-      responseText,
-      shouldShow: responseState !== ResponseState.ReceivedSuccess,
+      requestState: requestState,
+      statusText: statusText,
+      shouldShow: requestState !== RequestState.ReceivedSuccess,
     });
   }
 

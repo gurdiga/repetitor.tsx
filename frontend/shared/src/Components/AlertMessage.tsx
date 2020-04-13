@@ -1,6 +1,6 @@
 import {AlertMessageCss} from "frontend/shared/src/Components/AlertMessage.css";
 import * as React from "react";
-import {ServerResponse, ResponseState} from "frontend/shared/src/ScenarioRunner";
+import {ServerRequest, RequestState} from "frontend/shared/src/ScenarioRunner";
 
 export type AlertType = "success" | "info" | "error";
 
@@ -23,14 +23,14 @@ export function getClassForType(type: AlertType): string {
   }
 }
 
-export function getAlertTypeForServerResponseState(serverResponseState: ResponseState): AlertType {
+export function getAlertTypeForServerResponseState(serverResponseState: RequestState): AlertType {
   switch (serverResponseState) {
-    case ResponseState.Sent:
-    case ResponseState.NotYetSent:
+    case RequestState.Sent:
+    case RequestState.NotYetSent:
       return "info";
-    case ResponseState.ReceivedSuccess:
+    case RequestState.ReceivedSuccess:
       return "success";
-    case ResponseState.ReceivedError:
+    case RequestState.ReceivedError:
       return "error";
   }
 }
