@@ -41,6 +41,7 @@ function renderLoginForm() {
   const [password, updatePassword] = React.useState(emptyFieldValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
+  const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   return (
@@ -79,7 +80,7 @@ function renderLoginForm() {
           />,
         ]}
       />
-      {serverResponse.shouldShow && (
+      {shouldShowServerRequestState && (
         <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
       )}
     </>
@@ -137,7 +138,7 @@ function renderLoginForm() {
     setServerResponse({
       requestState: requestState,
       statusText: statusText,
-      shouldShow: true,
     });
+    toggleServerRequestState(true);
   }
 }

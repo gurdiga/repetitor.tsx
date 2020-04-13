@@ -49,9 +49,10 @@ function renderLoginForm() {
   const [hasAcceptUserLicenceAgreement, acceptUserLicenceAgreement] = React.useState(UlaInitialValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
+  const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
   const shouldShowServerResponse =
-    serverResponse.shouldShow &&
+    shouldShowServerRequestState &&
     (serverResponse.requestState === RequestState.ReceivedError ||
       serverResponse.requestState === RequestState.ReceivedSuccess);
 
@@ -114,7 +115,7 @@ function renderLoginForm() {
           />,
         ]}
       />
-      {serverResponse.shouldShow &&
+      {shouldShowServerRequestState &&
         (serverResponse.requestState === RequestState.ReceivedError ||
           serverResponse.requestState === RequestState.ReceivedSuccess) && (
           <AlertMessage type={getAlertTypeFromResponseState(serverResponse.requestState)}>
@@ -188,8 +189,8 @@ function renderLoginForm() {
     setServerResponse({
       requestState: requestState,
       statusText: statusText,
-      shouldShow: true,
     });
+    toggleServerRequestState(true);
   }
 }
 

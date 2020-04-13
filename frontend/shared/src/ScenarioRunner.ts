@@ -53,7 +53,6 @@ export const EmptyScenarioInput = {};
 export interface ServerRequest {
   requestState: RequestState;
   statusText: string;
-  shouldShow: boolean;
 }
 
 export enum RequestState {
@@ -66,7 +65,6 @@ export enum RequestState {
 export const placeholderServerResponse: ServerRequest = {
   requestState: RequestState.NotYetSent,
   statusText: "",
-  shouldShow: false,
 };
 
 export interface TransportError {

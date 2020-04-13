@@ -39,6 +39,7 @@ function renderStep1(props: PageProps) {
   const [email, updateEmail] = React.useState(getEmailFromPageProps(props));
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
+  const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   return (
@@ -46,7 +47,7 @@ function renderStep1(props: PageProps) {
       {isAuthenticated ? (
         <p>Veți primi un mesaj cu instrucțiuni pe adresa dumneavoastră de email.</p>
       ) : (
-        !serverResponse.shouldShow && (
+        !shouldShowServerRequestState && (
           <p>
             Pentru a reseta parola, introduceți adresa de email pe care ați folosit-o la înregistare. Veți primi un
             mesaj cu instrucțiuni.
@@ -80,7 +81,7 @@ function renderStep1(props: PageProps) {
           ]}
         />
       )}
-      {serverResponse.shouldShow && (
+      {shouldShowServerRequestState && (
         <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
       )}
     </>
@@ -127,8 +128,8 @@ function renderStep1(props: PageProps) {
     setServerResponse({
       requestState: requestState,
       statusText: statusText,
-      shouldShow: true,
     });
+    toggleServerRequestState(true);
   }
 }
 
@@ -139,6 +140,7 @@ function renderStep2(tokenString: string) {
   const token = {value: tokenString, isValid: tokenValidationResult.kind === "Valid"};
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
+  const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   return (
@@ -172,7 +174,7 @@ function renderStep2(tokenString: string) {
           />
         </>
       )}
-      {serverResponse.shouldShow && (
+      {shouldShowServerRequestState && (
         <p className={`server-response-${serverResponse.requestState}`}>{serverResponse.statusText}</p>
       )}
     </>
@@ -226,8 +228,8 @@ function renderStep2(tokenString: string) {
     setServerResponse({
       requestState: requestState,
       statusText: statusText,
-      shouldShow: true,
     });
+    toggleServerRequestState(true);
   }
 }
 

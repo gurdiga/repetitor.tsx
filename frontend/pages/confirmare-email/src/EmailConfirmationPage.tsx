@@ -80,7 +80,6 @@ function renderTokenVerificationView(token: string) {
     setServerResponse({
       requestState: requestState,
       statusText: statusText,
-      shouldShow: true,
     });
   }
 }

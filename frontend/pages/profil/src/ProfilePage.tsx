@@ -37,6 +37,7 @@ function renderProfileForm() {
   const [email, updateEmail] = React.useState(emptyFieldValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
+  const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerRequest>(placeholderServerResponse);
 
   if (serverResponse.requestState === RequestState.NotYetSent) {
@@ -44,7 +45,6 @@ function renderProfileForm() {
     setServerResponse({
       requestState: RequestState.Sent,
       statusText: "",
-      shouldShow: false,
     });
 
     return <Spinner />;
@@ -52,7 +52,7 @@ function renderProfileForm() {
 
   return (
     <>
-      {serverResponse.shouldShow && (
+      {shouldShowServerRequestState && (
         <AlertMessage type={getAlertTypeForServerResponseState(serverResponse.requestState)}>
           {serverResponse.statusText}
         </AlertMessage>
@@ -141,8 +141,8 @@ function renderProfileForm() {
     setServerResponse({
       requestState: requestState,
       statusText: statusText,
-      shouldShow: true,
     });
+    toggleServerRequestState(true);
   }
 
   async function loadProfileInfo(): Promise<void> {
@@ -180,8 +180,8 @@ function renderProfileForm() {
     setServerResponse({
       requestState: requestState,
       statusText: statusText,
-      shouldShow: requestState !== RequestState.ReceivedSuccess,
     });
+    toggleServerRequestState(requestState !== RequestState.ReceivedSuccess);
   }
 
   function receiveProfileInfo(profileInfo: ProfileLoaded): void {
