@@ -22,7 +22,7 @@ export function TopNavigation(props: Props) {
       {!isAuthenticated && (
         <>
           <li>
-            <a href={PagePath.TutorRegistration}>Înregistrare</a>
+            <a href={PagePath.Registration}>Înregistrare</a>
           </li>
           <li>
             <a href={PagePath.TutorLogin}>Autentificare</a>
