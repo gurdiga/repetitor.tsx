@@ -58,6 +58,7 @@ export interface ServerResponse {
 
 export enum ResponseState {
   NotYetSent = "not-yet-sent",
+  Sent = "sent",
   ReceivedSuccess = "received-success",
   ReceivedError = "received-error",
 }

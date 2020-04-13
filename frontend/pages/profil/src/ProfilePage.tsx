@@ -39,11 +39,14 @@ function renderProfileForm() {
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
-  React.useEffect(() => {
-    loadProfileInfo();
-  }, []);
-
   if (serverResponse.responseState === ResponseState.NotYetSent) {
+    loadProfileInfo();
+    setServerResponse({
+      responseState: ResponseState.Sent,
+      responseText: "",
+      shouldShow: false,
+    });
+
     return <Spinner />;
   }
 

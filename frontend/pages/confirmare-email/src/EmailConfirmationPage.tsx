@@ -39,7 +39,10 @@ export function EmailConfirmationPage(props: Props) {
 function renderTokenVerificationView(token: string) {
   const [serverResponse, setServerResponse] = React.useState<ServerResponse>(placeholderServerResponse);
 
-  if (serverResponse.responseState === ResponseState.NotYetSent) {
+  if (
+    serverResponse.responseState === ResponseState.NotYetSent ||
+    serverResponse.responseState === ResponseState.Sent
+  ) {
     confirmEmailWithToken(token);
 
     return <AlertMessage type="info">Verificare token…</AlertMessage>;

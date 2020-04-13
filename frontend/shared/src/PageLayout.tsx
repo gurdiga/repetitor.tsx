@@ -16,9 +16,7 @@ interface Props {
 export function PageLayout(props: Props) {
   const {isAuthenticated} = props;
 
-  React.useEffect(() => {
-    document.title = props.title;
-  });
+  document.title = props.title;
 
   return (
     <div className={classes(PageLayoutCss.Wrapper, DEBUG_LAYOUT && UtilsCss.DebugLayout)}>

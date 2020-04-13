@@ -25,6 +25,7 @@ export function getClassForType(type: AlertType): string {
 
 export function getAlertTypeForServerResponseState(serverResponseState: ResponseState): AlertType {
   switch (serverResponseState) {
+    case ResponseState.Sent:
     case ResponseState.NotYetSent:
       return "info";
     case ResponseState.ReceivedSuccess:
