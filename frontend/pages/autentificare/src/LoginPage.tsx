@@ -17,7 +17,7 @@ import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
 import {PagePath} from "shared/src/Utils/PagePath";
 import {ResetPasswordLink} from "frontend/shared/src/Components/ResetPasswordLink";
 
-export function TutorLoginPage(props: PageProps) {
+export function LoginPage(props: PageProps) {
   const {isAuthenticated} = props;
 
   return (

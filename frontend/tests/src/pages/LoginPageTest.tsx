@@ -8,14 +8,14 @@ import * as React from "react";
 import {EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordValidationRules} from "shared/src/Model/Password";
 import {expectProps, expectToRenderSnapshot, Stub, Wrapper, Comp} from "frontend/tests/src/TestHelpers";
-import {TutorLoginPage} from "frontend/pages/autentificare/src/TutorLoginPage";
+import {LoginPage} from "frontend/pages/autentificare/src/LoginPage";
 import {expect} from "chai";
 import Sinon = require("sinon");
 import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";
 
-describe("<TutorLoginPage/>", () => {
+describe("<LoginPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
-  let wrapper: Wrapper<typeof TutorLoginPage>;
+  let wrapper: Wrapper<typeof LoginPage>;
 
   const {location} = global as any;
   const locationStub = Sinon.stub();
@@ -34,7 +34,7 @@ describe("<TutorLoginPage/>", () => {
       let form: Wrapper<typeof Form>;
 
       before(() => {
-        wrapper = shallow(<TutorLoginPage isAuthenticated={false} />);
+        wrapper = shallow(<LoginPage isAuthenticated={false} />);
         form = wrapper.find(Form);
       });
 
@@ -237,7 +237,7 @@ describe("<TutorLoginPage/>", () => {
     });
 
     it("renders a button to log out", () => {
-      const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
+      const wrapper = shallow(<LoginPage isAuthenticated={true} />);
 
       clickLogoutButtonInPage(wrapper);
 
@@ -247,7 +247,7 @@ describe("<TutorLoginPage/>", () => {
     describe("logout result", () => {
       context("when the server says OK", () => {
         it("navigates to homepage", async () => {
-          const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
 
           await clickLogoutButtonInPage(wrapper);
 
@@ -266,7 +266,7 @@ describe("<TutorLoginPage/>", () => {
         });
 
         it("displays an appropriate error message", async () => {
-          const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
           const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
           await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
@@ -290,7 +290,7 @@ describe("<TutorLoginPage/>", () => {
         });
 
         it("displays an appropriate error message", async () => {
-          const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
           const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
           await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
@@ -313,7 +313,7 @@ describe("<TutorLoginPage/>", () => {
         });
 
         it("displays an appropriate error message", async () => {
-          const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
           const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
           await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
@@ -324,7 +324,7 @@ describe("<TutorLoginPage/>", () => {
       });
     });
 
-    async function clickLogoutButtonInPage(wrapper: Wrapper<typeof TutorLoginPage>) {
+    async function clickLogoutButtonInPage(wrapper: Wrapper<typeof LoginPage>) {
       const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
       await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
@@ -340,13 +340,13 @@ describe("<TutorLoginPage/>", () => {
 
   describe("snapshots", () => {
     it("renders the authenticated state", () => {
-      const wrapper = shallow(<TutorLoginPage isAuthenticated={true} />);
+      const wrapper = shallow(<LoginPage isAuthenticated={true} />);
 
       expectToRenderSnapshot(__filename, wrapper, "authenticated");
     });
 
     it("renders the unauthenticated state", () => {
-      const wrapper = shallow(<TutorLoginPage isAuthenticated={false} />);
+      const wrapper = shallow(<LoginPage isAuthenticated={false} />);
 
       expectToRenderSnapshot(__filename, wrapper, "unauthenticated");
     });
