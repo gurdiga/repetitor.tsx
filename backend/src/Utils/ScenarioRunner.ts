@@ -1,5 +1,5 @@
 import {TestScenario} from "backend/src/ScenarioHandlers/TestScenario";
-import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
+import {Login} from "backend/src/ScenarioHandlers/Login";
 import {Logout} from "backend/src/ScenarioHandlers/Logout";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {ScenarioHandler, ScenarioName} from "shared/src/ScenarioRegistry";
@@ -13,7 +13,7 @@ const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   TestScenario,
   Registration,
   EmailConfirmation,
-  TutorLogin,
+  Login,
   Logout,
   PasswordResetStep1,
   PasswordResetStep2,

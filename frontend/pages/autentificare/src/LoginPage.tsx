@@ -10,7 +10,7 @@ import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {DbErrorMessages} from "shared/src/Model/Utils";
-import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
+import {LoginInput} from "shared/src/Scenarios/Login";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";
 import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
@@ -86,14 +86,14 @@ function renderLoginForm() {
     </>
   );
 
-  async function maybeSubmitForm(fields: Record<keyof TutorLoginInput, ValidatedValue<string>>): Promise<void> {
+  async function maybeSubmitForm(fields: Record<keyof LoginInput, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
 
     if (anyInvalidField) {
       return;
     }
 
-    const response = await runScenario("TutorLogin", {
+    const response = await runScenario("Login", {
       email: fields.email.value,
       password: fields.password.value,
     });

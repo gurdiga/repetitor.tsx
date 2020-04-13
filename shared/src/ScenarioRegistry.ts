@@ -1,6 +1,6 @@
 import {RegistrationInput, RegistrationResult} from "shared/src/Scenarios/Registration";
 import {TestScenarioInput, TestScenarioResult} from "shared/src/Scenarios/TestScenario";
-import {TutorLoginInput, TutorLoginResult} from "shared/src/Scenarios/TutorLogin";
+import {LoginInput, LoginResult} from "shared/src/Scenarios/Login";
 import {UserSession} from "shared/src/Model/UserSession";
 import {LogoutInput, LogoutResult} from "shared/src/Scenarios/Logout";
 import {
@@ -20,9 +20,9 @@ export interface ScenarioRegistry {
     Input: RegistrationInput;
     Result: RegistrationResult;
   };
-  TutorLogin: {
-    Input: TutorLoginInput;
-    Result: TutorLoginResult;
+  Login: {
+    Input: LoginInput;
+    Result: LoginResult;
   };
   Logout: {
     Input: LogoutInput;

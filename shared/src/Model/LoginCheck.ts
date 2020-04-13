@@ -1,5 +1,5 @@
 import {DataProps} from "shared/src/Model/Utils";
-import {TutorLoginInput} from "shared/src/Scenarios/TutorLogin";
+import {LoginInput} from "shared/src/Scenarios/Login";
 import {EmailError, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordError, PasswordValidationRules} from "shared/src/Model/Password";
 import {validateWithRules, PredicateFn} from "shared/src/Utils/Validation";
@@ -34,7 +34,7 @@ export type IncorrectPasswordError = {
 
 export type LoginCheckPropError = EmailError | PasswordError;
 
-export function makeLoginCkeckFromLoginInput(input: TutorLoginInput): LoginCheck | LoginCheckPropError {
+export function makeLoginCkeckFromLoginInput(input: LoginInput): LoginCheck | LoginCheckPropError {
   const emailValidationResult = validateWithRules(input.email, LoginCheckValidationRules.email);
 
   if (emailValidationResult.kind === "Invalid") {

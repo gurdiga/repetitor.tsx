@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
+import {Login} from "backend/src/ScenarioHandlers/Login";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {stubExport} from "backend/tests/src/TestHelpers";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
@@ -11,19 +11,19 @@ describe("Login", () => {
   stubExport(EmailUtils, "sendEmail", before, after);
 
   it("validates the email", async () => {
-    const result = await TutorLogin({email: "", password: "secrets"}, session);
+    const result = await Login({email: "", password: "secrets"}, session);
 
     expect(result).to.deep.equal({kind: "EmailError", errorCode: "REQUIRED"});
   });
 
   it("validates the password", async () => {
-    const result = await TutorLogin({email: "some@email.com", password: undefined}, session);
+    const result = await Login({email: "some@email.com", password: undefined}, session);
 
     expect(result).to.deep.equal({kind: "PasswordError", errorCode: "REQUIRED"});
   });
 
   it("tells when the email is not recognized", async () => {
-    const result = await TutorLogin({email: "some@email.com", password: "secret"}, session);
+    const result = await Login({email: "some@email.com", password: "secret"}, session);
 
     expect(result).to.deep.equal({kind: "UnknownEmailError"});
   });
@@ -33,7 +33,7 @@ describe("Login", () => {
 
     await Registration({fullName: "Joe DOE", email, password: "secret;"}, session);
 
-    const result = await TutorLogin({email, password: "12345"}, session);
+    const result = await Login({email, password: "12345"}, session);
 
     expect(result).to.deep.equal({kind: "IncorrectPasswordError"});
   });
@@ -49,7 +49,7 @@ describe("Login", () => {
 
     session.userId = undefined;
 
-    const result = await TutorLogin({email, password}, session);
+    const result = await Login({email, password}, session);
 
     expect(result).to.deep.equal({kind: "LoginCheckSuccess"});
     expect(session.userId).to.equal(userId);

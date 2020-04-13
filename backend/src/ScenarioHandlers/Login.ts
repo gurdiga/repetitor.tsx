@@ -4,9 +4,9 @@ import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {hashString} from "backend/src/Utils/StringUtils";
 import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 
-type Scenario = ScenarioRegistry["TutorLogin"];
+type Scenario = ScenarioRegistry["Login"];
 
-export async function TutorLogin(input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
+export async function Login(input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
   const result = makeLoginCkeckFromLoginInput(input);
 
   if (result.kind !== "LoginCheck") {

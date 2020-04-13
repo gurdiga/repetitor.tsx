@@ -3,9 +3,9 @@ import {EmailError} from "shared/src/Model/Email";
 import {PasswordError} from "shared/src/Model/Password";
 import {LoginCheckSuccess, LoginCheckError} from "shared/src/Model/LoginCheck";
 
-export interface TutorLoginInput {
+export interface LoginInput {
   email: string | undefined;
   password: string | undefined;
 }
 
-export type TutorLoginResult = LoginCheckSuccess | EmailError | PasswordError | LoginCheckError | SystemError;
+export type LoginResult = LoginCheckSuccess | EmailError | PasswordError | LoginCheckError | SystemError;

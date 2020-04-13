@@ -9,7 +9,7 @@ import {runQuery, RowSet} from "backend/src/Utils/Db";
 import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
 import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/AccountPersistence";
 import {requireEnvVar} from "backend/src/Utils/Env";
-import {TutorLogin} from "backend/src/ScenarioHandlers/TutorLogin";
+import {Login} from "backend/src/ScenarioHandlers/Login";
 import {UserSession} from "shared/src/Model/UserSession";
 
 describe("PasswordResetStep2", () => {
@@ -58,7 +58,7 @@ describe("PasswordResetStep2", () => {
       expect(session.email).to.equal(email);
       expect(session.userId).to.exist;
 
-      expect(await TutorLogin({email, password: newPassword}, {})).to.deep.equal(
+      expect(await Login({email, password: newPassword}, {})).to.deep.equal(
         {kind: "LoginCheckSuccess"},
         "can log in with the new password"
       );
