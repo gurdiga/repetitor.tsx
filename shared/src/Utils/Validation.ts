@@ -16,13 +16,13 @@ export const emptyFieldValue: ValidatedValue<string> = {
 
 type ValidationResult<C, V> =
   | {
-      kind: "Valid";
-      value: V;
-    }
+    kind: "Valid";
+    value: V;
+  }
   | {
-      kind: "Invalid";
-      validationErrorCode: C;
-    };
+    kind: "Invalid";
+    validationErrorCode: C;
+  };
 
 export function validateWithRules<V extends string, VR extends ValidationRules>(
   value: V | undefined,
