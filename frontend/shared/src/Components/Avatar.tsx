@@ -6,5 +6,5 @@ interface Props {
 }
 
 export function Avatar(_props: Props) {
-  return <pre className="avatar">TODO: Add avatar.</pre>;
+  return <pre className="avatar">TODO: implement &lt;Avatar /&gt;.</pre>;
 }

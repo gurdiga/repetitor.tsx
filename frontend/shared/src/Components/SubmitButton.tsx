@@ -16,6 +16,8 @@ enum Status {
   Error,
 }
 
+export const SUCCESS_CELEBRATION_DURATION = 1500; // time to pop 3 times
+
 export function SubmitButton(props: Props) {
   const {label, onClick, className, ...rest} = props;
   const [isDisabled, toggleDisabled] = React.useState(false);
@@ -37,16 +39,17 @@ export function SubmitButton(props: Props) {
   async function handleClick() {
     toggleDisabled(true);
     setStatus(Status.Pending);
-    await onClick()
-      .then(() => {
-        setStatus(Status.Success);
-        setTimeout(() => {
-          // Give it time to pop 3 times
-          setStatus(Status.Steady);
-        }, 1500);
-      })
-      .catch(() => setStatus(Status.Error))
-      .finally(() => toggleDisabled(false));
+
+    try {
+      await onClick();
+      setStatus(Status.Success);
+    } catch (error) {
+      console.error(error);
+      setStatus(Status.Error);
+    }
+
+    toggleDisabled(false);
+    setTimeout(() => setStatus(Status.Steady), SUCCESS_CELEBRATION_DURATION);
   }
 
   function getIllustration(status: Status) {

@@ -75,7 +75,7 @@ export function sleep(ms: number): Promise<void> {
 export function expectAlertMessage(name: string, wrapper: Wrapper<any>, type: AlertType, text: string): void {
   const alertMessage = wrapper.find(AlertMessage);
 
-  expect(alertMessage.exists(), name).to.be.true;
+  expect(alertMessage.exists(), `${name} exists`).to.be.true;
   expect(alertMessage.props().type, `${name} type`).to.equal(type);
   expect(alertMessage.dive().text(), `${name} text`).to.equal(text);
 }

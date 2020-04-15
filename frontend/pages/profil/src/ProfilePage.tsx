@@ -1,4 +1,4 @@
-import {AlertMessage, getAlertTypeForRequestState} from "frontend/shared/src/Components/AlertMessage";
+import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {Avatar} from "frontend/shared/src/Components/Avatar";
 import {Form} from "frontend/shared/src/Components/Form";
 import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
@@ -41,7 +41,6 @@ function renderProfileForm() {
   const [photo, updatePhoto] = React.useState<Link | undefined>(undefined);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
-  const [shouldShowServerRequestState, toggleServerRequestState] = React.useState(false);
   const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
   if (serverRequest.requestState === RequestState.NotYetSent) {
@@ -58,11 +57,6 @@ function renderProfileForm() {
     // serverRequest.requestState === RequestState.ReceivedSuccess
     return (
       <>
-        {shouldShowServerRequestState && (
-          <AlertMessage type={getAlertTypeForRequestState(serverRequest.requestState)}>
-            {serverRequest.statusText}
-          </AlertMessage>
-        )}
         <Avatar url={photo} />
         <Form
           fields={[
@@ -141,7 +135,6 @@ function renderProfileForm() {
     }
 
     setServerRequest({requestState, statusText});
-    toggleServerRequestState(true);
   }
 
   async function loadProfileInfo() {
@@ -156,17 +149,17 @@ function renderProfileForm() {
 
     switch (response.kind) {
       case "ProfileLoaded":
-        [requestState, statusText] = [RequestState.ReceivedSuccess, "Profile loaded."];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Profile loaded"];
         receiveProfileInfo(response);
         break;
       case "NotAuthenticatedError":
         [requestState, statusText] = [
           RequestState.ReceivedError,
-          "Pentru a vă vedea profilul trebuie să fiți autentificat.",
+          "Pentru a vă vedea profilul trebuie să vă autentificați",
         ];
         break;
       case "ProfileNotFoundError":
-        [requestState, statusText] = [RequestState.ReceivedError, "Nu am găsit profilul."];
+        [requestState, statusText] = [RequestState.ReceivedError, "Nu am găsit profilul"];
         break;
       case "DbError":
         [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
@@ -181,7 +174,6 @@ function renderProfileForm() {
     }
 
     setServerRequest({requestState, statusText});
-    toggleServerRequestState(requestState !== RequestState.ReceivedSuccess);
   }
 
   function receiveProfileInfo(profileInfo: ProfileLoaded): void {

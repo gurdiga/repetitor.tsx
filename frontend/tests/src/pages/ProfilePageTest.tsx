@@ -1,21 +1,31 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
 import {ProfilePage} from "frontend/pages/profil/src/ProfilePage";
-import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
-import {Stub, Wrapper, expectProps, ServerResponseSimulator, find, sleep} from "frontend/tests/src/TestHelpers";
-import * as React from "react";
-import Sinon = require("sinon");
-import {NeedsAuthentication} from "frontend/shared/src/Components/NeedsAuthentication";
-import {PageLayout} from "frontend/shared/src/PageLayout";
 import {Avatar} from "frontend/shared/src/Components/Avatar";
 import {Form} from "frontend/shared/src/Components/Form";
-import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
-import {FullNameValidationRules, FullNameErrorMessages} from "shared/src/Model/Account";
-import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
-import {ResetPasswordLink} from "frontend/shared/src/Components/ResetPasswordLink";
-import {SecondaryButton} from "frontend/shared/src/Components/SecondaryButton";
-import {makeLink, Link, MarkdownDocument, ProfileLoaded} from "shared/src/Model/Profile";
+import {NeedsAuthentication} from "frontend/shared/src/Components/NeedsAuthentication";
 import {Spinner} from "frontend/shared/src/Components/Spinner";
+import {PageLayout} from "frontend/shared/src/PageLayout";
+import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
+import {
+  expectAlertMessage,
+  expectProps,
+  find,
+  ServerResponseSimulator,
+  Stub,
+  Wrapper,
+} from "frontend/tests/src/TestHelpers";
+import * as React from "react";
+import {
+  Link,
+  makeLink,
+  MarkdownDocument,
+  NotAuthenticatedError,
+  ProfileLoaded,
+  ProfileNotFoundError,
+} from "shared/src/Model/Profile";
+import {DbError, UnexpectedError} from "shared/src/Model/Utils";
+import Sinon = require("sinon");
 
 describe("<ProfilePage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
@@ -52,7 +62,7 @@ describe("<ProfilePage/>", () => {
         expect(scenarioInput).to.deep.equal({});
       });
 
-      context("when the request succeeds", () => {
+      context("when loading the profile succeeds", () => {
         const response: ProfileLoaded = {
           kind: "ProfileLoaded",
           fullName: "John DOE",
@@ -62,9 +72,7 @@ describe("<ProfilePage/>", () => {
           isPublished: false,
         };
 
-        beforeEach(async () => {
-          await simulateServerResponse(response);
-        });
+        beforeEach(async () => await simulateServerResponse(response));
 
         it("renderd the filled form and the avatar", () => {
           const form = find(wrapper, Form);
@@ -79,6 +87,89 @@ describe("<ProfilePage/>", () => {
           expectProps("email", emailField, {value: response.email, label: "Adresa de email"});
           expectProps("password", passwordField, {label: "Parola"});
           expectProps("avatar", wrapper.find(Avatar), {url: response.photo});
+        });
+      });
+
+      context("when loading the profile fails", () => {
+        context("because not authenticated", () => {
+          const response: NotAuthenticatedError = {
+            kind: "NotAuthenticatedError",
+          };
+
+          beforeEach(async () => await simulateServerResponse(response));
+
+          it("renders a corresponding error message", () => {
+            expectAlertMessage(
+              "error message",
+              wrapper,
+              "error",
+              "Pentru a vă vedea profilul trebuie să vă autentificați"
+            );
+          });
+        });
+
+        context("because profile not found", () => {
+          const response: ProfileNotFoundError = {
+            kind: "ProfileNotFoundError",
+          };
+
+          beforeEach(async () => await simulateServerResponse(response));
+
+          it("renders a corresponding error message", () => {
+            expectAlertMessage("error message", wrapper, "error", "Nu am găsit profilul");
+          });
+        });
+
+        context("because of a DB error", () => {
+          const response: DbError = {
+            kind: "DbError",
+            errorCode: "GENERIC_DB_ERROR",
+          };
+
+          beforeEach(async () => await simulateServerResponse(response));
+
+          it("renders a corresponding error message", () => {
+            expectAlertMessage("error message", wrapper, "error", "Eroare neprevăzută de bază de date");
+          });
+        });
+
+        context("because of a transport error", () => {
+          const response: ScenarioRunner.TransportError = {
+            kind: "TransportError",
+            error: "Wifi is down or something…",
+          };
+
+          beforeEach(async () => await simulateServerResponse(response));
+
+          it("renders a corresponding error message", () => {
+            expectAlertMessage("error message", wrapper, "error", "Eroare: Wifi is down or something…");
+          });
+        });
+
+        context("because of a server error", () => {
+          const response: ScenarioRunner.ServerError = {
+            kind: "ServerError",
+            error: "Express.js has a bug",
+          };
+
+          beforeEach(async () => await simulateServerResponse(response));
+
+          it("renders a corresponding error message", () => {
+            expectAlertMessage("error message", wrapper, "error", "Eroare: Express.js has a bug");
+          });
+        });
+
+        context("because of something else", () => {
+          const response: UnexpectedError = {
+            kind: "UnexpectedError",
+            error: "It just doesn’s work!?",
+          };
+
+          beforeEach(async () => await simulateServerResponse(response));
+
+          it("renders a corresponding error message", () => {
+            expectAlertMessage("error message", wrapper, "error", "Eroare: It just doesn’s work!?");
+          });
         });
       });
     });
