@@ -5,7 +5,7 @@ import {PasswordFieldCss} from "frontend/shared/src/Components/FormFields/Passwo
 import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
 import * as React from "react";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
-import {expectProps, expectToRenderSnapshot, HtmlWrapper, Wrapper} from "frontend/tests/src/TestHelpers";
+import {expectProps, expectToRenderSnapshot, HtmlWrapper, Wrapper, find} from "frontend/tests/src/TestHelpers";
 
 describe("<PasswordField/>", () => {
   const defaultProps = {
@@ -21,12 +21,11 @@ describe("<PasswordField/>", () => {
   describe("rendering", () => {
     it("renders the initial state", () => {
       const wrapper = render();
-      const input = wrapper.find("input");
-      const generateButton = wrapper.find(`button.${PasswordFieldCss.GenerateButton}`);
-      const unmaskButton = wrapper.find(`button.${PasswordFieldCss.EyeButton}`);
-      const validationMessage = wrapper.find(ValidationMessage) as Wrapper<typeof ValidationMessage>;
+      const generateButton = find(wrapper, `button.${PasswordFieldCss.GenerateButton}`);
+      const unmaskButton = find(wrapper, `button.${PasswordFieldCss.EyeButton}`);
+      const validationMessage = find(wrapper, ValidationMessage);
 
-      expectProps("input", input, {
+      expectProps("input", wrapper.find("input"), {
         type: "password",
         id: defaultProps.id,
       });
@@ -39,7 +38,7 @@ describe("<PasswordField/>", () => {
 
     it("renders the validation message", () => {
       const wrapper = render({showValidationMessage: true});
-      const validationMessage = wrapper.find(ValidationMessage) as Wrapper<typeof ValidationMessage>;
+      const validationMessage = find(wrapper, ValidationMessage);
 
       expectProps("validation message", validationMessage, {
         text: PasswordErrorMessages["REQUIRED"],
@@ -49,7 +48,7 @@ describe("<PasswordField/>", () => {
 
     it("can render with no generate button", () => {
       const wrapper = render({hasGenerateButton: false});
-      const generateButton = wrapper.find(`button.${PasswordFieldCss.GenerateButton}`);
+      const generateButton = find(wrapper, `button.${PasswordFieldCss.GenerateButton}`);
 
       expect(generateButton.exists()).to.be.false;
       expectToRenderSnapshot(__filename, wrapper, "with-no-generate-button");
@@ -63,8 +62,8 @@ describe("<PasswordField/>", () => {
 
     before(() => {
       wrapper = render({hasGenerateButton: true});
-      unmaskButton = wrapper.find(`button.${PasswordFieldCss.EyeButton}`);
-      generateButton = wrapper.find(`button.${PasswordFieldCss.GenerateButton}`);
+      unmaskButton = find(wrapper, `button.${PasswordFieldCss.EyeButton}`);
+      generateButton = find(wrapper, `button.${PasswordFieldCss.GenerateButton}`);
     });
 
     it("unmasks the password text when clicking the “unmask” button", () => {

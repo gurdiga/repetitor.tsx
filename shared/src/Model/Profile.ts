@@ -29,7 +29,7 @@ export type Link = {
   value: string;
 };
 
-type MarkdownDocument = {
+export type MarkdownDocument = {
   kind: "MarkdownDocument";
   value: string;
 };
@@ -50,4 +50,21 @@ export function makeProfileUpdateRequestFromInput(input: ProfileUpdateInput): Pr
     kind: "ProfileUpdateRequest",
     fullName: fullNameValidationResult.value,
   };
+}
+
+export function makeLink(input: string): Link | undefined {
+  try {
+    const url = new URL(input);
+
+    if (url.protocol === "http:" || url.protocol === "https:") {
+      return {
+        kind: "Link",
+        value: url.toString(),
+      };
+    }
+  } catch (error) {
+    // What can I do? 🤷🏻‍♂️
+  }
+
+  return undefined;
 }

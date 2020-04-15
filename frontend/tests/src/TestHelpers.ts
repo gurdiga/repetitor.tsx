@@ -1,9 +1,10 @@
 import {expect} from "chai";
-import {configure, ShallowWrapper, shallow} from "enzyme";
+import {configure, ShallowWrapper} from "enzyme";
 import * as Adapter from "enzyme-adapter-react-16";
-import * as Sinon from "sinon";
+import {AlertMessage, AlertType} from "frontend/shared/src/Components/AlertMessage";
+import {runScenario} from "frontend/shared/src/ScenarioRunner";
 import * as fs from "fs";
-import {AlertType, AlertMessage} from "frontend/shared/src/Components/AlertMessage";
+import * as Sinon from "sinon";
 
 configure({adapter: new Adapter()});
 
@@ -12,28 +13,45 @@ export type Comp<C extends React.FunctionComponent<any>> = React.ReactElement<Re
 export type Wrapper<FC extends React.FunctionComponent<any>> = ShallowWrapper<React.ComponentProps<FC>>;
 export type HtmlWrapper<E extends HTMLElement> = ShallowWrapper<React.HTMLAttributes<E>>;
 
+export function find<T extends (props: any) => JSX.Element>(
+  wrapper: Wrapper<(props: any) => JSX.Element>,
+  childType: T
+): Wrapper<T>;
+export function find(wrapper: Wrapper<(props: any) => JSX.Element>, selector: string): HtmlWrapper<any>;
+export function find<T extends (props: any) => JSX.Element>(
+  wrapper: Wrapper<(props: any) => JSX.Element>,
+  x: T | string
+) {
+  if (typeof x === "string") {
+    return wrapper.find(x);
+  } else {
+    return wrapper.find(x) as Wrapper<T>;
+  }
+}
+
 // https://www.typescriptlang.org/docs/handbook/advanced-types.html#example-2
 export type Unpromise<T> = T extends (infer U)[] ? U : T extends Promise<infer U> ? U : T;
+export type ServerResponseSimulator = (value: Unpromise<ReturnType<typeof runScenario>>) => void;
 
 export function expectProps<C extends React.FunctionComponent<any>>(
   subject: string,
-  field: JSX.Element | Wrapper<C>,
+  element: JSX.Element | Wrapper<C>,
   expectedProps: Partial<React.ComponentProps<C>>
 ): void {
-  if (field instanceof ShallowWrapper) {
+  if (element instanceof ShallowWrapper) {
     for (const propName in expectedProps) {
-      expect(field.exists(), `“${subject}” is expected to exist`).to.be.true;
+      expect(element.exists(), `“${subject}” is expected to exist`).to.be.true;
       expect(
-        field.prop(propName),
+        element.prop(propName),
         `“${subject}” is expected to have prop “${propName}” of “${expectedProps[propName]}”`
-      ).to.equal(expectedProps[propName]);
+      ).to.deep.equal(expectedProps[propName]);
     }
   } else {
     for (const propName in expectedProps) {
       expect(
-        field.props[propName],
+        element.props[propName],
         `“${subject}” is expected to have prop “${propName}” of “${expectedProps[propName]}”`
-      ).to.equal(expectedProps[propName]);
+      ).to.deep.equal(expectedProps[propName]);
     }
   }
 }
@@ -51,7 +69,7 @@ export function expectToRenderSnapshot(testFileName: string, wrapper: Wrapper<an
 }
 
 export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function expectAlertMessage(name: string, wrapper: Wrapper<any>, type: AlertType, text: string): void {

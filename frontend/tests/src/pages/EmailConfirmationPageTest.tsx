@@ -3,7 +3,7 @@ import * as React from "react";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import {expect} from "chai";
 import Sinon = require("sinon");
-import {Stub, Wrapper, expectAlertMessage, Unpromise} from "frontend/tests/src/TestHelpers";
+import {Stub, Wrapper, expectAlertMessage, ServerResponseSimulator} from "frontend/tests/src/TestHelpers";
 import {EmailConfirmationPage} from "frontend/pages/confirmare-email/src/EmailConfirmationPage";
 import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {PageLayout} from "frontend/shared/src/PageLayout";
@@ -12,14 +12,14 @@ describe("<EmailConfirmationPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
   let wrapper: Wrapper<typeof EmailConfirmationPage>;
 
-  let simulateServerResponse: (value: Unpromise<ReturnType<typeof ScenarioRunner.runScenario>>) => void;
+  let simulateServerResponse: ServerResponseSimulator;
 
   context("when the token is valid", () => {
     const token = "TOKEN42";
 
     beforeEach(() => {
       runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").returns(
-        new Promise(resolve => (simulateServerResponse = resolve))
+        new Promise((resolve) => (simulateServerResponse = resolve))
       );
       wrapper = shallow(<EmailConfirmationPage isAuthenticated={false} params={{token}} />);
     });
