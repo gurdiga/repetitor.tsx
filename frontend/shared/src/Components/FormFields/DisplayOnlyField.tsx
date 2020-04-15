@@ -4,9 +4,10 @@ import {TextFieldCss} from "frontend/shared/src/Components/FormFields/TextField.
 import * as React from "react";
 import {DisplayOnlyFieldCss} from "frontend/shared/src/Components/FormFields/DisplayOnlyField.css";
 
-interface Props extends Pick<FormField.CommonProps, "id" | "label" | "value" | "additionalControls"> {}
+export interface DisplayOnlyFieldProps
+  extends Pick<FormField.CommonProps, "id" | "label" | "value" | "additionalControls"> {}
 
-export function DisplayOnlyField(props: Props) {
+export function DisplayOnlyField(props: DisplayOnlyFieldProps) {
   const {id, label, value, additionalControls} = props;
 
   return (
