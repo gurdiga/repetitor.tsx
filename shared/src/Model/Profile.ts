@@ -24,7 +24,7 @@ export type ProfileNotFoundError = {
   kind: "ProfileNotFoundError";
 };
 
-type Link = {
+export type Link = {
   kind: "Link";
   value: string;
 };
