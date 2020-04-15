@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {shallow} from "enzyme";
-import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
+import {SubmitButton, SUCCESS_CELEBRATION_DURATION} from "frontend/shared/src/Components/SubmitButton";
 import {expectToRenderSnapshot, Wrapper, sleep} from "frontend/tests/src/TestHelpers";
 import * as React from "react";
 import Sinon = require("sinon");
@@ -10,30 +10,37 @@ describe("<SubmitButton/>", () => {
   let wrapper: Wrapper<typeof SubmitButton>;
   const workDuration = 1; // ms
 
+  let time: Sinon.SinonFakeTimers;
+
   beforeEach(() => {
     onClick = Sinon.stub().returns(doWork(workDuration));
     wrapper = shallow(<SubmitButton label="Submit" onClick={onClick} />);
+    time = Sinon.useFakeTimers();
+  });
+
+  afterEach(() => {
+    time.restore();
   });
 
   it("renders a <button> with type=submit", () => {
-    const button = wrapper.find("button");
-
-    expect(button.exists()).to.be.true;
-    expect(button.prop("type")).to.equal("submit");
-    expect(button.text()).to.equal("Submit");
+    expect(wrapper.exists()).to.be.true;
+    expect(wrapper.prop("type")).to.equal("submit");
+    expect(wrapper.text()).to.equal("Submit");
   });
 
   it("calls onClick and meanwhile disables itself to prevent multiple submissions", async () => {
-    const button = wrapper.find("button");
+    expect(wrapper.prop("disabled"), "is initially enabled").to.be.false;
 
-    expect(button.prop("disabled"), "is initially enabled").to.be.false;
-
-    button.simulate("click");
+    wrapper.simulate("click");
     expect(onClick.callCount, "calls onClick for the first click").to.equal(1);
-    expect(wrapper.find("button").prop("disabled"), "is disabled while resolving onClick").to.be.true;
+    expect(wrapper.prop("disabled"), "is disabled while resolving onClick").to.be.true;
 
     await wait(workDuration + 1);
-    expect(wrapper.find("button").prop("disabled"), "is enabled again after onClick resolved").to.be.false;
+    expect(wrapper.prop("disabled"), "is enabled again after onClick resolved").to.be.false;
+
+    time.tick(SUCCESS_CELEBRATION_DURATION); // let the time pass, otherwise Node hangs until timers are done
+    expect(wrapper.prop("disabled"), "is enabled again after onClick resolved").to.be.false;
+    expect(wrapper.text(), "the status illustration is removed").to.equal("Submit");
   });
 
   it("renders snapshot", () => {
