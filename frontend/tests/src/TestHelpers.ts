@@ -5,8 +5,11 @@ import {AlertMessage, AlertType} from "frontend/shared/src/Components/AlertMessa
 import {runScenario} from "frontend/shared/src/ScenarioRunner";
 import * as fs from "fs";
 import * as Sinon from "sinon";
+import sinonChai = require("sinon-chai");
+import chai = require("chai");
 
 configure({adapter: new Adapter()});
+chai.use(sinonChai);
 
 export type Stub<T extends (...args: any) => any> = Sinon.SinonStub<Parameters<T>, ReturnType<T>>;
 export type Comp<C extends React.FunctionComponent<any>> = React.ReactElement<React.ComponentProps<C>>;
