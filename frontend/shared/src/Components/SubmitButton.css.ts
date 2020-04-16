@@ -10,15 +10,7 @@ export namespace SubmitButtonCss {
     marginLeft: em(1)
   });
 
-  export const IllustrationSuccess = style({
-    animationName: keyframes({
-      '50%': {transform: scale(1.5)}
-    }),
-    animationDuration: '0.5s',
-    animationIterationCount: 'infinite',
-  });
-
-  export const IllustrationPending = style({
+  export const IllustrationSubmitted = style({
     animationName: keyframes({
       'from': {transform: rotate(deg(0))},
       'to': {transform: rotate(deg(360))}

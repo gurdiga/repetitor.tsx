@@ -11,12 +11,8 @@ interface Props extends BuiltinButtonProps {
 
 enum Status {
   Steady,
-  Pending,
-  Success,
-  Error,
+  Submitted,
 }
-
-export const SUCCESS_CELEBRATION_DURATION = 1500; // time to pop 3 times
 
 export function SubmitButton(props: Props) {
   const {label, onClick, className, ...rest} = props;
@@ -38,30 +34,24 @@ export function SubmitButton(props: Props) {
 
   async function handleClick() {
     toggleDisabled(true);
-    setStatus(Status.Pending);
+    setStatus(Status.Submitted);
 
     try {
       await onClick();
-      setStatus(Status.Success);
     } catch (error) {
       console.error(error);
-      setStatus(Status.Error);
     }
 
-    toggleDisabled(false);
-    setTimeout(() => setStatus(Status.Steady), SUCCESS_CELEBRATION_DURATION);
+    setStatus(Status.Steady);
+    setTimeout(() => toggleDisabled(false), 1000);
   }
 
   function getIllustration(status: Status) {
     switch (status) {
       case Status.Steady:
         return <></>;
-      case Status.Pending:
-        return <span className={classes(SubmitButtonCss.Illustration, SubmitButtonCss.IllustrationPending)}>+</span>;
-      case Status.Success:
-        return <span className={classes(SubmitButtonCss.Illustration, SubmitButtonCss.IllustrationSuccess)}>👍</span>;
-      case Status.Error:
-        return <span className={SubmitButtonCss.Illustration}>😵</span>;
+      case Status.Submitted:
+        return <span className={classes(SubmitButtonCss.Illustration, SubmitButtonCss.IllustrationSubmitted)}>+</span>;
     }
   }
 }
