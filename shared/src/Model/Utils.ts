@@ -1,4 +1,5 @@
 import {ErrorMessages} from "shared/src/Utils/Validation";
+import {omit} from "shared/src/Utils/Language";
 
 export type Success = {
   kind: "Success";
@@ -23,15 +24,7 @@ export type UnexpectedError = {
 export type DataProps<T> = Omit<T, "kind">;
 
 export function dataProps<SI extends any>(scenarioInput: SI): DataProps<SI> {
-  const result: any = {};
-
-  for (const propName in scenarioInput) {
-    if (propName !== "kind") {
-      result[propName] = scenarioInput[propName];
-    }
-  }
-
-  return result as DataProps<SI>;
+  return omit(scenarioInput, "kind");
 }
 
 export type SystemError = DbError | UnexpectedError;
