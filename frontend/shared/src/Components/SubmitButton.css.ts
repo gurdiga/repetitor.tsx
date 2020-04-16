@@ -12,7 +12,7 @@ export namespace SubmitButtonCss {
 
   export const IllustrationSuccess = style({
     animationName: keyframes({
-      '50%': {transform: scale(1.2)}
+      '50%': {transform: scale(1.5)}
     }),
     animationDuration: '0.5s',
     animationIterationCount: 'infinite',

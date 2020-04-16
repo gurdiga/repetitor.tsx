@@ -25,6 +25,8 @@ export function find<T extends (props: any) => JSX.Element>(
   wrapper: Wrapper<(props: any) => JSX.Element>,
   x: T | string
 ) {
+  expect(wrapper, "the wrapper to look into").to.exist;
+
   if (typeof x === "string") {
     return wrapper.find(x);
   } else {

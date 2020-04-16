@@ -26,40 +26,46 @@ import {
 } from "shared/src/Model/Profile";
 import {DbError, UnexpectedError} from "shared/src/Model/Utils";
 import Sinon = require("sinon");
+import {AuthenticatedState} from "frontend/pages/profil/src/AuthenticatedState";
+import {ProfileForm} from "frontend/pages/profil/src/ProfileForm";
+import {pick, omit} from "shared/src/Utils/Language";
 
 describe("<ProfilePage/>", () => {
-  let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
   let wrapper: Wrapper<typeof ProfilePage>;
-  let simulateServerResponse: ServerResponseSimulator;
 
   context("when authenticated", () => {
     beforeEach(() => {
-      runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").returns(
-        new Promise((resolve) => (simulateServerResponse = resolve))
-      );
+      wrapper = shallow(<ProfilePage isAuthenticated={true} />);
     });
 
-    afterEach(() => {
-      runScenarioStub.restore();
+    it("renders the authenticated state", () => {
+      const layout = find(wrapper, PageLayout);
+
+      expectProps("layout", layout, {
+        title: "Profil",
+        isAuthenticated: true,
+      });
+      expect(wrapper.find(AuthenticatedState).exists()).to.be.true;
     });
 
-    describe("rendering", () => {
+    describe("authenticated state", () => {
+      let wrapper: Wrapper<typeof AuthenticatedState>;
+      let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
+      let simulateServerResponse: ServerResponseSimulator;
+
       beforeEach(() => {
-        wrapper = shallow(<ProfilePage isAuthenticated={true} />);
+        runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").returns(
+          new Promise((resolve) => (simulateServerResponse = resolve))
+        );
+
+        wrapper = shallow(<AuthenticatedState />);
       });
 
+      afterEach(() => runScenarioStub.restore());
+
       it("renders the page layout with a spinner and loads the profile info once", () => {
-        expectProps("layout", find(wrapper, PageLayout), {
-          title: "Profil",
-          isAuthenticated: true,
-        });
         expect(wrapper.find(Spinner).exists(), "spinner exists").to.be.true;
-
-        const [scenarioName, scenarioInput] = runScenarioStub.args[0];
-
-        expect(runScenarioStub.calledOnce, "once").to.be.true;
-        expect(scenarioName).to.equal("ProfileLoad");
-        expect(scenarioInput).to.deep.equal({});
+        expect(runScenarioStub).to.have.been.calledOnceWithExactly("ProfileLoad", {});
       });
 
       context("when loading the profile succeeds", () => {
@@ -71,22 +77,41 @@ describe("<ProfilePage/>", () => {
           resume: {kind: "MarkdownDocument", value: ""} as MarkdownDocument,
           isPublished: false,
         };
+        const expectedProps = pick(response, "fullName", "email", "photo");
 
         beforeEach(async () => await simulateServerResponse(response));
 
-        it("renderd the filled form and the avatar", () => {
-          const form = find(wrapper, Form);
+        it("renders the profile form", () => {
+          expectProps("profile form", find(wrapper, ProfileForm), expectedProps);
+        });
 
-          expect(form.exists(), "form").to.be.true;
-          expect(form.props().fields, "fields").to.have.lengthOf(3);
-          expect(form.props().actionButtons, "action buttons").to.have.lengthOf(1);
+        describe("profile form", () => {
+          let wrapper: Wrapper<typeof ProfileForm>;
 
-          const [fullNameField, emailField, passwordField] = form.props().fields;
+          beforeEach(() => {
+            wrapper = shallow(<ProfileForm {...expectedProps} />);
+          });
 
-          expectProps("full name", fullNameField, {value: response.fullName, label: "Nume deplin"});
-          expectProps("email", emailField, {value: response.email, label: "Adresa de email"});
-          expectProps("password", passwordField, {label: "Parola"});
-          expectProps("avatar", wrapper.find(Avatar), {url: response.photo});
+          it("renderd the filled form and the avatar", () => {
+            const form = find(wrapper, Form);
+
+            expect(form.exists(), "form").to.be.true;
+            expect(form.props().fields, "fields").to.have.lengthOf(3);
+            expect(form.props().actionButtons, "action buttons").to.have.lengthOf(1);
+
+            const [fullNameField, emailField, passwordField] = form.props().fields;
+
+            expectProps("full name", fullNameField, {value: response.fullName, label: "Nume deplin"});
+            expectProps("email", emailField, {value: response.email, label: "Adresa de email"});
+            expectProps("password", passwordField, {label: "Parola"});
+            expectProps("avatar", wrapper.find(Avatar), {url: response.photo});
+          });
+
+          describe("behavior", () => {
+            it("handles the server responses properly", () => {
+              expect(it).to.exist; // TODO
+            });
+          });
         });
       });
 
@@ -181,9 +206,12 @@ describe("<ProfilePage/>", () => {
     });
 
     it("renders the page layout with the needs-authentication view", () => {
-      const layout = wrapper.find(PageLayout);
+      const layout = find(wrapper, PageLayout);
 
-      expect(layout.exists(), "layout").to.be.true;
+      expectProps("layout", layout, {
+        title: "Profil",
+        isAuthenticated: false,
+      });
       expect(layout.find(NeedsAuthentication).exists(), "needs-authentication view").to.be.true;
     });
   });
