@@ -60,11 +60,20 @@ export function ProfileForm(props: Props) {
           />,
         ]}
       />
-      {serverRequest.requestState === RequestState.ReceivedError && (
-        <AlertMessage type="error">{serverRequest.statusText}</AlertMessage>
-      )}
+      {statusMessage(serverRequest.requestState)}
     </>
   );
+
+  function statusMessage(requestState: RequestState) {
+    switch (requestState) {
+      case RequestState.ReceivedSuccess:
+        return <AlertMessage type="success">{serverRequest.statusText}</AlertMessage>;
+      case RequestState.ReceivedError:
+        return <AlertMessage type="error">{serverRequest.statusText}</AlertMessage>;
+      default:
+        return undefined;
+    }
+  }
 
   async function maybeSubmitForm(fields: Record<"fullName", ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
@@ -82,7 +91,7 @@ export function ProfileForm(props: Props) {
 
     switch (response.kind) {
       case "ProfileUpdated":
-        [requestState, statusText] = [RequestState.ReceivedSuccess, "Profilul a fost actualizat."];
+        [requestState, statusText] = [RequestState.ReceivedSuccess, "Profilul a fost actualizat"];
         break;
       case "FullNameError":
         [requestState, statusText] = [RequestState.ReceivedError, FullNameErrorMessages[response.errorCode]];
@@ -90,11 +99,11 @@ export function ProfileForm(props: Props) {
       case "NotAuthenticatedError":
         [requestState, statusText] = [
           RequestState.ReceivedError,
-          "Pentru a vă vedea profilul trebuie să fiți autentificat.",
+          "Pentru a vă vedea profilul trebuie să fiți autentificat",
         ];
         break;
       case "ProfileNotFoundError":
-        [requestState, statusText] = [RequestState.ReceivedError, "Nu am găsit profilul."];
+        [requestState, statusText] = [RequestState.ReceivedError, "Nu am găsit profilul"];
         break;
       case "DbError":
         [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];

@@ -23,12 +23,14 @@ import {
   NotAuthenticatedError,
   ProfileLoaded,
   ProfileNotFoundError,
+  ProfileUpdated,
 } from "shared/src/Model/Profile";
 import {DbError, UnexpectedError} from "shared/src/Model/Utils";
 import Sinon = require("sinon");
 import {AuthenticatedState} from "frontend/pages/profil/src/AuthenticatedState";
 import {ProfileForm} from "frontend/pages/profil/src/ProfileForm";
 import {pick, omit} from "shared/src/Utils/Language";
+import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 
 describe("<ProfilePage/>", () => {
   let wrapper: Wrapper<typeof ProfilePage>;
@@ -107,9 +109,92 @@ describe("<ProfilePage/>", () => {
             expectProps("avatar", wrapper.find(Avatar), {url: response.photo});
           });
 
-          describe("behavior", () => {
-            it("handles the server responses properly", () => {
-              expect(it).to.exist; // TODO
+          describe("response handling", () => {
+            beforeEach(() => {
+              runScenarioStub.restore();
+              runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").returns(
+                new Promise((resolve) => (simulateServerResponse = resolve))
+              );
+              wrapper.find(Form).dive().find(SubmitButton).simulate("click");
+            });
+
+            afterEach(() => runScenarioStub.restore());
+
+            context("when succeeds", () => {
+              beforeEach(async () => {
+                await simulateServerResponse({kind: "ProfileUpdated"});
+              });
+
+              it("renders a success message", () => {
+                expectAlertMessage("success message", wrapper, "success", "Profilul a fost actualizat");
+              });
+            });
+
+            context("when fails", () => {
+              context("because of an issue with the full name", () => {
+                beforeEach(async () => {
+                  await simulateServerResponse({kind: "FullNameError", errorCode: "TOO_LONG"});
+                });
+
+                it("renders an error message", () => {
+                  expectAlertMessage("error message", wrapper, "error", "Numele este prea lung");
+                });
+              });
+
+              context("because the session has expired", () => {
+                beforeEach(async () => {
+                  await simulateServerResponse({kind: "NotAuthenticatedError"});
+                });
+
+                it("renders an error message", () => {
+                  expectAlertMessage(
+                    "error message",
+                    wrapper,
+                    "error",
+                    "Pentru a vă vedea profilul trebuie să fiți autentificat"
+                  );
+                });
+              });
+
+              context("because the profile has not been found", () => {
+                beforeEach(async () => {
+                  await simulateServerResponse({kind: "ProfileNotFoundError"});
+                });
+
+                it("renders an error message", () => {
+                  expectAlertMessage("error message", wrapper, "error", "Nu am găsit profilul");
+                });
+              });
+
+              context("because of a database error", () => {
+                beforeEach(async () => {
+                  await simulateServerResponse({kind: "DbError", errorCode: "GENERIC_DB_ERROR"});
+                });
+
+                it("renders an error message", () => {
+                  expectAlertMessage("error message", wrapper, "error", "Eroare neprevăzută de bază de date");
+                });
+              });
+
+              context("because of a connection error", () => {
+                beforeEach(async () => {
+                  await simulateServerResponse({kind: "TransportError", error: "LieFi is down"});
+                });
+
+                it("renders an error message", () => {
+                  expectAlertMessage("error message", wrapper, "error", "LieFi is down");
+                });
+              });
+
+              context("because of an Express.js upgrade", () => {
+                beforeEach(async () => {
+                  await simulateServerResponse({kind: "ServerError", error: "Runtime error"});
+                });
+
+                it("renders an error message", () => {
+                  expectAlertMessage("error message", wrapper, "error", "Runtime error");
+                });
+              });
             });
           });
         });

@@ -2,7 +2,7 @@
 SHELL=bash
 
 default:
-	@make --no-print-directory test-frontend FILES=frontend/tests/src/pages/ProfilePageTest.tsx
+	make --no-print-directory test-frontend FILES=frontend/tests/src/pages/ProfilePageTest.tsx
 
 test: test-backend test-frontend
 t: test
