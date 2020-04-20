@@ -3,7 +3,13 @@ import * as React from "react";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import {expect} from "chai";
 import Sinon = require("sinon");
-import {Stub, Wrapper, expectAlertMessage, ServerResponseSimulator} from "frontend/tests/src/TestHelpers";
+import {
+  Stub,
+  Wrapper,
+  expectAlertMessage,
+  ServerResponseSimulator,
+  ServerResponse,
+} from "frontend/tests/src/TestHelpers";
 import {EmailConfirmationPage} from "frontend/pages/confirmare-email/src/EmailConfirmationPage";
 import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {PageLayout} from "frontend/shared/src/PageLayout";
@@ -45,41 +51,36 @@ describe("<EmailConfirmationPage/>", () => {
       });
     });
 
-    context("when the server does not recognize the token", () => {
-      beforeEach(async () => {
-        simulateServerResponse({
-          kind: "EmailConfirmationTokenUnrecognizedError",
+    describe("unhappy paths", () => {
+      Object.entries({
+        "when the server does not recognize the token": {
+          serverResponse: {
+            kind: "EmailConfirmationTokenUnrecognizedError",
+          },
+          statusText: "Token necunoscut",
+        },
+        "when the database query fails for some reason": {
+          serverResponse: {
+            kind: "DbError",
+            errorCode: "GENERIC_DB_ERROR",
+          },
+          statusText: "Eroare neprevăzută de bază de date",
+        },
+        "when can’t connect to server": {
+          serverResponse: {
+            kind: "TransportError",
+            error: "Network error",
+          },
+          statusText: "Eroare: Network error",
+        },
+      }).forEach(([caseDescription, {serverResponse, statusText}]) => {
+        context(caseDescription, () => {
+          beforeEach(async () => simulateServerResponse(serverResponse as ServerResponse));
+
+          it("renders an error message", () => {
+            expectAlertMessage("error message", wrapper, "error", statusText);
+          });
         });
-      });
-
-      it("renders the appropriate failure message", () => {
-        expectAlertMessage("failure message", wrapper, "error", "Token necunoscut");
-      });
-    });
-
-    context("when the server does not recognize the token", () => {
-      beforeEach(async () => {
-        simulateServerResponse({
-          kind: "DbError",
-          errorCode: "GENERIC_DB_ERROR",
-        });
-      });
-
-      it("renders the appropriate failure message", () => {
-        expectAlertMessage("failure message", wrapper, "error", "Eroare neprevăzută de bază de date");
-      });
-    });
-
-    context("when can’t connect to server", () => {
-      beforeEach(async () => {
-        simulateServerResponse({
-          kind: "TransportError",
-          error: "Network error",
-        });
-      });
-
-      it("renders the appropriate failure message", () => {
-        expectAlertMessage("failure message", wrapper, "error", "Eroare: Network error");
       });
     });
   });

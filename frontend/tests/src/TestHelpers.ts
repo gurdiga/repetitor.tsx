@@ -36,7 +36,13 @@ export function find<T extends (props: any) => JSX.Element>(
 
 // https://www.typescriptlang.org/docs/handbook/advanced-types.html#example-2
 export type Unpromise<T> = T extends (infer U)[] ? U : T extends Promise<infer U> ? U : T;
-export type ServerResponseSimulator = (value: Unpromise<ReturnType<typeof runScenario>>) => void;
+export type ServerResponse = Unpromise<ReturnType<typeof runScenario>>;
+export type ServerResponseSimulator = (value: ServerResponse) => void;
+
+interface TestCaseDetails {
+  serverResponse: ServerResponse;
+  statusText: string;
+}
 
 export function expectProps<C extends React.FunctionComponent<any>>(
   subject: string,
