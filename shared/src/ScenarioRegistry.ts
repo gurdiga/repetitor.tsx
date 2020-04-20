@@ -14,6 +14,7 @@ import {
 import {EmailConfirmationInput, EmailConfirmationResult} from "shared/src/Scenarios/EmailConfirmation";
 import {ProfileLoadInput, ProfileLoadResult} from "shared/src/Scenarios/ProfileLoad";
 import {ProfileUpdateInput, ProfileUpdateResult} from "shared/src/Scenarios/ProfileUpdate";
+import {EmailChangeStep1Input, EmailChangeStep2Result} from "shared/src/Scenarios/EmailChangeStep1";
 
 export interface ScenarioRegistry {
   Registration: {
@@ -43,6 +44,10 @@ export interface ScenarioRegistry {
   EmailConfirmation: {
     Input: EmailConfirmationInput;
     Result: EmailConfirmationResult;
+  };
+  EmailChangeStep1: {
+    Input: EmailChangeStep1Input;
+    Result: EmailChangeStep2Result;
   };
   ProfileLoad: {
     Input: ProfileLoadInput;

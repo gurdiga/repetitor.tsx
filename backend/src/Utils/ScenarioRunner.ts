@@ -8,11 +8,13 @@ import {PasswordResetStep2} from "backend/src/ScenarioHandlers/PasswordResetStep
 import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
 import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
 import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
+import {EmailChangeStep1} from "backend/src/ScenarioHandlers/EmailChangeStep1";
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   TestScenario,
   Registration,
   EmailConfirmation,
+  EmailChangeStep1,
   Login,
   Logout,
   PasswordResetStep1,
