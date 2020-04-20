@@ -53,8 +53,14 @@ watch: node_modules
 	@~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w \
 	| tee >( \
 		while read ln; do \
-			if echo "$${ln}" | grep -q "Found 0 errors. Watching for file changes."; then \
-				osascript -e 'display notification "Compilation complete" with title "Repetitor build"'; \
+			PROJECT_DIR=`basename $$PWD`; \
+			STATUS_LINE=`echo "$${ln}" | grep -Po '(Found \d+ errors)'`; \
+			if [ "$$STATUS_LINE" ]; then \
+				if [ "$$STATUS_LINE" = "Found 0 errors" ]; then \
+					osascript -e "display notification \"Compilation complete\" with title \"✅ $$PROJECT_DIR\""; \
+				else \
+					osascript -e "display notification \"Compilation failed: $$STATUS_LINE\" with title \"❌ $$PROJECT_DIR\""; \
+				fi; \
 			fi; \
 		done \
 	)
