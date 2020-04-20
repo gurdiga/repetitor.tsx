@@ -55,12 +55,11 @@ watch: node_modules
 		while read ln; do \
 			PROJECT_DIR=`basename $$PWD`; \
 			STATUS_LINE=`echo "$${ln}" | grep -Po '(Found \d+ errors)'`; \
-			if [ "$$STATUS_LINE" ]; then \
-				if [ "$$STATUS_LINE" = "Found 0 errors" ]; then \
-					osascript -e "display notification \"Compilation complete\" with title \"✅ $$PROJECT_DIR\""; \
-				else \
-					osascript -e "display notification \"Compilation failed: $$STATUS_LINE\" with title \"❌ $$PROJECT_DIR\""; \
-				fi; \
+			if [ ! "$$STATUS_LINE" ]; then continue; fi \
+			if [ "$$STATUS_LINE" = "Found 0 errors" ]; then \
+				osascript -e "display notification \"Compilation complete\" with title \"✅ $$PROJECT_DIR\""; \
+			else \
+				osascript -e "display notification \"Compilation failed: $$STATUS_LINE\" with title \"❌ $$PROJECT_DIR\""; \
 			fi; \
 		done \
 	)
