@@ -8,7 +8,7 @@ export namespace FormValidation {
     setValidationErrorCode: (message: keyof VR | null) => void,
     onValueChange: ValueChangeHandler
   ): (event: React.ChangeEvent<T>) => void {
-    return event => {
+    return (event) => {
       let {value, type, checked} = event.target;
 
       if (type === "checkbox") {

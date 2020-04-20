@@ -37,5 +37,5 @@ Vlad
     html,
   };
 
-  return transporter.sendMail(mail).catch(e => logError(`nodemailer#sendMail failed`, e));
+  return transporter.sendMail(mail).catch((e) => logError(`nodemailer#sendMail failed`, e));
 }

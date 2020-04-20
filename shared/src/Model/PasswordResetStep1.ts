@@ -25,9 +25,7 @@ export type PasswordResetToken = {
   token: string;
 };
 
-export function makePasswordResetRequestFromInput(
-  input: PasswordResetStep1Input
-): PasswordResetStep1 | EmailError {
+export function makePasswordResetRequestFromInput(input: PasswordResetStep1Input): PasswordResetStep1 | EmailError {
   const emailValidationResult = validateWithRules(input.email, EmailValidationRules);
 
   if (emailValidationResult.kind === "Invalid") {

@@ -23,6 +23,7 @@
     "chai-as-promised": "^7.1.1",
     "mocha": "7.1.1",
     "nodemon": "2.0.3",
+    "prettier": "2.0.4",
     "sinon": "9.0.2"
   },
   "dependencies": {
@@ -78,5 +79,11 @@
       "backend/migrations/",
       "**/build/bundle.js"
     ]
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "bracketSpacing": false,
+    "semi": true,
+    "printWidth": 120
   }
 }

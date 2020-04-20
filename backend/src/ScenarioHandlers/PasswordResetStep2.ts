@@ -9,10 +9,7 @@ import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["PasswordResetStep2"];
 
-export async function PasswordResetStep2(
-  input: Scenario["Input"],
-  session: UserSession
-): Promise<Scenario["Result"]> {
+export async function PasswordResetStep2(input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
   const inputValidationResult = makePasswordResetStep2RequestFromInput(input);
 
   if (inputValidationResult.kind !== "PasswordResetStep2Request") {

@@ -6,14 +6,14 @@ import {PoolConnection} from "mysql";
 use(require("chai-as-promised"));
 use(require("chai-http"));
 
-process.on("unhandledRejection", e => {
+process.on("unhandledRejection", (e) => {
   throw e;
 });
 
 connectionPool.config.connectionLimit = 1;
-connectionPool.on("connection", connection => {
+connectionPool.on("connection", (connection) => {
   beforeEach(() => {
-    connection.beginTransaction(e => {
+    connection.beginTransaction((e) => {
       if (e) {
         throw e;
       }

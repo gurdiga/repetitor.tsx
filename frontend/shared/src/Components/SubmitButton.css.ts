@@ -7,16 +7,16 @@ export namespace SubmitButtonCss {
 
   export const Illustration = style({
     display: "inline-block",
-    marginLeft: em(1)
+    marginLeft: em(1),
   });
 
   export const IllustrationSubmitted = style({
     animationName: keyframes({
-      'from': {transform: rotate(deg(0))},
-      'to': {transform: rotate(deg(360))}
+      from: {transform: rotate(deg(0))},
+      to: {transform: rotate(deg(360))},
     }),
-    animationDuration: '0.5s',
-    animationTimingFunction: 'linear',
-    animationIterationCount: 'infinite',
+    animationDuration: "0.5s",
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
   });
 }

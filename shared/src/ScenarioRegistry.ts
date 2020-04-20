@@ -3,14 +3,8 @@ import {TestScenarioInput, TestScenarioResult} from "shared/src/Scenarios/TestSc
 import {LoginInput, LoginResult} from "shared/src/Scenarios/Login";
 import {UserSession} from "shared/src/Model/UserSession";
 import {LogoutInput, LogoutResult} from "shared/src/Scenarios/Logout";
-import {
-  PasswordResetStep1Input,
-  PasswordResetStep1Result,
-} from "shared/src/Scenarios/PasswordResetStep1";
-import {
-  PasswordResetStep2Input,
-  PasswordResetStep2Result,
-} from "shared/src/Scenarios/PasswordResetStep2";
+import {PasswordResetStep1Input, PasswordResetStep1Result} from "shared/src/Scenarios/PasswordResetStep1";
+import {PasswordResetStep2Input, PasswordResetStep2Result} from "shared/src/Scenarios/PasswordResetStep2";
 import {EmailConfirmationInput, EmailConfirmationResult} from "shared/src/Scenarios/EmailConfirmation";
 import {ProfileLoadInput, ProfileLoadResult} from "shared/src/Scenarios/ProfileLoad";
 import {ProfileUpdateInput, ProfileUpdateResult} from "shared/src/Scenarios/ProfileUpdate";

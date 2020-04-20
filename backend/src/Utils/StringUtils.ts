@@ -1,10 +1,7 @@
 import * as crypto from "crypto";
 
 export function hashString(string: string, salt: string): string {
-  return crypto
-    .createHmac("sha256", salt)
-    .update(string)
-    .digest("hex");
+  return crypto.createHmac("sha256", salt).update(string).digest("hex");
 }
 
 export function genRandomString(length: number): string {

@@ -44,7 +44,7 @@ export const app = express()
   .get("*", csrfProtection, sendPageHtml)
   .post("/", csrfProtection, handlePost);
 
-app.listen(requireNumericEnvVar("PORT")).on("error", error => {
+app.listen(requireNumericEnvVar("PORT")).on("error", (error) => {
   console.error(error);
   process.exit(1);
 });

@@ -25,14 +25,14 @@ function isSyntacticallyCorrectEmail(text: UserValue): boolean {
   text = text.trim();
 
   const keyCharacters = [".", "@"];
-  const containsKeyCharacters = keyCharacters.every(c => !!text && text.includes(c));
+  const containsKeyCharacters = keyCharacters.every((c) => !!text && text.includes(c));
 
   if (!containsKeyCharacters) {
     return false;
   }
 
   const sides = text.split("@");
-  const [login, domain] = sides.map(s => s.trim());
+  const [login, domain] = sides.map((s) => s.trim());
 
   const doesLoginLookReasonable = login.length >= 2 && /[a-z0-9]+/i.test(login);
 
@@ -41,7 +41,7 @@ function isSyntacticallyCorrectEmail(text: UserValue): boolean {
   }
 
   const domainLevels = domain.split(/\./).reverse();
-  const doDomainPartsLookReasonable = /[a-z]{2,}/i.test(domainLevels[0]) && domainLevels.every(l => l.length >= 1);
+  const doDomainPartsLookReasonable = /[a-z]{2,}/i.test(domainLevels[0]) && domainLevels.every((l) => l.length >= 1);
 
   if (!doDomainPartsLookReasonable) {
     return false;

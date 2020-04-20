@@ -160,7 +160,7 @@ describe("Express integration", () => {
     });
 
     it("serves the ones that exis", () => {
-      Object.keys(VersionedVendorModulePaths).forEach(async module => {
+      Object.keys(VersionedVendorModulePaths).forEach(async (module) => {
         res = await agent.get(`${VENDOR_MODULE_PREFIX}${module}`);
 
         expect(res).to.have.status(200);
@@ -184,7 +184,7 @@ describe("Express integration", () => {
         "/frontend/shared/bundle-VERSION.js",
         "/home/bundle-VERSION.js",
         "/autentificare/bundle-VERSION.js",
-      ].forEach(async bundle => {
+      ].forEach(async (bundle) => {
         res = await agent.get(bundle);
 
         expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");

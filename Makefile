@@ -164,6 +164,11 @@ sql:
 	if [ ! "$$NODE_ENV" ] || [ "$$NODE_ENV" == "development" ]; then source .env; else source .env.$$NODE_ENV; fi
 	mysql --host $$APP_DB_HOST --user $$APP_DB_USER --password=$$APP_DB_PASSWORD $$APP_DB_NAME
 
+pretty:
+	git ls-tree -r master --name-only | xargs prettier --write
+
+format: pretty
+
 heroku-setup: h-expose-release-env h-env
 
 h-env:
