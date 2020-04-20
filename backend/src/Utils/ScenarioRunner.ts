@@ -9,12 +9,14 @@ import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation"
 import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
 import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
 import {EmailChangeStep1} from "backend/src/ScenarioHandlers/EmailChangeStep1";
+import {EmailChangeStep2} from "backend/src/ScenarioHandlers/EmailChangeStep2";
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   TestScenario,
   Registration,
   EmailConfirmation,
   EmailChangeStep1,
+  EmailChangeStep2,
   Login,
   Logout,
   PasswordResetStep1,

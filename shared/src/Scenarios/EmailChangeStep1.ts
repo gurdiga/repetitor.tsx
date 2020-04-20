@@ -1,5 +1,5 @@
 import {EmailError} from "shared/src/Model/Email";
-import {EmailChangeConfirmationSent} from "shared/src/Model/EmailChange";
+import {EmailChangeConfirmationRequestSent} from "shared/src/Model/EmailChange";
 import {NotAuthenticatedError, ProfileNotFoundError} from "shared/src/Model/Profile";
 import {SystemError} from "shared/src/Model/Utils";
 
@@ -18,8 +18,8 @@ export interface EmailChangeStep1Input {
  * - step2: and delete the change request in email_change_requests.
  */
 
-export type EmailChangeStep2Result =
-  | EmailChangeConfirmationSent
+export type EmailChangeStep1Result =
+  | EmailChangeConfirmationRequestSent
   | EmailError
   | ProfileNotFoundError
   | NotAuthenticatedError

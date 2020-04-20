@@ -187,7 +187,7 @@ export async function verifyToken(
 export const PASSWORD_RESET_EXPIRATION_HOURS = 1;
 export const TOKEN_EXPIRATION_TIME = PASSWORD_RESET_EXPIRATION_HOURS * 3600 * 1000;
 
-async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
+async function purgeExpiredTokens(): Promise<void> {
   const expirationTimestamp = Date.now() - TOKEN_EXPIRATION_TIME;
 
   try {
@@ -198,11 +198,8 @@ async function purgeExpiredTokens(): Promise<PurgedExpiredTokens | DbError> {
           `,
       params: [expirationTimestamp],
     });
-
-    return {kind: "PurgedExpiredTokens"};
   } catch (error) {
     logError(error);
-    return {kind: "DbError", errorCode: "GENERIC_DB_ERROR"};
   }
 }
 

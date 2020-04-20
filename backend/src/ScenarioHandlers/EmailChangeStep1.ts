@@ -16,13 +16,13 @@ export async function EmailChangeStep1(input: Scenario["Input"], session: UserSe
     return {kind: "NotAuthenticatedError"};
   }
 
-  const makeResult = makeEmailChangeRequest(input, currentEmail);
+  const inputValidationResult = makeEmailChangeRequest(input, currentEmail);
 
-  if (makeResult.kind !== "EmailChangeRequest") {
-    return makeResult;
+  if (inputValidationResult.kind !== "EmailChangeRequest") {
+    return inputValidationResult;
   }
 
-  const registrationResult = await registerEmailChangeRequest(makeResult);
+  const registrationResult = await registerEmailChangeRequest(userId, inputValidationResult);
 
   if (registrationResult.kind !== "RequestCreated") {
     return registrationResult;
@@ -34,16 +34,16 @@ export async function EmailChangeStep1(input: Scenario["Input"], session: UserSe
     return loadProfileResult;
   }
 
-  const {newEmail} = makeResult;
+  const {newEmail} = inputValidationResult;
   const {fullName} = loadProfileResult;
   const {token} = registrationResult;
 
-  sendEmailChangeConfirmationMessage(newEmail, fullName, token);
+  sendEmailChangeConfirmationRequestMessage(newEmail, fullName, token);
 
-  return {kind: "EmailChangeConfirmationSent"};
+  return {kind: "EmailChangeConfirmationRequestSent"};
 }
 
-function sendEmailChangeConfirmationMessage(newEmail: string, fullName: string, token: string): void {
+function sendEmailChangeConfirmationRequestMessage(newEmail: string, fullName: string, token: string): void {
   const expirationTime =
     EMAIL_CHANGE_REQUEST_EXPIRATION_HOURS === 1 ? "într-o oră" : `în ${EMAIL_CHANGE_REQUEST_EXPIRATION_HOURS} ore`;
 
