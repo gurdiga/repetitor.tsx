@@ -30,7 +30,7 @@
     "@typescript-eslint/eslint-plugin": "2.28.0",
     "@typescript-eslint/parser": "2.28.0",
     "amd-loader": "0.0.8",
-    "db-migrate": "0.11.6",
+    "db-migrate": "0.11.10",
     "db-migrate-mysql": "2.1.1",
     "eslint": "^6.8.0",
     "requirejs": "2.3.6",
