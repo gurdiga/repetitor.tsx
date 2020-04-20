@@ -35,7 +35,7 @@ export async function Registration(input: Scenario["Input"], session: UserSessio
 function sendWelcomeMessage(fullName: string, email: string, emailConfirmationToken: string) {
   sendEmail(
     email,
-    `Bine ați venit la ${requireEnvVar("APP_NAME")}`,
+    `Bine ați venit!`,
     `
 Dragă ${fullName},
 

@@ -33,7 +33,7 @@ Vlad
   const mail = {
     from: emailConfirmationMessageSenderAddress,
     to: email,
-    subject,
+    subject: `${requireEnvVar("APP_NAME")}: ${subject}`,
     html,
   };
 

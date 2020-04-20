@@ -1,8 +1,11 @@
+import {EmailError} from "shared/src/Model/Email";
+import {EmailChangeConfirmationSent} from "shared/src/Model/EmailChange";
+import {NotAuthenticatedError, ProfileNotFoundError} from "shared/src/Model/Profile";
 import {SystemError} from "shared/src/Model/Utils";
-import {NotAuthenticatedError} from "shared/src/Model/Profile";
-import {EmailChangeConfirmationSent, ConfirmationSendError} from "shared/src/Model/EmailChange";
 
-export interface EmailChangeStep1Input {}
+export interface EmailChangeStep1Input {
+  newEmail: string | undefined;
+}
 
 /**
  * - step1: add a record to email_change_requests table (create it first)
@@ -15,7 +18,9 @@ export interface EmailChangeStep1Input {}
  * - step2: and delete the change request in email_change_requests.
  */
 
-export type EmailChangeStep2Result = EmailChangeConfirmationSent
-  | ConfirmationSendError
+export type EmailChangeStep2Result =
+  | EmailChangeConfirmationSent
+  | EmailError
+  | ProfileNotFoundError
   | NotAuthenticatedError
   | SystemError;

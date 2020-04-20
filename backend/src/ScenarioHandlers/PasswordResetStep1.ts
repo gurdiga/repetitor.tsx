@@ -45,7 +45,7 @@ function sendTutorPasswordResetEmail(email: string, fullName: string, token: str
 
   sendEmail(
     email,
-    `Resetarea parolei în sistemul ${requireEnvVar("APP_NAME")}`,
+    `Resetarea parolei`,
     `
 Dragă ${fullName},
 Ați primit acest mesaj pentru că ați inițiat procesul de resetare a
