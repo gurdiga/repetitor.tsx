@@ -1,19 +1,19 @@
 import React = require("react");
+import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {Avatar} from "frontend/shared/src/Components/Avatar";
 import {Form} from "frontend/shared/src/Components/Form";
 import {DisplayOnlyField} from "frontend/shared/src/Components/FormFields/DisplayOnlyField";
 import {DisplayOnlyPasswordField} from "frontend/shared/src/Components/FormFields/DisplayOnlyPasswordField";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {ResetPasswordLink} from "frontend/shared/src/Components/ResetPasswordLink";
-import {SecondaryButton} from "frontend/shared/src/Components/SecondaryButton";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {placeholderServerRequest, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import {FullNameErrorMessages, FullNameValidationRules} from "shared/src/Model/Account";
 import {Link} from "shared/src/Model/Profile";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
+import {PagePath} from "shared/src/Utils/PagePath";
 import {ValidatedValue} from "shared/src/Utils/Validation";
-import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 
 interface Props {
   fullName: string;
@@ -46,7 +46,7 @@ export function ProfileForm(props: Props) {
             id="email"
             label="Adresa de email"
             value={props.email}
-            additionalControls={<SecondaryButton label="Schimbă" onClick={() => new Promise(() => alert("click"))} />}
+            additionalControls={<a href={PagePath.EmailChange}>Schimbare email</a>}
           />,
           <DisplayOnlyPasswordField id="password" label="Parola" additionalControls={<ResetPasswordLink />} />,
         ]}

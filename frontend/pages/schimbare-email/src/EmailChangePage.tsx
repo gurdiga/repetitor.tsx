@@ -1,10 +1,8 @@
-import {TokenInvalidView} from "frontend/pages/schimbare-email/src/TokenInvalidView";
-import {TokenVerificationView} from "frontend/pages/schimbare-email/src/TokenVerificationView";
+import {Step1} from "frontend/pages/schimbare-email/src/Step1";
+import {Step2} from "frontend/pages/schimbare-email/src/Step2";
 import {PageLayout} from "frontend/shared/src/PageLayout";
 import {QueryStringParams} from "frontend/shared/src/Utils/QueryStringParams";
-import {ChangeEmailTokenValidationRules} from "shared/src/Model/EmailChange";
 import {PageProps} from "shared/src/Utils/PageProps";
-import {validateWithRules} from "shared/src/Utils/Validation";
 import React = require("react");
 
 interface Props extends PageProps {
@@ -13,16 +11,10 @@ interface Props extends PageProps {
 
 export function EmailChangePage(props: Props) {
   const {isAuthenticated, params} = props;
-  const {token} = params;
-  const tokenValidationResult = validateWithRules(token, ChangeEmailTokenValidationRules);
 
   return (
     <PageLayout {...{title: "Schimare email", isAuthenticated}}>
-      {tokenValidationResult.kind === "Valid" ? (
-        <TokenVerificationView {...{token: tokenValidationResult.value}} />
-      ) : (
-        <TokenInvalidView {...{validationErrorCode: tokenValidationResult.validationErrorCode}} />
-      )}
+      {"token" in params ? <Step2 {...{token: params.token}} /> : <Step1 />}
     </PageLayout>
   );
 }
