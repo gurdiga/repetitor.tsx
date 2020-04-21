@@ -8,6 +8,7 @@
     {"path": "./frontend/tests"},
     {"path": "./frontend/pages/autentificare"},
     {"path": "./frontend/pages/confirmare-email"},
+    {"path": "./frontend/pages/schimbare-email"},
     {"path": "./frontend/pages/home"},
     {"path": "./frontend/pages/inregistrare"},
     {"path": "./frontend/pages/profil"},

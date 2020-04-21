@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "files": ["src/Main.tsx"],
+  "references": [{"path": "../../shared"}, {"path": "../../../shared"}],
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": "../../..",
+    "outFile": "build/bundle.js"
+  }
+}

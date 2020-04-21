@@ -2,7 +2,6 @@ import {validateWithRules, PredicateFn, UserValue, ValidationMessages} from "sha
 import {EmailValidationRules, EmailError} from "shared/src/Model/Email";
 import {EmailChangeStep1Input} from "shared/src/Scenarios/EmailChangeStep1";
 import {EmailChangeStep2Input} from "shared/src/Scenarios/EmailChangeStep2";
-import {tokenErrorMessages} from "shared/src/Model/PasswordResetStep2";
 
 export type EmailChangeConfirmationRequestSent = {
   kind: "EmailChangeConfirmationRequestSent";
@@ -63,18 +62,18 @@ export type EmailChangeTokenVerified = {
   currentEmail: string;
 };
 
-type ChangeEmailTokenErrorCode = "REQUIRED" | "LENGTH";
+export type ChangeEmailTokenErrorCode = "REQUIRED" | "BAD_LENGTH";
 
 export const EMAIL_CHANGE_TOKEN_LENGTH = 16;
 
-const ChangeEmailTokenValidationRules: Record<ChangeEmailTokenErrorCode, PredicateFn> = {
+export const ChangeEmailTokenValidationRules: Record<ChangeEmailTokenErrorCode, PredicateFn> = {
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
-  LENGTH: (text: UserValue) => !!text && text.trim().length === EMAIL_CHANGE_TOKEN_LENGTH,
+  BAD_LENGTH: (text: UserValue) => !!text && text.trim().length === EMAIL_CHANGE_TOKEN_LENGTH,
 };
 
 export const ChangeEmailTokenErrorMessages: ValidationMessages<typeof ChangeEmailTokenValidationRules> = {
   REQUIRED: "Tokenul de resetare a parolei lipsește",
-  LENGTH: "Tokenul de resetare a nu corespunde după lungime",
+  BAD_LENGTH: "Tokenul de resetare a nu corespunde după lungime",
 };
 
 export function makeEmailChangeConfirmation(
