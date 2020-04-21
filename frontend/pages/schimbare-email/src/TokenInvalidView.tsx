@@ -1,16 +1,14 @@
 import React = require("react");
-import {ChangeEmailTokenErrorCode} from "shared/src/Model/EmailChange";
+import {ChangeEmailTokenErrorCode, ChangeEmailTokenErrorMessages} from "shared/src/Model/EmailChange";
+import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 
 interface Props {
   validationErrorCode: ChangeEmailTokenErrorCode;
 }
 
 export function TokenInvalidView(props: Props) {
-  return (
-    <code>
-      &lt;TokenInvalidView {"{"}
-      {JSON.stringify(props)}
-      {"}"}/&gt;
-    </code>
-  );
+  const {validationErrorCode} = props;
+  const errorMessage = ChangeEmailTokenErrorMessages[validationErrorCode];
+
+  return <AlertMessage type="error">{errorMessage}</AlertMessage>;
 }

@@ -44,6 +44,7 @@ export type EmailChangeConfirmed = {
 
 export type EmailChangeTokenValidationError = {
   kind: "EmailChangeTokenValidationError";
+  errorCode: ChangeEmailTokenErrorCode;
 };
 
 export type EmailChangeTokenUnrecognizedError = {
@@ -72,8 +73,8 @@ export const ChangeEmailTokenValidationRules: Record<ChangeEmailTokenErrorCode, 
 };
 
 export const ChangeEmailTokenErrorMessages: ValidationMessages<typeof ChangeEmailTokenValidationRules> = {
-  REQUIRED: "Tokenul de resetare a parolei lipsește",
-  BAD_LENGTH: "Tokenul de resetare a nu corespunde după lungime",
+  REQUIRED: "Tokenul de schimbare a adresei de email lipsește",
+  BAD_LENGTH: "Tokenul de schimbare a adresei de email a nu corespunde după lungime",
 };
 
 export function makeEmailChangeConfirmation(
@@ -84,6 +85,7 @@ export function makeEmailChangeConfirmation(
   if (validationResult.kind === "Invalid") {
     return {
       kind: "EmailChangeTokenValidationError",
+      errorCode: validationResult.validationErrorCode,
     };
   }
 

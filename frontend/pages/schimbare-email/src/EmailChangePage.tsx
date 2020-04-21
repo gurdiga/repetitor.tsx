@@ -17,7 +17,7 @@ export function EmailChangePage(props: Props) {
   const tokenValidationResult = validateWithRules(token, ChangeEmailTokenValidationRules);
 
   return (
-    <PageLayout {...{title: "Profil", isAuthenticated}}>
+    <PageLayout {...{title: "Schimare email", isAuthenticated}}>
       {tokenValidationResult.kind === "Valid" ? (
         <TokenVerificationView {...{token: tokenValidationResult.value}} />
       ) : (
