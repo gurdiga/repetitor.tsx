@@ -1,5 +1,6 @@
 import {PageLayoutCss} from "frontend/shared/src/Css/PageLayout.css";
 import {UtilsCss} from "frontend/shared/src/Css/Utils.css";
+import {Footer} from "frontend/shared/src/Footer";
 import {TopNavigation} from "frontend/shared/src/TopNavigation";
 import * as React from "react";
 import {classes} from "typestyle";
@@ -31,7 +32,3 @@ export function PageLayout(props: Props) {
     </div>
   );
 }
-
-const Footer = () => {
-  return <pre>Footer</pre>;
-};
