@@ -136,7 +136,6 @@ migrate:
 	@set -e
 	if [ ! "$$NODE_ENV" ] || [ "$$NODE_ENV" == "development" ]; then source .env; else source .env.$$NODE_ENV; fi
 	db-migrate $${DIRECTION:-up} \
-		--verbose \
 		--env $$NODE_ENV \
 		--config backend/migrations/config.json \
 		--migrations-dir backend/migrations
@@ -155,6 +154,13 @@ migration:
 	read -p "Migration title: " MIGRATION_TITLE
 	db-migrate create $$MIGRATION_TITLE \
 		--env $${NODE_ENV:-development} \
+		--config backend/migrations/config.json \
+		--migrations-dir backend/migrations
+
+mcheck:
+	@db-migrate $${DIRECTION:-up} \
+		--check \
+		--env $$NODE_ENV \
 		--config backend/migrations/config.json \
 		--migrations-dir backend/migrations
 
