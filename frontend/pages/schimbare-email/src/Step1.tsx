@@ -1,4 +1,5 @@
 import React = require("react");
+import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {Form} from "frontend/shared/src/Components/Form";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
@@ -20,12 +21,12 @@ export function Step1() {
     <>
       {serverRequest.requestState !== RequestState.ReceivedSuccess && (
         <>
-          <p>Introduceți parola nouă.</p>
+          <p>Introduceți adresa nouă de email.</p>
           <Form
             fields={[
               <TextField
                 id="new-password"
-                label="Parola nouă"
+                label="Adresa nouă de email"
                 value={newEmail.value}
                 onValueChange={updateNewEmail}
                 validationRules={EmailValidationRules}
@@ -46,11 +47,20 @@ export function Step1() {
           />
         </>
       )}
-      {shouldShowServerRequestState && (
-        <p className={`server-response-${serverRequest.requestState}`}>{serverRequest.statusText}</p>
-      )}
+      {shouldShowServerRequestState && statusMessage(serverRequest.requestState)}
     </>
   );
+
+  function statusMessage(requestState: RequestState) {
+    switch (requestState) {
+      case RequestState.ReceivedSuccess:
+        return <AlertMessage type="success">{serverRequest.statusText}</AlertMessage>;
+      case RequestState.ReceivedError:
+        return <AlertMessage type="error">{serverRequest.statusText}</AlertMessage>;
+      default:
+        return undefined;
+    }
+  }
 
   async function maybeSubmitForm(fields: Record<keyof EmailChangeStep1Input, ValidatedValue<string>>): Promise<void> {
     const anyInvalidField = Object.values(fields).some((f) => !f.isValid);
