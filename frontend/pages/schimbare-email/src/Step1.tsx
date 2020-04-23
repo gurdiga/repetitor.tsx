@@ -10,7 +10,15 @@ import {EmailChangeStep1Input} from "shared/src/Scenarios/EmailChangeStep1";
 import {assertNever} from "shared/src/Utils/Language";
 import {emptyFieldValue, ValidatedValue} from "shared/src/Utils/Validation";
 
-export function Step1() {
+interface Props {
+  currentEmail: string;
+}
+
+const EmailIsTheSameErrorMessage = "Adresa de email nu s-a schimbat";
+
+export function Step1(props: Props) {
+  const {currentEmail} = props;
+
   const [newEmail, updateNewEmail] = React.useState(emptyFieldValue);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
@@ -29,9 +37,15 @@ export function Step1() {
                 label="Adresa nouă de email"
                 value={newEmail.value}
                 onValueChange={updateNewEmail}
-                validationRules={EmailValidationRules}
+                validationRules={{
+                  ...EmailValidationRules,
+                  MUST_BE_DIFFERENT: (text) => !!text && text.trim() !== currentEmail,
+                }}
+                validationMessages={{
+                  ...EmailErrorMessages,
+                  MUST_BE_DIFFERENT: EmailIsTheSameErrorMessage,
+                }}
                 showValidationMessage={shouldShowValidationMessage}
-                validationMessages={EmailErrorMessages}
                 autoFocus={true}
               />,
             ]}
@@ -85,6 +99,9 @@ export function Step1() {
         break;
       case "EmailError":
         [requestState, statusText] = [RequestState.ReceivedError, EmailErrorMessages[response.errorCode]];
+        break;
+      case "EmailIsTheSameError":
+        [requestState, statusText] = [RequestState.ReceivedError, EmailIsTheSameErrorMessage];
         break;
       case "ProfileNotFoundError":
         [requestState, statusText] = [RequestState.ReceivedError, "N-am găsit profilul"];

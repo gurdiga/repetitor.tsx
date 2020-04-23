@@ -39,11 +39,6 @@ export type Unpromise<T> = T extends (infer U)[] ? U : T extends Promise<infer U
 export type ServerResponse = Unpromise<ReturnType<typeof runScenario>>;
 export type ServerResponseSimulator = (value: ServerResponse) => void;
 
-interface TestCaseDetails {
-  serverResponse: ServerResponse;
-  statusText: string;
-}
-
 export function expectProps<C extends React.FunctionComponent<any>>(
   subject: string,
   element: JSX.Element | Wrapper<C>,

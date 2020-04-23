@@ -3,7 +3,6 @@ import {logError} from "backend/src/Utils/Logging";
 import {genRandomString} from "backend/src/Utils/StringUtils";
 import {
   EmailChangeConfirmed,
-  EmailChangeRequest,
   EmailChangeTokenUnrecognizedError,
   EmailChangeTokenVerified,
   EMAIL_CHANGE_TOKEN_LENGTH,
@@ -16,9 +15,9 @@ export const EMAIL_CHANGE_TOKEN_EXPIRATION_TIME = EMAIL_CHANGE_REQUEST_EXPIRATIO
 
 export async function registerEmailChangeRequest(
   userId: number,
-  emailChangeRequest: EmailChangeRequest
+  currentEmail: string,
+  newEmail: string
 ): Promise<RequestCreated | DbError> {
-  const {currentEmail, newEmail} = emailChangeRequest;
   const token = genRandomString(EMAIL_CHANGE_TOKEN_LENGTH);
   const timestamp = Date.now();
 

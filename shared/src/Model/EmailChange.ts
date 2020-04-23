@@ -1,10 +1,14 @@
-import {validateWithRules, PredicateFn, UserValue, ValidationMessages} from "shared/src/Utils/Validation";
-import {EmailValidationRules, EmailError} from "shared/src/Model/Email";
+import {EmailError, EmailValidationRules} from "shared/src/Model/Email";
 import {EmailChangeStep1Input} from "shared/src/Scenarios/EmailChangeStep1";
 import {EmailChangeStep2Input} from "shared/src/Scenarios/EmailChangeStep2";
+import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/src/Utils/Validation";
 
 export type EmailChangeConfirmationRequestSent = {
   kind: "EmailChangeConfirmationRequestSent";
+};
+
+export type EmailIsTheSameError = {
+  kind: "EmailIsTheSameError";
 };
 
 export type EmailChangeRequest = {
@@ -21,7 +25,7 @@ export type RequestCreated = {
 export function makeEmailChangeRequest(
   input: EmailChangeStep1Input,
   currentEmail: string
-): EmailChangeRequest | EmailError {
+): EmailChangeRequest | EmailError | EmailIsTheSameError {
   const newEmailResult = validateWithRules(input.newEmail, EmailValidationRules);
 
   if (newEmailResult.kind === "Invalid") {
@@ -31,9 +35,17 @@ export function makeEmailChangeRequest(
     };
   }
 
+  const newEmail = newEmailResult.value;
+
+  if (currentEmail === newEmail) {
+    return {
+      kind: "EmailIsTheSameError",
+    };
+  }
+
   return {
     kind: "EmailChangeRequest",
-    newEmail: newEmailResult.value,
+    newEmail,
     currentEmail,
   };
 }

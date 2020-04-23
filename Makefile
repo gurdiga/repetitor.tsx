@@ -54,7 +54,7 @@ watch: node_modules
 	| tee >( \
 		while read ln; do \
 			PROJECT_DIR=`basename $$PWD`; \
-			STATUS_LINE=`echo "$${ln}" | grep -Po '(Found \d+ errors)'`; \
+			STATUS_LINE=`echo "$${ln}" | grep -Po '(Found \d+ errors?)'`; \
 			if [ ! "$$STATUS_LINE" ]; then continue; fi; \
 			if [ "$$STATUS_LINE" = "Found 0 errors" ]; then \
 				osascript -e "display notification \"Compilation complete\" with title \"✅ $$PROJECT_DIR\""; \

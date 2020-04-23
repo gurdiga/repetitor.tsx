@@ -22,7 +22,8 @@ export async function EmailChangeStep1(input: Scenario["Input"], session: UserSe
     return inputValidationResult;
   }
 
-  const registrationResult = await registerEmailChangeRequest(userId, inputValidationResult);
+  const {newEmail} = inputValidationResult;
+  const registrationResult = await registerEmailChangeRequest(userId, currentEmail, newEmail);
 
   if (registrationResult.kind !== "RequestCreated") {
     return registrationResult;
@@ -34,7 +35,6 @@ export async function EmailChangeStep1(input: Scenario["Input"], session: UserSe
     return loadProfileResult;
   }
 
-  const {newEmail} = inputValidationResult;
   const {fullName} = loadProfileResult;
   const {token} = registrationResult;
 
