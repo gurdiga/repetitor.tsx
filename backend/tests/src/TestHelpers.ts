@@ -1,7 +1,6 @@
+import {connectionPool, RowSet, runQuery} from "backend/src/Utils/Db";
 import {expect, use} from "chai";
-import {connectionPool, runQuery, RowSet} from "backend/src/Utils/Db";
 import Sinon = require("sinon");
-import {PoolConnection} from "mysql";
 
 use(require("chai-as-promised"));
 use(require("chai-http"));
@@ -11,16 +10,21 @@ process.on("unhandledRejection", (e) => {
 });
 
 connectionPool.config.connectionLimit = 1;
-connectionPool.on("connection", (connection) => {
-  beforeEach(() => {
-    connection.beginTransaction((e) => {
-      if (e) {
-        throw e;
-      }
+
+before(async () => {
+  connectionPool.on("connection", (connection) => {
+    beforeEach(() => {
+      connection.beginTransaction((e) => {
+        if (e) throw e;
+      });
+    });
+
+    afterEach(() => {
+      connection.rollback();
     });
   });
 
-  afterEach(async () => connection.rollback());
+  await q(`SELECT 'Trigger "connection" above to wrap tests in a transation';`);
 });
 
 interface AssertionParams {
