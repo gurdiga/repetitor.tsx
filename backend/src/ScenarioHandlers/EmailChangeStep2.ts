@@ -9,7 +9,7 @@ import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 
 type Scenario = ScenarioRegistry["EmailChangeStep2"];
 
-export async function EmailChangeStep2(input: Scenario["Input"], _session: UserSession): Promise<Scenario["Result"]> {
+export async function EmailChangeStep2(input: Scenario["Input"], session: UserSession): Promise<Scenario["Result"]> {
   const inputValidationResult = makeEmailChangeConfirmation(input);
 
   if (inputValidationResult.kind !== "EmailChangeConfirmation") {
@@ -26,6 +26,11 @@ export async function EmailChangeStep2(input: Scenario["Input"], _session: UserS
   const {userId, newEmail, currentEmail} = tokenVerificationResult;
   const changeEmailResult = await changeEmail(userId, newEmail, currentEmail);
   const profile = (await loadProfile(userId)) as ProfileLoaded; // ASSUMPTION: If changeEmail above succedes, so does loadProfile
+
+  if (session.email) {
+    // When authenticated
+    session.email = newEmail;
+  }
 
   const {fullName} = profile;
 
