@@ -27,6 +27,24 @@ before(async () => {
   await q(`SELECT 'Trigger "connection" above to wrap tests in a transation';`);
 });
 
+after(expectEmptyTables);
+
+async function expectEmptyTables() {
+  const tablesToExclude = ["migrations", "sessions"];
+
+  const tableNames = (await q(`SHOW TABLES`))
+    .map(({Tables_in_repetitor_test: tableName}) => tableName as string)
+    .filter((x) => !tablesToExclude.includes(x));
+
+  const getRowCount = async (tableName: string) => (await q(`SELECT * FROM ${tableName}`)).length;
+  const getTableTuple = async (tableName: string) => [tableName, await getRowCount(tableName)] as [string, number];
+
+  const rowCounts = Object.fromEntries(await Promise.all(tableNames.map(getTableTuple)));
+  const expectedRowCounts = Object.fromEntries(tableNames.map((n) => [n, 0]));
+
+  expect(rowCounts, "some tables have rows after running tests").to.deep.equal(expectedRowCounts);
+}
+
 interface AssertionParams {
   promise: Promise<any>;
   expectedErrorMessage: string;
