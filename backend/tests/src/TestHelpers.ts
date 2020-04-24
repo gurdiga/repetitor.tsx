@@ -11,12 +11,13 @@ process.on("unhandledRejection", (e) => {
 
 connectionPool.config.connectionLimit = 1;
 
-before(async () => {
+before(makeTestsTransactional);
+after(expectEmptyTables);
+
+async function makeTestsTransactional() {
   connectionPool.on("connection", (connection) => {
     beforeEach(() => {
-      connection.beginTransaction((e) => {
-        if (e) throw e;
-      });
+      connection.beginTransaction((e) => expect(e).not.to.exist);
     });
 
     afterEach(() => {
@@ -25,9 +26,7 @@ before(async () => {
   });
 
   await q(`SELECT 'Trigger "connection" above to wrap tests in a transation';`);
-});
-
-after(expectEmptyTables);
+}
 
 async function expectEmptyTables() {
   const tablesToExclude = ["migrations", "sessions"];
@@ -43,27 +42,6 @@ async function expectEmptyTables() {
   const expectedRowCounts = Object.fromEntries(tableNames.map((n) => [n, 0]));
 
   expect(rowCounts, "some tables have rows after running tests").to.deep.equal(expectedRowCounts);
-}
-
-interface AssertionParams {
-  promise: Promise<any>;
-  expectedErrorMessage: string;
-}
-
-export async function assertRejectedPromise(params: AssertionParams): Promise<void> {
-  const {promise, expectedErrorMessage} = params;
-  let coughtException = false;
-
-  try {
-    await promise;
-  } catch (error) {
-    coughtException = true;
-    expect(error.message).to.equal(expectedErrorMessage);
-  }
-
-  if (!coughtException) {
-    expect.fail(`Promise NOT rejected with "${expectedErrorMessage}"`);
-  }
 }
 
 export type Stub<T extends (...args: any) => any> = Sinon.SinonStub<Parameters<T>, ReturnType<T>>;
@@ -85,7 +63,7 @@ export function stubExport<T extends any>(
   });
 }
 
-// Run ad-hoc queries
+// For misc ad-hoc queries.
 export async function q(sql: string): Promise<any[]> {
   const result = (await runQuery({sql, params: []})) as RowSet;
 
