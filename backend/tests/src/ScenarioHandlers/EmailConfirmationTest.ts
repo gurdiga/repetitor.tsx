@@ -1,10 +1,10 @@
-import {expect} from "chai";
-import {stubExport, q} from "backend/tests/src/TestHelpers";
-import * as EmailUtils from "backend/src/Utils/EmailUtils";
-import {UserSession} from "shared/src/Model/UserSession";
 import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
-import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
+import * as EmailUtils from "backend/src/Utils/EmailUtils";
+import {q, stubExport} from "backend/tests/src/TestHelpers";
+import {expect} from "chai";
+import {UserSession} from "shared/src/Model/UserSession";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 
 describe("EmailConfirmation", () => {
   const session: UserSession = {userId: undefined};
