@@ -25,11 +25,13 @@ async function makeTestsTransactional() {
     });
   });
 
-  await q(`SELECT 'Trigger "connection" above to wrap tests in a transation';`);
+  await q(`SELECT 'Trigger "connection" above to wrap tests in a transaction';`);
 }
 
 async function expectEmptyTables() {
   const tablesToExclude = ["migrations", "sessions"];
+
+  await q(`TRUNCATE sessions`);
 
   const tableNames = (await q(`SHOW TABLES`))
     .map(({Tables_in_repetitor_test: tableName}) => tableName as string)
