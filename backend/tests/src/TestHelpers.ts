@@ -4,6 +4,7 @@ import Sinon = require("sinon");
 
 use(require("chai-as-promised"));
 use(require("chai-http"));
+use(require("sinon-chai"));
 
 process.on("unhandledRejection", (e) => {
   throw e;
