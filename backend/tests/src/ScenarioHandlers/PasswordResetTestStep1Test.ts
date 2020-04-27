@@ -1,10 +1,10 @@
-import {expect} from "chai";
 import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
-import Sinon = require("sinon");
-import {Stub} from "backend/tests/src/TestHelpers";
 import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
+import {Stub} from "backend/tests/src/TestHelpers";
+import {expect} from "chai";
+import Sinon = require("sinon");
 
 describe("PasswordResetStep1", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
