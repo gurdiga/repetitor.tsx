@@ -103,9 +103,6 @@ export function Step1(props: Props) {
       case "EmailIsTheSameError":
         [requestState, statusText] = [RequestState.ReceivedError, EmailIsTheSameErrorMessage];
         break;
-      case "ProfileNotFoundError":
-        [requestState, statusText] = [RequestState.ReceivedError, "N-am găsit profilul"];
-        break;
       case "NotAuthenticatedError":
         [requestState, statusText] = [
           RequestState.ReceivedError,

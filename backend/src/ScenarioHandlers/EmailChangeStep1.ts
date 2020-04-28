@@ -3,6 +3,7 @@ import {EMAIL_CHANGE_REQUEST_EXPIRATION_HOURS, registerEmailChangeRequest} from 
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
 import {makeEmailChangeRequest} from "shared/src/Model/EmailChange";
+import {ProfileLoaded} from "shared/src/Model/Profile";
 import {UserSession} from "shared/src/Model/UserSession";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {PagePath} from "shared/src/Utils/PagePath";
@@ -29,13 +30,7 @@ export async function EmailChangeStep1(input: Scenario["Input"], session: UserSe
     return registrationResult;
   }
 
-  const loadProfileResult = await loadProfile(userId);
-
-  if (loadProfileResult.kind !== "ProfileLoaded") {
-    return loadProfileResult;
-  }
-
-  const {fullName} = loadProfileResult;
+  const {fullName} = (await loadProfile(userId)) as ProfileLoaded; // ASSUMPTION: profile exists
   const {token} = registrationResult;
 
   sendEmailChangeConfirmationRequestMessage(newEmail, fullName, token);
