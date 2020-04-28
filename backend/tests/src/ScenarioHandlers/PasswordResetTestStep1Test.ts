@@ -1,7 +1,7 @@
 import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
-import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
+import {getPasswordResetTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
 import {Stub} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import Sinon = require("sinon");
@@ -39,7 +39,7 @@ describe("PasswordResetStep1", () => {
     sendEmailStub.resetHistory(); // ignore the registration email
 
     expect(await PasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
-    expect(await getTokenForEmail(email), "token created").to.exist;
+    expect(await getPasswordResetTokenForEmail(email), "token created").to.exist;
 
     const {args} = sendEmailStub.firstCall;
 

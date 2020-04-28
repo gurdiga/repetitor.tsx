@@ -167,7 +167,7 @@ describe("EmailChange", () => {
         result = await EmailChangeStep2({token: currentToken}, session);
       });
 
-      it("records the email change", async () => {
+      it("does the work", async () => {
         const tokens = await getCurrentEmailChangeRequestTokens();
         expect(tokens).not.to.include(expiredToken, "purges the expired token");
         expect(tokens).not.to.include(currentToken, "deletes the verified token");

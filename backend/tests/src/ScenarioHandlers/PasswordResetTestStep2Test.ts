@@ -1,16 +1,15 @@
-import {expect} from "chai";
-import {Stub} from "backend/tests/src/TestHelpers";
-import * as EmailUtils from "backend/src/Utils/EmailUtils";
-import Sinon = require("sinon");
+import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/AccountPersistence";
+import {Login} from "backend/src/ScenarioHandlers/Login";
+import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
 import {PasswordResetStep2} from "backend/src/ScenarioHandlers/PasswordResetStep2";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
-import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
-import {runQuery, RowSet} from "backend/src/Utils/Db";
-import {getTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
-import {TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/AccountPersistence";
+import * as EmailUtils from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
-import {Login} from "backend/src/ScenarioHandlers/Login";
+import {getPasswordResetTokenForEmail} from "backend/tests/src/ScenarioHandlers/Helpers";
+import {q, Stub} from "backend/tests/src/TestHelpers";
+import {expect} from "chai";
 import {UserSession} from "shared/src/Model/UserSession";
+import Sinon = require("sinon");
 
 describe("PasswordResetStep2", () => {
   let sendEmailStub: Stub<typeof EmailUtils.sendEmail>;
@@ -33,7 +32,7 @@ describe("PasswordResetStep2", () => {
       await insertExpiredToken(expiredToken);
       expect(await doesTokenExist(expiredToken)).to.be.true;
 
-      token = await getTokenForEmail(email);
+      token = await getPasswordResetTokenForEmail(email);
       expect(token).to.exist;
 
       sendEmailStub.reset(); // ignore emails from TutorRegistration and TutorPasswordResetStep1
@@ -67,26 +66,20 @@ describe("PasswordResetStep2", () => {
     async function insertExpiredToken(token: string): Promise<void> {
       const timestamp = Date.now() - TOKEN_EXPIRATION_TIME - 100;
 
-      await runQuery({
-        sql: `
-              INSERT INTO passsword_reset_tokens (user_id, token, timestamp)
-              VALUES(?, ?, ?)
-             `,
-        params: [42, token, timestamp],
-      });
+      await q(`
+        INSERT INTO passsword_reset_tokens (user_id, token, timestamp)
+        VALUES(42, "${token}", ${timestamp})
+      `);
     }
 
     async function doesTokenExist(token: string): Promise<boolean> {
-      const result = (await runQuery({
-        sql: `
-                SELECT 1
-                FROM passsword_reset_tokens
-                WHERE token = ?
-              `,
-        params: [token],
-      })) as RowSet;
+      const rows = await q(`
+        SELECT 1
+        FROM passsword_reset_tokens
+        WHERE token = "${token}"
+      `);
 
-      return result.rows.length > 0;
+      return rows.length > 0;
     }
   });
 

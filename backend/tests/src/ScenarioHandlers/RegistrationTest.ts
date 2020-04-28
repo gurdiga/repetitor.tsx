@@ -1,12 +1,12 @@
-import {expect} from "chai";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
-import {UserSession} from "shared/src/Model/UserSession";
-import {stubExport} from "backend/tests/src/TestHelpers";
-import {RowSet, runQuery, DataRow} from "backend/src/Utils/Db";
+import {DataRow} from "backend/src/Utils/Db";
 import * as EmailUtils from "backend/src/Utils/EmailUtils";
-import {hashString} from "backend/src/Utils/StringUtils";
-import {AccountCreationSuccess} from "shared/src/Model/Account";
 import * as Logging from "backend/src/Utils/Logging";
+import {hashString} from "backend/src/Utils/StringUtils";
+import {q, stubExport} from "backend/tests/src/TestHelpers";
+import {expect} from "chai";
+import {AccountCreationSuccess} from "shared/src/Model/Account";
+import {UserSession} from "shared/src/Model/UserSession";
 
 describe("Registration", () => {
   stubExport(EmailUtils, "sendEmail", before, after);
@@ -45,8 +45,7 @@ describe("Registration", () => {
       });
 
       it("adds the appropriate row to the users table", async () => {
-        const {rows} = (await runQuery({sql: "SELECT * FROM users", params: []})) as RowSet;
-        row = rows[0];
+        const [row] = await q("SELECT * FROM users");
 
         if (!row) {
           expect(row, "row in the table").to.exist;
