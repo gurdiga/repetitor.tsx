@@ -99,7 +99,7 @@ function renderStep1(props: PageProps) {
     let statusText: string;
 
     switch (response.kind) {
-      case "TutorPasswordResetEmailSent":
+      case "PasswordResetEmailSent":
         [requestState, statusText] = [
           RequestState.ReceivedSuccess,
           `Verificați cutia poștală ${fields.email.value}. Am trimis un mesaj cu instrucțiuni de resetare a parolei.`,

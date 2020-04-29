@@ -1,5 +1,3 @@
-import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {makePasswordResetRequestFromInput} from "shared/src/Model/PasswordResetStep1";
 import {
   checkIfEmailExists,
   createPasswordResetToken,
@@ -7,6 +5,8 @@ import {
 } from "backend/src/Persistence/AccountPersistence";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
+import {makePasswordResetRequestFromInput} from "shared/src/Model/PasswordResetStep1";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["PasswordResetStep1"];
@@ -14,7 +14,7 @@ type Scenario = ScenarioRegistry["PasswordResetStep1"];
 export async function PasswordResetStep1(input: Scenario["Input"]): Promise<Scenario["Result"]> {
   const result = makePasswordResetRequestFromInput(input);
 
-  if (result.kind !== "TutorPasswordResetRequest") {
+  if (result.kind !== "PasswordResetRequest") {
     return result;
   }
 
@@ -34,12 +34,12 @@ export async function PasswordResetStep1(input: Scenario["Input"]): Promise<Scen
 
   const {token} = resetTokenCreationResult;
 
-  sendTutorPasswordResetEmail(email, fullName, token);
+  sendPasswordResetEmail(email, fullName, token);
 
-  return {kind: "TutorPasswordResetEmailSent"};
+  return {kind: "PasswordResetEmailSent"};
 }
 
-function sendTutorPasswordResetEmail(email: string, fullName: string, token: string): void {
+function sendPasswordResetEmail(email: string, fullName: string, token: string): void {
   const expirationTime =
     PASSWORD_RESET_EXPIRATION_HOURS === 1 ? "într-o oră" : `în ${PASSWORD_RESET_EXPIRATION_HOURS} ore`;
 

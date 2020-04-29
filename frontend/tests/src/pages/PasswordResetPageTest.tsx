@@ -1,18 +1,18 @@
+import {expect} from "chai";
 import {shallow} from "enzyme";
+import {PasswordResetPage} from "frontend/pages/resetare-parola/src/PasswordResetPage";
 import {Form} from "frontend/shared/src/Components/Form";
+import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
-import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
-import * as React from "react";
-import {PasswordResetPage} from "frontend/pages/resetare-parola/src/PasswordResetPage";
-import {expect} from "chai";
-import Sinon = require("sinon");
-import {Stub, Wrapper, expectProps, expectToRenderSnapshot, Comp} from "frontend/tests/src/TestHelpers";
 import {PageLayout} from "frontend/shared/src/PageLayout";
+import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
+import {Comp, expectProps, expectToRenderSnapshot, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
+import * as React from "react";
 import {EmailValidationRules} from "shared/src/Model/Email";
+import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {ValidatedValue} from "shared/src/Utils/Validation";
-import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
-import {PasswordValidationRules, PasswordErrorMessages} from "shared/src/Model/Password";
+import Sinon = require("sinon");
 
 describe("<PasswordResetPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
@@ -83,7 +83,7 @@ describe("<PasswordResetPage/>", () => {
 
           context("when the email is valid", () => {
             beforeEach(() => {
-              runScenarioStub.resolves({kind: "TutorPasswordResetEmailSent"});
+              runScenarioStub.resolves({kind: "PasswordResetEmailSent"});
               submitEmailValue({
                 value: "email@example.com",
                 isValid: true,
@@ -134,9 +134,7 @@ describe("<PasswordResetPage/>", () => {
 
       context("happy path", () => {
         beforeEach(async () => {
-          runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({
-            kind: "TutorPasswordResetEmailSent",
-          });
+          runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({kind: "PasswordResetEmailSent"});
           await submitValidForm();
 
           expect(runScenarioStub.called, "called runScenario").to.be.true;

@@ -25,7 +25,7 @@ describe("PasswordReset", () => {
         await Registration({fullName: "Joe DOE", email, password: "secret"}, {});
         sendEmailStub.resetHistory(); // ignore the registration email
 
-        expect(await PasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
+        expect(await PasswordResetStep1({email})).to.deep.equal({kind: "PasswordResetEmailSent"});
 
         const token = await getPasswordResetTokenForEmail(email);
         expect(token, "token created").to.exist;
@@ -78,7 +78,7 @@ describe("PasswordReset", () => {
         token = await getPasswordResetTokenForEmail(email);
         expect(token).to.exist;
 
-        sendEmailStub.reset(); // ignore emails from TutorRegistration and TutorPasswordResetStep1
+        sendEmailStub.reset(); // ignore emails from Registration and PasswordResetStep1
         session = {};
       });
 
