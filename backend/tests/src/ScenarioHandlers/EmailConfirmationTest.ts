@@ -45,15 +45,22 @@ describe("EmailConfirmation", () => {
     }
   });
 
-  it("validates the token", async () => {
-    const result = await EmailConfirmation({token: ""}, session);
-
-    expect(result).to.deep.equal({kind: "EmailConfirmationTokenValidationError", errorCode: "REQUIRED"});
-  });
-
-  it("tells when the token is not recognized", async () => {
-    const result = await EmailConfirmation({token: "magic42"}, session);
-
-    expect(result).to.deep.equal({kind: "EmailConfirmationTokenUnrecognizedError"});
+  describe("unhappy paths", () => {
+    Object.entries({
+      "when the token is missing": {
+        input: {token: ""},
+        expectedResult: {kind: "EmailConfirmationTokenValidationError", errorCode: "REQUIRED"},
+      },
+      "when the token is not recognized": {
+        input: {token: "magic42"},
+        expectedResult: {kind: "EmailConfirmationTokenUnrecognizedError"},
+      },
+    }).forEach(([description, {input, expectedResult}]) => {
+      context(description, () => {
+        it("reports the failure", async () => {
+          expect(await EmailConfirmation(input, session)).to.deep.equal(expectedResult);
+        });
+      });
+    });
   });
 });
