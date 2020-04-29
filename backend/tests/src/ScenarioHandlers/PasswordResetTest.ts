@@ -8,6 +8,7 @@ import {requireEnvVar} from "backend/src/Utils/Env";
 import {q, Stub} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import {UserSession} from "shared/src/Model/UserSession";
+import {PagePath} from "shared/src/Utils/PagePath";
 import Sinon = require("sinon");
 
 describe("PasswordReset", () => {
@@ -25,13 +26,12 @@ describe("PasswordReset", () => {
         sendEmailStub.resetHistory(); // ignore the registration email
 
         expect(await PasswordResetStep1({email})).to.deep.equal({kind: "TutorPasswordResetEmailSent"});
-        expect(await getPasswordResetTokenForEmail(email), "token created").to.exist;
 
-        const {args} = sendEmailStub.firstCall;
+        const token = await getPasswordResetTokenForEmail(email);
+        expect(token, "token created").to.exist;
 
-        expect(args[0], "notification email address").to.equal(email);
-        expect(args[1], "notification email subject").to.contain("Resetarea parolei");
-        expect(args[2], "notification email body").to.contain("/resetare-parola?token=");
+        const containsTheMagicLink = Sinon.match(`${requireEnvVar("APP_URL")}/resetare-parola?token=${token}`);
+        expect(sendEmailStub).to.have.been.calledOnceWithExactly(email, "Resetarea parolei", containsTheMagicLink);
       });
     });
 
@@ -90,15 +90,15 @@ describe("PasswordReset", () => {
         expect(await doesTokenExist(token), "deletes the used token").to.be.false;
         expect(await doesTokenExist(expiredToken), "purges expired tokens").to.be.false;
 
-        expect(sendEmailStub.calledOnce, "sends notification email").to.be.true;
+        const containsResetLink = Sinon.match(`${requireEnvVar("APP_URL")}${PagePath.PasswordReset}`);
+        expect(sendEmailStub, "sends notification email").to.have.been.calledOnceWithExactly(
+          email,
+          "Parola dumneavoastră a fost resetată",
+          containsResetLink
+        );
 
-        const {args} = sendEmailStub.firstCall;
-        expect(args[0], "notification email address").to.equal(email);
-        expect(args[1], "notification email subject").to.equal("Parola dumneavoastră a fost resetată");
-        expect(args[2], "notification email body").to.contain(requireEnvVar("APP_URL"));
-
-        expect(session.email).to.equal(email);
-        expect(session.userId).to.exist;
+        expect(session.email, "sets the email on the session").to.equal(email);
+        expect(session.userId, "sets the userId on the session").to.exist;
 
         expect(await Login({email, password: newPassword}, {})).to.deep.equal(
           {kind: "LoginCheckSuccess"},
@@ -152,11 +152,11 @@ describe("PasswordReset", () => {
 
   async function getPasswordResetTokenForEmail(email: string): Promise<string> {
     const [row] = await q(`
-    SELECT passsword_reset_tokens.token
-    FROM users
-    LEFT JOIN passsword_reset_tokens ON passsword_reset_tokens.user_id = users.id
-    WHERE users.email = "${email}"
-  `);
+      SELECT passsword_reset_tokens.token
+      FROM users
+      LEFT JOIN passsword_reset_tokens ON passsword_reset_tokens.user_id = users.id
+      WHERE users.email = "${email}"
+    `);
 
     return row?.token;
   }
