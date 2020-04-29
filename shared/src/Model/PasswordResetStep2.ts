@@ -1,7 +1,7 @@
+import {PasswordError, PasswordValidationRules} from "shared/src/Model/Password";
 import {DataProps} from "shared/src/Model/Utils";
 import {PasswordResetStep2Input} from "shared/src/Scenarios/PasswordResetStep2";
-import {UserValue, PredicateFn, ValidationMessages, validateWithRules} from "shared/src/Utils/Validation";
-import {PasswordValidationRules, PasswordError} from "shared/src/Model/Password";
+import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/src/Utils/Validation";
 
 export interface PasswordResetStep2Request {
   kind: "PasswordResetStep2Request";
@@ -26,7 +26,7 @@ export const PasswordResetTokenValidationRules: Record<PasswordResetTokenValidat
   REQUIRED: (text: UserValue) => !!text && text.trim().length > 0,
 };
 
-export const tokenErrorMessages: ValidationMessages<typeof PasswordResetTokenValidationRules> = {
+export const TokenErrorMessages: ValidationMessages<typeof PasswordResetTokenValidationRules> = {
   REQUIRED: "Tokenul de resetare a parolei lipsește",
 };
 

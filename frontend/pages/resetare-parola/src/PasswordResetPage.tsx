@@ -10,9 +10,9 @@ import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
 import {PasswordResetStep1PropName} from "shared/src/Model/PasswordResetStep1";
 import {
-  PasswordResetTokenValidationRules,
-  tokenErrorMessages,
   PasswordResetStep2PropName,
+  PasswordResetTokenValidationRules,
+  TokenErrorMessages,
 } from "shared/src/Model/PasswordResetStep2";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
@@ -204,7 +204,7 @@ function renderStep2(tokenString: string) {
         [requestState, statusText] = [RequestState.ReceivedError, PasswordErrorMessages[response.errorCode]];
         break;
       case "PasswordResetTokenError":
-        [requestState, statusText] = [RequestState.ReceivedError, tokenErrorMessages[response.errorCode]];
+        [requestState, statusText] = [RequestState.ReceivedError, TokenErrorMessages[response.errorCode]];
         break;
       case "DbError":
         [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
