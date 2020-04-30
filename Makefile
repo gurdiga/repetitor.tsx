@@ -50,17 +50,20 @@ build: node_modules
 cc: clean build
 
 watch: node_modules
-	@~/.nvm/nvm-exec node_modules/.bin/tsc --build -v -w \
+	@~/.nvm/nvm-exec node_modules/.bin/tsc \
+		--build \
+		--watch \
+		--preserveWatchOutput \
 	| tee >( \
-		while read ln; do \
-			PROJECT_DIR=`basename $$PWD`; \
-			STATUS_LINE=`echo "$${ln}" | grep -Po '(Found \d+ errors?)'`; \
-			if [ ! "$$STATUS_LINE" ]; then continue; fi; \
-			if [ "$$STATUS_LINE" = "Found 0 errors" ]; then \
-				osascript -e "display notification \"Compilation complete\" with title \"✅ $$PROJECT_DIR\""; \
-			else \
-				osascript -e "display notification \"Compilation failed: $$STATUS_LINE\" with title \"❌ $$PROJECT_DIR\""; \
-			fi; \
+		while read line; do
+			PROJECT_DIR=`basename $$PWD`
+			STATUS_LINE=`echo "$${line}" | grep -Po '(Found \d+ errors?)'`
+			if [ ! "$$STATUS_LINE" ]; then continue; fi
+			if [ "$$STATUS_LINE" = "Found 0 errors" ]; then
+				osascript -e "display notification \"Compilation complete\" with title \"✅ $$PROJECT_DIR\""
+			else
+				osascript -e "display notification \"Compilation failed: $$STATUS_LINE\" with title \"❌ $$PROJECT_DIR\""
+			fi
 		done \
 	)
 
