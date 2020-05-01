@@ -1,12 +1,12 @@
-import {Request, Response, NextFunction} from "express";
+import {isTestEnvironment, requireEnvVar} from "backend/src/Utils/Env";
+import {NextFunction, Request, Response} from "express";
 import * as Rollbar from "rollbar";
-import {requireEnvVar, isTestEnvironment} from "backend/src/Utils/Env";
 
 const rollbar = new Rollbar({
   accessToken: requireEnvVar("APP_ROLLBAR_POST_SERVER_ITEM_TOKEN"),
   captureUncaught: true,
   captureUnhandledRejections: true,
-  codeVersion: "TODO",
+  codeVersion: requireEnvVar("HEROKU_SLUG_COMMIT"),
   environment: requireEnvVar("NODE_ENV"),
   verbose: true,
 });
