@@ -8,12 +8,12 @@ import {QueryStringParams} from "frontend/shared/src/Utils/QueryStringParams";
 import * as React from "react";
 import {EmailErrorMessages, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordErrorMessages, PasswordValidationRules} from "shared/src/Model/Password";
-import {PasswordResetStep1PropName} from "shared/src/Model/PasswordResetStep1";
 import {
+  PasswordResetStep1PropName,
   PasswordResetStep2PropName,
   PasswordResetTokenValidationRules,
   TokenErrorMessages,
-} from "shared/src/Model/PasswordResetStep2";
+} from "shared/src/Model/PasswordReset";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PageProps} from "shared/src/Utils/PageProps";

@@ -5,7 +5,7 @@ import {
 } from "backend/src/Persistence/AccountPersistence";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
-import {makePasswordResetRequestFromInput} from "shared/src/Model/PasswordResetStep1";
+import {makePasswordResetRequestFromInput} from "shared/src/Model/PasswordReset";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {PagePath} from "shared/src/Utils/PagePath";
 
@@ -14,7 +14,7 @@ type Scenario = ScenarioRegistry["PasswordResetStep1"];
 export async function PasswordResetStep1(input: Scenario["Input"]): Promise<Scenario["Result"]> {
   const result = makePasswordResetRequestFromInput(input);
 
-  if (result.kind !== "PasswordResetRequest") {
+  if (result.kind !== "TutorPasswordResetStep1") {
     return result;
   }
 

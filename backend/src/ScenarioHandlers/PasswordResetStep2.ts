@@ -1,10 +1,10 @@
-import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {makePasswordResetStep2RequestFromInput} from "shared/src/Model/PasswordResetStep2";
-import {verifyToken, deleteToken, resetPassword} from "backend/src/Persistence/AccountPersistence";
-import {getStorablePassword} from "backend/src/Utils/StringUtils";
+import {deleteToken, resetPassword, verifyToken} from "backend/src/Persistence/AccountPersistence";
 import {sendEmail} from "backend/src/Utils/EmailUtils";
 import {requireEnvVar} from "backend/src/Utils/Env";
-import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
+import {getStorablePassword} from "backend/src/Utils/StringUtils";
+import {makePasswordResetStep2RequestFromInput} from "shared/src/Model/PasswordReset";
+import {initializeUserSession, UserSession} from "shared/src/Model/UserSession";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["PasswordResetStep2"];

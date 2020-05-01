@@ -1,7 +1,44 @@
+import {EmailError, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordError, PasswordValidationRules} from "shared/src/Model/Password";
 import {DataProps} from "shared/src/Model/Utils";
+import {PasswordResetStep1Input} from "shared/src/Scenarios/PasswordResetStep1";
 import {PasswordResetStep2Input} from "shared/src/Scenarios/PasswordResetStep2";
 import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/src/Utils/Validation";
+
+export interface PasswordResetStep1 {
+  kind: "TutorPasswordResetStep1";
+  email: string;
+}
+
+export type PasswordResetStep1PropName = keyof DataProps<PasswordResetStep1>;
+
+export interface PasswordResetEmailSent {
+  kind: "PasswordResetEmailSent";
+}
+
+export type EmailExists = {
+  kind: "EmailExists";
+  userId: number;
+  fullName: string;
+};
+
+export type PasswordResetToken = {
+  kind: "PasswordResetToken";
+  token: string;
+};
+
+export function makePasswordResetRequestFromInput(input: PasswordResetStep1Input): PasswordResetStep1 | EmailError {
+  const emailValidationResult = validateWithRules(input.email, EmailValidationRules);
+
+  if (emailValidationResult.kind === "Invalid") {
+    return {kind: "EmailError", errorCode: emailValidationResult.validationErrorCode};
+  }
+
+  return {
+    kind: "TutorPasswordResetStep1",
+    email: emailValidationResult.value,
+  };
+}
 
 export interface PasswordResetStep2Request {
   kind: "PasswordResetStep2Request";

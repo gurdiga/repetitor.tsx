@@ -1,10 +1,10 @@
+import {PasswordError} from "shared/src/Model/Password";
 import {
+  PasswordResetSuccess,
   PasswordResetTokenError,
   PasswordResetTokenUnknownError,
-  PasswordResetSuccess,
-} from "shared/src/Model/PasswordResetStep2";
+} from "shared/src/Model/PasswordReset";
 import {SystemError} from "shared/src/Model/Utils";
-import {PasswordError} from "shared/src/Model/Password";
 
 export interface PasswordResetStep2Input {
   token: string | undefined;
