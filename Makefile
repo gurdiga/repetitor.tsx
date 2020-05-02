@@ -9,7 +9,7 @@ t: test
 
 test-backend: node_modules
 	@set -e
-	printf "\nRunning backend tests:\n"
+	echo -e "\nRunning backend tests:"
 	source .env.test
 	DEBUG=app:none \
 	TS_NODE_PROJECT=backend/tests/tsconfig.json \
@@ -29,7 +29,7 @@ tb: test-backend
 
 test-frontend: node_modules
 	@set -e
-	printf "\nRunning frontend tests:\n"
+	echo -e "\nRunning frontend tests:"
 	TS_NODE_PROJECT=frontend/tests/tsconfig.json \
 	TS_NODE_TRANSPILE_ONLY=true \
 	TS_NODE_SCOPE=true \
