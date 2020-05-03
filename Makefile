@@ -56,13 +56,12 @@ watch: node_modules
 		--preserveWatchOutput \
 	| tee >( \
 		while read line; do
-			PROJECT_DIR=`basename $$PWD`
-			STATUS_LINE=`echo "$${line}" | grep -Po '(Found \d+ errors?)'`
+			STATUS_LINE=`echo $$line | grep -Po 'Found \d+ errors?'`
 			if [ ! "$$STATUS_LINE" ]; then continue; fi
 			if [ "$$STATUS_LINE" = "Found 0 errors" ]; then
-				osascript -e "display notification \"Compilation complete\" with title \"✅ $$PROJECT_DIR\""
+				osascript -e "display notification \"Compilation complete\" with title \"✅ repetitor.tsx\""
 			else
-				osascript -e "display notification \"Compilation failed: $$STATUS_LINE\" with title \"❌ $$PROJECT_DIR\""
+				osascript -e "display notification \"Compilation failed: $$STATUS_LINE\" with title \"❌ repetitor.tsx\""
 			fi
 		done \
 	)
