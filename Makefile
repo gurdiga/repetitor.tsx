@@ -124,6 +124,7 @@ $(NODE_BINARY_PATH):
 
 pre-commit:
 	TEST_EMAIL_UTILS=yes \
+	TEST_FILE_STORAGE=yes \
 	time make --no-print-directory lint clean build test
 pc: pre-commit
 

@@ -1,5 +1,5 @@
 build/
 node_modules/
-backend/db/migrations/*.sql.migrated
+google-cloud-adc.json
 .env.test
 .env.production
