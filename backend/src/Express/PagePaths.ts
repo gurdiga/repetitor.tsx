@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import {AppRoot} from "backend/src/Utils/Express/AppRoot";
+import {AppRoot} from "backend/src/Express/AppRoot";
 
 const RelativePagesRoot = "frontend/pages";
 const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;

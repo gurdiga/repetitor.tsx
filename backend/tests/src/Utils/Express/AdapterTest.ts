@@ -3,7 +3,7 @@ import {
   VENDOR_MODULE_PREFIX,
   VersionedVendorModulePaths,
   VendorModulesWebPaths,
-} from "backend/src/Utils/Express/VendorModules";
+} from "backend/src/Express/VendorModules";
 import * as chai from "chai";
 import {expect} from "chai";
 import ChaiHttp = require("chai-http");

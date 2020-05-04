@@ -1,4 +1,4 @@
-import {transporter} from "backend/src/Utils/EmailUtils";
+import {transporter} from "backend/src/EmailUtils";
 
 if (process.env.TEST_EMAIL_UTILS) {
   describe("EmailUtils", () => {

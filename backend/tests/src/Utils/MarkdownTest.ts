@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {parseMarkdown} from "backend/src/Utils/Markdown";
+import {parseMarkdown} from "backend/src/Markdown";
 
 describe("parseMarkdown", () => {
   it("parses markdown and returns HTML", () => {

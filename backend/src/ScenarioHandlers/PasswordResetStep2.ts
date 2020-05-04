@@ -1,7 +1,7 @@
 import {deleteToken, resetPassword, verifyToken} from "backend/src/Persistence/AccountPersistence";
-import {sendEmail} from "backend/src/Utils/EmailUtils";
-import {requireEnvVar} from "backend/src/Utils/Env";
-import {getStorablePassword} from "backend/src/Utils/StringUtils";
+import {sendEmail} from "backend/src/EmailUtils";
+import {requireEnvVar} from "backend/src/Env";
+import {getStorablePassword} from "backend/src/StringUtils";
 import {makePasswordResetStep2RequestFromInput} from "shared/src/Model/PasswordReset";
 import {initializeUserSession, UserSession} from "shared/src/Model/UserSession";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";

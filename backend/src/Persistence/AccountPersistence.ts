@@ -1,6 +1,6 @@
-import {RowSet, runQuery, StatementResult} from "backend/src/Utils/Db";
-import {logError} from "backend/src/Utils/Logging";
-import {genRandomString, StorablePassword} from "backend/src/Utils/StringUtils";
+import {RowSet, runQuery, StatementResult} from "backend/src/Db";
+import {logError} from "backend/src/ErrorLogging";
+import {genRandomString, StorablePassword} from "backend/src/StringUtils";
 import {AccountCreationSuccess, AccountModelError} from "shared/src/Model/Account";
 import {LoginCheckError, LoginCheckInfo, UnknownEmailError} from "shared/src/Model/LoginCheck";
 import {

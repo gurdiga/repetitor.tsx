@@ -1,7 +1,7 @@
 import {checkLoginInfo} from "backend/src/Persistence/AccountPersistence";
 import {makeLoginCkeckFromLoginInput} from "shared/src/Model/LoginCheck";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {hashString} from "backend/src/Utils/StringUtils";
+import {hashString} from "backend/src/StringUtils";
 import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 
 type Scenario = ScenarioRegistry["Login"];

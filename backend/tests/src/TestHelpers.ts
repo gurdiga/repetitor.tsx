@@ -1,4 +1,4 @@
-import {connectionPool, RowSet, runQuery} from "backend/src/Utils/Db";
+import {connectionPool, RowSet, runQuery} from "backend/src/Db";
 import {expect, use} from "chai";
 import Sinon = require("sinon");
 

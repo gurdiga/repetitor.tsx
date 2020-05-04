@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {runScenario} from "backend/src/Utils/ScenarioRunner";
+import {runScenario} from "backend/src/ScenarioRunner";
 
 describe("runScenario", () => {
   const scenarioInput = {};

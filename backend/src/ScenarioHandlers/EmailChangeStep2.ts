@@ -1,7 +1,7 @@
 import {loadProfile} from "backend/src/Persistence/AccountPersistence";
 import {changeEmail, verifyEmailChangeToken} from "backend/src/Persistence/EmailChange";
-import {sendEmail} from "backend/src/Utils/EmailUtils";
-import {requireEnvVar} from "backend/src/Utils/Env";
+import {sendEmail} from "backend/src/EmailUtils";
+import {requireEnvVar} from "backend/src/Env";
 import {makeEmailChangeConfirmation} from "shared/src/Model/EmailChange";
 import {ProfileLoaded} from "shared/src/Model/Profile";
 import {UserSession} from "shared/src/Model/UserSession";

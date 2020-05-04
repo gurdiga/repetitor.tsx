@@ -1,6 +1,6 @@
-import {RowSet, runQuery} from "backend/src/Utils/Db";
-import {logError} from "backend/src/Utils/Logging";
-import {genRandomString} from "backend/src/Utils/StringUtils";
+import {RowSet, runQuery} from "backend/src/Db";
+import {logError} from "backend/src/ErrorLogging";
+import {genRandomString} from "backend/src/StringUtils";
 import {
   EmailChangeConfirmed,
   EmailChangeTokenUnrecognizedError,

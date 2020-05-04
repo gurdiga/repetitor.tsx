@@ -1,8 +1,8 @@
+import {DataRow} from "backend/src/Db";
+import * as EmailUtils from "backend/src/EmailUtils";
+import * as Logging from "backend/src/ErrorLogging";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
-import {DataRow} from "backend/src/Utils/Db";
-import * as EmailUtils from "backend/src/Utils/EmailUtils";
-import * as Logging from "backend/src/Utils/Logging";
-import {hashString} from "backend/src/Utils/StringUtils";
+import {hashString} from "backend/src/StringUtils";
 import {q, stubExport} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import {AccountCreationSuccess} from "shared/src/Model/Account";

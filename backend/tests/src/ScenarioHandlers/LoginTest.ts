@@ -2,7 +2,7 @@ import {expect} from "chai";
 import {Login} from "backend/src/ScenarioHandlers/Login";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {stubExport} from "backend/tests/src/TestHelpers";
-import * as EmailUtils from "backend/src/Utils/EmailUtils";
+import * as EmailUtils from "backend/src/EmailUtils";
 import {UserSession} from "shared/src/Model/UserSession";
 
 describe("Login", () => {

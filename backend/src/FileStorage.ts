@@ -1,5 +1,5 @@
 import {Storage, UploadOptions} from "@google-cloud/storage";
-import {requireEnvVar} from "backend/src/Utils/Env";
+import {requireEnvVar} from "backend/src/Env";
 import * as fs from "fs";
 import {IncomingHttpHeaders} from "http2";
 import * as https from "https";

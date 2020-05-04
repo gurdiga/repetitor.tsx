@@ -1,6 +1,6 @@
 import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
-import * as EmailUtils from "backend/src/Utils/EmailUtils";
+import * as EmailUtils from "backend/src/EmailUtils";
 import {q, stubExport} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import {UserSession} from "shared/src/Model/UserSession";

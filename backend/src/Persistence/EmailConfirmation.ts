@@ -1,7 +1,7 @@
-import {EmailConfirmed, EmailConfirmationTokenUnrecognizedError} from "shared/src/Model/EmailConfirmation";
+import {RowSet, runQuery} from "backend/src/Db";
+import {logError} from "backend/src/ErrorLogging";
+import {EmailConfirmationTokenUnrecognizedError, EmailConfirmed} from "shared/src/Model/EmailConfirmation";
 import {DbError} from "shared/src/Model/Utils";
-import {runQuery, RowSet} from "backend/src/Utils/Db";
-import {logError} from "backend/src/Utils/Logging";
 
 export async function verifyEmailConfirmationToken(
   token: string

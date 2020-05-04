@@ -1,6 +1,6 @@
 import * as expressSession from "express-session";
-import {connectionPool} from "backend/src/Utils/Db";
-import {requireEnvVar} from "backend/src/Utils/Env";
+import {connectionPool} from "backend/src/Db";
+import {requireEnvVar} from "backend/src/Env";
 
 const MySQLSessionStore = require("express-mysql-session")(expressSession);
 const sessionStore = new MySQLSessionStore({}, connectionPool);

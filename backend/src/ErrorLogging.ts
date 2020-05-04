@@ -1,4 +1,4 @@
-import {isTestEnvironment, requireEnvVar} from "backend/src/Utils/Env";
+import {isTestEnvironment, requireEnvVar} from "backend/src/Env";
 import {NextFunction, Request, Response} from "express";
 import * as Rollbar from "rollbar";
 

@@ -1,4 +1,4 @@
-import {downloadFile, uploadFile} from "backend/src/Utils/FileStorage";
+import {downloadFile, uploadFile} from "backend/src/FileStorage";
 import {expect} from "chai";
 import * as fs from "fs";
 

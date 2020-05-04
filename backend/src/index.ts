@@ -1,4 +1,5 @@
-import {requireNumericEnvVar} from "backend/src/Utils/Env";
+import {requireNumericEnvVar} from "backend/src/Env";
+import {errorLoggingMiddleware} from "backend/src/ErrorLogging";
 import {
   handlePost,
   sendPageBundle,
@@ -7,10 +8,9 @@ import {
   sendSharedBundle,
   sendVendorModule,
   SharedBundles,
-} from "backend/src/Utils/Express/Adapter";
-import {session} from "backend/src/Utils/Express/Session";
-import {VENDOR_MODULE_PREFIX} from "backend/src/Utils/Express/VendorModules";
-import {errorLoggingMiddleware} from "backend/src/Utils/Logging";
+} from "backend/src/Express/Adapter";
+import {session} from "backend/src/Express/Session";
+import {VENDOR_MODULE_PREFIX} from "backend/src/Express/VendorModules";
 import * as compression from "compression";
 import * as cors from "cors";
 import * as csurf from "csurf";

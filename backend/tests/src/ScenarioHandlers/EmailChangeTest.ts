@@ -3,9 +3,9 @@ import {EMAIL_CHANGE_TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/EmailC
 import {EmailChangeStep1} from "backend/src/ScenarioHandlers/EmailChangeStep1";
 import {EmailChangeStep2} from "backend/src/ScenarioHandlers/EmailChangeStep2";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
-import * as EmailUtils from "backend/src/Utils/EmailUtils";
-import {requireEnvVar} from "backend/src/Utils/Env";
-import * as StringUtils from "backend/src/Utils/StringUtils";
+import * as EmailUtils from "backend/src/EmailUtils";
+import {requireEnvVar} from "backend/src/Env";
+import * as StringUtils from "backend/src/StringUtils";
 import {q, Stub} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import {AccountCreationSuccess} from "shared/src/Model/Account";

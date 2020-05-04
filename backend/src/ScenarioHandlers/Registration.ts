@@ -1,10 +1,10 @@
-import {getStorablePassword, genRandomString} from "backend/src/Utils/StringUtils";
+import {getStorablePassword, genRandomString} from "backend/src/StringUtils";
 import {createTutor} from "backend/src/Persistence/AccountPersistence";
 import {makeRegistrationRequestFromInput} from "shared/src/Model/Account";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
-import {sendEmail} from "backend/src/Utils/EmailUtils";
-import {requireEnvVar} from "backend/src/Utils/Env";
+import {sendEmail} from "backend/src/EmailUtils";
+import {requireEnvVar} from "backend/src/Env";
 import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["Registration"];

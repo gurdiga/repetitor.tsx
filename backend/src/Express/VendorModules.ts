@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import {AppRoot} from "backend/src/Utils/Express/AppRoot";
+import {AppRoot} from "backend/src/Express/AppRoot";
 
 export const VENDOR_MODULE_PREFIX = "/vendor_modules/";
 

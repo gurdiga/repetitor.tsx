@@ -3,8 +3,8 @@ import {
   createPasswordResetToken,
   PASSWORD_RESET_EXPIRATION_HOURS,
 } from "backend/src/Persistence/AccountPersistence";
-import {sendEmail} from "backend/src/Utils/EmailUtils";
-import {requireEnvVar} from "backend/src/Utils/Env";
+import {sendEmail} from "backend/src/EmailUtils";
+import {requireEnvVar} from "backend/src/Env";
 import {makePasswordResetRequestFromInput} from "shared/src/Model/PasswordReset";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {PagePath} from "shared/src/Utils/PagePath";
