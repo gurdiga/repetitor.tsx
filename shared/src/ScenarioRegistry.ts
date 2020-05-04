@@ -1,4 +1,5 @@
 import {UserSession} from "shared/src/Model/UserSession";
+import {AvatarUploadInput, AvatarUploadResult} from "shared/src/Scenarios/AvatarUpload";
 import {EmailChangeStep1Input, EmailChangeStep1Result} from "shared/src/Scenarios/EmailChangeStep1";
 import {EmailChangeStep2Input, EmailChangeStep2Result} from "shared/src/Scenarios/EmailChangeStep2";
 import {EmailConfirmationInput, EmailConfirmationResult} from "shared/src/Scenarios/EmailConfirmation";
@@ -55,6 +56,10 @@ export interface ScenarioRegistry {
   ProfileUpdate: {
     Input: ProfileUpdateInput;
     Result: ProfileUpdateResult;
+  };
+  AvatarUpload: {
+    Input: AvatarUploadInput;
+    Result: AvatarUploadResult;
   };
 }
 

@@ -1,15 +1,16 @@
-import {TestScenario} from "backend/src/ScenarioHandlers/TestScenario";
-import {Login} from "backend/src/ScenarioHandlers/Login";
-import {Logout} from "backend/src/ScenarioHandlers/Logout";
-import {Registration} from "backend/src/ScenarioHandlers/Registration";
-import {ScenarioHandler, ScenarioName} from "shared/src/ScenarioRegistry";
-import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
-import {PasswordResetStep2} from "backend/src/ScenarioHandlers/PasswordResetStep2";
-import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
-import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
-import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
+import {AvatarUpload} from "backend/src/ScenarioHandlers/AvatarUpload";
 import {EmailChangeStep1} from "backend/src/ScenarioHandlers/EmailChangeStep1";
 import {EmailChangeStep2} from "backend/src/ScenarioHandlers/EmailChangeStep2";
+import {EmailConfirmation} from "backend/src/ScenarioHandlers/EmailConfirmation";
+import {Login} from "backend/src/ScenarioHandlers/Login";
+import {Logout} from "backend/src/ScenarioHandlers/Logout";
+import {PasswordResetStep1} from "backend/src/ScenarioHandlers/PasswordResetStep1";
+import {PasswordResetStep2} from "backend/src/ScenarioHandlers/PasswordResetStep2";
+import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
+import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
+import {Registration} from "backend/src/ScenarioHandlers/Registration";
+import {TestScenario} from "backend/src/ScenarioHandlers/TestScenario";
+import {ScenarioHandler, ScenarioName} from "shared/src/ScenarioRegistry";
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   TestScenario,
@@ -23,6 +24,7 @@ const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   PasswordResetStep2,
   ProfileLoad,
   ProfileUpdate,
+  AvatarUpload,
 };
 
 export async function runScenario(scenarioName?: string, scenarioInput: any = {}, session?: any): Promise<any> {
