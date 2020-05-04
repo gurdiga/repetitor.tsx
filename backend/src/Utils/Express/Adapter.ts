@@ -1,4 +1,4 @@
-import {isTestEnvironment, requireEnvVar, isDevelopmentEnvironment} from "backend/src/Utils/Env";
+import {isDevelopmentEnvironment, isTestEnvironment, requireEnvVar} from "backend/src/Utils/Env";
 import {AppRoot} from "backend/src/Utils/Express/AppRoot";
 import {PageBundleFilePaths, PagePathNames, RequireModulePaths} from "backend/src/Utils/Express/PagePaths";
 import {VendorModulesWebPaths, VersionedVendorModulePaths} from "backend/src/Utils/Express/VendorModules";
@@ -27,6 +27,12 @@ const cacheParams = isDevelopmentEnvironment() ? {cacheControl: true} : {maxAge:
 
 export function sendVendorModule(fileName: string, res: HttpResponse): void {
   const vendorModuleFilePath = VersionedVendorModulePaths[fileName];
+
+  // An exception.
+  if (fileName === "rollbar.umd.min.js.map") {
+    res.sendStatus(200);
+    return;
+  }
 
   if (vendorModuleFilePath) {
     res.sendFile(vendorModuleFilePath, cacheParams);
