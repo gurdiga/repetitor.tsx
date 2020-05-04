@@ -1,4 +1,5 @@
 import React = require("react");
+import {AvatarUploadButton} from "frontend/pages/profil/src/AvatarUploadButton";
 import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {Avatar} from "frontend/shared/src/Components/Avatar";
 import {Form} from "frontend/shared/src/Components/Form";
@@ -30,6 +31,7 @@ export function ProfileForm(props: Props) {
   return (
     <>
       <Avatar url={props.photo} />
+      <AvatarUploadButton />
       <Form
         fields={[
           <TextField
