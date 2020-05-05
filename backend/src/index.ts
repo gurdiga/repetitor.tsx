@@ -10,6 +10,7 @@ import {
   SharedBundles,
 } from "backend/src/Express/Adapter";
 import {session} from "backend/src/Express/Session";
+import {handleUpload} from "backend/src/Express/UploadHandler";
 import {VENDOR_MODULE_PREFIX} from "backend/src/Express/VendorModules";
 import * as compression from "compression";
 import * as cors from "cors";
@@ -42,6 +43,7 @@ export const app = express()
     sendPageBundle(req.params.pagePathName, res);
   })
   .get("*", csrfProtection, sendPageHtml)
+  .post("/upload", csrfProtection, handleUpload)
   .post("/", csrfProtection, handlePost);
 
 app.listen(requireNumericEnvVar("PORT")).on("error", (error) => {
