@@ -2,21 +2,20 @@ import {isDevelopmentEnvironment, isTestEnvironment, requireEnvVar} from "backen
 import {logError} from "backend/src/ErrorLogging";
 import {AppRoot} from "backend/src/Express/AppRoot";
 import {PageBundleFilePaths, PagePathNames, RequireModulePaths} from "backend/src/Express/PagePaths";
+import {uploadedFilesFromRequest} from "backend/src/Express/UploadParsers";
 import {VendorModulesWebPaths, VersionedVendorModulePaths} from "backend/src/Express/VendorModules";
 import {runScenario} from "backend/src/ScenarioRunner";
-import * as express from "express";
+import {Request, Response} from "express";
 import * as path from "path";
 import {UserSession} from "shared/src/Model/UserSession";
 import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 
-type HttpRequest = Pick<express.Request, "path" | "body" | "csrfToken" | "session">;
-type HttpResponse = Pick<express.Response, "json" | "status" | "sendFile" | "sendStatus" | "send" | "set">;
-
-export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<void> {
+export async function handlePost(req: Request, res: Response): Promise<void> {
+  const uploadedFiles = uploadedFilesFromRequest(req);
   const {scenarioName, scenarioInput} = req.body;
 
   try {
-    res.json(await runScenario(scenarioName, scenarioInput, req.session));
+    res.json(await runScenario(scenarioName, scenarioInput, req.session, uploadedFiles));
   } catch (error) {
     logError(`Error on runScenario`, {scenarioName}, error);
     res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});
@@ -25,7 +24,7 @@ export async function handlePost(req: HttpRequest, res: HttpResponse): Promise<v
 
 const cacheParams = isDevelopmentEnvironment() ? {cacheControl: true} : {maxAge: "1000 days"};
 
-export function sendVendorModule(fileName: string, res: HttpResponse): void {
+export function sendVendorModule(fileName: string, res: Response): void {
   const vendorModuleFilePath = VersionedVendorModulePaths[fileName];
 
   // An exception.
@@ -41,7 +40,7 @@ export function sendVendorModule(fileName: string, res: HttpResponse): void {
   }
 }
 
-export function sendPageBundle(pagePathName: string, res: HttpResponse): void {
+export function sendPageBundle(pagePathName: string, res: Response): void {
   if (PagePathNames.includes(pagePathName)) {
     res.sendFile(PageBundleFilePaths[pagePathName], cacheParams);
   } else {
@@ -52,7 +51,7 @@ export function sendPageBundle(pagePathName: string, res: HttpResponse): void {
 const VERSION = requireEnvVar("HEROKU_SLUG_COMMIT");
 export const SharedBundles = [`/frontend/shared/bundle-${VERSION}.js`, `/shared/bundle-${VERSION}.js`];
 
-export function sendSharedBundle(pathName: string, res: HttpResponse): void {
+export function sendSharedBundle(pathName: string, res: Response): void {
   if (SharedBundles.includes(pathName)) {
     const bundleDir = path.dirname(pathName);
     const bundleFilePath = `${AppRoot}/${bundleDir}/build/bundle.js`;
@@ -106,7 +105,7 @@ const htmlTemplate = `<!DOCTYPE html>
 </body>
 `;
 
-export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
+export function sendPageHtml(req: Request, res: Response): void {
   let pagePathName = req.path.replace(/^\/|\/$/g, ""); // strip the slashes on both ends
 
   if (pagePathName === "") {
@@ -134,7 +133,7 @@ export function sendPageHtml(req: HttpRequest, res: HttpResponse): void {
   }
 }
 
-export function sendSecurityTxt(_req: HttpRequest, res: HttpResponse): void {
+export function sendSecurityTxt(_req: Request, res: Response): void {
   res.set({"Content-Type": "text/plain"}).send(
     `# If you found any security issue, please let me know.
 Contact: mailto:gurdiga@gmail.com`

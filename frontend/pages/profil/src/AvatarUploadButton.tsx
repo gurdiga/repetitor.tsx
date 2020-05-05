@@ -1,4 +1,5 @@
 import React = require("react");
+import {UPLOADED_FILES_FORM_FIELD_NAME} from "shared/src/Model/UploadedFile";
 
 export function AvatarUploadButton() {
   return (
@@ -19,7 +20,7 @@ export function AvatarUploadButton() {
     const file = files[0];
     const formData = new FormData();
 
-    formData.append("avatar", file);
+    formData.append(UPLOADED_FILES_FORM_FIELD_NAME, file);
 
     const response = await fetch("/upload", {
       method: "POST",

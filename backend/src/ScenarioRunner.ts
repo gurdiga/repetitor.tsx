@@ -10,6 +10,7 @@ import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
 import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {TestScenario} from "backend/src/ScenarioHandlers/TestScenario";
+import {UploadedFile} from "shared/src/Model/UploadedFile";
 import {ScenarioHandler, ScenarioName} from "shared/src/ScenarioRegistry";
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
@@ -27,11 +28,16 @@ const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {
   AvatarUpload,
 };
 
-export async function runScenario(scenarioName?: string, scenarioInput: any = {}, session?: any): Promise<any> {
+export async function runScenario(
+  scenarioName?: string,
+  scenarioInput: any = {},
+  session?: any,
+  uploadedFiles: UploadedFile[] = []
+): Promise<any> {
   const scenarioHandler = scenarioHandlers[scenarioName as ScenarioName];
 
   if (scenarioHandler) {
-    return await scenarioHandler(scenarioInput, session);
+    return await scenarioHandler(scenarioInput, session, uploadedFiles);
   } else {
     if (!scenarioName) {
       throw new Error(`The "scenarioName" param is required`);

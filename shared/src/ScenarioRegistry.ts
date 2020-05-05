@@ -1,3 +1,4 @@
+import {UploadedFile} from "shared/src/Model/UploadedFile";
 import {UserSession} from "shared/src/Model/UserSession";
 import {AvatarUploadInput, AvatarUploadResult} from "shared/src/Scenarios/AvatarUpload";
 import {EmailChangeStep1Input, EmailChangeStep1Result} from "shared/src/Scenarios/EmailChangeStep1";
@@ -64,4 +65,8 @@ export interface ScenarioRegistry {
 }
 
 export type ScenarioName = keyof ScenarioRegistry;
-export type ScenarioHandler<I, R> = (scenarioInput: I, session: UserSession) => Promise<R>;
+export type ScenarioHandler<I, R> = (
+  scenarioInput: I,
+  session: UserSession,
+  uploadedFiles: UploadedFile[]
+) => Promise<R>;
