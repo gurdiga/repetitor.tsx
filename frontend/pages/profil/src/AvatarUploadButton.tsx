@@ -1,16 +1,15 @@
 import React = require("react");
+import {runScenario} from "frontend/shared/src/ScenarioRunner";
 import {UPLOADED_FILES_FORM_FIELD_NAME} from "shared/src/Model/UploadedFile";
 
 export function AvatarUploadButton() {
   return (
-    <form>
-      &lt;AvatarUploadButton /&gt;
-      <br />
-      <input type="file" onChange={handleChange} />
-    </form>
+    <>
+      <input type="file" onChange={maybeUploadFile} />
+    </>
   );
 
-  async function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  async function maybeUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
     const {files} = event.target;
 
     if (!files || files.length === 0) {
@@ -18,23 +17,23 @@ export function AvatarUploadButton() {
     }
 
     const file = files[0];
-    const formData = new FormData();
+    const uploadForm = new FormData();
 
-    formData.append(UPLOADED_FILES_FORM_FIELD_NAME, file);
+    uploadForm.append(UPLOADED_FILES_FORM_FIELD_NAME, file);
 
-    const response = await fetch("/upload", {
-      method: "POST",
-      body: formData,
-      redirect: "error",
-      cache: "no-store",
-    });
+    const response = await runScenario("AvatarUpload", {}, uploadForm);
 
-    if (response.status !== 200) {
-      return {failed: true}; // TODO
-    }
+    // const response = await fetch("/upload", {
+    //   method: "POST",
+    //   body: formData,
+    //   redirect: "error",
+    //   cache: "no-store",
+    // });
 
-    // TODO: consider using runScenario()
+    // if (response.status !== 200) {
+    //   return {failed: true}; // TODO
+    // }
 
-    return await response.json();
+    // return await response.json();
   }
 }

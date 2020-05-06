@@ -5,7 +5,7 @@ import {UploadedFile, UPLOADED_FILES_FORM_FIELD_NAME} from "shared/src/Model/Upl
 const upload = multer({
   dest: "uploads/",
   limits: {
-    fields: 2, // scenarioName & scenarioInput
+    fields: 3, // scenarioName, scenarioInput, and _csfrf
     fieldNameSize: 30,
     fieldSize: 10 * 1024,
     files: 1, // the max number of file fields; I’ll increase when needed
@@ -17,8 +17,8 @@ export const uploadParser = upload.array(UPLOADED_FILES_FORM_FIELD_NAME, 1);
 
 export function uploadedFilesFromRequest(req: Request): UploadedFile[] {
   if (req.files instanceof Array) {
-    return req.files as UploadedFile[];
+    return req.files;
   } else {
-    return req.files[UPLOADED_FILES_FORM_FIELD_NAME] as UploadedFile[];
+    return req.files ? req.files[UPLOADED_FILES_FORM_FIELD_NAME] : [];
   }
 }

@@ -1,5 +1,6 @@
 build/
 node_modules/
+uploads/
 google-cloud-adc.json
 .env.test
 .env.production

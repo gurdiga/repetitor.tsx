@@ -1,8 +1,15 @@
 import {ScenarioName, ScenarioRegistry} from "shared/src/ScenarioRegistry";
 
+const FETCH_DEFAULTS: RequestInit = {
+  method: "POST",
+  redirect: "error",
+  cache: "no-store",
+};
+
 export async function runScenario<SN extends ScenarioName, S extends ScenarioRegistry[SN]>(
   scenarioName: SN,
-  scenarioInput: S["Input"]
+  scenarioInput: S["Input"],
+  uploadForm?: FormData
 ): Promise<S["Result"] | TransportError | ServerError> {
   const getCsrfTokenResult = getCsrfToken();
 
@@ -11,19 +18,28 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
   }
 
   try {
+    const {csrfToken} = getCsrfTokenResult;
     const requestBody = JSON.stringify({
       scenarioName,
       scenarioInput,
-      _csrf: getCsrfTokenResult.csrfToken,
+      _csrf: csrfToken,
     });
 
-    const response = await fetch("/", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: requestBody,
-      redirect: "error",
-      cache: "no-store",
-    });
+    if (uploadForm) {
+      uploadForm.append("scenarioName", scenarioName);
+      uploadForm.append("scenarioInput", JSON.stringify(scenarioInput));
+      uploadForm.append("_csrf", csrfToken);
+    }
+
+    const fetchParams: RequestInit = uploadForm
+      ? {...FETCH_DEFAULTS, body: uploadForm}
+      : {
+          ...FETCH_DEFAULTS,
+          headers: {"Content-Type": "application/json"},
+          body: requestBody,
+        };
+
+    const response = await fetch("/", fetchParams);
 
     if (response.status === 200) {
       try {

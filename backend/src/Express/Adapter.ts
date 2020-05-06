@@ -2,7 +2,7 @@ import {isDevelopmentEnvironment, isTestEnvironment, requireEnvVar} from "backen
 import {logError} from "backend/src/ErrorLogging";
 import {AppRoot} from "backend/src/Express/AppRoot";
 import {PageBundleFilePaths, PagePathNames, RequireModulePaths} from "backend/src/Express/PagePaths";
-import {uploadedFilesFromRequest} from "backend/src/Express/UploadParsers";
+import {uploadedFilesFromRequest} from "backend/src/Express/UploadParsing";
 import {VendorModulesWebPaths, VersionedVendorModulePaths} from "backend/src/Express/VendorModules";
 import {runScenario} from "backend/src/ScenarioRunner";
 import {Request, Response} from "express";
