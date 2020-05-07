@@ -8,7 +8,7 @@ if (process.env.TEST_FILE_STORAGE) {
       const fileName = ".gitignore";
 
       beforeEach(async () => {
-        await uploadFile(fileName);
+        await uploadFile(fileName, fileName, "text/plain");
       });
 
       it("can upload a file", async () => {

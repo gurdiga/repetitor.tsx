@@ -3,7 +3,6 @@ import {requireEnvVar} from "backend/src/Env";
 import * as fs from "fs";
 import {IncomingHttpHeaders} from "http2";
 import * as https from "https";
-import {lookup} from "mime-types";
 
 const configJson = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS_JSON");
 const configFile = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
@@ -21,10 +20,15 @@ const defaultUploadOptions = {
   },
 };
 
-export async function uploadFile(filename: string, options: UploadOptions = defaultUploadOptions) {
-  const contentType = lookup(filename) || "binary/octet-stream";
-
-  await bucket.upload(`./${filename}`, {
+export async function uploadFile(
+  sourceFile: string,
+  filename: string,
+  contentType: string,
+  options: UploadOptions = defaultUploadOptions
+) {
+  await bucket.upload(sourceFile, {
+    destination: filename,
+    ...defaultUploadOptions,
     ...options,
     contentType,
   });

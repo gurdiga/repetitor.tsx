@@ -1,6 +1,11 @@
 import {Request} from "express";
 import * as multer from "multer";
-import {UploadedFile, UPLOADED_FILES_FORM_FIELD_NAME} from "shared/src/Model/UploadedFile";
+import {
+  MAX_UPLOADED_FILE_COUNT,
+  MAX_UPLOADED_FILE_SIZE,
+  UploadedFile,
+  UPLOADED_FILES_FORM_FIELD_NAME,
+} from "shared/src/Model/UploadedFile";
 
 const upload = multer({
   dest: "uploads/",
@@ -8,12 +13,12 @@ const upload = multer({
     fields: 3, // scenarioName, scenarioInput, and _csfrf
     fieldNameSize: 30,
     fieldSize: 10 * 1024,
-    files: 1, // the max number of file fields; I’ll increase when needed
-    fileSize: 5 * 1024 * 1024,
+    files: MAX_UPLOADED_FILE_COUNT, // the max number of file fields; I’ll increase when needed
+    fileSize: MAX_UPLOADED_FILE_SIZE,
   },
 });
 
-export const uploadParser = upload.array(UPLOADED_FILES_FORM_FIELD_NAME, 1);
+export const uploadParser = upload.array(UPLOADED_FILES_FORM_FIELD_NAME, MAX_UPLOADED_FILE_COUNT);
 
 export function uploadedFilesFromRequest(req: Request): UploadedFile[] {
   if (req.files instanceof Array) {
