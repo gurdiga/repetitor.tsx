@@ -1,4 +1,4 @@
-import {UploadedFile} from "shared/src/Model/UploadedFile";
+import {UploadedFile} from "shared/src/Model/FileUpload";
 import {UserSession} from "shared/src/Model/UserSession";
 import {AvatarUploadInput, AvatarUploadResult} from "shared/src/Scenarios/AvatarUpload";
 import {EmailChangeStep1Input, EmailChangeStep1Result} from "shared/src/Scenarios/EmailChangeStep1";

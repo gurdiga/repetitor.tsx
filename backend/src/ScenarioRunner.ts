@@ -10,7 +10,7 @@ import {ProfileLoad} from "backend/src/ScenarioHandlers/ProfileLoad";
 import {ProfileUpdate} from "backend/src/ScenarioHandlers/ProfileUpdate";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
 import {TestScenario} from "backend/src/ScenarioHandlers/TestScenario";
-import {UploadedFile} from "shared/src/Model/UploadedFile";
+import {UploadedFile} from "shared/src/Model/FileUpload";
 import {ScenarioHandler, ScenarioName} from "shared/src/ScenarioRegistry";
 
 const scenarioHandlers: Record<ScenarioName, ScenarioHandler<any, any>> = {

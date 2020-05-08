@@ -1,6 +1,6 @@
 import React = require("react");
 import {runScenario} from "frontend/shared/src/ScenarioRunner";
-import {UPLOADED_FILES_FORM_FIELD_NAME} from "shared/src/Model/UploadedFile";
+import {UPLOADED_FILES_FORM_FIELD_NAME} from "shared/src/Model/FileUpload";
 
 export function AvatarUploadButton() {
   return (

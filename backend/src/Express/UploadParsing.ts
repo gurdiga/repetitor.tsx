@@ -5,7 +5,7 @@ import {
   MAX_UPLOADED_FILE_SIZE,
   UploadedFile,
   UPLOADED_FILES_FORM_FIELD_NAME,
-} from "shared/src/Model/UploadedFile";
+} from "shared/src/Model/FileUpload";
 
 const upload = multer({
   dest: "uploads/",
