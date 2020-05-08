@@ -180,11 +180,9 @@ format: pretty
 heroku-setup: h-expose-release-env h-env
 
 h-env:
-	heroku config:set \
-		--app repetitor \
-		` sed 's/^export //' .env.production \
-			| paste -sd " " - \
-		`
+	sed 's/^export //' .env.production \
+	| xargs heroku config:set \
+		--app repetitor
 
 h-tail:
 	heroku logs --tail --app repetitor
