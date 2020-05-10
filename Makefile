@@ -94,10 +94,11 @@ npm-outdated:
 	(cd backend && npm outdated)
 	(cd frontend && npm outdated)
 
-node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules backend/node_modules
+node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules frontend/tests/node_modules backend/node_modules
 backend/node_modules: backend/package.json
 frontend/node_modules: frontend/package.json
-node_modules backend/node_modules frontend/node_modules:
+frontend/tests/node_modules: frontend/tests/package.json
+node_modules backend/node_modules frontend/node_modules frontend/tests/node_modules:
 	@set -e
 	( cd $(@D) && ~/.nvm/nvm-exec npm install )
 	touch $@

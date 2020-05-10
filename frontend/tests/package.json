@@ -1,0 +1,13 @@
+{
+  "name": "frontend",
+  "author": "Vlad GURDIGA <gurdiga@gmail.com>",
+  "description": "none",
+  "repository": "none",
+  "license": "MIT",
+  "dependencies": {
+    "@types/enzyme": "3.10.5",
+    "@types/enzyme-adapter-react-16": "1.0.6",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2"
+  }
+}
