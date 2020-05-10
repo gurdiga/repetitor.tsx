@@ -8,7 +8,7 @@
   },
   "scripts": {
     "migrate": "db-migrate up --verbose --env $NODE_ENV --config backend/migrations/config.json --migrations-dir backend/migrations",
-    "install-packages": "(cd backend && npm install) && (cd frontend && npm install) && npm install",
+    "install-packages": "(cd backend && npm install) && (cd frontend && npm install) && (cd frontend/tests && npm install) && npm install",
     "heroku-prebuild": "npm run-script install-packages && npm run-script migrate",
     "build": "tsc --build -v",
     "start": "node --require ts-node/register --require tsconfig-paths/register --require amd-loader backend/src/index.ts"

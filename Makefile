@@ -113,7 +113,7 @@ clean:
 		frontend/pages/*/build/
 
 uninstall: clean
-	rm -rf {.,backend,frontend}/node_modules
+	rm -rf {.,backend,frontend,frontend/tests}/node_modules
 
 NODE_BINARY_PATH=$(shell echo "~/.nvm/versions/node/`cat .nvmrc`/bin/node")
 $(NODE_BINARY_PATH):
