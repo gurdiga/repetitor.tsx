@@ -4,7 +4,7 @@
   "description": "This is going to be an online system for tutors.",
   "license": "MIT",
   "engines": {
-    "node": "13.1.0"
+    "node": "14.2.0"
   },
   "scripts": {
     "migrate": "db-migrate up --verbose --env $NODE_ENV --config backend/migrations/config.json --migrations-dir backend/migrations",
