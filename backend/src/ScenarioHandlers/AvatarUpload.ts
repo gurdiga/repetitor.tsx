@@ -1,7 +1,11 @@
-import {logError} from "backend/src/ErrorLogging";
 import {getUploadedFileUrl, uploadFile} from "backend/src/FileStorage";
 import {AvatarUrl, makeImageFromUploadedFiles} from "shared/src/Model/AvatarUpload";
-import {CloudUploadError, TempFileNotFoundError, UploadedFile} from "shared/src/Model/FileUpload";
+import {
+  CloudUploadError,
+  CloudUploadVerificationError,
+  TempFileNotFoundError,
+  UploadedFile,
+} from "shared/src/Model/FileUpload";
 import {UserSession} from "shared/src/Model/UserSession";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import path = require("path");
@@ -33,18 +37,13 @@ export async function AvatarUpload(
 async function uploadAvatar(
   image: UploadedFile,
   userId: number
-): Promise<AvatarUrl | TempFileNotFoundError | CloudUploadError> {
+): Promise<AvatarUrl | TempFileNotFoundError | CloudUploadError | CloudUploadVerificationError> {
   const fileExtension = path.extname(image.originalname);
   const destinationFileName = `avatar-${userId}${fileExtension}`;
+  const uploadFileResult = await uploadFile(image.path, destinationFileName, image.mimetype);
 
-  try {
-    await uploadFile(image.path, destinationFileName, image.mimetype);
-  } catch (e) {
-    logError(e);
-
-    return {
-      kind: "CloudUploadError",
-    };
+  if (uploadFileResult.kind !== "UploadFileSuccess") {
+    return uploadFileResult;
   }
 
   return {

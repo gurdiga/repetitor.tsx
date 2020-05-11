@@ -3,6 +3,7 @@ import {
   BadFileTypeError,
   CantDeleteTempFileError,
   CloudUploadError,
+  CloudUploadVerificationError,
   FileTooLargeErrorr,
   FileUploadMissingErrorr,
   TempFileNotFoundError,
@@ -22,5 +23,6 @@ export type AvatarUploadResult =
   | FileTooLargeErrorr
   | TempFileNotFoundError
   | CloudUploadError
+  | CloudUploadVerificationError
   | CantDeleteTempFileError
   | SystemError;

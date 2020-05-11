@@ -1,18 +1,17 @@
 import {Storage, UploadOptions} from "@google-cloud/storage";
 import {requireEnvVar} from "backend/src/Env";
+import {logError} from "backend/src/ErrorLogging";
 import * as fs from "fs";
 import {IncomingHttpHeaders} from "http2";
 import * as https from "https";
+import {CloudUploadError, CloudUploadVerificationError, UploadFileSuccess} from "shared/src/Model/FileUpload";
 import assert = require("assert");
+import retry = require("retry");
 
-const configJson = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS_JSON");
-const configFile = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
+writeConfigFile();
 
-fs.writeFileSync(configFile, configJson);
-
-const storage = new Storage();
 const bucketName = requireEnvVar("GOOGLE_CLOUD_STORAGE_BUCKET_NAME");
-const bucket = storage.bucket(bucketName);
+const bucket = new Storage().bucket(bucketName);
 
 const defaultUploadOptions = {
   gzip: true,
@@ -21,22 +20,52 @@ const defaultUploadOptions = {
   },
 };
 
+const retryOptions = {
+  retries: 5,
+  minTimeout: 1 * 1000,
+  maxTimeout: 10 * 1000,
+  maxRetryTime: 60 * 1000,
+  randomize: true,
+};
+
+const methodsToWrap: (keyof typeof bucket)[] = ["upload"];
+
+retry.wrap(bucket, retryOptions, methodsToWrap);
+
 export async function uploadFile(
   sourceFile: string,
   fileName: string,
   contentType: string,
   options: UploadOptions = defaultUploadOptions
-) {
-  // TODO: return CloudUploadError if this fails, and log the error
-  await bucket.upload(sourceFile, {
-    destination: fileName,
-    ...defaultUploadOptions,
-    ...options,
-    contentType,
-  });
+): Promise<UploadFileSuccess | CloudUploadError | CloudUploadVerificationError> {
+  try {
+    await bucket.upload(sourceFile, {
+      destination: fileName,
+      ...defaultUploadOptions,
+      ...options,
+      contentType,
+    });
+  } catch (e) {
+    logError(e);
 
-  // TODO: return CloudUploadVerificationError if this fails, and log the error
-  await verifyUpload(sourceFile, fileName);
+    return {
+      kind: "CloudUploadError",
+    };
+  }
+
+  try {
+    await verifyUpload(sourceFile, fileName);
+  } catch (e) {
+    logError(e);
+
+    return {
+      kind: "CloudUploadVerificationError",
+    };
+  }
+
+  return {
+    kind: "UploadFileSuccess",
+  };
 }
 
 async function verifyUpload(sourceFile: string, fileName: string): Promise<void> {
@@ -68,4 +97,11 @@ export async function downloadFile(filename: string): Promise<DownloadedFile> {
       })
       .on("error", reject);
   });
+}
+
+function writeConfigFile() {
+  const configJson = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS_JSON");
+  const configFile = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
+
+  fs.writeFileSync(configFile, configJson);
 }

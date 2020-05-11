@@ -40,6 +40,10 @@ export type CloudUploadError = {
   kind: "CloudUploadError";
 };
 
-export type CloudDownloadError = {
-  kind: "CloudDownloadError";
+export type CloudUploadVerificationError = {
+  kind: "CloudUploadVerificationError";
+};
+
+export type UploadFileSuccess = {
+  kind: "UploadFileSuccess";
 };
