@@ -1,3 +1,0 @@
-<PageLayout title="Autentificare repetitor" isAuthenticated={false}>
-  <Form fields={{...}} actionButtons={{...}} />
-</PageLayout>

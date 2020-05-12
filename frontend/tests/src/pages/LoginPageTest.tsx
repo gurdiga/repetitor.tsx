@@ -1,17 +1,19 @@
+import {expect} from "chai";
 import {shallow} from "enzyme";
+import {AlreadyLoggedInState} from "frontend/pages/autentificare/src/AlreadyLoggedState";
+import {LoginForm} from "frontend/pages/autentificare/src/LoginForm";
+import {LoginPage} from "frontend/pages/autentificare/src/LoginPage";
+import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";
 import {Form} from "frontend/shared/src/Components/Form";
 import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordField";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
+import {Comp, expectProps, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
 import * as React from "react";
 import {EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordValidationRules} from "shared/src/Model/Password";
-import {expectProps, expectToRenderSnapshot, Stub, Wrapper, Comp} from "frontend/tests/src/TestHelpers";
-import {LoginPage} from "frontend/pages/autentificare/src/LoginPage";
-import {expect} from "chai";
 import Sinon = require("sinon");
-import {AlreadyLoggedIn} from "frontend/shared/src/Components/AlreadyLoggedIn";
 
 describe("<LoginPage/>", () => {
   let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
@@ -30,11 +32,16 @@ describe("<LoginPage/>", () => {
   });
 
   context("when not logged in already", () => {
-    describe("form", () => {
+    it("renders the <LoginForm/>", () => {
+      wrapper = shallow(<LoginPage isAuthenticated={false} />);
+      expect(wrapper.find(LoginForm).exists()).to.be.true;
+    });
+
+    describe("<LoginForm/>", () => {
       let form: Wrapper<typeof Form>;
 
       before(() => {
-        wrapper = shallow(<LoginPage isAuthenticated={false} />);
+        wrapper = shallow(<LoginForm />);
         form = wrapper.find(Form);
       });
 
@@ -228,6 +235,11 @@ describe("<LoginPage/>", () => {
   });
 
   context("when already logged in", () => {
+    it("renders the <AlreadyLoggedState/>", () => {
+      wrapper = shallow(<LoginPage isAuthenticated={true} />);
+      expect(wrapper.find(AlreadyLoggedInState).exists()).to.be.true;
+    });
+
     beforeEach(async () => {
       runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({kind: "LogoutSuccess"});
     });
@@ -237,7 +249,7 @@ describe("<LoginPage/>", () => {
     });
 
     it("renders a button to log out", () => {
-      const wrapper = shallow(<LoginPage isAuthenticated={true} />);
+      const wrapper = shallow(<AlreadyLoggedInState />);
 
       clickLogoutButtonInPage(wrapper);
 
@@ -247,7 +259,7 @@ describe("<LoginPage/>", () => {
     describe("logout result", () => {
       context("when the server says OK", () => {
         it("navigates to homepage", async () => {
-          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<AlreadyLoggedInState />);
 
           await clickLogoutButtonInPage(wrapper);
 
@@ -266,7 +278,7 @@ describe("<LoginPage/>", () => {
         });
 
         it("displays an appropriate error message", async () => {
-          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<AlreadyLoggedInState />);
           const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
           await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
@@ -290,7 +302,7 @@ describe("<LoginPage/>", () => {
         });
 
         it("displays an appropriate error message", async () => {
-          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<AlreadyLoggedInState />);
           const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
           await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
@@ -313,7 +325,7 @@ describe("<LoginPage/>", () => {
         });
 
         it("displays an appropriate error message", async () => {
-          const wrapper = shallow(<LoginPage isAuthenticated={true} />);
+          const wrapper = shallow(<AlreadyLoggedInState />);
           const alreadyLoggedIn = wrapper.find(AlreadyLoggedIn).dive();
 
           await clickLogoutButtonInAlreadyLoggedIn(alreadyLoggedIn);
@@ -336,19 +348,5 @@ describe("<LoginPage/>", () => {
 
       await logoutButton.prop("onClick")!(mouseEvent);
     }
-  });
-
-  describe("snapshots", () => {
-    it("renders the authenticated state", () => {
-      const wrapper = shallow(<LoginPage isAuthenticated={true} />);
-
-      expectToRenderSnapshot(__filename, wrapper, "authenticated");
-    });
-
-    it("renders the unauthenticated state", () => {
-      const wrapper = shallow(<LoginPage isAuthenticated={false} />);
-
-      expectToRenderSnapshot(__filename, wrapper, "unauthenticated");
-    });
   });
 });
