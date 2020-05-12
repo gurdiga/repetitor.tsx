@@ -1,4 +1,4 @@
-import {Storage, UploadOptions} from "@google-cloud/storage";
+import {Storage, StorageOptions, UploadOptions} from "@google-cloud/storage";
 import {requireEnvVar} from "backend/src/Env";
 import {logError} from "backend/src/ErrorLogging";
 import * as fs from "fs";
@@ -6,12 +6,15 @@ import {IncomingHttpHeaders} from "http2";
 import * as https from "https";
 import {CloudUploadError, CloudUploadVerificationError, UploadFileSuccess} from "shared/src/Model/FileUpload";
 import assert = require("assert");
-import retry = require("retry");
 
 writeConfigFile();
 
 const bucketName = requireEnvVar("GOOGLE_CLOUD_STORAGE_BUCKET_NAME");
-const bucket = new Storage().bucket(bucketName);
+const storageOptions: StorageOptions = {
+  autoRetry: true,
+  maxRetries: 5,
+};
+const bucket = new Storage(storageOptions).bucket(bucketName);
 
 const defaultUploadOptions = {
   gzip: true,
@@ -19,18 +22,6 @@ const defaultUploadOptions = {
     // cacheControl: "must-revalidate",
   },
 };
-
-const retryOptions = {
-  retries: 5,
-  minTimeout: 1 * 1000,
-  maxTimeout: 10 * 1000,
-  maxRetryTime: 60 * 1000,
-  randomize: true,
-};
-
-const methodsToWrap: (keyof typeof bucket)[] = ["upload"];
-
-retry.wrap(bucket, retryOptions, methodsToWrap);
 
 export async function uploadFile(
   sourceFile: string,
