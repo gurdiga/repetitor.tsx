@@ -36,21 +36,21 @@ export async function uploadFile(
       ...options,
       contentType,
     });
+
+    try {
+      await verifyUpload(sourceFile, fileName);
+    } catch (e) {
+      logError(e);
+
+      return {
+        kind: "CloudUploadVerificationError",
+      };
+    }
   } catch (e) {
     logError(e);
 
     return {
       kind: "CloudUploadError",
-    };
-  }
-
-  try {
-    await verifyUpload(sourceFile, fileName);
-  } catch (e) {
-    logError(e);
-
-    return {
-      kind: "CloudUploadVerificationError",
     };
   }
 
