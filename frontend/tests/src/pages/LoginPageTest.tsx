@@ -9,7 +9,7 @@ import {PasswordField} from "frontend/shared/src/Components/FormFields/PasswordF
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
-import {Comp, expectProps, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
+import {Comp, expectAlertMessage, expectProps, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
 import * as React from "react";
 import {EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordValidationRules} from "shared/src/Model/Password";
@@ -82,7 +82,7 @@ describe("<LoginPage/>", () => {
 
             it("submits the field values to the backend and then navigates to home page", () => {
               expect(runScenarioStub.called, "called runScenario").to.be.true;
-              expect(wrapper.find(".server-response-received-success").exists(), "success message").to.be.true;
+              expectAlertMessage("success message", wrapper, "success", "Autentificat.");
               expect(runScenarioStub.calledBefore(locationStub), "navigates *after* the server response").to.be.true;
               expect(locationStub.calledWith("/"), "navigates to homepage").to.be.true;
             });
@@ -103,9 +103,7 @@ describe("<LoginPage/>", () => {
 
             it("display the error and does NOT navigate to the home page", () => {
               expect(runScenarioStub.called, "called runScenario").to.be.true;
-              expect(wrapper.find(".server-response-received-error").text(), "error message").to.equal(
-                "Adresa de email este invalidă"
-              );
+              expectAlertMessage("error message", wrapper, "error", "Adresa de email este invalidă");
               expect(locationStub.called, "does not navigate to homepage").to.be.false;
             });
           });
@@ -122,9 +120,7 @@ describe("<LoginPage/>", () => {
 
             it("display the error and does NOT navigate to the home page", () => {
               expect(runScenarioStub.called, "called runScenario").to.be.true;
-              expect(wrapper.find(".server-response-received-error").text(), "error message").to.equal(
-                "Parola este incorectă"
-              );
+              expectAlertMessage("error message", wrapper, "error", "Parola este incorectă");
               expect(locationStub.called, "does not navigate to homepage").to.be.false;
             });
           });
@@ -141,9 +137,7 @@ describe("<LoginPage/>", () => {
 
             it("display the error and does NOT navigate to the home page", () => {
               expect(runScenarioStub.called, "called runScenario").to.be.true;
-              expect(wrapper.find(".server-response-received-error").text(), "error message").to.equal(
-                "Adresa de email nu este înregistrată în sistem."
-              );
+              expectAlertMessage("error message", wrapper, "error", "Adresa de email nu este înregistrată în sistem.");
               expect(locationStub.called, "does not navigate to homepage").to.be.false;
             });
           });
@@ -162,7 +156,7 @@ describe("<LoginPage/>", () => {
 
             it("display the error and does NOT navigate to the home page", () => {
               expect(runScenarioStub.called, "called runScenario").to.be.true;
-              expect(wrapper.find(".server-response-received-error").text(), "error message").to.equal(error);
+              expectAlertMessage("error message", wrapper, "error", error);
               expect(locationStub.called, "does not navigate to homepage").to.be.false;
             });
           });
@@ -181,7 +175,7 @@ describe("<LoginPage/>", () => {
 
             it("display the error and does NOT navigate to the home page", () => {
               expect(runScenarioStub.called, "called runScenario").to.be.true;
-              expect(wrapper.find(".server-response-received-error").text(), "error message").to.equal(error);
+              expectAlertMessage("error message", wrapper, "error", error);
               expect(locationStub.called, "does not navigate to homepage").to.be.false;
             });
           });
@@ -201,9 +195,7 @@ describe("<LoginPage/>", () => {
 
             it("display the error and does NOT navigate to the home page", () => {
               expect(runScenarioStub.called, "called runScenario").to.be.true;
-              expect(wrapper.find(".server-response-received-error").text(), "error message").to.equal(
-                "Eroare neprevăzută de bază de date"
-              );
+              expectAlertMessage("error message", wrapper, "error", "Eroare neprevăzută de bază de date");
               expect(locationStub.called, "does not navigate to homepage").to.be.false;
             });
           });
