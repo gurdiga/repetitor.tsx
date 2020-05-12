@@ -5,9 +5,8 @@ import {
   CloudUploadError,
   CloudUploadVerificationError,
   FileTooLargeErrorr,
-  FileUploadMissingErrorr,
-  TempFileNotFoundError,
   TooManyFilesError,
+  UploadSourceFileMissingErrorr,
 } from "shared/src/Model/FileUpload";
 import {NotAuthenticatedError} from "shared/src/Model/Profile";
 import {SystemError} from "shared/src/Model/Utils";
@@ -18,10 +17,9 @@ export type AvatarUploadResult =
   | AvatarUrl
   | NotAuthenticatedError
   | TooManyFilesError
-  | FileUploadMissingErrorr
+  | UploadSourceFileMissingErrorr
   | BadFileTypeError
   | FileTooLargeErrorr
-  | TempFileNotFoundError
   | CloudUploadError
   | CloudUploadVerificationError
   | CantDeleteTempFileError

@@ -4,7 +4,12 @@ import {logError} from "backend/src/ErrorLogging";
 import * as fs from "fs";
 import {IncomingHttpHeaders} from "http2";
 import * as https from "https";
-import {CloudUploadError, CloudUploadVerificationError, UploadFileSuccess} from "shared/src/Model/FileUpload";
+import {
+  CloudUploadError,
+  CloudUploadVerificationError,
+  UploadFileSuccess,
+  UploadSourceFileMissingErrorr,
+} from "shared/src/Model/FileUpload";
 import assert = require("assert");
 
 writeConfigFile();
@@ -28,7 +33,13 @@ export async function uploadFile(
   fileName: string,
   contentType: string,
   options: UploadOptions = defaultUploadOptions
-): Promise<UploadFileSuccess | CloudUploadError | CloudUploadVerificationError> {
+): Promise<UploadFileSuccess | UploadSourceFileMissingErrorr | CloudUploadError | CloudUploadVerificationError> {
+  if (!fs.existsSync(sourceFile)) {
+    return {
+      kind: "UploadSourceFileMissingErrorr",
+    };
+  }
+
   try {
     await bucket.upload(sourceFile, {
       destination: fileName,

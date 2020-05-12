@@ -1,4 +1,4 @@
-import {BadFileTypeError, FileUploadMissingErrorr, UploadedFile} from "shared/src/Model/FileUpload";
+import {BadFileTypeError, UploadedFile} from "shared/src/Model/FileUpload";
 
 export type AvatarUrl = {
   kind: "AvatarUrl";
@@ -10,16 +10,8 @@ export type AvatarImage = {
   image: UploadedFile;
 };
 
-export function makeImageFromUploadedFiles(
-  uploadedFiles: UploadedFile[]
-): AvatarImage | FileUploadMissingErrorr | BadFileTypeError {
+export function makeImageFromUploadedFiles(uploadedFiles: UploadedFile[]): AvatarImage | BadFileTypeError {
   const [image] = uploadedFiles;
-
-  if (!image) {
-    return {
-      kind: "FileUploadMissingErrorr",
-    };
-  }
 
   if (image.mimetype !== "image/jpeg") {
     return {

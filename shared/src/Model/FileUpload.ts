@@ -20,12 +20,8 @@ export type FileTooLargeErrorr = {
   kind: "FileTooLargeErrorr";
 };
 
-export type FileUploadMissingErrorr = {
-  kind: "FileUploadMissingErrorr";
-};
-
-export type TempFileNotFoundError = {
-  kind: "TempFileNotFoundError";
+export type UploadSourceFileMissingErrorr = {
+  kind: "UploadSourceFileMissingErrorr";
 };
 
 export type CantDeleteTempFileError = {

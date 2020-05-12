@@ -3,8 +3,8 @@ import {AvatarUrl, makeImageFromUploadedFiles} from "shared/src/Model/AvatarUplo
 import {
   CloudUploadError,
   CloudUploadVerificationError,
-  TempFileNotFoundError,
   UploadedFile,
+  UploadSourceFileMissingErrorr,
 } from "shared/src/Model/FileUpload";
 import {UserSession} from "shared/src/Model/UserSession";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
@@ -37,7 +37,7 @@ export async function AvatarUpload(
 async function uploadAvatar(
   image: UploadedFile,
   userId: number
-): Promise<AvatarUrl | TempFileNotFoundError | CloudUploadError | CloudUploadVerificationError> {
+): Promise<AvatarUrl | UploadSourceFileMissingErrorr | CloudUploadError | CloudUploadVerificationError> {
   const fileExtension = path.extname(image.originalname);
   const destinationFileName = `avatar-${userId}${fileExtension}`;
   const uploadFileResult = await uploadFile(image.path, destinationFileName, image.mimetype);
