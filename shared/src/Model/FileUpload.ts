@@ -28,6 +28,10 @@ export type CantDeleteTempFileError = {
   kind: "CantDeleteTempFileError";
 };
 
+export type DeletedTempFile = {
+  kind: "DeletedTempFile";
+};
+
 export type BadFileTypeError = {
   kind: "BadFileTypeError";
 };
@@ -42,4 +46,5 @@ export type CloudUploadVerificationError = {
 
 export type UploadFileSuccess = {
   kind: "UploadFileSuccess";
+  url: URL;
 };

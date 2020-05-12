@@ -5,8 +5,10 @@ import * as fs from "fs";
 import {IncomingHttpHeaders} from "http2";
 import * as https from "https";
 import {
+  CantDeleteTempFileError,
   CloudUploadError,
   CloudUploadVerificationError,
+  DeletedTempFile,
   UploadFileSuccess,
   UploadSourceFileMissingErrorr,
 } from "shared/src/Model/FileUpload";
@@ -50,6 +52,11 @@ export async function uploadFile(
 
     try {
       await verifyUpload(sourceFile, fileName);
+
+      return {
+        kind: "UploadFileSuccess",
+        url: getUploadedFileUrl(fileName),
+      };
     } catch (e) {
       logError(e);
 
@@ -64,10 +71,6 @@ export async function uploadFile(
       kind: "CloudUploadError",
     };
   }
-
-  return {
-    kind: "UploadFileSuccess",
-  };
 }
 
 async function verifyUpload(sourceFile: string, fileName: string): Promise<void> {
@@ -106,4 +109,20 @@ function writeConfigFile() {
   const configFile = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
 
   fs.writeFileSync(configFile, configJson);
+}
+
+export function deleteTemFile(filePath: string): DeletedTempFile | CantDeleteTempFileError {
+  try {
+    fs.unlinkSync(filePath);
+
+    return {
+      kind: "DeletedTempFile",
+    };
+  } catch (error) {
+    logError(error);
+
+    return {
+      kind: "CantDeleteTempFileError",
+    };
+  }
 }
