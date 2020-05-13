@@ -26,7 +26,7 @@ export async function AvatarUpload(
   }
 
   const {image} = makeImageResult;
-  const fileExtension = path.extname(image.originalname);
+  const fileExtension = path.extname(image.originalname).toLowerCase();
   const destinationFileName = `avatar-${session.userId}${fileExtension}`;
   const uploadFileResult = await uploadFile(image.path, destinationFileName, image.mimetype);
 

@@ -3,8 +3,7 @@ import {
   BadFileTypeError,
   CantDeleteTempFileError,
   CloudUploadError,
-  CloudUploadVerificationError,
-  FileTooLargeErrorr,
+  FileTooLargeError,
   TooManyFilesError,
   UploadSourceFileMissingErrorr,
 } from "shared/src/Model/FileUpload";
@@ -19,8 +18,7 @@ export type AvatarUploadResult =
   | TooManyFilesError
   | UploadSourceFileMissingErrorr
   | BadFileTypeError
-  | FileTooLargeErrorr
+  | FileTooLargeError
   | CloudUploadError
-  | CloudUploadVerificationError
   | CantDeleteTempFileError
   | SystemError;

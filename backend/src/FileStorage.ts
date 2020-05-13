@@ -7,7 +7,6 @@ import * as https from "https";
 import {
   CantDeleteTempFileError,
   CloudUploadError,
-  CloudUploadVerificationError,
   DeletedTempFile,
   UploadFileSuccess,
   UploadSourceFileMissingErrorr,
@@ -24,9 +23,9 @@ const storageOptions: StorageOptions = {
 const bucket = new Storage(storageOptions).bucket(bucketName);
 
 const defaultUploadOptions = {
-  gzip: true,
+  // gzip: true, // For images it makes very little sense because they are already compressed.
   metadata: {
-    // cacheControl: "must-revalidate",
+    cacheControl: "must-revalidate",
   },
 };
 
@@ -35,7 +34,7 @@ export async function uploadFile(
   fileName: string,
   contentType: string,
   options: UploadOptions = defaultUploadOptions
-): Promise<UploadFileSuccess | UploadSourceFileMissingErrorr | CloudUploadError | CloudUploadVerificationError> {
+): Promise<UploadFileSuccess | UploadSourceFileMissingErrorr | CloudUploadError> {
   if (!fs.existsSync(sourceFile)) {
     return {
       kind: "UploadSourceFileMissingErrorr",
@@ -50,20 +49,10 @@ export async function uploadFile(
       contentType,
     });
 
-    try {
-      await verifyUpload(sourceFile, fileName);
-
-      return {
-        kind: "UploadFileSuccess",
-        url: getUploadedFileUrl(fileName),
-      };
-    } catch (e) {
-      logError(e);
-
-      return {
-        kind: "CloudUploadVerificationError",
-      };
-    }
+    return {
+      kind: "UploadFileSuccess",
+      url: getUploadedFileUrl(fileName),
+    };
   } catch (e) {
     logError(e);
 
@@ -71,13 +60,6 @@ export async function uploadFile(
       kind: "CloudUploadError",
     };
   }
-}
-
-async function verifyUpload(sourceFile: string, fileName: string): Promise<void> {
-  const {body: downloadedFileContents} = await downloadFile(fileName);
-  const actualFileContents = await fs.promises.readFile(sourceFile, {encoding: "utf-8"});
-
-  assert(downloadedFileContents == actualFileContents, "Expected downloadedFileContents == actualFileContents");
 }
 
 export function getUploadedFileUrl(filename: string): URL {

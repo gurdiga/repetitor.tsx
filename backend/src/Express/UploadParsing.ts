@@ -7,6 +7,7 @@ import {
   UPLOADED_FILES_FORM_FIELD_NAME,
 } from "shared/src/Model/FileUpload";
 
+// Docs: https://www.npmjs.com/package/multer
 const upload = multer({
   dest: "uploads/",
   limits: {

@@ -16,8 +16,8 @@ export type TooManyFilesError = {
 };
 
 // Signaled from uploadParser. Still needs to be properly handled on the front-end.
-export type FileTooLargeErrorr = {
-  kind: "FileTooLargeErrorr";
+export type FileTooLargeError = {
+  kind: "FileTooLargeError";
 };
 
 export type UploadSourceFileMissingErrorr = {
