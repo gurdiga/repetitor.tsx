@@ -9,23 +9,18 @@ export interface UploadedFile {
   size: number;
 }
 
-// Can be signaled from uploadParser. Still needs to be properly handled on the front-end.
-export type TooManyFilesError = {
-  kind: "TooManyFilesError";
-  fileCount: number;
-};
-
 // Signaled from uploadParser. Still needs to be properly handled on the front-end.
 export type FileTooLargeError = {
   kind: "FileTooLargeError";
 };
 
-export type UploadSourceFileMissingErrorr = {
-  kind: "UploadSourceFileMissingErrorr";
+export type UnacceptableUploadError = {
+  kind: "UnacceptableUploadError";
+  error: string;
 };
 
-export type CantDeleteTempFileError = {
-  kind: "CantDeleteTempFileError";
+export type UploadTempFileMissingErrorr = {
+  kind: "UploadTempFileMissingErrorr";
 };
 
 export type DeletedTempFile = {
@@ -40,11 +35,15 @@ export type CloudUploadError = {
   kind: "CloudUploadError";
 };
 
-export type CloudUploadVerificationError = {
-  kind: "CloudUploadVerificationError";
-};
-
-export type UploadFileSuccess = {
-  kind: "UploadFileSuccess";
+export type StoreFileSuccess = {
+  kind: "StoreFileSuccess";
   url: URL;
 };
+
+export type UploadValidationError = FileTooLargeError | UnacceptableUploadError;
+export type UploadParsingResult = UploadedFile[] | UploadValidationError;
+export type Upload = FileList | UploadParsingResult;
+
+export interface UploadScenario {
+  upload: Upload;
+}

@@ -2,7 +2,7 @@ import {isDevelopmentEnvironment, isTestEnvironment, requireEnvVar} from "backen
 import {logError} from "backend/src/ErrorLogging";
 import {AppRoot} from "backend/src/Express/AppRoot";
 import {PageBundleFilePaths, PagePathNames, RequireModulePaths} from "backend/src/Express/PagePaths";
-import {uploadedFilesFromRequest} from "backend/src/Express/UploadParsing";
+import {getUploadParsingResult} from "backend/src/Express/UploadParsing";
 import {VendorModulesWebPaths, VersionedVendorModulePaths} from "backend/src/Express/VendorModules";
 import {runScenario} from "backend/src/ScenarioRunner";
 import {Request, Response} from "express";
@@ -11,11 +11,11 @@ import {UserSession} from "shared/src/Model/UserSession";
 import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 
 export async function handlePost(req: Request, res: Response): Promise<void> {
-  const uploadedFiles = uploadedFilesFromRequest(req);
+  const upload = getUploadParsingResult(req);
   const {scenarioName, scenarioInput} = req.body;
 
   try {
-    res.json(await runScenario(scenarioName, scenarioInput, req.session, uploadedFiles));
+    res.json(await runScenario(scenarioName, {...scenarioInput, upload}, req.session));
   } catch (error) {
     logError(`Error on runScenario`, {scenarioName}, error);
     res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});

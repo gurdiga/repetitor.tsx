@@ -1,21 +1,21 @@
-import {downloadFile, uploadFile} from "backend/src/FileStorage";
+import {downloadStoredFile, storeFile} from "backend/src/FileStorage";
 import {expect} from "chai";
 import * as fs from "fs";
 
 if (process.env.TEST_FILE_STORAGE) {
   describe("FileStorage", () => {
-    describe("uploadFile", () => {
+    describe("storeFile", () => {
       const fileName = ".gitignore";
 
       beforeEach(async () => {
-        await uploadFile(fileName, fileName, "text/plain");
+        await storeFile(fileName, fileName, "text/plain");
       });
 
-      it("can upload a file", async () => {
-        const downloadedFileContent = (await downloadFile(fileName)).body;
-        const uploadedFileContent = fs.readFileSync(fileName, {encoding: "utf-8"});
+      it("can store a file", async () => {
+        const storedFileContent = (await downloadStoredFile(fileName)).body;
+        const localFileContent = fs.readFileSync(fileName, {encoding: "utf-8"});
 
-        expect(downloadedFileContent).to.equal(uploadedFileContent);
+        expect(storedFileContent).to.equal(localFileContent);
       });
     });
   });

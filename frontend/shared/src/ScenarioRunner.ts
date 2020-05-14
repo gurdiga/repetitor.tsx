@@ -1,3 +1,4 @@
+import {UPLOADED_FILES_FORM_FIELD_NAME, UploadScenario} from "shared/src/Model/FileUpload";
 import {ScenarioName, ScenarioRegistry} from "shared/src/ScenarioRegistry";
 
 const FETCH_DEFAULTS: RequestInit = {
@@ -8,8 +9,7 @@ const FETCH_DEFAULTS: RequestInit = {
 
 export async function runScenario<SN extends ScenarioName, S extends ScenarioRegistry[SN]>(
   scenarioName: SN,
-  scenarioInput: S["Input"],
-  uploadForm?: FormData
+  scenarioInput: S["Input"]
 ): Promise<S["Result"] | TransportError | ServerError> {
   const getCsrfTokenResult = getCsrfToken();
 
@@ -19,25 +19,33 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
 
   try {
     const {csrfToken} = getCsrfTokenResult;
-    const requestBody = JSON.stringify({
-      scenarioName,
-      scenarioInput,
-      _csrf: csrfToken,
-    });
 
-    if (uploadForm) {
+    let fetchParams: RequestInit;
+
+    if ("upload" in scenarioInput) {
+      const userFiles = Array.from((scenarioInput as UploadScenario).upload as FileList);
+      const uploadForm = new FormData();
+
+      userFiles.forEach((file) => {
+        uploadForm.append(UPLOADED_FILES_FORM_FIELD_NAME, file);
+      });
+
       uploadForm.append("scenarioName", scenarioName);
       uploadForm.append("scenarioInput", JSON.stringify(scenarioInput));
       uploadForm.append("_csrf", csrfToken);
-    }
 
-    const fetchParams: RequestInit = uploadForm
-      ? {...FETCH_DEFAULTS, body: uploadForm}
-      : {
-          ...FETCH_DEFAULTS,
-          headers: {"Content-Type": "application/json"},
-          body: requestBody,
-        };
+      fetchParams = {...FETCH_DEFAULTS, body: uploadForm};
+    } else {
+      fetchParams = {
+        ...FETCH_DEFAULTS,
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          scenarioName,
+          scenarioInput,
+          _csrf: csrfToken,
+        }),
+      };
+    }
 
     const response = await fetch("/", fetchParams);
 
@@ -51,10 +59,17 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
         };
       }
     } else {
-      return {
-        kind: "ServerError",
-        error: `Eroare neprevăzută de aplicație (${response.status} ${response.statusText})`,
-      };
+      try {
+        return {
+          kind: "ServerError",
+          error: `Eroare neprevăzută de aplicație (${(await response.json()).error})`,
+        };
+      } catch (e) {
+        return {
+          kind: "ServerError",
+          error: `Eroare neprevăzută de aplicație (${response.status} ${response.statusText})`,
+        };
+      }
     }
   } catch (e) {
     return {

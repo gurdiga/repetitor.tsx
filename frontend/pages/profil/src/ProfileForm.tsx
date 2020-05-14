@@ -24,14 +24,15 @@ interface Props {
 
 export function ProfileForm(props: Props) {
   const [fullName, updateFullName] = React.useState({value: props.fullName, isValid: true});
+  const [photoUrl, setPhotoUrl] = React.useState(props.photo);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
   return (
     <>
-      <Avatar url={props.photo} />
-      <AvatarUploadButton />
+      <Avatar url={photoUrl} />
+      <AvatarUploadButton onUploaded={(url) => setPhotoUrl({kind: "Link", value: url.toString()})} />
       <Form
         fields={[
           <TextField

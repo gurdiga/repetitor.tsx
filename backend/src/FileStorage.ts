@@ -4,13 +4,7 @@ import {logError} from "backend/src/ErrorLogging";
 import * as fs from "fs";
 import {IncomingHttpHeaders} from "http2";
 import * as https from "https";
-import {
-  CantDeleteTempFileError,
-  CloudUploadError,
-  DeletedTempFile,
-  UploadFileSuccess,
-  UploadSourceFileMissingErrorr,
-} from "shared/src/Model/FileUpload";
+import {CloudUploadError, StoreFileSuccess, UploadTempFileMissingErrorr} from "shared/src/Model/FileUpload";
 import assert = require("assert");
 
 writeConfigFile();
@@ -29,15 +23,17 @@ const defaultUploadOptions = {
   },
 };
 
-export async function uploadFile(
+export async function storeFile(
   sourceFile: string,
   fileName: string,
   contentType: string,
   options: UploadOptions = defaultUploadOptions
-): Promise<UploadFileSuccess | UploadSourceFileMissingErrorr | CloudUploadError> {
+): Promise<StoreFileSuccess | UploadTempFileMissingErrorr | CloudUploadError> {
   if (!fs.existsSync(sourceFile)) {
+    logError(new Error(`UploadTempFileMissingErrorr: ${sourceFile}`));
+
     return {
-      kind: "UploadSourceFileMissingErrorr",
+      kind: "UploadTempFileMissingErrorr",
     };
   }
 
@@ -50,8 +46,8 @@ export async function uploadFile(
     });
 
     return {
-      kind: "UploadFileSuccess",
-      url: getUploadedFileUrl(fileName),
+      kind: "StoreFileSuccess",
+      url: getStoredFileUrl(fileName),
     };
   } catch (e) {
     logError(e);
@@ -62,7 +58,7 @@ export async function uploadFile(
   }
 }
 
-export function getUploadedFileUrl(filename: string): URL {
+export function getStoredFileUrl(filename: string): URL {
   return new URL(`https://storage.googleapis.com/${bucketName}/${filename}`);
 }
 
@@ -71,10 +67,10 @@ interface DownloadedFile {
   headers: IncomingHttpHeaders;
 }
 
-export async function downloadFile(filename: string): Promise<DownloadedFile> {
+export async function downloadStoredFile(filename: string): Promise<DownloadedFile> {
   return new Promise((resolve, reject) => {
     https
-      .get(getUploadedFileUrl(filename), (res) => {
+      .get(getStoredFileUrl(filename), (res) => {
         res.setEncoding("utf8");
 
         let body = "";
@@ -93,18 +89,10 @@ function writeConfigFile() {
   fs.writeFileSync(configFile, configJson);
 }
 
-export function deleteTemFile(filePath: string): DeletedTempFile | CantDeleteTempFileError {
+export function deleteTemFile(filePath: string): void {
   try {
     fs.unlinkSync(filePath);
-
-    return {
-      kind: "DeletedTempFile",
-    };
   } catch (error) {
     logError(error);
-
-    return {
-      kind: "CantDeleteTempFileError",
-    };
   }
 }
