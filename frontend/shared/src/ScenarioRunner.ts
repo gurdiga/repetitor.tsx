@@ -19,35 +19,8 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
 
   try {
     const {csrfToken} = getCsrfTokenResult;
-
-    let fetchParams: RequestInit;
-
-    if ("upload" in scenarioInput) {
-      const userFiles = Array.from((scenarioInput as UploadScenario).upload as FileList);
-      const uploadForm = new FormData();
-
-      userFiles.forEach((file) => {
-        uploadForm.append(UPLOADED_FILES_FORM_FIELD_NAME, file);
-      });
-
-      uploadForm.append("scenarioName", scenarioName);
-      uploadForm.append("scenarioInput", JSON.stringify(scenarioInput));
-      uploadForm.append("_csrf", csrfToken);
-
-      fetchParams = {...FETCH_DEFAULTS, body: uploadForm};
-    } else {
-      fetchParams = {
-        ...FETCH_DEFAULTS,
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          scenarioName,
-          scenarioInput,
-          _csrf: csrfToken,
-        }),
-      };
-    }
-
-    const response = await fetch("/", fetchParams);
+    const request = createRquest<S["Input"]>(scenarioName, scenarioInput, csrfToken);
+    const response = await fetch("/", request);
 
     if (response.status === 200) {
       try {
@@ -77,6 +50,52 @@ export async function runScenario<SN extends ScenarioName, S extends ScenarioReg
       error: e.message,
     };
   }
+}
+
+function createRquest<SI>(scenarioName: string, scenarioInput: SI, csrfToken: string): RequestInit {
+  if ("upload" in scenarioInput) {
+    return createUploadRequest(scenarioName, scenarioInput, csrfToken);
+  } else {
+    return createJsonRquest(scenarioName, scenarioInput, csrfToken);
+  }
+}
+
+function createUploadRequest<SI>(scenarioName: string, scenarioInput: SI, csrfToken: string): RequestInit {
+  const fileList = getFileList<SI>(scenarioInput);
+  const userFiles = Array.from(fileList);
+  const uploadForm = new FormData();
+
+  userFiles.forEach((file) => {
+    uploadForm.append(UPLOADED_FILES_FORM_FIELD_NAME, file);
+  });
+
+  uploadForm.append("scenarioName", scenarioName);
+  uploadForm.append("scenarioInput", JSON.stringify(scenarioInput));
+  uploadForm.append("_csrf", csrfToken);
+
+  return {...FETCH_DEFAULTS, body: uploadForm};
+}
+
+function getFileList<SI>(scenarioInput: SI): FileList {
+  const uploadScenario = (scenarioInput as any) as UploadScenario;
+
+  if (!(uploadScenario.upload instanceof FileList)) {
+    throw new Error("UploadScenario.upload must be a FileList");
+  }
+
+  return uploadScenario.upload;
+}
+
+function createJsonRquest<SI>(scenarioName: string, scenarioInput: SI, csrfToken: string): RequestInit {
+  return {
+    ...FETCH_DEFAULTS,
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      scenarioName,
+      scenarioInput,
+      _csrf: csrfToken,
+    }),
+  };
 }
 
 export const EmptyScenarioInput = {};
