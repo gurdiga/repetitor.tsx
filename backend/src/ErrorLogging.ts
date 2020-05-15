@@ -1,4 +1,4 @@
-import {isTestEnvironment, requireEnvVar} from "backend/src/Env";
+import {isDevelopmentEnvironment, isTestEnvironment, requireEnvVar} from "backend/src/Env";
 import {NextFunction, Request, Response} from "express";
 import * as Rollbar from "rollbar";
 
@@ -21,8 +21,9 @@ export function errorLoggingMiddleware(
 }
 
 export function logError(...args: any[]): void {
-  if (isTestEnvironment()) {
+  if (isTestEnvironment() || isDevelopmentEnvironment()) {
     console.error(...args);
+    return;
   }
 
   rollbar.error(...args);
