@@ -43,6 +43,9 @@ export const app = express()
     sendPageBundle(req.params.pagePathName, res);
   })
   .get("*", csrfProtection, sendPageHtml)
+  // uploadParser must go before csrfProtection because for a
+  // multipart/form-data request, the req.body needs to be parsed by
+  // the time it reaches csrfProtection
   .post("/", uploadParser, csrfProtection, handlePost);
 
 app.listen(requireNumericEnvVar("PORT")).on("error", (error) => {
