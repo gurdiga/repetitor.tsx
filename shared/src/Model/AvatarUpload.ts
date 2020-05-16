@@ -1,4 +1,5 @@
-import {BadFileTypeError, UploadedFile} from "shared/src/Model/FileUpload";
+import {BadFileTypeError, Upload, UploadedFile, UploadValidationError} from "shared/src/Model/FileUpload";
+import {UnexpectedError} from "shared/src/Model/Utils";
 
 export type AvatarUrl = {
   kind: "AvatarUrl";
@@ -10,17 +11,27 @@ export type AvatarImage = {
   image: UploadedFile;
 };
 
-export function makeImageFromUploadedFiles(uploadedFiles: UploadedFile[]): AvatarImage | BadFileTypeError {
-  const [image] = uploadedFiles;
+export function makeImageFromUpload(
+  upload: Upload
+): AvatarImage | UploadValidationError | BadFileTypeError | UnexpectedError {
+  if (upload instanceof Array) {
+    // ASSUMPTION: It’s an UploadedFile[]
+    const [image] = upload;
 
-  if (image.mimetype !== "image/jpeg") {
+    if (image.mimetype !== "image/jpeg") {
+      return {
+        kind: "BadFileTypeError",
+      };
+    }
+
     return {
-      kind: "BadFileTypeError",
+      kind: "AvatarImage",
+      image,
     };
+  } else if ("kind" in upload) {
+    // ASSUMPTION: It’s an UploadValidationError.
+    return upload;
+  } else {
+    throw new Error("Unexpected upload type");
   }
-
-  return {
-    kind: "AvatarImage",
-    image,
-  };
 }

@@ -1,5 +1,5 @@
 import {deleteTemFile, storeFile} from "backend/src/FileStorage";
-import {makeImageFromUploadedFiles} from "shared/src/Model/AvatarUpload";
+import {makeImageFromUpload} from "shared/src/Model/AvatarUpload";
 import {UserSession} from "shared/src/Model/UserSession";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import path = require("path");
@@ -14,22 +14,7 @@ export async function AvatarUpload(input: Scenario["Input"], session: UserSessio
     };
   }
 
-  const {upload} = input;
-
-  if ("kind" in upload) {
-    // It’s an UploadValidationError.
-    return upload;
-  }
-
-  if (!(upload instanceof Array)) {
-    // This can’t really happen; it’s just to keep the compiler happy.
-    return {
-      kind: "UnexpectedError",
-      error: "Unexpected FileList",
-    };
-  }
-
-  const makeImageResult = makeImageFromUploadedFiles(upload);
+  const makeImageResult = makeImageFromUpload(input.upload);
 
   if (makeImageResult.kind !== "AvatarImage") {
     return makeImageResult;
