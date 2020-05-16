@@ -22,7 +22,8 @@ export async function AvatarUpload(input: Scenario["Input"], session: UserSessio
 
   const {image} = makeImageResult;
   const fileExtension = path.extname(image.originalname).toLowerCase();
-  const destinationFileName = `avatar-${session.userId}${fileExtension}`;
+  const uniqueToken = Date.now();
+  const destinationFileName = `avatar-${session.userId}-${uniqueToken}${fileExtension}`;
   const storeFileResult = await storeFile(image.path, destinationFileName, image.mimetype);
 
   if (storeFileResult.kind !== "StoreFileSuccess") {
