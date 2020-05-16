@@ -25,7 +25,7 @@ const defaultUploadOptions = {
 
 export async function storeFile(
   sourceFile: string,
-  fileName: string,
+  destinationFileName: string,
   contentType: string,
   options: UploadOptions = defaultUploadOptions
 ): Promise<StoreFileSuccess | UploadTempFileMissingErrorr | CloudUploadError> {
@@ -39,7 +39,7 @@ export async function storeFile(
 
   try {
     await bucket.upload(sourceFile, {
-      destination: fileName,
+      destination: destinationFileName,
       ...defaultUploadOptions,
       ...options,
       contentType,
@@ -47,7 +47,7 @@ export async function storeFile(
 
     return {
       kind: "StoreFileSuccess",
-      url: getStoredFileUrl(fileName),
+      url: getStoredFileUrl(destinationFileName),
     };
   } catch (e) {
     logError(e);
@@ -56,6 +56,10 @@ export async function storeFile(
       kind: "CloudUploadError",
     };
   }
+}
+
+export async function deleteStoredFile(destinationFileName: string): Promise<void> {
+  await bucket.deleteFiles({prefix: destinationFileName});
 }
 
 export function getStoredFileUrl(filename: string): URL {
