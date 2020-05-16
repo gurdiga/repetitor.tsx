@@ -11,14 +11,46 @@ import {UserSession} from "shared/src/Model/UserSession";
 import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 
 export async function handlePost(req: Request, res: Response): Promise<void> {
-  const upload = getUploadParsingResult(req);
-  const {scenarioName, scenarioInput} = req.body;
+  const {scenarioName} = req.body;
+  const scenarioInput = getScenarioInput(req);
 
   try {
-    res.json(await runScenario(scenarioName, {...scenarioInput, upload}, req.session));
+    res.json(await runScenario(scenarioName, scenarioInput, req.session));
   } catch (error) {
     logError(`Error on runScenario`, {scenarioName}, error);
     res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});
+  }
+}
+
+function getScenarioInput(req: Request): object {
+  const isFormUpload = !!req.get("Content-Type")?.startsWith("multipart/form-data");
+
+  if (isFormUpload) {
+    const upload = getUploadParsingResult(req);
+    const input = getScenarioInputFromForm(req);
+
+    return {...input, upload};
+  } else {
+    // I assume it’s a JSON request.
+    return req.body.scenarioInput;
+  }
+}
+
+function getScenarioInputFromForm(req: Request): object {
+  let input: object;
+
+  try {
+    input = JSON.parse(req.body.scenarioInput);
+  } catch (error) {
+    throw new Error("Unable to parse scenario input JSON");
+  }
+
+  const isObject = typeof input === "object" && input !== null;
+
+  if (isObject) {
+    return input;
+  } else {
+    throw new Error("Scenario input is expected to be an object");
   }
 }
 

@@ -83,7 +83,11 @@ function getFileList<SI>(scenarioInput: SI): FileList {
     throw new Error("UploadScenario.upload must be a FileList");
   }
 
-  return uploadScenario.upload;
+  const {upload} = uploadScenario;
+
+  delete uploadScenario.upload;
+
+  return upload;
 }
 
 function createJsonRquest<SI>(scenarioName: string, scenarioInput: SI, csrfToken: string): RequestInit {
