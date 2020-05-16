@@ -3,7 +3,6 @@ import {makeImageFromUpload} from "shared/src/Model/AvatarUpload";
 import {UserSession} from "shared/src/Model/UserSession";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import path = require("path");
-import fs = require("fs");
 
 type Scenario = ScenarioRegistry["AvatarUpload"];
 
