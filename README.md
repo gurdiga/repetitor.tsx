@@ -1,4 +1,18 @@
-This is going to be an online system for tutors.
+## The arrangement
+
+Here I’m trying to come up with a way to put together a whole system, frontend and backend, in a way that makes it understandable and maintainable.
+
+The app logic — and the code — is structured around **scenarios**, user workflow scenarios like these: registration, log in, email confirmation, password reset, etc.
+
+Scenarios have some UI elements and some backend elements. Scenarios have a definition of input and the definition of possible outcomes: usually one of successful, and multiple error states.
+
+I’m trying to make use of the TypeScript’s type‑system so that it first guides, and then ties together the UI code and the backend code.
+
+I have described some of the details [here][1], [here][2], and [here][3].
+
+[1]: https://gurdiga.com/blog/2020/01/31/simpler-architecture/
+[2]: https://gurdiga.com/blog/2020/02/14/simpler-architecture-specifics/
+[3]: https://gurdiga.com/blog/2020/03/16/simpler-architecture-validation-and-error-handling/
 
 ## LICENCE
 
