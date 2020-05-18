@@ -9,6 +9,10 @@ export interface UploadedFile {
   size: number;
 }
 
+export type UploadMissingError = {
+  kind: "UploadMissingError";
+};
+
 // Signaled from uploadParser. Still needs to be properly handled on the front-end.
 export type FileTooLargeError = {
   kind: "FileTooLargeError";
@@ -40,7 +44,7 @@ export type StoreFileSuccess = {
   url: URL;
 };
 
-export type UploadValidationError = FileTooLargeError | UnacceptableUploadError;
+export type UploadValidationError = FileTooLargeError | UnacceptableUploadError | UploadMissingError;
 export type UploadParsingResult = UploadedFile[] | UploadValidationError;
 export type Upload = FileList | UploadParsingResult;
 

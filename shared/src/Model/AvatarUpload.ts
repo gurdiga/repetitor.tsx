@@ -18,6 +18,12 @@ export function makeImageFromUpload(
     // ASSUMPTION: It’s an UploadedFile[]
     const [image] = upload;
 
+    if (!image) {
+      return {
+        kind: "UploadMissingError",
+      };
+    }
+
     if (image.mimetype !== "image/jpeg") {
       return {
         kind: "BadFileTypeError",

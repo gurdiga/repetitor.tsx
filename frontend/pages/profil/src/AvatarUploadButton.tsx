@@ -54,6 +54,7 @@ export function AvatarUploadButton(props: Props) {
           `Poza trebuie să aibă mai puțin de ${MAX_UPLOADED_FILE_SIZE / 1_048_576}MB`,
         ];
         break;
+      case "UploadMissingError":
       case "UploadTempFileMissingErrorr":
       case "UnacceptableUploadError":
       case "CloudUploadError":

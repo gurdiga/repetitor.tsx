@@ -1,8 +1,8 @@
 import {deleteTemFile, storeFile} from "backend/src/FileStorage";
+import * as path from "path";
 import {makeImageFromUpload} from "shared/src/Model/AvatarUpload";
 import {UserSession} from "shared/src/Model/UserSession";
 import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import path = require("path");
 
 type Scenario = ScenarioRegistry["AvatarUpload"];
 
