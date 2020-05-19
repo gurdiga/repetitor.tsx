@@ -2,7 +2,7 @@
 SHELL=bash
 
 default:
-	make --no-print-directory test-backend FILES=backend/tests/src/ScenarioHandlers/AvatarUploadTest.ts
+	TEST_FILE_STORAGE=true make --no-print-directory test-backend FILES=backend/tests/src/Utils/FileStorageTest.ts
 
 test: test-backend test-frontend
 t: test
