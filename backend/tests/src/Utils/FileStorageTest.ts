@@ -23,5 +23,9 @@ if (process.env.TEST_FILE_STORAGE) {
         expect(storedFileContent).to.equal(localFileContent);
       });
     });
+
+    // TODO:
+    // - test unhappy paths for FileStorage.storeFile
+    // - test FileStorage.deleteTemFile doesn’t throw
   });
 }

@@ -20,12 +20,20 @@ describe("AvatarUpload", () => {
   });
 
   describe("happy path", () => {
-    const fileStorageUrl = new URL("http://cloud.net/bucket/avatar.jpg");
+    const session = {userId: 42};
+    const uploadedFile: UploadedFile = {
+      originalname: "IMG042042.JPG",
+      path: "/some/path",
+      mimetype: "image/jpeg",
+      size: 1,
+    };
+    const input = {upload: [uploadedFile]};
 
     let time: Sinon.SinonFakeTimers;
     beforeEach(() => (time = Sinon.useFakeTimers(Date.parse("2020-05-18T07:47:47.000Z"))));
     afterEach(() => time.restore());
 
+    const fileStorageUrl = new URL("http://cloud.net/bucket/avatar.jpg");
     beforeEach(() => {
       storeFileStub = storeFileStub.resolves({
         kind: "StoreFileSuccess",
@@ -34,15 +42,6 @@ describe("AvatarUpload", () => {
     });
 
     it("does the work", async () => {
-      const session = {userId: 42};
-      const uploadedFile: UploadedFile = {
-        originalname: "IMG042042.JPG",
-        path: "/some/path",
-        mimetype: "image/jpeg",
-        size: 1,
-      };
-      const input = {upload: [uploadedFile]};
-
       expect(await AvatarUpload(input, session), "reports the succes").to.deep.equal({
         kind: "AvatarUrl",
         url: fileStorageUrl,
@@ -57,9 +56,26 @@ describe("AvatarUpload", () => {
       expect(deleteTemFileStub, "deletes the temp file").to.have.been.calledOnceWithExactly(uploadedFile.path);
     });
 
-    // TODO:
-    // - test storeFile failure
-    // - test deleteTemFile doesn’t break the flow
+    context("when storeFile fails", () => {
+      Object.entries({
+        "when source temp file is missing": {
+          storeFileResponse: {kind: "UploadTempFileMissingErrorr" as const},
+          expectedResult: {kind: "UploadTempFileMissingErrorr"},
+        },
+        "when cloud storage fails": {
+          storeFileResponse: {kind: "CloudUploadError" as const},
+          expectedResult: {kind: "CloudUploadError"},
+        },
+      }).forEach(([description, {storeFileResponse, expectedResult}]) => {
+        context(description, () => {
+          beforeEach(() => (storeFileStub = storeFileStub.resolves(storeFileResponse)));
+
+          it("reports the failure", async () => {
+            expect(await AvatarUpload(input, session)).to.deep.equal(expectedResult);
+          });
+        });
+      });
+    });
   });
 
   describe("unhappy paths", () => {
