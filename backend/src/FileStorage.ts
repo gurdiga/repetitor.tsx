@@ -2,10 +2,7 @@ import {Storage, StorageOptions, UploadOptions} from "@google-cloud/storage";
 import {requireEnvVar} from "backend/src/Env";
 import {logError} from "backend/src/ErrorLogging";
 import * as fs from "fs";
-import {IncomingHttpHeaders} from "http2";
-import * as https from "https";
 import {CloudUploadError, StoreFileSuccess, UploadTempFileMissingErrorr} from "shared/src/Model/FileUpload";
-import assert = require("assert");
 
 writeConfigFile();
 
@@ -66,24 +63,12 @@ export function getStoredFileUrl(filename: string): URL {
   return new URL(`https://storage.googleapis.com/${bucketName}/${filename}`);
 }
 
-interface DownloadedFile {
-  body: string;
-  headers: IncomingHttpHeaders;
-}
-
-export async function downloadStoredFile(filename: string): Promise<DownloadedFile> {
-  return new Promise((resolve, reject) => {
-    https
-      .get(getStoredFileUrl(filename), (res) => {
-        res.setEncoding("utf8");
-
-        let body = "";
-
-        res.on("data", (data) => (body += data));
-        res.on("end", () => resolve({body, headers: res.headers}));
-      })
-      .on("error", reject);
-  });
+export function deleteTemFile(filePath: string): void {
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    logError(error);
+  }
 }
 
 function writeConfigFile() {
@@ -91,12 +76,4 @@ function writeConfigFile() {
   const configFile = requireEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
 
   fs.writeFileSync(configFile, configJson);
-}
-
-export function deleteTemFile(filePath: string): void {
-  try {
-    fs.unlinkSync(filePath);
-  } catch (error) {
-    logError(error);
-  }
 }

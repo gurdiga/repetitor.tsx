@@ -1,8 +1,10 @@
 import * as ErrorLogging from "backend/src/ErrorLogging";
-import {deleteStoredFile, deleteTemFile, downloadStoredFile, storeFile} from "backend/src/FileStorage";
+import {deleteStoredFile, deleteTemFile, getStoredFileUrl, storeFile} from "backend/src/FileStorage";
 import {Stub} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import * as fs from "fs";
+import {IncomingHttpHeaders} from "http2";
+import * as https from "https";
 import Sinon = require("sinon");
 
 if (process.env.TEST_FILE_STORAGE) {
@@ -26,8 +28,40 @@ if (process.env.TEST_FILE_STORAGE) {
         expect(storedFileContent).to.equal(localFileContent);
       });
 
-      context("when the cloud fails", () => {
-        // TODO
+      describe("unhappy paths", () => {
+        const {instanceOf, has} = Sinon.match;
+
+        let logErrorStub: Stub<typeof ErrorLogging.logError>;
+        beforeEach(() => (logErrorStub = Sinon.stub(ErrorLogging, "logError")));
+        afterEach(() => logErrorStub.restore());
+
+        context("when the source file is missing", () => {
+          const badSourceFile = `${sourceFile};-)`;
+
+          it("reports and logs the error", async () => {
+            const result = await storeFile(badSourceFile, destinationFileName, "text/plain");
+
+            expect(result).to.deep.equal({kind: "UploadTempFileMissingErrorr"});
+            expect(logErrorStub).to.have.been.calledOnceWithExactly(
+              instanceOf(Error).and(has("message", `UploadTempFileMissingErrorr: ${badSourceFile}`))
+            );
+          });
+        });
+
+        context("when the cloud fails for any reason", () => {
+          // Giving it bad input intentionally, to make it fail.
+          const destinationFileName = ".";
+          const contentType = "}}}";
+
+          it("reports and logs the error", async () => {
+            const result = await storeFile(sourceFile, destinationFileName, contentType);
+
+            expect(result).to.deep.equal({kind: "CloudUploadError"});
+            expect(logErrorStub).to.have.been.calledOnceWithExactly(
+              instanceOf(Error).and(has("message", `The object name '${destinationFileName}' is invalid.`))
+            );
+          });
+        });
       });
     });
 
@@ -70,5 +104,25 @@ if (process.env.TEST_FILE_STORAGE) {
         });
       });
     });
+  });
+}
+
+interface DownloadedFile {
+  body: string;
+  headers: IncomingHttpHeaders;
+}
+
+export async function downloadStoredFile(filename: string): Promise<DownloadedFile> {
+  return new Promise((resolve, reject) => {
+    https
+      .get(getStoredFileUrl(filename), (res) => {
+        res.setEncoding("utf8");
+
+        let body = "";
+
+        res.on("data", (data) => (body += data));
+        res.on("end", () => resolve({body, headers: res.headers}));
+      })
+      .on("error", reject);
   });
 }
