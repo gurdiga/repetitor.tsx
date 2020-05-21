@@ -2,7 +2,7 @@
 SHELL=bash
 
 default:
-	TEST_FILE_STORAGE=true make --no-print-directory test-backend FILES=backend/tests/src/Utils/FileStorageTest.ts
+	make --no-print-directory test-backend FILES=backend/tests/src/Utils/Express/AdapterTest.ts
 
 test: test-backend test-frontend
 t: test

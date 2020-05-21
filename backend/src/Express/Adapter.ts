@@ -12,13 +12,19 @@ import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 
 export async function handlePost(req: Request, res: Response): Promise<void> {
   const {scenarioName} = req.body;
-  const scenarioInput = getScenarioInput(req);
 
   try {
-    res.json(await runScenario(scenarioName, scenarioInput, req.session));
+    const scenarioInput = getScenarioInput(req);
+
+    try {
+      res.json(await runScenario(scenarioName, scenarioInput, req.session));
+    } catch (error) {
+      logError(error, {scenarioName, context: "runScenario"});
+      res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});
+    }
   } catch (error) {
-    logError(`Error on runScenario`, {scenarioName}, error);
-    res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});
+    logError(error, {scenarioName, context: "getScenarioInput"});
+    res.status(500).json({error: "SCENARIO_INPUT_ERROR"});
   }
 }
 

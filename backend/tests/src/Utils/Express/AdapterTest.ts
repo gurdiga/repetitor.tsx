@@ -1,42 +1,37 @@
+import * as ErrorLogging from "backend/src/ErrorLogging";
 import {
   VendorModulesWebPaths,
   VENDOR_MODULE_PREFIX,
   VersionedVendorModulePaths,
 } from "backend/src/Express/VendorModules";
 import {app} from "backend/src/index";
+import {Stub} from "backend/tests/src/TestHelpers";
 import * as chai from "chai";
 import {expect} from "chai";
+import * as Sinon from "sinon";
 import ChaiHttp = require("chai-http");
 
 describe("Express integration", () => {
   let agent: ChaiHttp.Agent;
-  let res: ChaiHttp.Response;
 
   before(async () => {
     agent = chai.request.agent(app);
-    res = await agent.get("/");
   });
 
-  it("responds with HTTP OK 200", () => {
-    expect(res).to.have.status(200);
-  });
+  describe("GET", () => {
+    it("does the work", async () => {
+      const res = await agent.get("/");
 
-  it("includes the CSRF token into the page", () => {
-    const csrfToken = res.header["xsrf-token"];
-    const expectedTag = `<meta name="csrf_token" content="${csrfToken}" />`;
+      expect(res, "responds with HTTP OK 200").to.have.status(200);
 
-    expect(res.text).to.have.string(expectedTag);
-  });
+      const csrfToken = res.header["xsrf-token"];
+      const expectedMetaTag = `<meta name="csrf_token" content="${csrfToken}" />`;
+      expect(res.text, "includes the CSRF token into the page").to.have.string(expectedMetaTag);
 
-  it("includes the reference to the RequireJS loader", () => {
-    const expectedTag = '<script src="/vendor_modules/requirejs-2.3.6.js"></script>';
+      const expectedStringTag = '<script src="/vendor_modules/requirejs-2.3.6.js"></script>';
+      expect(res.text, "includes the reference to the RequireJS loader").to.have.string(expectedStringTag);
 
-    expect(res.text).to.have.string(expectedTag);
-  });
-
-  it("renders the golden sample HTML", () => {
-    const csrfToken = res.header["xsrf-token"];
-    const goldenSampleHtml = `<!DOCTYPE html>
+      const goldenSampleHtml = `<!DOCTYPE html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -88,142 +83,227 @@ describe("Express integration", () => {
   </script>
 </body>
 `;
+      expect(res.text, "renders the golden sample HTML").to.equal(goldenSampleHtml);
 
-    expect(res.text).to.equal(goldenSampleHtml);
-  });
+      const sessionCookie = res.header["set-cookie"][0];
+      const sessionCookieRegexp = /connect.sid=(.+); Path=\/; Expires=(.+); HttpOnly; SameSite=Strict/;
 
-  it("sets the session cookie appropriately", () => {
-    const sessionCookie = res.header["set-cookie"][0];
-    const sessionCookieRegexp = /connect.sid=(.+); Path=\/; Expires=(.+); HttpOnly; SameSite=Strict/;
+      expect(sessionCookie, "sets the session cookie appropriately").to.match(sessionCookieRegexp);
 
-    expect(sessionCookie).to.match(sessionCookieRegexp);
+      const [_wholeMatch, seesionId, expirationTimestamp] = sessionCookie.match(sessionCookieRegexp);
 
-    const [_wholeMatch, seesionId, expirationTimestamp] = sessionCookie.match(sessionCookieRegexp);
+      expect(unescape(seesionId), "seesionId length").to.have.lengthOf(78);
 
-    expect(unescape(seesionId)).to.have.lengthOf(78);
+      const oneWeekFromNow = new Date(Date.now() + 1000 * 3600 * 24 * 7);
+      const expectedExpirationDate = stripMilliseconds(oneWeekFromNow);
+      const actualExpirationDate = stripMilliseconds(new Date(expirationTimestamp));
 
-    const oneWeekFromNow = new Date(Date.now() + 1000 * 3600 * 24 * 7);
-    const expectedExpirationDate = stripMilliseconds(oneWeekFromNow);
-    const actualExpirationDate = stripMilliseconds(new Date(expirationTimestamp));
+      expect(actualExpirationDate, "session cookie expiration date").to.equal(expectedExpirationDate);
 
-    expect(actualExpirationDate).to.equal(expectedExpirationDate);
-  });
+      const goldenSampleHeaders = {
+        "x-dns-prefetch-control": "off",
+        "x-frame-options": "SAMEORIGIN",
+        "strict-transport-security": "max-age=15552000; includeSubDomains",
+        "x-download-options": "noopen",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "access-control-allow-origin": "*",
+        "content-type": "text/html; charset=utf-8",
+        vary: "Accept-Encoding",
+        connection: "close",
+      };
 
-  it("sets the expected headers on the response", () => {
-    const goldenSampleHeaders = {
-      "x-dns-prefetch-control": "off",
-      "x-frame-options": "SAMEORIGIN",
-      "strict-transport-security": "max-age=15552000; includeSubDomains",
-      "x-download-options": "noopen",
-      "x-content-type-options": "nosniff",
-      "x-xss-protection": "1; mode=block",
-      "access-control-allow-origin": "*",
-      "content-type": "text/html; charset=utf-8",
-      vary: "Accept-Encoding",
-      connection: "close",
-    };
+      expect(res.header, "headers").to.deep.include(goldenSampleHeaders);
+    });
 
-    expect(res.header, "headers").to.deep.include(goldenSampleHeaders);
-  });
+    it("responds to /.well-known/security.txt", async () => {
+      const res = await agent.get("/.well-known/security.txt");
 
-  it("responds to /.well-known/security.txt", async () => {
-    res = await agent.get("/.well-known/security.txt");
+      expect(res).to.have.status(200);
+      expect(res.text).to.equal(
+        [`# If you found any security issue, please let me know.`, `Contact: mailto:gurdiga@gmail.com`].join("\n")
+      );
+    });
 
-    expect(res).to.have.status(200);
-    expect(res.text).to.equal(
-      [`# If you found any security issue, please let me know.`, `Contact: mailto:gurdiga@gmail.com`].join("\n")
-    );
-  });
+    describe("serving of vendor modules", () => {
+      it("correctly computes the golden samples", () => {
+        expect(VersionedVendorModulePaths).to.deep.equal({
+          "react-16.13.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
+          "react-dom-16.13.1.js":
+            "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react-dom/umd/react-dom.production.min.js",
+          "typestyle-2.1.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/typestyle/umd/typestyle.min.js",
+          "csx-10.0.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csx/umd/csx.min.js",
+          "csstips-1.2.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csstips/umd/csstips.min.js",
+          "requirejs-2.3.6.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/requirejs/require.js",
+          "rollbar-2.15.2.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/rollbar/dist/rollbar.umd.min.js",
+        });
 
-  describe("serving of vendor modules", () => {
-    it("correctly computes the golden samples", () => {
-      expect(VersionedVendorModulePaths).to.deep.equal({
-        "react-16.13.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react/umd/react.production.min.js",
-        "react-dom-16.13.1.js":
-          "/Users/vlad/src/repetitor.tsx/frontend/node_modules/react-dom/umd/react-dom.production.min.js",
-        "typestyle-2.1.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/typestyle/umd/typestyle.min.js",
-        "csx-10.0.1.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csx/umd/csx.min.js",
-        "csstips-1.2.0.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/csstips/umd/csstips.min.js",
-        "requirejs-2.3.6.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/requirejs/require.js",
-        "rollbar-2.15.2.js": "/Users/vlad/src/repetitor.tsx/frontend/node_modules/rollbar/dist/rollbar.umd.min.js",
+        expect(VendorModulesWebPaths).to.deep.equal({
+          react: `/vendor_modules/react-16.13.1`,
+          "react-dom": `/vendor_modules/react-dom-16.13.1`,
+          typestyle: `/vendor_modules/typestyle-2.1.0`,
+          csx: `/vendor_modules/csx-10.0.1`,
+          csstips: `/vendor_modules/csstips-1.2.0`,
+          rollbar: "/vendor_modules/rollbar-2.15.2",
+          requirejs: `/vendor_modules/requirejs-2.3.6`,
+        });
       });
 
-      expect(VendorModulesWebPaths).to.deep.equal({
-        react: `/vendor_modules/react-16.13.1`,
-        "react-dom": `/vendor_modules/react-dom-16.13.1`,
-        typestyle: `/vendor_modules/typestyle-2.1.0`,
-        csx: `/vendor_modules/csx-10.0.1`,
-        csstips: `/vendor_modules/csstips-1.2.0`,
-        rollbar: "/vendor_modules/rollbar-2.15.2",
-        requirejs: `/vendor_modules/requirejs-2.3.6`,
+      it("serves the ones that exis", () => {
+        Object.keys(VersionedVendorModulePaths).forEach(async (module) => {
+          const res = await agent.get(`${VENDOR_MODULE_PREFIX}${module}`);
+
+          expect(res).to.have.status(200);
+          expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
+          expect(res, "caches them indefinitely").to.have.header("cache-control", "public, max-age=31536000");
+        });
+      });
+
+      it("responds with 404 for the ones that do not exist", async () => {
+        const res = await agent.get(`${VENDOR_MODULE_PREFIX}nonexistent.js`);
+
+        expect(res).to.be.text;
+        expect(res).to.have.status(404);
       });
     });
 
-    it("serves the ones that exis", () => {
-      Object.keys(VersionedVendorModulePaths).forEach(async (module) => {
-        res = await agent.get(`${VENDOR_MODULE_PREFIX}${module}`);
+    describe("serving of app bundles", () => {
+      it("serves the ones that exis", async () => {
+        [
+          "/shared/bundle-VERSION.js",
+          "/frontend/shared/bundle-VERSION.js",
+          "/home/bundle-VERSION.js",
+          "/autentificare/bundle-VERSION.js",
+        ].forEach(async (bundle) => {
+          const res = await agent.get(bundle);
 
-        expect(res).to.have.status(200);
-        expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
-        expect(res, "caches them indefinitely").to.have.header("cache-control", "public, max-age=31536000");
+          expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
+          expect(res, "caches them indefinitely").to.have.header("cache-control", "public, max-age=31536000");
+          expect(res).to.have.status(200);
+        });
+      });
+
+      it("responds with 404 for the ones that do not exist", async () => {
+        const res = await agent.get("/nonexistent/bundle-VERSION.js");
+
+        expect(res).to.be.text;
+        expect(res).to.have.status(404);
       });
     });
 
-    it("responds with 404 for the ones that do not exist", async () => {
-      res = await agent.get(`${VENDOR_MODULE_PREFIX}nonexistent.js`);
+    it("responds with 404 on non-existend paths", async () => {
+      const res = await agent.get("/nonexistent/");
 
       expect(res).to.be.text;
       expect(res).to.have.status(404);
     });
+
+    it("trusts the reverse proxy", () => {
+      expect(app.enabled("trust proxy")).to.be.true;
+    });
+
+    it("is inspectable", () => {
+      const middlewareNames = app._router.stack.map((layer: any) => layer.name);
+      const expectedMiddlewareNames = [
+        "errorLoggingMiddleware",
+        "helmet",
+        "session",
+        "compression",
+        "jsonParser",
+        "corsMiddleware",
+      ];
+
+      expect(middlewareNames).to.include.members(expectedMiddlewareNames);
+    });
   });
 
-  describe("serving of app bundles", () => {
-    it("serves the ones that exis", async () => {
-      [
-        "/shared/bundle-VERSION.js",
-        "/frontend/shared/bundle-VERSION.js",
-        "/home/bundle-VERSION.js",
-        "/autentificare/bundle-VERSION.js",
-      ].forEach(async (bundle) => {
-        res = await agent.get(bundle);
+  describe("handlePost", () => {
+    describe("unhappy paths", () => {
+      let logErrorStub: Stub<typeof ErrorLogging.logError>;
+      beforeEach(() => (logErrorStub = Sinon.stub(ErrorLogging, "logError")));
+      afterEach(() => logErrorStub.restore());
 
-        expect(res).to.have.header("content-type", "application/javascript; charset=UTF-8");
-        expect(res, "caches them indefinitely").to.have.header("cache-control", "public, max-age=31536000");
-        expect(res).to.have.status(200);
+      const {instanceOf, has} = Sinon.match;
+
+      context("when request is a form upload", () => {
+        context("when the form scenarioInput field is not a valid JSON string", () => {
+          it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
+            const res = await simulateFormUploadPost(
+              {files: __filename},
+              {
+                scenarioName: "TestScenario",
+                scenarioInput: "some non-JSON blob",
+              }
+            );
+
+            expect(res, "responds with HTTP 500 ").to.have.status(500);
+            expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
+            expect(logErrorStub).to.have.been.calledOnceWithExactly(
+              instanceOf(Error).and(has("message", `Unable to parse scenario input JSON`)),
+              {context: "getScenarioInput", scenarioName: "TestScenario"}
+            );
+          });
+        });
       });
     });
 
-    it("responds with 404 for the ones that do not exist", async () => {
-      res = await agent.get("/nonexistent/bundle-VERSION.js");
+    describe("CSRF validation", () => {
+      context("when the request is a form upload", () => {
+        it("responds with 403", async () => {
+          const res = await simulateFormUploadPost(
+            {files: __filename},
+            {
+              scenarioName: "TestScenario",
+              scenarioInput: "some non-JSON blob",
+              _csrf: "abracadabra",
+            }
+          );
 
-      expect(res).to.be.text;
-      expect(res).to.have.status(404);
+          expect(res).to.have.status(403);
+        });
+      });
+
+      context("when the request is JONS", () => {
+        it("responds with 401", async () => {
+          const res = await simulateJsonPost({
+            scenarioName: "TestScenario",
+            scenarioInput: "some non-JSON blob",
+            _csrf: "abracadabra",
+          });
+
+          expect(res).to.have.status(403);
+        });
+      });
     });
-  });
 
-  it("responds with 404 on non-existend paths", async () => {
-    res = await agent.get("/nonexistent/");
+    async function simulateFormUploadPost(
+      uploadedFiles: Record<string, string>,
+      formFields: Record<string, string>
+    ): Promise<ChaiHttp.Response> {
+      const csrfToken = (await agent.get("/")).header["xsrf-token"];
 
-    expect(res).to.be.text;
-    expect(res).to.have.status(404);
-  });
+      formFields = {_csrf: csrfToken, ...formFields};
 
-  it("trusts the reverse proxy", () => {
-    expect(app.enabled("trust proxy")).to.be.true;
-  });
+      let req = agent.post("/");
 
-  it("is inspectable", () => {
-    const middlewareNames = app._router.stack.map((layer: any) => layer.name);
-    const expectedMiddlewareNames = [
-      "errorLoggingMiddleware",
-      "helmet",
-      "session",
-      "compression",
-      "jsonParser",
-      "corsMiddleware",
-    ];
+      Object.entries(uploadedFiles).forEach(([fieldName, filePath]) => {
+        req = req.attach(fieldName, filePath);
+      });
 
-    expect(middlewareNames).to.include.members(expectedMiddlewareNames);
+      Object.entries(formFields).forEach(([fieldName, fieldValue]) => {
+        req = req.field(fieldName, fieldValue);
+      });
+
+      return await req;
+    }
+
+    async function simulateJsonPost(data: object): Promise<ChaiHttp.Response> {
+      const csrfToken = (await agent.get("/")).header["xsrf-token"];
+
+      data = {_csrf: csrfToken, ...data};
+
+      return await agent.post("/").type("json").send(data);
+    }
   });
 
   function stripMilliseconds(d: Date): string {

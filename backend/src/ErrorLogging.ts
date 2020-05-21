@@ -17,6 +17,11 @@ export function errorLoggingMiddleware(
   response: Response,
   next: NextFunction
 ): void {
+  if (err && (isTestEnvironment() || isDevelopmentEnvironment())) {
+    console.error(err);
+    return;
+  }
+
   rollbar.errorHandler()(err, request, response, next);
 }
 
