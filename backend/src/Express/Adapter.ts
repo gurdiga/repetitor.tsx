@@ -51,7 +51,7 @@ function getScenarioInputFromForm(req: Request): object {
     throw new Error("Unable to parse scenario input JSON");
   }
 
-  const isObject = typeof input === "object" && input !== null;
+  const isObject = input !== null && input.constructor.name === "Object";
 
   if (isObject) {
     return input;

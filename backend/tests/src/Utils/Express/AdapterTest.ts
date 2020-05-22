@@ -226,7 +226,7 @@ describe("Express integration", () => {
       const {instanceOf, has} = Sinon.match;
 
       context("when request is a form upload", () => {
-        context("when the form scenarioInput field is not a valid JSON string", () => {
+        context("when the scenarioInput form field is not a valid JSON string", () => {
           it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
             const res = await simulateFormUploadPost(
               {files: __filename},
@@ -239,9 +239,30 @@ describe("Express integration", () => {
             expect(res, "responds with HTTP 500 ").to.have.status(500);
             expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
             expect(logErrorStub).to.have.been.calledOnceWithExactly(
-              instanceOf(Error).and(has("message", `Unable to parse scenario input JSON`)),
+              instanceOf(Error).and(has("message", "Unable to parse scenario input JSON")),
               {context: "getScenarioInput", scenarioName: "TestScenario"}
             );
+          });
+        });
+
+        context("when the scenarioInput form field is valid JSON but not opbect", () => {
+          ['["this", "is", "not an {}"]', "1", "null", '"string"'].forEach((invalidInput) => {
+            it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
+              const res = await simulateFormUploadPost(
+                {files: __filename},
+                {
+                  scenarioName: "TestScenario",
+                  scenarioInput: invalidInput,
+                }
+              );
+
+              expect(res, "responds with HTTP 500 ").to.have.status(500);
+              expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
+              expect(logErrorStub).to.have.been.calledOnceWithExactly(
+                instanceOf(Error).and(has("message", "Scenario input is expected to be an object")),
+                {context: "getScenarioInput", scenarioName: "TestScenario"}
+              );
+            });
           });
         });
       });
@@ -249,7 +270,7 @@ describe("Express integration", () => {
 
     describe("CSRF validation", () => {
       context("when the request is a form upload", () => {
-        it("responds with 403", async () => {
+        it("responds with 403 if invalid", async () => {
           const res = await simulateFormUploadPost(
             {files: __filename},
             {
@@ -261,10 +282,22 @@ describe("Express integration", () => {
 
           expect(res).to.have.status(403);
         });
+
+        it("responds with 200 if valid", async () => {
+          const res = await simulateFormUploadPost(
+            {files: __filename},
+            {
+              scenarioName: "TestScenario",
+              scenarioInput: "{}",
+            }
+          );
+
+          expect(res).to.have.status(200);
+        });
       });
 
       context("when the request is JONS", () => {
-        it("responds with 401", async () => {
+        it("responds with 403 if invalid", async () => {
           const res = await simulateJsonPost({
             scenarioName: "TestScenario",
             scenarioInput: "some non-JSON blob",
@@ -272,6 +305,15 @@ describe("Express integration", () => {
           });
 
           expect(res).to.have.status(403);
+        });
+
+        it("responds with 200 if valid", async () => {
+          const res = await simulateJsonPost({
+            scenarioName: "TestScenario",
+            scenarioInput: "some non-JSON blob",
+          });
+
+          expect(res).to.have.status(200);
         });
       });
     });
