@@ -218,6 +218,10 @@ describe("Express integration", () => {
   });
 
   describe("handlePost", () => {
+    describe("happy path", () => {
+      // TODO test scenario invocation
+    });
+
     describe("unhappy paths", () => {
       let logErrorStub: Stub<typeof ErrorLogging.logError>;
       beforeEach(() => (logErrorStub = Sinon.stub(ErrorLogging, "logError")));
@@ -246,7 +250,7 @@ describe("Express integration", () => {
         });
 
         context("when the scenarioInput form field is valid JSON but not opbect", () => {
-          ['["this", "is", "not an {}"]', "1", "null", '"string"'].forEach((invalidInput) => {
+          ['["this", "is", "not an {}"]', "1", "null", '"string"', "false"].forEach((invalidInput) => {
             it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
               const res = await simulateFormUploadPost(
                 {files: __filename},
@@ -289,6 +293,7 @@ describe("Express integration", () => {
             {
               scenarioName: "TestScenario",
               scenarioInput: "{}",
+              // When not specified _csrf is set to a valid value inside this helper function
             }
           );
 
