@@ -224,11 +224,11 @@ describe("Express integration", () => {
   });
 
   describe("handlePost", () => {
-    describe("happy path", () => {
-      let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
-      beforeEach(() => (runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario")));
-      afterEach(() => runScenarioStub.restore());
+    let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
+    beforeEach(() => (runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario")));
+    afterEach(() => runScenarioStub.restore());
 
+    describe("happy path", () => {
       const scenarioName = "TestScenario";
       const scenarioInput = {one: 1, two: 2};
 
@@ -282,10 +282,10 @@ describe("Express integration", () => {
 
             expect(res, "responds with HTTP 500 ").to.have.status(500);
             expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
-            expect(logErrorStub).to.have.been.calledOnceWithExactly(
-              instanceOf(Error).and(has("message", "Unable to parse scenario input JSON")),
-              {context: "getScenarioInput", scenarioName: "TestScenario"}
-            );
+
+            const expectedError = instanceOf(Error).and(has("message", "Unable to parse scenario input JSON"));
+            const expectedErrorData = {context: "getScenarioInput", scenarioName: "TestScenario"};
+            expect(logErrorStub).to.have.been.calledOnceWithExactly(expectedError, expectedErrorData);
           });
         });
 
@@ -299,12 +299,32 @@ describe("Express integration", () => {
 
               expect(res, "responds with HTTP 500 ").to.have.status(500);
               expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
-              expect(logErrorStub).to.have.been.calledOnceWithExactly(
-                instanceOf(Error).and(has("message", "Scenario input is expected to be an object")),
-                {context: "getScenarioInput", scenarioName: "TestScenario"}
-              );
+
+              const expectedError = instanceOf(Error).and(has("message", "Scenario input is expected to be an object"));
+              const expectedErrorData = {context: "getScenarioInput", scenarioName: "TestScenario"};
+              expect(logErrorStub).to.have.been.calledOnceWithExactly(expectedError, expectedErrorData);
             });
           });
+        });
+      });
+
+      context("when input is OK, but scenario handler fails", () => {
+        beforeEach(() => {
+          runScenarioStub = runScenarioStub.throws(new Error("Beep!"));
+        });
+
+        it("responds with JSON 500 SCENARIO_EXECUTION_ERROR", async () => {
+          const res = await simulateFormUploadPost([__filename], {
+            scenarioName: "TestScenario",
+            scenarioInput: "{}",
+          });
+
+          expect(res, "responds with HTTP 500 ").to.have.status(500);
+          expect(res.body).to.deep.equal({error: "SCENARIO_EXECUTION_ERROR"});
+
+          const expectedError = instanceOf(Error).and(has("message", "Beep!"));
+          const expectedErrorData = {context: "runScenario", scenarioName: "TestScenario"};
+          expect(logErrorStub).to.have.been.calledOnceWithExactly(expectedError, expectedErrorData);
         });
       });
     });
