@@ -9,6 +9,17 @@ export interface UploadedFile {
   size: number;
 }
 
+export function isUploadedFile(value: any): value is UploadedFile {
+  return (
+    value !== null &&
+    value.constructor.name === "Object" &&
+    typeof value.originalname === "string" &&
+    typeof value.path === "string" &&
+    typeof value.mimetype === "string" &&
+    typeof value.size === "number"
+  );
+}
+
 export type UploadMissingError = {
   kind: "UploadMissingError";
 };

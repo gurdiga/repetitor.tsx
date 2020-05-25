@@ -5,11 +5,17 @@ import {
   VersionedVendorModulePaths,
 } from "backend/src/Express/VendorModules";
 import {app} from "backend/src/index";
+import * as ScenarioRunner from "backend/src/ScenarioRunner";
 import {Stub} from "backend/tests/src/TestHelpers";
 import * as chai from "chai";
 import {expect} from "chai";
+import {isUploadedFile} from "shared/src/Model/FileUpload";
 import * as Sinon from "sinon";
 import ChaiHttp = require("chai-http");
+import path = require("path");
+import fs = require("fs");
+
+const {instanceOf, has, hasNested, array} = Sinon.match;
 
 describe("Express integration", () => {
   let agent: ChaiHttp.Agent;
@@ -219,7 +225,46 @@ describe("Express integration", () => {
 
   describe("handlePost", () => {
     describe("happy path", () => {
-      // TODO test scenario invocation
+      let runScenarioStub: Stub<typeof ScenarioRunner.runScenario>;
+      beforeEach(() => (runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario")));
+      afterEach(() => runScenarioStub.restore());
+
+      const scenarioName = "TestScenario";
+      const scenarioInput = {one: 1, two: 2};
+
+      context("when request is a form upload", () => {
+        it("runs the scenario and responds with its output", async () => {
+          const expectedSession = instanceOf(Object).and(has("cookie").and(has("csrfSecret")));
+          const res = await simulateJsonPost({scenarioName, scenarioInput});
+
+          expect(runScenarioStub).to.have.been.calledOnceWithExactly(scenarioName, scenarioInput, expectedSession);
+          expect(res).to.have.status(200);
+        });
+      });
+
+      context("when the request is JSON", () => {
+        it("runs the scenario and responds with its output", async () => {
+          const file = __filename;
+          const expectedSession = instanceOf(Object).and(has("cookie").and(has("csrfSecret")));
+          const expectedInput = instanceOf(Object)
+            .and(has("one", 1))
+            .and(has("two", 2))
+            .and(hasNested("upload[0].destination", "uploads/"))
+            .and(hasNested("upload[0].fieldname", "files"))
+            .and(hasNested("upload[0].mimetype", "video/mp2t"))
+            .and(hasNested("upload[0].size", fs.statSync(file)["size"]))
+            .and(hasNested("upload[0].originalname", path.basename(file)));
+
+          const res = await simulateFormUploadPost([file], {
+            scenarioName,
+            scenarioInput: JSON.stringify(scenarioInput),
+          });
+
+          expect(runScenarioStub).to.have.been.calledOnceWithExactly(scenarioName, expectedInput, expectedSession);
+          expect(isUploadedFile(runScenarioStub.firstCall.args[1].upload[0])).to.be.true;
+          expect(res).to.have.status(200);
+        });
+      });
     });
 
     describe("unhappy paths", () => {
@@ -227,18 +272,13 @@ describe("Express integration", () => {
       beforeEach(() => (logErrorStub = Sinon.stub(ErrorLogging, "logError")));
       afterEach(() => logErrorStub.restore());
 
-      const {instanceOf, has} = Sinon.match;
-
       context("when request is a form upload", () => {
         context("when the scenarioInput form field is not a valid JSON string", () => {
           it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
-            const res = await simulateFormUploadPost(
-              {files: __filename},
-              {
-                scenarioName: "TestScenario",
-                scenarioInput: "some non-JSON blob",
-              }
-            );
+            const res = await simulateFormUploadPost([__filename], {
+              scenarioName: "TestScenario",
+              scenarioInput: "some non-JSON blob",
+            });
 
             expect(res, "responds with HTTP 500 ").to.have.status(500);
             expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
@@ -249,16 +289,13 @@ describe("Express integration", () => {
           });
         });
 
-        context("when the scenarioInput form field is valid JSON but not opbect", () => {
+        context("when the scenarioInput form field is valid JSON but not object", () => {
           ['["this", "is", "not an {}"]', "1", "null", '"string"', "false"].forEach((invalidInput) => {
             it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
-              const res = await simulateFormUploadPost(
-                {files: __filename},
-                {
-                  scenarioName: "TestScenario",
-                  scenarioInput: invalidInput,
-                }
-              );
+              const res = await simulateFormUploadPost([__filename], {
+                scenarioName: "TestScenario",
+                scenarioInput: invalidInput,
+              });
 
               expect(res, "responds with HTTP 500 ").to.have.status(500);
               expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
@@ -275,33 +312,27 @@ describe("Express integration", () => {
     describe("CSRF validation", () => {
       context("when the request is a form upload", () => {
         it("responds with 403 if invalid", async () => {
-          const res = await simulateFormUploadPost(
-            {files: __filename},
-            {
-              scenarioName: "TestScenario",
-              scenarioInput: "some non-JSON blob",
-              _csrf: "abracadabra",
-            }
-          );
+          const res = await simulateFormUploadPost([__filename], {
+            scenarioName: "TestScenario",
+            scenarioInput: "some non-JSON blob",
+            _csrf: "abracadabra",
+          });
 
           expect(res).to.have.status(403);
         });
 
         it("responds with 200 if valid", async () => {
-          const res = await simulateFormUploadPost(
-            {files: __filename},
-            {
-              scenarioName: "TestScenario",
-              scenarioInput: "{}",
-              // When not specified _csrf is set to a valid value inside this helper function
-            }
-          );
+          const res = await simulateFormUploadPost([__filename], {
+            scenarioName: "TestScenario",
+            scenarioInput: "{}",
+            // When not specified _csrf is set to a valid value inside this helper function
+          });
 
           expect(res).to.have.status(200);
         });
       });
 
-      context("when the request is JONS", () => {
+      context("when the request is JSON", () => {
         it("responds with 403 if invalid", async () => {
           const res = await simulateJsonPost({
             scenarioName: "TestScenario",
@@ -315,7 +346,7 @@ describe("Express integration", () => {
         it("responds with 200 if valid", async () => {
           const res = await simulateJsonPost({
             scenarioName: "TestScenario",
-            scenarioInput: "some non-JSON blob",
+            scenarioInput: "{}",
           });
 
           expect(res).to.have.status(200);
@@ -324,7 +355,7 @@ describe("Express integration", () => {
     });
 
     async function simulateFormUploadPost(
-      uploadedFiles: Record<string, string>,
+      filePaths: string[],
       formFields: Record<string, string>
     ): Promise<ChaiHttp.Response> {
       const csrfToken = (await agent.get("/")).header["xsrf-token"];
@@ -333,8 +364,8 @@ describe("Express integration", () => {
 
       let req = agent.post("/");
 
-      Object.entries(uploadedFiles).forEach(([fieldName, filePath]) => {
-        req = req.attach(fieldName, filePath);
+      filePaths.forEach((filePath) => {
+        req = req.attach("files", filePath);
       });
 
       Object.entries(formFields).forEach(([fieldName, fieldValue]) => {
