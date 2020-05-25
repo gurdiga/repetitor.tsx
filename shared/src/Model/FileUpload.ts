@@ -1,3 +1,5 @@
+import {isObject} from "shared/src/Utils/Language";
+
 export const UPLOADED_FILES_FORM_FIELD_NAME = "files";
 export const MAX_UPLOADED_FILE_COUNT = 1;
 export const MAX_UPLOADED_FILE_SIZE = 5 * 1024 * 1024;
@@ -9,10 +11,12 @@ export interface UploadedFile {
   size: number;
 }
 
-export function isUploadedFile(value: any): value is UploadedFile {
+export function isUploadedFile(value: UploadedFile): value is UploadedFile {
+  if (!isObject(value)) {
+    return false;
+  }
+
   return (
-    value !== null &&
-    value.constructor.name === "Object" &&
     typeof value.originalname === "string" &&
     typeof value.path === "string" &&
     typeof value.mimetype === "string" &&

@@ -24,3 +24,7 @@ export function omit<T, K extends keyof T>(obj: T, ...keys: K[]): Omit<T, K> {
 
   return picked as Omit<T, K>;
 }
+
+export function isObject(value: any): value is object {
+  return value != null && value.constructor.name === "Object";
+}

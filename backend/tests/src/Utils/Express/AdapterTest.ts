@@ -290,7 +290,7 @@ describe("Express integration", () => {
         });
 
         context("when the scenarioInput form field is valid JSON but not object", () => {
-          ['["this", "is", "not an {}"]', "1", "null", '"string"', "false"].forEach((invalidInput) => {
+          ["[]", "1", "null", '"string"', "false"].forEach((invalidInput) => {
             it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
               const res = await simulateFormUploadPost([__filename], {
                 scenarioName: "TestScenario",
@@ -308,6 +308,25 @@ describe("Express integration", () => {
         });
       });
 
+      context("when request is JSON", () => {
+        context("when the scenarioInput property is not an object", () => {
+          [[], 1, null, "string", false, undefined].forEach((invalidInput) => {
+            it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
+              const res = await simulateJsonPost({
+                scenarioName: "TestScenario",
+                scenarioInput: invalidInput,
+              });
+
+              expect(res, "responds with HTTP 500 ").to.have.status(500);
+              expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
+
+              const expectedError = instanceOf(Error).and(has("message", "Scenario input is expected to be an object"));
+              const expectedErrorData = {context: "getScenarioInput", scenarioName: "TestScenario"};
+              expect(logErrorStub).to.have.been.calledOnceWithExactly(expectedError, expectedErrorData);
+            });
+          });
+        });
+      });
       context("when input is OK, but scenario handler fails", () => {
         beforeEach(() => {
           runScenarioStub = runScenarioStub.throws(new Error("Beep!"));
@@ -356,7 +375,7 @@ describe("Express integration", () => {
         it("responds with 403 if invalid", async () => {
           const res = await simulateJsonPost({
             scenarioName: "TestScenario",
-            scenarioInput: "some non-JSON blob",
+            scenarioInput: {},
             _csrf: "abracadabra",
           });
 
@@ -366,7 +385,7 @@ describe("Express integration", () => {
         it("responds with 200 if valid", async () => {
           const res = await simulateJsonPost({
             scenarioName: "TestScenario",
-            scenarioInput: "{}",
+            scenarioInput: {},
           });
 
           expect(res).to.have.status(200);

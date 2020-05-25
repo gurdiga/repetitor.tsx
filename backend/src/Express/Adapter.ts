@@ -8,13 +8,15 @@ import {runScenario} from "backend/src/ScenarioRunner";
 import {Request, Response} from "express";
 import * as path from "path";
 import {UserSession} from "shared/src/Model/UserSession";
+import {isObject} from "shared/src/Utils/Language";
 import {pagePropsFromSession} from "shared/src/Utils/PageProps";
+import assert = require("assert");
 
 export async function handlePost(req: Request, res: Response): Promise<void> {
   const {scenarioName} = req.body;
 
   try {
-    const scenarioInput = getScenarioInput(req);
+    const scenarioInput: object = getScenarioInput(req);
 
     try {
       res.json(await runScenario(scenarioName, scenarioInput, req.session));
@@ -38,7 +40,13 @@ function getScenarioInput(req: Request): object {
     return {...input, upload};
   } else {
     // I assume it’s a JSON request.
-    return req.body.scenarioInput;
+    const {scenarioInput} = req.body;
+
+    if (!isObject(scenarioInput)) {
+      throw new Error("Scenario input is expected to be an object");
+    }
+
+    return scenarioInput;
   }
 }
 
