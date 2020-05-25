@@ -88,11 +88,13 @@ npm-update:
 	npm --depth 9 update
 	(cd backend && npm --depth 9 update)
 	(cd frontend && npm --depth 9 update)
+	(cd frontend/tests && npm --depth 9 update)
 
 npm-outdated:
 	npm outdated
 	(cd backend && npm outdated)
 	(cd frontend && npm outdated)
+	(cd frontend/tests && npm outdated)
 
 node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules frontend/tests/node_modules backend/node_modules
 backend/node_modules: backend/package.json
