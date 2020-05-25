@@ -1,5 +1,5 @@
-import {ErrorMessages} from "shared/src/Utils/Validation";
 import {omit} from "shared/src/Utils/Language";
+import {ErrorMessages} from "shared/src/Utils/Validation";
 
 export type Success = {
   kind: "Success";
@@ -23,7 +23,7 @@ export type UnexpectedError = {
 
 export type DataProps<T> = Omit<T, "kind">;
 
-export function dataProps<SI extends any>(scenarioInput: SI): DataProps<SI> {
+export function dataProps<T extends {kind: string}>(scenarioInput: T): DataProps<T> {
   return omit(scenarioInput, "kind");
 }
 
