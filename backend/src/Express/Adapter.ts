@@ -113,6 +113,7 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="csrf_token" content="CSRF_TOKEN" />
+  <meta name="msvalidate.01" content="7349C399D4F768E25C7444A6204D3F13" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
   <script>
