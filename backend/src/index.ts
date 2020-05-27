@@ -1,6 +1,7 @@
 import {requireNumericEnvVar} from "backend/src/Env";
 import {errorLoggingMiddleware} from "backend/src/ErrorLogging";
 import {
+  forwardTo,
   handlePost,
   sendPageBundle,
   sendPageHtml,
@@ -23,7 +24,6 @@ const csrfProtection = csurf();
 // exported for tests
 export const app = express()
   .set("trust proxy", true)
-  .use(errorLoggingMiddleware)
   .use(helmet())
   .use(session)
   .use(compression())
@@ -46,7 +46,8 @@ export const app = express()
   // uploadParser must go before csrfProtection because for a
   // multipart/form-data request, the req.body needs to be parsed by
   // the time it reaches csrfProtection
-  .post("/", uploadParser, csrfProtection, handlePost);
+  .post("/", uploadParser, csrfProtection, handlePost)
+  .use(forwardTo(() => errorLoggingMiddleware));
 
 app.listen(requireNumericEnvVar("PORT")).on("error", (error) => {
   console.error(error);

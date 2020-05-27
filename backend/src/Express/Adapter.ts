@@ -10,7 +10,6 @@ import * as path from "path";
 import {UserSession} from "shared/src/Model/UserSession";
 import {isObject} from "shared/src/Utils/Language";
 import {pagePropsFromSession} from "shared/src/Utils/PageProps";
-import assert = require("assert");
 
 export async function handlePost(req: Request, res: Response): Promise<void> {
   const {scenarioName} = req.body;

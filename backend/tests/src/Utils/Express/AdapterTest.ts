@@ -350,6 +350,10 @@ describe("Express integration", () => {
     });
 
     describe("CSRF validation", () => {
+      let errorLoggingMiddlewareStub: Stub<typeof ErrorLogging.errorLoggingMiddleware>;
+      beforeEach(() => (errorLoggingMiddlewareStub = Sinon.stub(ErrorLogging, "errorLoggingMiddleware").callsArg(3)));
+      afterEach(() => errorLoggingMiddlewareStub.restore());
+
       context("when the request is a form upload", () => {
         it("responds with 403 if invalid", async () => {
           const res = await simulateFormUploadPost([__filename], {
