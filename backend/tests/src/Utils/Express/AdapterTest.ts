@@ -209,18 +209,16 @@ describe("Express integration", () => {
       expect(app.enabled("trust proxy")).to.be.true;
     });
 
-    it("is inspectable", () => {
+    it("has the appropriate middleware set", () => {
       const middlewareNames = app._router.stack.map((layer: any) => layer.name);
-      const expectedMiddlewareNames = [
-        "errorLoggingMiddleware",
-        "helmet",
-        "session",
-        "compression",
-        "jsonParser",
-        "corsMiddleware",
-      ];
 
-      expect(middlewareNames).to.include.members(expectedMiddlewareNames);
+      expect(middlewareNames).to.include("session");
+      expect(middlewareNames).to.include("compression");
+      expect(middlewareNames).to.include("jsonParser");
+      expect(middlewareNames).to.include("corsMiddleware");
+      expect(middlewareNames).to.include("helmet");
+
+      // CSRF protection, error logging, and file upload parsing are tested in the context of handlePost.
     });
   });
 
