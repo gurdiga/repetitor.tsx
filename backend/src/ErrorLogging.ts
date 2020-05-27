@@ -8,28 +8,14 @@ const rollbar = new Rollbar({
   captureUnhandledRejections: true,
   codeVersion: requireEnvVar("HEROKU_SLUG_COMMIT"),
   environment: requireEnvVar("NODE_ENV"),
-  verbose: true,
+  transmit: !isDevelopmentEnvironment(), // Tests are also run by Heroku, and I want to know if something trows there.
+  verbose: isTestEnvironment() || isDevelopmentEnvironment(),
 });
 
-export function errorLoggingMiddleware(
-  err: Error,
-  request: Request<any>,
-  response: Response,
-  next: NextFunction
-): void {
-  if (err && (isTestEnvironment() || isDevelopmentEnvironment())) {
-    console.error(err);
-    return;
-  }
-
-  rollbar.errorHandler()(err, request, response, next);
+export function errorLoggingMiddleware(err: Error, req: Request, res: Response, next: NextFunction): void {
+  rollbar.errorHandler()(err, req, res, next);
 }
 
-export function logError(...args: any[]): void {
-  if (isTestEnvironment() || isDevelopmentEnvironment()) {
-    console.error(...args);
-    return;
-  }
-
+export function logError(...args: Rollbar.LogArgument[]): void {
   rollbar.error(...args);
 }
