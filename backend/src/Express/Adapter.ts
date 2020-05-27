@@ -5,7 +5,7 @@ import {PageBundleFilePaths, PagePathNames, RequireModulePaths} from "backend/sr
 import {getUploadParsingResult} from "backend/src/Express/UploadParsing";
 import {VendorModulesWebPaths, VersionedVendorModulePaths} from "backend/src/Express/VendorModules";
 import {runScenario} from "backend/src/ScenarioRunner";
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import * as path from "path";
 import {UserSession} from "shared/src/Model/UserSession";
 import {isObject} from "shared/src/Utils/Language";
@@ -185,4 +185,11 @@ export function sendSecurityTxt(_req: Request, res: Response): void {
     `# If you found any security issue, please let me know.
 Contact: mailto:gurdiga@gmail.com`
   );
+}
+
+type ExpressHandler = (err: Error, req: Request, res: Response, next: NextFunction) => void;
+
+// This function only exists to facilitate stubbing in integration tests for this adapter.
+export function forwardTo<HF extends () => ExpressHandler>(handlerFactory: HF): ExpressHandler {
+  return (...args: Parameters<ExpressHandler>): ReturnType<ExpressHandler> => handlerFactory()(...args);
 }
