@@ -1,10 +1,10 @@
+import * as EmailUtils from "backend/src/EmailUtils";
+import {requireEnvVar} from "backend/src/Env";
 import {loadProfile} from "backend/src/Persistence/AccountPersistence";
 import {EMAIL_CHANGE_TOKEN_EXPIRATION_TIME} from "backend/src/Persistence/EmailChange";
 import {EmailChangeStep1} from "backend/src/ScenarioHandlers/EmailChangeStep1";
 import {EmailChangeStep2} from "backend/src/ScenarioHandlers/EmailChangeStep2";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
-import * as EmailUtils from "backend/src/EmailUtils";
-import {requireEnvVar} from "backend/src/Env";
 import * as StringUtils from "backend/src/StringUtils";
 import {q, Stub} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
@@ -64,7 +64,7 @@ describe("EmailChange", () => {
       const token = "8715a02588ff190e";
 
       beforeEach(async () => {
-        genRandomStringStub = genRandomStringStub.returns(token);
+        genRandomStringStub.returns(token);
         result = await EmailChangeStep1(input, session);
       });
 
@@ -149,11 +149,11 @@ describe("EmailChange", () => {
         const currentToken = "8715a02588ff1902";
 
         beforeEach(async () => {
-          genRandomStringStub = genRandomStringStub.onFirstCall().returns(expiredToken);
+          genRandomStringStub.onFirstCall().returns(expiredToken);
           await EmailChangeStep1({newEmail}, {userId, email: currentEmail});
           time.tick(EMAIL_CHANGE_TOKEN_EXPIRATION_TIME + 1); // To test expiration of old tokens.
 
-          genRandomStringStub = genRandomStringStub.onSecondCall().returns(currentToken);
+          genRandomStringStub.onSecondCall().returns(currentToken);
           await EmailChangeStep1({newEmail}, {userId, email: currentEmail});
 
           expect(await getEmailChangeRequestCount()).to.equal(2);

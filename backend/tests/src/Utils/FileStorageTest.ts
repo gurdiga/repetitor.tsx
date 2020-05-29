@@ -92,9 +92,7 @@ if (process.env.TEST_FILE_STORAGE) {
       context("when fs.unlinkSync throws", () => {
         const error = new Error("File is missing or something!");
 
-        beforeEach(() => {
-          unlinkSyncStub = unlinkSyncStub.throws(error);
-        });
+        beforeEach(() => unlinkSyncStub.throws(error));
 
         it("reports the error but does not throw", () => {
           expect(() => deleteTemFile(filePath)).not.to.throw();

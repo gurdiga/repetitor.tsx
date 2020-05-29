@@ -327,9 +327,7 @@ describe("Express integration", () => {
         });
       });
       context("when input is OK, but scenario handler fails", () => {
-        beforeEach(() => {
-          runScenarioStub = runScenarioStub.throws(new Error("Beep!"));
-        });
+        beforeEach(() => runScenarioStub.throws(new Error("Beep!")));
 
         it("responds with JSON 500 SCENARIO_EXECUTION_ERROR", async () => {
           const res = await simulateFormUploadPost([__filename], {

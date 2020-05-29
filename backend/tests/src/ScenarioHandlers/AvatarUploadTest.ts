@@ -35,7 +35,7 @@ describe("AvatarUpload", () => {
 
     const fileStorageUrl = new URL("http://cloud.net/bucket/avatar.jpg");
     beforeEach(() => {
-      storeFileStub = storeFileStub.resolves({
+      storeFileStub.resolves({
         kind: "StoreFileSuccess",
         url: fileStorageUrl,
       });
@@ -68,7 +68,7 @@ describe("AvatarUpload", () => {
         },
       }).forEach(([description, {storeFileResponse, expectedResult}]) => {
         context(description, () => {
-          beforeEach(() => (storeFileStub = storeFileStub.resolves(storeFileResponse)));
+          beforeEach(() => storeFileStub.resolves(storeFileResponse));
 
           it("reports the failure", async () => {
             expect(await AvatarUpload(input, session)).to.deep.equal(expectedResult);
