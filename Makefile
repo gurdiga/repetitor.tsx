@@ -2,7 +2,7 @@
 SHELL=bash
 
 default:
-	make --no-print-directory test-backend FILES=backend/tests/src/Utils/Express/AdapterTest.ts
+	make --no-print-directory test-frontend FILES=frontend/tests/src/shared/ScenarioRunnerTest.ts
 
 test: test-backend test-frontend
 t: test
@@ -126,10 +126,14 @@ $(NODE_BINARY_PATH):
 	exit 1
 
 pre-commit:
+	time make --no-print-directory lint clean build pre-commit-test
+pc: pre-commit
+
+pre-commit-test:
 	TEST_EMAIL_UTILS=yes \
 	TEST_FILE_STORAGE=yes \
-	time make --no-print-directory lint clean build test
-pc: pre-commit
+	time make --no-print-directory test
+pct: pre-commit-test
 
 lint:
 	eslint . \
