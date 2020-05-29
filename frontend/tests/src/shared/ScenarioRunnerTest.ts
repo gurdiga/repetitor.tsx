@@ -49,84 +49,54 @@ describe("ScenarioRunner", () => {
     });
 
     describe("unhappy paths", () => {
-      context("when the CSRF meta tag is not found", () => {
-        beforeEach(() => {
-          querySelectorStub.returns(null);
-        });
-
-        it("reports it", async () => {
-          const result = await runScenario("Login", {email: "some@email.com", password: "53cr37"});
-
-          expect(result).to.deep.equal({
+      Object.entries({
+        "when the CSRF meta tag is not found": {
+          setup: () => querySelectorStub.returns(null),
+          expectedResult: {
             error: "Lipsește codul CSRF (meta tag)",
             kind: "TransportError",
-          });
-        });
-      });
-
-      context("when the CSRF meta tag has empty `content` attribute", () => {
-        beforeEach(() => {
-          querySelectorStub.returns({getAttribute: Sinon.stub().returns(null)});
-        });
-
-        it("reports it", async () => {
-          const result = await runScenario("Login", {email: "some@email.com", password: "53cr37"});
-
-          expect(result).to.deep.equal({
+          },
+        },
+        "when the CSRF meta tag has empty `content` attribute": {
+          setup: () => querySelectorStub.returns({getAttribute: Sinon.stub().returns(null)}),
+          expectedResult: {
             error: "Lipsește codul CSRF",
             kind: "TransportError",
-          });
-        });
-      });
-
-      context("when the response body is not parseable JSON", () => {
-        beforeEach(() => {
-          fetchStub.resolves({
-            status: 200,
-            json: Sinon.stub().rejects(new SyntaxError("JSON Parse error: Something’s fishy")),
-          });
-        });
-
-        it("reports it", async () => {
-          const result = await runScenario("Login", {email: "some@email.com", password: "53cr37"});
-
-          expect(result).to.deep.equal({
+          },
+        },
+        "when the response body is not parseable JSON": {
+          setup: () =>
+            fetchStub.resolves({
+              status: 200,
+              json: Sinon.stub().rejects(new SyntaxError("JSON Parse error: Something’s fishy")),
+            }),
+          expectedResult: {
             error: "Nu înțeleg răspunsul de la server (parsare JSON).",
             kind: "TransportError",
-          });
-        });
-      });
-
-      context("when the response body is not parseable JSON", () => {
-        const error = "Something broke";
-
-        beforeEach(() => {
-          fetchStub.resolves({status: 500, json: Sinon.stub().resolves({error})});
-        });
-
-        it("reports it", async () => {
-          const result = await runScenario("Login", {email: "some@email.com", password: "53cr37"});
-
-          expect(result).to.deep.equal({
-            error: `Eroare neprevăzută de aplicație (${error})`,
+          },
+        },
+        "when the response is a JSON error": {
+          setup: () => fetchStub.resolves({status: 500, json: Sinon.stub().resolves({error: "Something broke"})}),
+          expectedResult: {
+            error: "Eroare neprevăzută de aplicație (Something broke)",
             kind: "ServerError",
-          });
-        });
-      });
-
-      context("when fetch fails", () => {
-        const error = new Error("Wi-fi’s down?!");
-
-        beforeEach(() => {
-          fetchStub.rejects(error);
-        });
-
-        it("reports it", async () => {
-          const result = await runScenario("Login", {email: "some@email.com", password: "53cr37"});
-
-          expect(result).to.deep.equal({
-            error: error.message,
+          },
+        },
+        "when fetch fails": {
+          setup: () => fetchStub.rejects(new Error("Wi-fi’s down?!")),
+          expectedResult: {
+            error: "Wi-fi’s down?!",
             kind: "TransportError",
+          },
+        },
+      }).forEach(([description, {setup, expectedResult}]) => {
+        context(description, () => {
+          beforeEach(setup);
+
+          it("reports the failure", async () => {
+            const result = await runScenario("Login", {email: "some@email.com", password: "53cr37"});
+
+            expect(result).to.deep.equal(expectedResult);
           });
         });
       });
