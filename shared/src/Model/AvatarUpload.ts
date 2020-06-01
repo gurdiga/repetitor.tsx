@@ -3,7 +3,7 @@ import {UnexpectedError} from "shared/src/Model/Utils";
 
 export type AvatarUrl = {
   kind: "AvatarUrl";
-  url: URL;
+  url: string;
 };
 
 export type AvatarImage = {

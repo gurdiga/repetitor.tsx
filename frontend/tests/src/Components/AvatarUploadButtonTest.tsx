@@ -3,6 +3,7 @@ import {HTMLAttributes, shallow, ShallowWrapper} from "enzyme";
 import {AvatarUploadButton} from "frontend/pages/profil/src/AvatarUploadButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import {Stub, Wrapper} from "frontend/tests/src/TestHelpers";
+import {AvatarUrl} from "shared/src/Model/AvatarUpload";
 import Sinon = require("sinon");
 import React = require("react");
 
@@ -11,10 +12,6 @@ class FileList {
 
   get length() {
     return this.items.length;
-  }
-
-  public item(index: number): any | null {
-    return this.items[index] || null;
   }
 }
 
@@ -26,9 +23,10 @@ describe("AvatarUploadButton", () => {
   let input: ShallowWrapper<HTMLAttributes, any, React.Component<{}, {}, any>>;
 
   const onUploaded = Sinon.spy();
+  const mockScenarioResult: AvatarUrl = {kind: "AvatarUrl", url: "http://localhost:8084/profil"};
 
   beforeEach(() => {
-    runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario");
+    runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves(mockScenarioResult);
     wrapper = shallow(<AvatarUploadButton onUploaded={onUploaded} />);
     input = wrapper.find("input[type='file']");
   });
@@ -43,9 +41,7 @@ describe("AvatarUploadButton", () => {
 
     const selectedFiles = createMockFileList();
     const mockChangeEvent = {target: {files: selectedFiles}} as any;
-    const mockScenarioResult = {kind: "AvatarUrl", url: "THE URL"} as any; // AvatarUrl
 
-    runScenarioStub.resolves(mockScenarioResult);
     await input.prop("onChange")!(mockChangeEvent);
 
     expect(runScenarioStub).to.have.been.calledOnceWithExactly("AvatarUpload", {upload: selectedFiles});

@@ -33,7 +33,8 @@ describe("AvatarUpload", () => {
     beforeEach(() => (time = Sinon.useFakeTimers(Date.parse("2020-05-18T07:47:47.000Z"))));
     afterEach(() => time.restore());
 
-    const fileStorageUrl = new URL("http://cloud.net/bucket/avatar.jpg");
+    const fileStorageUrl = "http://cloud.net/bucket/avatar.jpg";
+
     beforeEach(() => {
       storeFileStub.resolves({
         kind: "StoreFileSuccess",

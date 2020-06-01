@@ -59,8 +59,8 @@ export async function deleteStoredFile(destinationFileName: string): Promise<voi
   await bucket.deleteFiles({prefix: destinationFileName});
 }
 
-export function getStoredFileUrl(filename: string): URL {
-  return new URL(`https://storage.googleapis.com/${bucketName}/${filename}`);
+export function getStoredFileUrl(filename: string): string {
+  return `https://storage.googleapis.com/${bucketName}/${filename}`;
 }
 
 export function deleteTemFile(filePath: string): void {

@@ -32,7 +32,7 @@ export function ProfileForm(props: Props) {
   return (
     <>
       <Avatar url={photoUrl} />
-      <AvatarUploadButton onUploaded={(url) => setPhotoUrl({kind: "Link", value: url.toString()})} />
+      <AvatarUploadButton onUploaded={(url) => setPhotoUrl({kind: "Link", value: url})} />
       <Form
         fields={[
           <TextField

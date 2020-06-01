@@ -6,7 +6,7 @@ import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 
 interface Props {
-  onUploaded: (url: URL) => void;
+  onUploaded: (url: string) => void;
 }
 
 export function AvatarUploadButton(props: Props) {

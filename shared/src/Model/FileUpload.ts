@@ -56,7 +56,7 @@ export type CloudUploadError = {
 
 export type StoreFileSuccess = {
   kind: "StoreFileSuccess";
-  url: URL;
+  url: string;
 };
 
 export type UploadValidationError = FileTooLargeError | UnacceptableUploadError | UploadMissingError;
