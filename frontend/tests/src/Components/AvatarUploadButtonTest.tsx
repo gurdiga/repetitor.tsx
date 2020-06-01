@@ -39,16 +39,13 @@ describe("AvatarUploadButton", () => {
   it("does the work", async () => {
     expect(input.exists()).to.be.true;
 
-    const selectedFiles = createMockFileList();
-    const mockChangeEvent = {target: {files: selectedFiles}} as any;
+    const mockFile = {__filename};
+    const mockFileList = new FileList([mockFile]);
+    const mockChangeEvent = {target: {files: mockFileList}} as any;
 
     await input.prop("onChange")!(mockChangeEvent);
 
-    expect(runScenarioStub).to.have.been.calledOnceWithExactly("AvatarUpload", {upload: selectedFiles});
+    expect(runScenarioStub).to.have.been.calledOnceWithExactly("AvatarUpload", {upload: mockFileList});
     expect(onUploaded).to.have.been.calledOnceWithExactly(mockScenarioResult.url);
   });
-
-  function createMockFileList(): FileList {
-    return new FileList([{}] as File[]);
-  }
 });
