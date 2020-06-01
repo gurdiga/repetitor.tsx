@@ -44,6 +44,7 @@ async function expectEmptyTables() {
   const rowCounts = Object.fromEntries(await Promise.all(tableNames.map(getTableTuple)));
   const expectedRowCounts = Object.fromEntries(tableNames.map((n) => [n, 0]));
 
+  // await Promise.all(tableNames.map((tableName) => q(`TRUNCATE ${tableName}`)));
   expect(rowCounts, "some tables have rows after running tests").to.deep.equal(expectedRowCounts);
 }
 
