@@ -84,7 +84,7 @@ describe("AvatarUploadButton", () => {
       });
     });
 
-    describe.only("server error conditions", () => {
+    describe("server error conditions", () => {
       Object.entries({
         "when the session has expired": {
           serverResponse: {kind: "NotAuthenticatedError"} as const,
