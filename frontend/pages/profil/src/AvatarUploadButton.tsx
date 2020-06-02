@@ -1,7 +1,7 @@
 import React = require("react");
 import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {placeholderServerRequest, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
-import {EXPECTED_AVATAR_IMAGE_TYPE, makeFileListFromInputElement, MAX_AVATAR_SIZE} from "shared/src/Model/AvatarUpload";
+import {AVATAR_IMAGE_TYPE, makeFileListFromInputElement, MAX_AVATAR_SIZE} from "shared/src/Model/AvatarUpload";
 import {MAX_UPLOADED_FILE_SIZE} from "shared/src/Model/FileUpload";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
@@ -32,7 +32,7 @@ export function AvatarUploadButton(props: Props) {
     if (!(result instanceof FileList)) {
       switch (result.kind) {
         case "BadFileTypeError":
-          setValidationError(`Formatul fotografiei nu corespunde: trebuie ${EXPECTED_AVATAR_IMAGE_TYPE}`);
+          setValidationError(`Formatul fotografiei nu corespunde: trebuie ${AVATAR_IMAGE_TYPE}`);
           break;
         case "TooManyFilesError":
           setValidationError(`Selectați o singură fotografie`);

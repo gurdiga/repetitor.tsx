@@ -3,7 +3,7 @@ import {HTMLAttributes, shallow, ShallowWrapper} from "enzyme";
 import {AvatarUploadButton} from "frontend/pages/profil/src/AvatarUploadButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
 import {expectAlertMessage, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
-import {AvatarUrl, EXPECTED_AVATAR_IMAGE_TYPE, MAX_AVATAR_SIZE} from "shared/src/Model/AvatarUpload";
+import {AvatarUrl, AVATAR_IMAGE_TYPE, MAX_AVATAR_SIZE} from "shared/src/Model/AvatarUpload";
 import Sinon = require("sinon");
 import React = require("react");
 
@@ -26,11 +26,11 @@ describe("AvatarUploadButton", () => {
   let wrapper: Wrapper<typeof AvatarUploadButton>;
   let input: ShallowWrapper<HTMLAttributes, any, React.Component<{}, {}, any>>;
 
+  const mockFile = {type: AVATAR_IMAGE_TYPE};
   const onUploaded = Sinon.spy();
-  const mockScenarioResult: AvatarUrl = {kind: "AvatarUrl", url: "http://localhost:8084/profil"};
 
   beforeEach(() => {
-    runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves(mockScenarioResult);
+    runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario");
     wrapper = shallow(<AvatarUploadButton onUploaded={onUploaded} />);
     input = wrapper.find("input[type='file']");
   });
@@ -43,10 +43,11 @@ describe("AvatarUploadButton", () => {
   it("does the work", async () => {
     expect(input.exists()).to.be.true;
 
-    const mockFile = {type: EXPECTED_AVATAR_IMAGE_TYPE};
     const mockFileList = new FileList([mockFile]);
     const mockChangeEvent = {target: {files: mockFileList}} as any;
+    const mockScenarioResult: AvatarUrl = {kind: "AvatarUrl", url: "http://localhost:8084/profil"};
 
+    runScenarioStub.resolves(mockScenarioResult);
     await input.prop("onChange")!(mockChangeEvent);
 
     expect(runScenarioStub).to.have.been.calledOnceWithExactly("AvatarUpload", {upload: mockFileList});
@@ -55,8 +56,6 @@ describe("AvatarUploadButton", () => {
 
   context("unhappy paths", () => {
     describe("client-side validation", () => {
-      const mockFile = {type: EXPECTED_AVATAR_IMAGE_TYPE};
-
       Object.entries({
         "when more than one file was selected": {
           mockFileList: new FileList([mockFile, mockFile]),
@@ -80,6 +79,30 @@ describe("AvatarUploadButton", () => {
             expectAlertMessage("validation error", wrapper, "error", errorMessage);
             expect(runScenarioStub).to.not.have.been.called;
             expect(onUploaded).to.not.have.been.called;
+          });
+        });
+      });
+    });
+
+    describe.only("server error conditions", () => {
+      Object.entries({
+        "when the session has expired": {
+          serverResponse: {kind: "NotAuthenticatedError"} as const,
+          errorMessage: "Eroare: probabil a expirat sesiunea din cauza inactivității.",
+        },
+      }).forEach(([description, {serverResponse, errorMessage}]) => {
+        context(description, () => {
+          beforeEach(() => runScenarioStub.resolves(serverResponse));
+
+          it("reports it", async () => {
+            const mockFileList = new FileList([mockFile]);
+            const mockChangeEvent = {target: {files: mockFileList}} as any;
+
+            await input.prop("onChange")!(mockChangeEvent);
+
+            expect(runScenarioStub).to.have.been.calledOnceWithExactly("AvatarUpload", {upload: mockFileList});
+            expect(onUploaded).to.not.have.been.called;
+            expectAlertMessage("validation error", wrapper, "error", errorMessage);
           });
         });
       });

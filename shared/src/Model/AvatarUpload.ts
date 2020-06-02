@@ -25,7 +25,7 @@ export type FileTooLargeError = {
   kind: "FileTooLargeError";
 };
 
-export const EXPECTED_AVATAR_IMAGE_TYPE = "image/jpeg";
+export const AVATAR_IMAGE_TYPE = "image/jpeg";
 export const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
 
 export function makeImageFromUpload(
@@ -41,7 +41,7 @@ export function makeImageFromUpload(
       };
     }
 
-    if (image.mimetype !== EXPECTED_AVATAR_IMAGE_TYPE) {
+    if (image.mimetype !== AVATAR_IMAGE_TYPE) {
       return {
         kind: "BadFileTypeError",
       };
@@ -72,7 +72,7 @@ export function makeFileListFromInputElement(
 
   const file = files.item(0) as File;
 
-  if (file.type !== EXPECTED_AVATAR_IMAGE_TYPE) {
+  if (file.type !== AVATAR_IMAGE_TYPE) {
     return {
       kind: "BadFileTypeError",
     };
