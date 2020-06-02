@@ -130,11 +130,19 @@ pre-commit:
 	time make --no-print-directory lint clean build pre-commit-test
 pc: pre-commit
 
-pre-commit-test:
+pre-commit-test: check-for-only
 	TEST_EMAIL_UTILS=yes \
 	TEST_FILE_STORAGE=yes \
 	time make --no-print-directory test
 pct: pre-commit-test
+
+check-for-only:
+	@grep -nRP '.(only|skip)\(' {frontend,backend}/tests/src \
+	&&	{
+		echo -e "\nSome Mocha tests are .only or .skip.\n"
+		exit 1
+	} \
+	|| exit 0
 
 lint:
 	eslint . \
