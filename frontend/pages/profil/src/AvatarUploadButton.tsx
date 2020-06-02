@@ -1,6 +1,7 @@
 import React = require("react");
 import {AlertMessage} from "frontend/shared/src/Components/AlertMessage";
 import {placeholderServerRequest, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
+import {EXPECTED_AVATAR_IMAGE_TYPE, makeFileListFromInputElement, MAX_AVATAR_SIZE} from "shared/src/Model/AvatarUpload";
 import {MAX_UPLOADED_FILE_SIZE} from "shared/src/Model/FileUpload";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
@@ -10,11 +11,14 @@ interface Props {
 }
 
 export function AvatarUploadButton(props: Props) {
+  const [validationError, setValidationError] = React.useState<string | undefined>();
   const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
   return (
     <div>
       <input type="file" onChange={maybeUploadFile} />
+
+      {validationError && <AlertMessage type="error">{validationError}</AlertMessage>}
 
       {serverRequest.requestState === RequestState.ReceivedError && (
         <AlertMessage type="error">{serverRequest.statusText}</AlertMessage>
@@ -23,13 +27,29 @@ export function AvatarUploadButton(props: Props) {
   );
 
   async function maybeUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const {files} = event.target;
+    const result = makeFileListFromInputElement(event.target);
 
-    if (!files || files.length === 0) {
+    if (!(result instanceof FileList)) {
+      switch (result.kind) {
+        case "BadFileTypeError":
+          setValidationError(`Formatul fotografiei nu corespunde: trebuie ${EXPECTED_AVATAR_IMAGE_TYPE}`);
+          break;
+        case "TooManyFilesError":
+          setValidationError(`Selectați o singură fotografie`);
+          break;
+        case "FileTooLargeError":
+          setValidationError(`Poza trebuie să aibă mai puțin de ${MAX_AVATAR_SIZE / 1_048_576}MB`);
+          break;
+        default:
+          assertNever(result);
+      }
+
       return;
+    } else {
+      setValidationError(undefined);
     }
 
-    const response = await runScenario("AvatarUpload", {upload: files});
+    const response = await runScenario("AvatarUpload", {upload: result});
 
     let requestState: RequestState;
     let statusText: string;

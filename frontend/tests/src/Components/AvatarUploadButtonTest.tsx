@@ -2,15 +2,19 @@ import {expect} from "chai";
 import {HTMLAttributes, shallow, ShallowWrapper} from "enzyme";
 import {AvatarUploadButton} from "frontend/pages/profil/src/AvatarUploadButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
-import {Stub, Wrapper} from "frontend/tests/src/TestHelpers";
-import {AvatarUrl} from "shared/src/Model/AvatarUpload";
+import {expectAlertMessage, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
+import {AvatarUrl, EXPECTED_AVATAR_IMAGE_TYPE, MAX_AVATAR_SIZE} from "shared/src/Model/AvatarUpload";
 import Sinon = require("sinon");
 import React = require("react");
 
 class FileList {
-  constructor(private items: any[]) {}
+  constructor(public items: any[]) {}
 
-  get length() {
+  public item(index: number) {
+    return this.items[index];
+  }
+
+  public get length(): number {
     return this.items.length;
   }
 }
@@ -39,7 +43,7 @@ describe("AvatarUploadButton", () => {
   it("does the work", async () => {
     expect(input.exists()).to.be.true;
 
-    const mockFile = {__filename};
+    const mockFile = {type: EXPECTED_AVATAR_IMAGE_TYPE};
     const mockFileList = new FileList([mockFile]);
     const mockChangeEvent = {target: {files: mockFileList}} as any;
 
@@ -47,5 +51,38 @@ describe("AvatarUploadButton", () => {
 
     expect(runScenarioStub).to.have.been.calledOnceWithExactly("AvatarUpload", {upload: mockFileList});
     expect(onUploaded).to.have.been.calledOnceWithExactly(mockScenarioResult.url);
+  });
+
+  context("unhappy paths", () => {
+    describe("client-side validation", () => {
+      const mockFile = {type: EXPECTED_AVATAR_IMAGE_TYPE};
+
+      Object.entries({
+        "when more than one file was selected": {
+          mockFileList: new FileList([mockFile, mockFile]),
+          errorMessage: "Selectați o singură fotografie",
+        },
+        "when selected a non-JPEG file": {
+          mockFileList: new FileList([{type: "text/plain"}]),
+          errorMessage: "Formatul fotografiei nu corespunde: trebuie image/jpeg",
+        },
+        "when the file is too large": {
+          mockFileList: new FileList([{...mockFile, size: MAX_AVATAR_SIZE + 1}]),
+          errorMessage: "Poza trebuie să aibă mai puțin de 5MB",
+        },
+      }).forEach(([description, {mockFileList, errorMessage}]) => {
+        context(description, () => {
+          it("reports it", async () => {
+            const mockChangeEvent = {target: {files: mockFileList}} as any;
+
+            await input.prop("onChange")!(mockChangeEvent);
+
+            expectAlertMessage("validation error", wrapper, "error", errorMessage);
+            expect(runScenarioStub).to.not.have.been.called;
+            expect(onUploaded).to.not.have.been.called;
+          });
+        });
+      });
+    });
   });
 });

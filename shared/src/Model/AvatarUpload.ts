@@ -1,4 +1,10 @@
-import {BadFileTypeError, Upload, UploadedFile, UploadValidationError} from "shared/src/Model/FileUpload";
+import {
+  BadFileTypeError,
+  MAX_UPLOADED_FILE_SIZE,
+  Upload,
+  UploadedFile,
+  UploadValidationError,
+} from "shared/src/Model/FileUpload";
 import {UnexpectedError} from "shared/src/Model/Utils";
 
 export type AvatarUrl = {
@@ -10,6 +16,17 @@ export type AvatarImage = {
   kind: "AvatarImage";
   image: UploadedFile;
 };
+
+export type TooManyFilesError = {
+  kind: "TooManyFilesError";
+};
+
+export type FileTooLargeError = {
+  kind: "FileTooLargeError";
+};
+
+export const EXPECTED_AVATAR_IMAGE_TYPE = "image/jpeg";
+export const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
 
 export function makeImageFromUpload(
   upload: Upload
@@ -24,7 +41,7 @@ export function makeImageFromUpload(
       };
     }
 
-    if (image.mimetype !== "image/jpeg") {
+    if (image.mimetype !== EXPECTED_AVATAR_IMAGE_TYPE) {
       return {
         kind: "BadFileTypeError",
       };
@@ -40,4 +57,32 @@ export function makeImageFromUpload(
   } else {
     throw new Error("Unexpected upload type");
   }
+}
+
+export function makeFileListFromInputElement(
+  input: HTMLInputElement
+): FileList | TooManyFilesError | BadFileTypeError | FileTooLargeError {
+  const files = input.files as FileList;
+
+  if (files.length > 1) {
+    return {
+      kind: "TooManyFilesError",
+    };
+  }
+
+  const file = files.item(0) as File;
+
+  if (file.type !== EXPECTED_AVATAR_IMAGE_TYPE) {
+    return {
+      kind: "BadFileTypeError",
+    };
+  }
+
+  if (file.size > MAX_AVATAR_SIZE || file.size > MAX_UPLOADED_FILE_SIZE) {
+    return {
+      kind: "FileTooLargeError",
+    };
+  }
+
+  return files;
 }
