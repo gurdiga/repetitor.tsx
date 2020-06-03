@@ -171,6 +171,14 @@ describe("Express integration", () => {
         expect(res).to.be.text;
         expect(res).to.have.status(404);
       });
+
+      it("responds with an empty reponse for Rollbar module sourcemap because it’s making it too hard to also serve the source-maps", async () => {
+        const res = await agent.get(`${VENDOR_MODULE_PREFIX}rollbar.umd.min.js.map`);
+
+        expect(res).to.have.status(200);
+        expect(res).to.have.header("content-type", "text/plain; charset=utf-8");
+        expect(res.body).to.be.empty;
+      });
     });
 
     describe("serving of app bundles", () => {
