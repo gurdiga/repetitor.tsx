@@ -6,10 +6,5 @@ interface Props {
 }
 
 export function Avatar(props: Props) {
-  return (
-    <pre className="avatar">
-      TODO: implement &lt;Avatar /&gt;.
-      {props.url && <img src={props.url.value} width="100" height="100" />}
-    </pre>
-  );
+  return props.url ? <img src={props.url.value} width="100" height="100" /> : <p>No photo.</p>;
 }
