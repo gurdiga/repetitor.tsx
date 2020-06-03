@@ -62,7 +62,7 @@ export function AvatarUploadButton(props: Props) {
       case "NotAuthenticatedError":
         [requestState, statusText] = [
           RequestState.ReceivedError,
-          "Eroare: probabil a expirat sesiunea din cauza inactivității.",
+          "Eroare: probabil a expirat sesiunea din cauza inactivității",
         ];
         break;
       case "BadFileTypeError":

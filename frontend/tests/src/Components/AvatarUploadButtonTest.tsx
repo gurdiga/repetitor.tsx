@@ -88,7 +88,50 @@ describe("AvatarUploadButton", () => {
       Object.entries({
         "when the session has expired": {
           serverResponse: {kind: "NotAuthenticatedError"} as const,
-          errorMessage: "Eroare: probabil a expirat sesiunea din cauza inactivității.",
+          errorMessage: "Eroare: probabil a expirat sesiunea din cauza inactivității",
+        },
+        "when bad file type": {
+          serverResponse: {kind: "BadFileTypeError"} as const,
+          errorMessage: "Poza trebuie să fie în format JPEG",
+        },
+        "when file is too large": {
+          serverResponse: {kind: "FileTooLargeError"} as const,
+          errorMessage: "Poza trebuie să aibă mai puțin de 5MB",
+        },
+        "when file is missing": {
+          serverResponse: {kind: "UploadMissingError"} as const,
+          errorMessage: "Eroare: UploadMissingError",
+        },
+        "when temporary uploaded file is missing": {
+          serverResponse: {kind: "UploadTempFileMissingErrorr"} as const,
+          errorMessage: "Eroare: UploadTempFileMissingErrorr",
+        },
+        "when file is deemed unacceptable by some other criterias": {
+          serverResponse: {
+            kind: "UnacceptableUploadError",
+            error: "A validation error from the upload parsing middleware",
+          } as const,
+          errorMessage: "Eroare: UnacceptableUploadError",
+        },
+        "when file couldn’t be stored in the cloud": {
+          serverResponse: {kind: "CloudUploadError"} as const,
+          errorMessage: "Eroare: CloudUploadError",
+        },
+        "when couldn’t make te request": {
+          serverResponse: {kind: "TransportError", error: "Wifi is down!"} as const,
+          errorMessage: "Wifi is down!",
+        },
+        "when server fails for some reason": {
+          serverResponse: {kind: "ServerError", error: "HTTP 500 something"} as const,
+          errorMessage: "HTTP 500 something",
+        },
+        "when Db fails for some reason": {
+          serverResponse: {kind: "DbError", errorCode: "GENERIC_DB_ERROR"} as const,
+          errorMessage: "Eroare neprevăzută de bază de date",
+        },
+        "when sky falls down": {
+          serverResponse: {kind: "UnexpectedError", error: "Sky falls down!"} as const,
+          errorMessage: "Sky falls down!",
         },
       }).forEach(([description, {serverResponse, errorMessage}]) => {
         context(description, () => {
