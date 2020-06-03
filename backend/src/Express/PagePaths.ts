@@ -1,8 +1,6 @@
 import * as fs from "fs";
-import {AppRoot} from "backend/src/Express/AppRoot";
 
-const RelativePagesRoot = "frontend/pages";
-const PagesRoot = `${AppRoot}/${RelativePagesRoot}`;
+const PagesRoot = "frontend/pages";
 
 export const PagePathNames = fs
   .readdirSync(PagesRoot, {withFileTypes: true})
@@ -14,5 +12,5 @@ export const PageBundleFilePaths = Object.fromEntries(
 );
 
 export const RequireModulePaths = Object.fromEntries(
-  PagePathNames.map((pagePathName) => [pagePathName, `${RelativePagesRoot}/${pagePathName}/src/Main`])
+  PagePathNames.map((pagePathName) => [pagePathName, `${PagesRoot}/${pagePathName}/src/Main`])
 );

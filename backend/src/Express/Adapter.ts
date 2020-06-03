@@ -68,6 +68,10 @@ function getScenarioInputFromForm(req: Request): object {
 }
 
 const cacheParams = isDevelopmentEnvironment() ? {cacheControl: true} : {maxAge: "1000 days"};
+const sendFileOptions = {
+  root: AppRoot,
+  ...cacheParams,
+};
 
 export function sendVendorModule(fileName: string, res: Response): void {
   const vendorModuleFilePath = VersionedVendorModulePaths[fileName];
@@ -79,7 +83,7 @@ export function sendVendorModule(fileName: string, res: Response): void {
   }
 
   if (vendorModuleFilePath) {
-    res.sendFile(vendorModuleFilePath, cacheParams);
+    res.sendFile(vendorModuleFilePath, sendFileOptions);
   } else {
     res.sendStatus(404);
   }
@@ -87,7 +91,7 @@ export function sendVendorModule(fileName: string, res: Response): void {
 
 export function sendPageBundle(pagePathName: string, res: Response): void {
   if (PagePathNames.includes(pagePathName)) {
-    res.sendFile(PageBundleFilePaths[pagePathName], cacheParams);
+    res.sendFile(PageBundleFilePaths[pagePathName], sendFileOptions);
   } else {
     res.sendStatus(404);
   }
@@ -99,9 +103,9 @@ export const SharedBundles = [`/frontend/shared/bundle-${VERSION}.js`, `/shared/
 export function sendSharedBundle(pathName: string, res: Response): void {
   if (SharedBundles.includes(pathName)) {
     const bundleDir = path.dirname(pathName);
-    const bundleFilePath = `${AppRoot}/${bundleDir}/build/bundle.js`;
+    const bundleFilePath = `${bundleDir}/build/bundle.js`;
 
-    res.sendFile(bundleFilePath, cacheParams);
+    res.sendFile(bundleFilePath, sendFileOptions);
   } else {
     res.sendStatus(404);
   }

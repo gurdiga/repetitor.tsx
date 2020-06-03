@@ -1,9 +1,9 @@
-import * as fs from "fs";
 import {AppRoot} from "backend/src/Express/AppRoot";
+import * as fs from "fs";
 
 export const VENDOR_MODULE_PREFIX = "/vendor_modules/";
 
-const FrontendNodeModulesPath = `${AppRoot}/frontend/node_modules`;
+const FrontendNodeModulesPath = `frontend/node_modules`;
 const FrontendDependencies = JSON.parse(fs.readFileSync(`${AppRoot}/frontend/package-lock.json`, "utf8")).dependencies;
 
 interface VendorModule {
