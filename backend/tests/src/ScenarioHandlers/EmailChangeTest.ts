@@ -52,9 +52,9 @@ describe("EmailChange", () => {
       const session = {userId: 42, email: "some@email.com"};
       const input = {newEmail: "new@email.com"};
 
-      let genRandomStringStub: Stub<typeof StringUtils.genRandomString>;
-      beforeEach(() => (genRandomStringStub = Sinon.stub(StringUtils, "genRandomString").returns("token")));
-      afterEach(() => genRandomStringStub.restore());
+      let getRandomStringStub: Stub<typeof StringUtils.getRandomString>;
+      beforeEach(() => (getRandomStringStub = Sinon.stub(StringUtils, "getRandomString").returns("token")));
+      afterEach(() => getRandomStringStub.restore());
 
       beforeEach(async () => {
         await Registration({fullName: "Joe DOE", email: session.email, password: "secret"}, session);
@@ -64,7 +64,7 @@ describe("EmailChange", () => {
       const token = "8715a02588ff190e";
 
       beforeEach(async () => {
-        genRandomStringStub.returns(token);
+        getRandomStringStub.returns(token);
         result = await EmailChangeStep1(input, session);
       });
 
@@ -141,19 +141,19 @@ describe("EmailChange", () => {
         beforeEach(() => (time = Sinon.useFakeTimers()));
         afterEach(() => time.restore());
 
-        let genRandomStringStub: Stub<typeof StringUtils.genRandomString>;
-        beforeEach(() => (genRandomStringStub = Sinon.stub(StringUtils, "genRandomString")));
-        afterEach(() => genRandomStringStub.restore());
+        let getRandomStringStub: Stub<typeof StringUtils.getRandomString>;
+        beforeEach(() => (getRandomStringStub = Sinon.stub(StringUtils, "getRandomString")));
+        afterEach(() => getRandomStringStub.restore());
 
         const expiredToken = "8715a02588ff1901";
         const currentToken = "8715a02588ff1902";
 
         beforeEach(async () => {
-          genRandomStringStub.onFirstCall().returns(expiredToken);
+          getRandomStringStub.onFirstCall().returns(expiredToken);
           await EmailChangeStep1({newEmail}, {userId, email: currentEmail});
           time.tick(EMAIL_CHANGE_TOKEN_EXPIRATION_TIME + 1); // To test expiration of old tokens.
 
-          genRandomStringStub.onSecondCall().returns(currentToken);
+          getRandomStringStub.onSecondCall().returns(currentToken);
           await EmailChangeStep1({newEmail}, {userId, email: currentEmail});
 
           expect(await getEmailChangeRequestCount()).to.equal(2);

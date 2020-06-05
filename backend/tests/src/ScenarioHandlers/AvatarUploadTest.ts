@@ -13,7 +13,7 @@ import * as Sinon from "sinon";
 describe("AvatarUpload", () => {
   let storeFileStub: Stub<typeof FileStorage.storeFile>;
   let deleteTemFileStub: Stub<typeof FileStorage.deleteTemFile>;
-  let genRandomStringStub: Stub<typeof StringUtils.genRandomString>;
+  let getRandomStringStub: Stub<typeof StringUtils.getRandomString>;
 
   const email = "AvatarUpload@email.com";
   const password = "53cr37";
@@ -34,13 +34,13 @@ describe("AvatarUpload", () => {
   beforeEach(() => {
     storeFileStub = Sinon.stub(FileStorage, "storeFile");
     deleteTemFileStub = Sinon.stub(FileStorage, "deleteTemFile");
-    genRandomStringStub = Sinon.stub(StringUtils, "genRandomString").returns(randomString);
+    getRandomStringStub = Sinon.stub(StringUtils, "getRandomString").returns(randomString);
   });
 
   afterEach(() => {
     storeFileStub.restore();
     deleteTemFileStub.restore();
-    genRandomStringStub.restore();
+    getRandomStringStub.restore();
   });
 
   describe("happy path", () => {

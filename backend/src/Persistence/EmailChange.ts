@@ -1,6 +1,6 @@
 import {RowSet, runQuery} from "backend/src/Db";
 import {logError} from "backend/src/ErrorLogging";
-import {genRandomString} from "backend/src/StringUtils";
+import {getRandomString} from "backend/src/StringUtils";
 import {
   EmailChangeConfirmed,
   EmailChangeTokenUnrecognizedError,
@@ -18,7 +18,7 @@ export async function registerEmailChangeRequest(
   currentEmail: string,
   newEmail: string
 ): Promise<RequestCreated | DbError> {
-  const token = genRandomString(EMAIL_CHANGE_TOKEN_LENGTH);
+  const token = getRandomString(EMAIL_CHANGE_TOKEN_LENGTH);
   const timestamp = Date.now();
 
   try {

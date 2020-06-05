@@ -1,6 +1,6 @@
 import {deleteStoredFile, deleteTemFile, storeFile} from "backend/src/FileStorage";
 import {loadProfile, updateProfile} from "backend/src/Persistence/AccountPersistence";
-import {genRandomString} from "backend/src/StringUtils";
+import {getRandomString} from "backend/src/StringUtils";
 import * as path from "path";
 import {AvatarExists, makeImageFromUpload, NoAvatar} from "shared/src/Model/AvatarUpload";
 import {ProfileNotFoundError} from "shared/src/Model/Profile";
@@ -55,7 +55,7 @@ export async function AvatarUpload(input: Scenario["Input"], session: UserSessio
 
 function getCloudFileName(originalFileName: string, userId: number): string {
   const fileExtension = path.extname(originalFileName).toLowerCase();
-  const uniqueToken = genRandomString(16);
+  const uniqueToken = getRandomString(16);
 
   return `avatar-${userId}-${uniqueToken}${fileExtension}`;
 }

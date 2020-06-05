@@ -1,10 +1,10 @@
-import {getStorablePassword, genRandomString} from "backend/src/StringUtils";
-import {createTutor} from "backend/src/Persistence/AccountPersistence";
-import {makeRegistrationRequestFromInput} from "shared/src/Model/Account";
-import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
-import {UserSession, initializeUserSession} from "shared/src/Model/UserSession";
 import {sendEmail} from "backend/src/EmailUtils";
 import {requireEnvVar} from "backend/src/Env";
+import {createTutor} from "backend/src/Persistence/AccountPersistence";
+import {getRandomString, getStorablePassword} from "backend/src/StringUtils";
+import {makeRegistrationRequestFromInput} from "shared/src/Model/Account";
+import {initializeUserSession, UserSession} from "shared/src/Model/UserSession";
+import {ScenarioRegistry} from "shared/src/ScenarioRegistry";
 import {PagePath} from "shared/src/Utils/PagePath";
 
 type Scenario = ScenarioRegistry["Registration"];
@@ -20,7 +20,7 @@ export async function Registration(input: Scenario["Input"], session: UserSessio
 
   const {fullName, email, password} = result;
   const {passwordSalt: salt, passwordHash} = getStorablePassword(password);
-  const emailConfirmationToken = genRandomString(EMAIL_CONFIRMATION_TOKEN_LENGTH);
+  const emailConfirmationToken = getRandomString(EMAIL_CONFIRMATION_TOKEN_LENGTH);
   const createTutorResult = await createTutor(fullName, email, passwordHash, salt, emailConfirmationToken);
 
   if (createTutorResult.kind === "AccountCreationSuccess") {
