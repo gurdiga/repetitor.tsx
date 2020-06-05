@@ -1,6 +1,6 @@
 import {sendEmail} from "backend/src/EmailUtils";
 import {requireEnvVar} from "backend/src/Env";
-import {createTutor} from "backend/src/Persistence/AccountPersistence";
+import {createUser} from "backend/src/Persistence/AccountPersistence";
 import {getRandomString, getStorablePassword} from "backend/src/StringUtils";
 import {makeRegistrationRequestFromInput} from "shared/src/Model/Account";
 import {initializeUserSession, UserSession} from "shared/src/Model/UserSession";
@@ -21,15 +21,15 @@ export async function Registration(input: Scenario["Input"], session: UserSessio
   const {fullName, email, password} = result;
   const {passwordSalt: salt, passwordHash} = getStorablePassword(password);
   const emailConfirmationToken = getRandomString(EMAIL_CONFIRMATION_TOKEN_LENGTH);
-  const createTutorResult = await createTutor(fullName, email, passwordHash, salt, emailConfirmationToken);
+  const createUserResult = await createUser(fullName, email, passwordHash, salt, emailConfirmationToken);
 
-  if (createTutorResult.kind === "AccountCreationSuccess") {
-    initializeUserSession(session, {userId: createTutorResult.id, email});
+  if (createUserResult.kind === "AccountCreationSuccess") {
+    initializeUserSession(session, {userId: createUserResult.id, email});
   }
 
   sendWelcomeMessage(fullName, email, emailConfirmationToken);
 
-  return createTutorResult;
+  return createUserResult;
 }
 
 function sendWelcomeMessage(fullName: string, email: string, emailConfirmationToken: string) {

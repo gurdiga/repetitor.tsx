@@ -15,7 +15,7 @@ import {ProfileLoaded, ProfileNotFoundError, ProfileUpdated} from "shared/src/Mo
 import {DataProps, DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
 import {camelCaseToUnderscore} from "shared/src/Utils/StringUtils";
 
-export async function createTutor(
+export async function createUser(
   fullName: string,
   email: string,
   passwordHash: string,

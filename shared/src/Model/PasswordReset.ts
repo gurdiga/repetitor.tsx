@@ -6,7 +6,7 @@ import {PasswordResetStep2Input} from "shared/src/Scenarios/PasswordResetStep2";
 import {PredicateFn, UserValue, validateWithRules, ValidationMessages} from "shared/src/Utils/Validation";
 
 export interface PasswordResetStep1 {
-  kind: "TutorPasswordResetStep1";
+  kind: "PasswordResetStep1";
   email: string;
 }
 
@@ -35,7 +35,7 @@ export function makePasswordResetRequestFromInput(input: PasswordResetStep1Input
   }
 
   return {
-    kind: "TutorPasswordResetStep1",
+    kind: "PasswordResetStep1",
     email: emailValidationResult.value,
   };
 }

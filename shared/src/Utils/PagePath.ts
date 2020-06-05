@@ -1,5 +1,5 @@
 export enum PagePath {
-  TutorLogin = "/autentificare",
+  Login = "/autentificare",
   EmailConfirmation = "/confirmare-email",
   EmailChange = "/schimbare-email",
   Home = "/",

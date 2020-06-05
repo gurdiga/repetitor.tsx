@@ -1,5 +1,5 @@
-import * as React from "react";
 import {TopNavigationCss} from "frontend/shared/src/TopNavigation.css";
+import * as React from "react";
 import {PagePath} from "shared/src/Utils/PagePath";
 
 interface Props {
@@ -25,7 +25,7 @@ export function TopNavigation(props: Props) {
             <a href={PagePath.Registration}>Înregistrare</a>
           </li>
           <li>
-            <a href={PagePath.TutorLogin}>Autentificare</a>
+            <a href={PagePath.Login}>Autentificare</a>
           </li>
         </>
       )}

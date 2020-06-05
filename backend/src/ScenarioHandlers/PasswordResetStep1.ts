@@ -14,7 +14,7 @@ type Scenario = ScenarioRegistry["PasswordResetStep1"];
 export async function PasswordResetStep1(input: Scenario["Input"]): Promise<Scenario["Result"]> {
   const result = makePasswordResetRequestFromInput(input);
 
-  if (result.kind !== "TutorPasswordResetStep1") {
+  if (result.kind !== "PasswordResetStep1") {
     return result;
   }
 
