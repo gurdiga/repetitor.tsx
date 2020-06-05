@@ -1,15 +1,24 @@
+import {FullNameError, UserValidationRules} from "shared/src/Model/Account";
 import {ProfileUpdateInput} from "shared/src/Scenarios/ProfileUpdate";
 import {validateWithRules} from "shared/src/Utils/Validation";
-import {UserValidationRules, FullNameError} from "shared/src/Model/Account";
 
 // Reference: https://beta.workflowy.com/#/8634d2e2a7e4
 export type ProfileLoaded = {
   kind: "ProfileLoaded";
   fullName: string;
   email: string;
-  photo: Link;
   resume: MarkdownDocument;
   isPublished: boolean;
+  avatarFilename: string | null;
+};
+
+export type ClientSideProfile = {
+  kind: "ClientSideProfile";
+  fullName: string;
+  email: string;
+  resume: MarkdownDocument;
+  isPublished: boolean;
+  avatarUrl: string | null;
 };
 
 export type ProfileUpdated = {

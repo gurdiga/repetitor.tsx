@@ -6,7 +6,7 @@ import {
   UploadTempFileMissingErrorr,
   UploadValidationError,
 } from "shared/src/Model/FileUpload";
-import {NotAuthenticatedError} from "shared/src/Model/Profile";
+import {NotAuthenticatedError, ProfileNotFoundError} from "shared/src/Model/Profile";
 import {SystemError} from "shared/src/Model/Utils";
 
 export interface AvatarUploadInput extends UploadScenario {}
@@ -18,4 +18,5 @@ export type AvatarUploadResult =
   | UploadTempFileMissingErrorr
   | BadFileTypeError
   | CloudUploadError
+  | ProfileNotFoundError
   | SystemError;

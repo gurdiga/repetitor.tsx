@@ -12,7 +12,8 @@ import {
   PurgedExpiredTokens,
 } from "shared/src/Model/PasswordReset";
 import {ProfileLoaded, ProfileNotFoundError, ProfileUpdated} from "shared/src/Model/Profile";
-import {DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
+import {DataProps, DbError, SystemError, UnexpectedError} from "shared/src/Model/Utils";
+import {camelCaseToUnderscore} from "shared/src/Utils/StringUtils";
 
 export async function createTutor(
   fullName: string,
@@ -242,9 +243,9 @@ export async function loadProfile(
           kind: "ProfileLoaded",
           fullName: row.full_name,
           email: row.email,
-          photo: row.photo,
           resume: row.resume,
           isPublished: Boolean(row.is_published),
+          avatarFilename: row.avatar_filename,
         };
       } else {
         return {kind: "ProfileNotFoundError"};
@@ -261,17 +262,22 @@ export async function loadProfile(
 
 export async function updateProfile(
   userId: number,
-  fullName: string
+  fields: Partial<DataProps<ProfileLoaded>>
 ): Promise<ProfileUpdated | ProfileNotFoundError | UnexpectedError | DbError> {
   try {
+    const fieldPlaceholders = Object.keys(fields)
+      .map(camelCaseToUnderscore)
+      .map((x) => `\n${x} = ?`)
+      .join(",");
+    const fieldValues = Object.values(fields);
+
     const result = (await runQuery({
       sql: `
             UPDATE users
-            SET
-              full_name = ?
+            SET ${fieldPlaceholders}
             WHERE id = ?
           `,
-      params: [fullName, userId],
+      params: [...fieldValues, userId],
     })) as StatementResult;
 
     try {

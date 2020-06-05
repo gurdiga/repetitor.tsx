@@ -9,7 +9,7 @@ import {
   runScenario,
   ServerRequest,
 } from "frontend/shared/src/ScenarioRunner";
-import {Link, ProfileLoaded} from "shared/src/Model/Profile";
+import {ClientSideProfile} from "shared/src/Model/Profile";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {emptyFieldValue} from "shared/src/Utils/Validation";
@@ -18,7 +18,7 @@ export function AuthenticatedState() {
   const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
   const [fullName, updateFullName] = React.useState(emptyFieldValue);
   const [email, updateEmail] = React.useState(emptyFieldValue);
-  const [photo, updatePhoto] = React.useState<Link | undefined>(undefined);
+  const [avatarUrl, updateAvatarUrl] = React.useState<ClientSideProfile["avatarUrl"]>(null);
 
   if (serverRequest.requestState === RequestState.NotYetSent) {
     loadProfileInfo();
@@ -29,7 +29,7 @@ export function AuthenticatedState() {
   } else if (serverRequest.requestState === RequestState.ReceivedError) {
     return <AlertMessage type="error">{serverRequest.statusText}</AlertMessage>;
   } else {
-    return <ProfileForm fullName={fullName.value} email={email.value} photo={photo} />;
+    return <ProfileForm fullName={fullName.value} email={email.value} avatarUrl={avatarUrl} />;
   }
 
   async function loadProfileInfo() {
@@ -43,7 +43,7 @@ export function AuthenticatedState() {
     let statusText: string;
 
     switch (response.kind) {
-      case "ProfileLoaded":
+      case "ClientSideProfile":
         [requestState, statusText] = [RequestState.ReceivedSuccess, "Profile loaded"];
         receiveProfileInfo(response);
         break;
@@ -71,9 +71,9 @@ export function AuthenticatedState() {
     setServerRequest({requestState, statusText});
   }
 
-  function receiveProfileInfo(profileInfo: ProfileLoaded): void {
-    updateFullName({value: profileInfo.fullName, isValid: true});
-    updateEmail({value: profileInfo.email, isValid: true});
-    updatePhoto(profileInfo.photo);
+  function receiveProfileInfo(profile: ClientSideProfile): void {
+    updateFullName({value: profile.fullName, isValid: true});
+    updateEmail({value: profile.email, isValid: true});
+    updateAvatarUrl(profile.avatarUrl);
   }
 }

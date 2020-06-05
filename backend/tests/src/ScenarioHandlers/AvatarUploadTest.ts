@@ -1,26 +1,49 @@
+import * as EmailUtils from "backend/src/EmailUtils";
 import * as FileStorage from "backend/src/FileStorage";
 import {AvatarUpload} from "backend/src/ScenarioHandlers/AvatarUpload";
-import {Stub} from "backend/tests/src/TestHelpers";
+import {Login} from "backend/src/ScenarioHandlers/Login";
+import {Registration} from "backend/src/ScenarioHandlers/Registration";
+import * as StringUtils from "backend/src/StringUtils";
+import {Stub, stubExport, unregisterUser} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import {UploadedFile} from "shared/src/Model/FileUpload";
-import Sinon = require("sinon");
+import {UserSession} from "shared/src/Model/UserSession";
+import * as Sinon from "sinon";
 
 describe("AvatarUpload", () => {
   let storeFileStub: Stub<typeof FileStorage.storeFile>;
   let deleteTemFileStub: Stub<typeof FileStorage.deleteTemFile>;
+  let genRandomStringStub: Stub<typeof StringUtils.genRandomString>;
+
+  const email = "AvatarUpload@email.com";
+  const password = "53cr37";
+  const session: UserSession = {};
+  const randomString = "16-character-rnd";
+
+  stubExport(EmailUtils, "sendEmail", before, after); // Skip registration emails
+
+  before(async () => {
+    await Registration({fullName: "Joe DOE", email, password}, session);
+    await Login({email, password}, session);
+  });
+
+  after(async () => {
+    await unregisterUser(email);
+  });
 
   beforeEach(() => {
     storeFileStub = Sinon.stub(FileStorage, "storeFile");
     deleteTemFileStub = Sinon.stub(FileStorage, "deleteTemFile");
+    genRandomStringStub = Sinon.stub(StringUtils, "genRandomString").returns(randomString);
   });
 
   afterEach(() => {
     storeFileStub.restore();
     deleteTemFileStub.restore();
+    genRandomStringStub.restore();
   });
 
   describe("happy path", () => {
-    const session = {userId: 42};
     const uploadedFile: UploadedFile = {
       originalname: "IMG042042.JPG",
       path: "/some/path",
@@ -50,7 +73,7 @@ describe("AvatarUpload", () => {
 
       expect(storeFileStub, "stores the file").to.have.been.calledOnceWithExactly(
         uploadedFile.path,
-        "avatar-42-1589788067000.jpg",
+        `avatar-${session.userId}-${randomString}.jpg`,
         uploadedFile.mimetype
       );
 

@@ -1,6 +1,6 @@
+import {ClientSideProfile, NotAuthenticatedError, ProfileNotFoundError} from "shared/src/Model/Profile";
 import {SystemError} from "shared/src/Model/Utils";
-import {ProfileLoaded, NotAuthenticatedError, ProfileNotFoundError} from "shared/src/Model/Profile";
 
 export interface ProfileLoadInput {}
 
-export type ProfileLoadResult = ProfileLoaded | NotAuthenticatedError | ProfileNotFoundError | SystemError;
+export type ProfileLoadResult = ClientSideProfile | NotAuthenticatedError | ProfileNotFoundError | SystemError;

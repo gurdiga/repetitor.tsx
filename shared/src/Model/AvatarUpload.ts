@@ -25,6 +25,15 @@ export type FileTooLargeError = {
   kind: "FileTooLargeError";
 };
 
+export type AvatarExists = {
+  kind: "AvatarExists";
+  fileName: string;
+};
+
+export type NoAvatar = {
+  kind: "NoAvatar";
+};
+
 export const AVATAR_IMAGE_TYPE = "image/jpeg";
 export const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
 

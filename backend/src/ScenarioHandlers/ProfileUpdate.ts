@@ -16,5 +16,5 @@ export async function ProfileUpdate(input: Scenario["Input"], session: UserSessi
     return result;
   }
 
-  return updateProfile(session.userId, result.fullName);
+  return updateProfile(session.userId, {fullName: result.fullName});
 }

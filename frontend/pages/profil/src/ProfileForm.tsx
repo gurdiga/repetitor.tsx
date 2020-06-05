@@ -10,7 +10,7 @@ import {ResetPasswordLink} from "frontend/shared/src/Components/ResetPasswordLin
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import {placeholderServerRequest, RequestState, runScenario, ServerRequest} from "frontend/shared/src/ScenarioRunner";
 import {FullNameErrorMessages, FullNameValidationRules} from "shared/src/Model/Account";
-import {Link} from "shared/src/Model/Profile";
+import {ClientSideProfile} from "shared/src/Model/Profile";
 import {DbErrorMessages} from "shared/src/Model/Utils";
 import {assertNever} from "shared/src/Utils/Language";
 import {PagePath} from "shared/src/Utils/PagePath";
@@ -19,20 +19,20 @@ import {ValidatedValue} from "shared/src/Utils/Validation";
 interface Props {
   fullName: string;
   email: string;
-  photo: Link | undefined;
+  avatarUrl: ClientSideProfile["avatarUrl"];
 }
 
 export function ProfileForm(props: Props) {
   const [fullName, updateFullName] = React.useState({value: props.fullName, isValid: true});
-  const [photoUrl, setPhotoUrl] = React.useState(props.photo);
+  const [avatarUrl, setAvatarUrl] = React.useState(props.avatarUrl);
 
   const [shouldShowValidationMessage, toggleValidationMessage] = React.useState(false);
   const [serverRequest, setServerRequest] = React.useState<ServerRequest>(placeholderServerRequest);
 
   return (
     <>
-      <Avatar url={photoUrl} />
-      <AvatarUploadButton onUploaded={(url) => setPhotoUrl({kind: "Link", value: url})} />
+      <Avatar url={avatarUrl} />
+      <AvatarUploadButton onUploaded={(url) => setAvatarUrl(url)} />
       <Form
         fields={[
           <TextField

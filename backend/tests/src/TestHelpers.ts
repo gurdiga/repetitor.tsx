@@ -73,3 +73,7 @@ export async function q(sql: string): Promise<any[]> {
 
   return result.rows;
 }
+
+export async function unregisterUser(email: string): Promise<void> {
+  await q(`DELETE FROM users WHERE email = "${email}"`);
+}

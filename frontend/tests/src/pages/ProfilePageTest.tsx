@@ -20,15 +20,7 @@ import {
   Wrapper,
 } from "frontend/tests/src/TestHelpers";
 import * as React from "react";
-import {
-  Link,
-  makeLink,
-  MarkdownDocument,
-  NotAuthenticatedError,
-  ProfileLoaded,
-  ProfileNotFoundError,
-} from "shared/src/Model/Profile";
-import {DbError, UnexpectedError} from "shared/src/Model/Utils";
+import {ClientSideProfile, MarkdownDocument} from "shared/src/Model/Profile";
 import {pick} from "shared/src/Utils/Language";
 import Sinon = require("sinon");
 
@@ -71,15 +63,15 @@ describe("<ProfilePage/>", () => {
       });
 
       context("when loading the profile succeeds", () => {
-        const response: ProfileLoaded = {
-          kind: "ProfileLoaded",
+        const response: ClientSideProfile = {
+          kind: "ClientSideProfile",
           fullName: "John DOE",
           email: "email@example.com",
-          photo: makeLink("https://gravatar.com/photo.jpg") as Link,
           resume: {kind: "MarkdownDocument", value: ""} as MarkdownDocument,
           isPublished: false,
+          avatarUrl: null,
         };
-        const expectedProps = pick(response, "fullName", "email", "photo");
+        const expectedProps = pick(response, "fullName", "email", "avatarUrl");
 
         beforeEach(async () => await simulateServerResponse(response));
 
@@ -106,7 +98,7 @@ describe("<ProfilePage/>", () => {
             expectProps("full name", fullNameField, {value: response.fullName, label: "Nume deplin"});
             expectProps("email", emailField, {value: response.email, label: "Adresa de email"});
             expectProps("password", passwordField, {label: "Parola"});
-            expectProps("avatar", wrapper.find(Avatar), {url: response.photo});
+            expectProps("avatar", wrapper.find(Avatar), {url: response.avatarUrl});
           });
 
           describe("response handling", () => {
