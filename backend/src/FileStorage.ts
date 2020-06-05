@@ -11,6 +11,7 @@ const storageOptions: StorageOptions = {
   autoRetry: true,
   maxRetries: 5,
 };
+// https://googleapis.dev/nodejs/storage/4.7.0/ ; check the precise version in package.json
 const bucket = new Storage(storageOptions).bucket(bucketName);
 
 const defaultUploadOptions = {
@@ -56,7 +57,11 @@ export async function storeFile(
 }
 
 export async function deleteStoredFile(destinationFileName: string): Promise<void> {
-  await bucket.deleteFiles({prefix: destinationFileName});
+  try {
+    await bucket.deleteFiles({prefix: destinationFileName});
+  } catch (error) {
+    logError(error);
+  }
 }
 
 export function getStoredFileUrl(filename: string): string {
