@@ -1,7 +1,7 @@
-import {loadProfile} from "backend/src/Persistence/AccountPersistence";
-import {changeEmail, verifyEmailChangeToken} from "backend/src/Persistence/EmailChange";
 import {sendEmail} from "backend/src/EmailUtils";
 import {requireEnvVar} from "backend/src/Env";
+import {loadProfile} from "backend/src/Persistence/AccountPersistence";
+import {changeEmail, verifyEmailChangeToken} from "backend/src/Persistence/EmailChange";
 import {makeEmailChangeConfirmation} from "shared/src/Model/EmailChange";
 import {ProfileLoaded} from "shared/src/Model/Profile";
 import {UserSession} from "shared/src/Model/UserSession";
@@ -48,7 +48,9 @@ Dragă ${fullName},
 
 Vă aducem la cunoștință că email-ul dumneavoastră în sistemul
 [${requireEnvVar("APP_NAME")}][1] a fost schimbat cu succes.
-De acum încolo veți primi comunicările de sistem pe această adresă.
+De acum încolo veți primi comunicările de sistem pe adresa nouă:
+
+${email}
 
 [1]: ${requireEnvVar("APP_URL")}
 `
