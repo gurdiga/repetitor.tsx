@@ -14,6 +14,7 @@ import * as Sinon from "sinon";
 
 describe("AvatarUpload", () => {
   let storeFileStub: Stub<typeof FileStorage.storeFile>;
+  let deleteStoredFileStub: Stub<typeof FileStorage.deleteStoredFile>;
   let deleteTemFileStub: Stub<typeof FileStorage.deleteTemFile>;
   let getRandomStringStub: Stub<typeof StringUtils.getRandomString>;
 
@@ -35,12 +36,14 @@ describe("AvatarUpload", () => {
 
   beforeEach(() => {
     storeFileStub = Sinon.stub(FileStorage, "storeFile");
+    deleteStoredFileStub = Sinon.stub(FileStorage, "deleteStoredFile");
     deleteTemFileStub = Sinon.stub(FileStorage, "deleteTemFile");
     getRandomStringStub = Sinon.stub(StringUtils, "getRandomString").returns(randomString);
   });
 
   afterEach(() => {
     storeFileStub.restore();
+    deleteStoredFileStub.restore();
     deleteTemFileStub.restore();
     getRandomStringStub.restore();
   });
@@ -86,6 +89,52 @@ describe("AvatarUpload", () => {
       const newProfile = (await loadProfile(session.userId!)) as ProfileLoaded;
 
       expect(newProfile.avatarFilename).to.equal(expectedCloudFileName);
+    });
+
+    context("when old avatar", () => {
+      const oldAvatar: UploadedFile = {
+        originalname: "IMG042042.JPG",
+        path: "/some/path",
+        mimetype: "image/jpeg",
+        size: 1,
+      };
+
+      const newAvatar: UploadedFile = {
+        originalname: "IMG042043.JPG",
+        path: "/some/path2",
+        mimetype: "image/jpeg",
+        size: 2,
+      };
+
+      const randomStringForNewAvatar = "rnd-string-for-new-avatar";
+
+      beforeEach(async () => {
+        await AvatarUpload({upload: [oldAvatar]}, session);
+        storeFileStub.resetHistory();
+        getRandomStringStub.returns(randomStringForNewAvatar);
+      });
+
+      it("deletes the old one and registers the new one", async () => {
+        await AvatarUpload({upload: [newAvatar]}, session);
+
+        const oldAvatarCloudFileName = `avatar-${session.userId}-${randomString}.jpg`;
+
+        expect(deleteStoredFileStub, "deletes the old avatar from the cloud").to.have.been.calledOnceWithExactly(
+          oldAvatarCloudFileName
+        );
+
+        const newAvatarCloudFileName = `avatar-${session.userId}-${randomStringForNewAvatar}.jpg`;
+
+        expect(storeFileStub, "stores the new avatar").to.have.been.calledOnceWithExactly(
+          newAvatar.path,
+          newAvatarCloudFileName,
+          newAvatar.mimetype
+        );
+
+        const newProfile = (await loadProfile(session.userId!)) as ProfileLoaded;
+
+        expect(newProfile.avatarFilename).to.equal(newAvatarCloudFileName);
+      });
     });
 
     context("when storeFile fails", () => {
