@@ -1,5 +1,6 @@
 import * as EmailUtils from "backend/src/EmailUtils";
 import * as FileStorage from "backend/src/FileStorage";
+import {loadProfile} from "backend/src/Persistence/AccountPersistence";
 import {AvatarUpload} from "backend/src/ScenarioHandlers/AvatarUpload";
 import {Login} from "backend/src/ScenarioHandlers/Login";
 import {Registration} from "backend/src/ScenarioHandlers/Registration";
@@ -7,6 +8,7 @@ import * as StringUtils from "backend/src/StringUtils";
 import {Stub, stubExport, unregisterUser} from "backend/tests/src/TestHelpers";
 import {expect} from "chai";
 import {UploadedFile} from "shared/src/Model/FileUpload";
+import {ProfileLoaded} from "shared/src/Model/Profile";
 import {UserSession} from "shared/src/Model/UserSession";
 import * as Sinon from "sinon";
 
@@ -71,13 +73,19 @@ describe("AvatarUpload", () => {
         url: fileStorageUrl,
       });
 
+      const expectedCloudFileName = `avatar-${session.userId}-${randomString}.jpg`;
+
       expect(storeFileStub, "stores the file").to.have.been.calledOnceWithExactly(
         uploadedFile.path,
-        `avatar-${session.userId}-${randomString}.jpg`,
+        expectedCloudFileName,
         uploadedFile.mimetype
       );
 
       expect(deleteTemFileStub, "deletes the temp file").to.have.been.calledOnceWithExactly(uploadedFile.path);
+
+      const newProfile = (await loadProfile(session.userId!)) as ProfileLoaded;
+
+      expect(newProfile.avatarFilename).to.equal(expectedCloudFileName);
     });
 
     context("when storeFile fails", () => {

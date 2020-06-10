@@ -33,12 +33,12 @@ export async function AvatarUpload(input: Scenario["Input"], session: UserSessio
     return storeFileResult;
   }
 
-  const getRegisteredAvatarResult = await getExistingAvatarCloudFileName(session.userId);
+  const getOldAvatarResult = await getOldAvatarCloudFileName(session.userId);
 
-  if (getRegisteredAvatarResult.kind === "AvatarExists") {
-    await deleteStoredFile(getRegisteredAvatarResult.fileName);
-  } else if (getRegisteredAvatarResult.kind !== "NoAvatar") {
-    return getRegisteredAvatarResult;
+  if (getOldAvatarResult.kind === "AvatarExists") {
+    await deleteStoredFile(getOldAvatarResult.fileName);
+  } else if (getOldAvatarResult.kind !== "NoAvatar") {
+    return getOldAvatarResult;
   }
 
   const updateProfileResult = await updateProfile(session.userId, {avatarFilename: cloudFileName});
@@ -60,7 +60,7 @@ function getCloudFileName(originalFileName: string, userId: number): string {
   return `avatar-${userId}-${uniqueToken}${fileExtension}`;
 }
 
-async function getExistingAvatarCloudFileName(
+async function getOldAvatarCloudFileName(
   userId: number
 ): Promise<AvatarExists | NoAvatar | ProfileNotFoundError | UnexpectedError | DbError> {
   const result = await loadProfile(userId);
