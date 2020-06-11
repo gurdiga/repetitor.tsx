@@ -1,9 +1,11 @@
-import * as expressSession from "express-session";
 import {connectionPool} from "backend/src/Db";
 import {requireEnvVar} from "backend/src/Env";
+import * as expressSession from "express-session";
 
 const MySQLSessionStore = require("express-mysql-session")(expressSession);
 const sessionStore = new MySQLSessionStore({}, connectionPool);
+
+const MAX_AGE = 7 * 24 * 3600 * 1000;
 
 export const session = expressSession({
   secret: requireEnvVar("APP_SESSION_COOKIE_SECRET"),
@@ -14,6 +16,6 @@ export const session = expressSession({
     httpOnly: true,
     secure: false,
     sameSite: true,
-    maxAge: 1000 * 3600 * 24 * 7,
+    maxAge: MAX_AGE,
   },
 });
