@@ -15,7 +15,6 @@ export const session = expressSession({
   cookie: {
     httpOnly: true,
     secure: false,
-    sameSite: true,
     maxAge: MAX_AGE,
   },
 });

@@ -93,7 +93,7 @@ describe("Express integration", () => {
       expect(res.text, "renders the golden sample HTML").to.equal(goldenSampleHtml);
 
       const sessionCookie = res.header["set-cookie"][0];
-      const sessionCookieRegexp = /connect.sid=(.+); Path=\/; Expires=(.+); HttpOnly; SameSite=Strict/;
+      const sessionCookieRegexp = /connect.sid=(.+); Path=\/; Expires=(.+); HttpOnly/;
 
       expect(sessionCookie, "sets the session cookie appropriately").to.match(sessionCookieRegexp);
 
