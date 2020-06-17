@@ -48,9 +48,7 @@ Dragă ${fullName},
 
 Vă aducem la cunoștință că email-ul dumneavoastră în sistemul
 [${requireEnvVar("APP_NAME")}][1] a fost schimbat cu succes.
-De acum încolo veți primi comunicările de sistem pe adresa nouă:
-
-${email}
+De acum încolo veți primi comunicările de sistem pe adresa nouă: ${email}
 
 [1]: ${requireEnvVar("APP_URL")}
 `

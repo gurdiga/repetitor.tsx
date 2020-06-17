@@ -83,6 +83,7 @@ edit:
 
 open:
 	open http://localhost:$(PORT)
+o: open
 
 npm-update:
 	npm --depth 999 update &
@@ -138,7 +139,7 @@ pct: pre-commit-test
 
 check-for-only:
 	@grep -nRP '.(only|skip)\(' {frontend,backend}/tests/src \
-	&&	{
+	&& {
 		echo -e "\nSome Mocha tests are .only or .skip.\n"
 		exit 1
 	} \

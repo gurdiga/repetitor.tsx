@@ -44,7 +44,7 @@ function renderStep1(props: PageProps) {
 
   return (
     <>
-      {isAuthenticated ? (
+      {isAuthenticated && !shouldShowServerRequestState ? (
         <p>Veți primi un mesaj cu instrucțiuni pe adresa dumneavoastră de email.</p>
       ) : (
         !shouldShowServerRequestState && (
