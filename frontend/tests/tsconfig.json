@@ -5,6 +5,7 @@
     {"path": "../../frontend/shared"},
     {"path": "../../frontend/pages/autentificare"},
     {"path": "../../frontend/pages/confirmare-email"},
+    {"path": "../../frontend/pages/schimbare-email"},
     {"path": "../../frontend/pages/inregistrare"},
     {"path": "../../frontend/pages/profil"},
     {"path": "../../frontend/pages/resetare-parola"}
