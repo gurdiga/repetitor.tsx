@@ -127,11 +127,11 @@ $(NODE_BINARY_PATH):
 	@echo "Install nvm from here: https://github.com/nvm-sh/nvm"
 	exit 1
 
-pre-commit:
+pre-commit: check-for-only
 	time make --no-print-directory lint clean build pre-commit-test
 pc: pre-commit
 
-pre-commit-test: check-for-only
+pre-commit-test:
 	TEST_EMAIL_UTILS=yes \
 	TEST_FILE_STORAGE=yes \
 	time make --no-print-directory test

@@ -112,9 +112,9 @@ export function Step1(props: Props) {
       case "DbError":
         [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
-      case "UnexpectedError":
       case "TransportError":
       case "ServerError":
+      case "UnexpectedError":
         [requestState, statusText] = [RequestState.ReceivedError, response.error];
         break;
       default:
