@@ -283,7 +283,7 @@ export async function updateProfile(
     try {
       const {affectedRows} = result;
 
-      // I assume that users.id has a unique constraint, and there can only be
+      // ASSUMPTION: users.id has a unique constraint, and there can only be
       // 1 or 0 records with a given ID.
       if (affectedRows === 1) {
         return {kind: "ProfileUpdated"};

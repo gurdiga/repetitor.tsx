@@ -1,5 +1,6 @@
 import {RowSet, runQuery} from "backend/src/Db";
 import {logError} from "backend/src/ErrorLogging";
+import {updateProfile} from "backend/src/Persistence/AccountPersistence";
 import {getRandomString} from "backend/src/StringUtils";
 import {
   EmailChangeConfirmed,
@@ -8,7 +9,8 @@ import {
   EMAIL_CHANGE_TOKEN_LENGTH,
   RequestCreated,
 } from "shared/src/Model/EmailChange";
-import {DbError} from "shared/src/Model/Utils";
+import {ProfileNotFoundError} from "shared/src/Model/Profile";
+import {DbError, UnexpectedError} from "shared/src/Model/Utils";
 
 export const EMAIL_CHANGE_REQUEST_EXPIRATION_HOURS = 1;
 export const EMAIL_CHANGE_TOKEN_EXPIRATION_TIME = EMAIL_CHANGE_REQUEST_EXPIRATION_HOURS * 3600 * 1000;
@@ -105,27 +107,17 @@ export async function changeEmail(
   userId: number,
   newEmail: string,
   currentEmail: string
-): Promise<EmailChangeConfirmed | DbError> {
+): Promise<EmailChangeConfirmed | ProfileNotFoundError | DbError | UnexpectedError> {
   recordPreviousEmail(userId, currentEmail);
 
-  try {
-    await runQuery({
-      sql: `
-        UPDATE users
-        SET email = ?
-        WHERE id = ?
-      `,
-      params: [newEmail, userId],
-    });
+  const profileUpdateResult = await updateProfile(userId, {email: newEmail});
 
+  if (profileUpdateResult.kind === "ProfileUpdated") {
     return {
       kind: "EmailChangeConfirmed",
     };
-  } catch (error) {
-    return {
-      kind: "DbError",
-      errorCode: "GENERIC_DB_ERROR",
-    };
+  } else {
+    return profileUpdateResult;
   }
 }
 

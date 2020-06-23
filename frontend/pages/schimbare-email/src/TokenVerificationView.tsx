@@ -41,6 +41,9 @@ export function TokenVerificationView(props: Props) {
       case "EmailChangeTokenUnrecognizedError":
         [requestState, statusText] = [RequestState.ReceivedError, "Token necunoscut"];
         break;
+      case "ProfileNotFoundError":
+        [requestState, statusText] = [RequestState.ReceivedError, "Nu am găsit profilul"];
+        break;
       case "DbError":
         [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;

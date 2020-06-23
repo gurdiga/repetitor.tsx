@@ -279,6 +279,10 @@ describe("<EmailChangePage/>", () => {
                   serverResponse: {kind: "EmailChangeTokenUnrecognizedError"} as const,
                   uiErrorMessage: "Token necunoscut",
                 },
+                "when profile was not found?!": {
+                  serverResponse: {kind: "ProfileNotFoundError"} as const,
+                  uiErrorMessage: "Nu am găsit profilul",
+                },
                 "when there was a DB hiccup": {
                   serverResponse: {kind: "DbError", errorCode: "GENERIC_DB_ERROR"} as const,
                   uiErrorMessage: "Eroare neprevăzută de bază de date",
