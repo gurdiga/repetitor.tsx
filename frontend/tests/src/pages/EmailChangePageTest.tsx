@@ -260,7 +260,7 @@ describe("<EmailChangePage/>", () => {
             context("when server says the token is OK", () => {
               beforeEach(async () => {
                 simulateServerResponse({
-                  kind: "EmailChangeConfirmed",
+                  kind: "EmailChanged",
                 });
               });
 

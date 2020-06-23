@@ -176,7 +176,7 @@ describe("EmailChange", () => {
             "records the email change"
           );
           expect(session.email).to.equal(newEmail, "updates the session");
-          expect(result).to.deep.equal({kind: "EmailChangeConfirmed"}, "reports the success");
+          expect(result).to.deep.equal({kind: "EmailChanged"}, "reports the success");
         });
 
         async function getEmailChangeRequestCount() {

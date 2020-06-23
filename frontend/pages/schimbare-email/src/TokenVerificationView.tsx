@@ -32,7 +32,7 @@ export function TokenVerificationView(props: Props) {
     let statusText: string;
 
     switch (response.kind) {
-      case "EmailChangeConfirmed":
+      case "EmailChanged":
         [requestState, statusText] = [RequestState.ReceivedSuccess, "Confirmare reușită. Vă mulțumim!"];
         break;
       case "EmailChangeTokenValidationError":

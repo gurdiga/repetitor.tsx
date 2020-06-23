@@ -1,5 +1,5 @@
 import {
-  EmailChangeConfirmed,
+  EmailChanged,
   EmailChangeTokenUnrecognizedError,
   EmailChangeTokenValidationError,
 } from "shared/src/Model/EmailChange";
@@ -10,7 +10,7 @@ export interface EmailChangeStep2Input {
   token: string | undefined;
 }
 export type EmailChangeStep2Result =
-  | EmailChangeConfirmed
+  | EmailChanged
   | EmailChangeTokenValidationError
   | EmailChangeTokenUnrecognizedError
   | ProfileNotFoundError

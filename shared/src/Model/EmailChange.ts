@@ -50,8 +50,8 @@ export function makeEmailChangeRequest(
   };
 }
 
-export type EmailChangeConfirmed = {
-  kind: "EmailChangeConfirmed";
+export type EmailChanged = {
+  kind: "EmailChanged";
 };
 
 export type EmailChangeTokenValidationError = {

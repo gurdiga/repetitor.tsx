@@ -3,7 +3,7 @@ import {logError} from "backend/src/ErrorLogging";
 import {updateProfile} from "backend/src/Persistence/AccountPersistence";
 import {getRandomString} from "backend/src/StringUtils";
 import {
-  EmailChangeConfirmed,
+  EmailChanged,
   EmailChangeTokenUnrecognizedError,
   EmailChangeTokenVerified,
   EMAIL_CHANGE_TOKEN_LENGTH,
@@ -107,14 +107,14 @@ export async function changeEmail(
   userId: number,
   newEmail: string,
   currentEmail: string
-): Promise<EmailChangeConfirmed | ProfileNotFoundError | DbError | UnexpectedError> {
+): Promise<EmailChanged | ProfileNotFoundError | DbError | UnexpectedError> {
   recordPreviousEmail(userId, currentEmail);
 
   const profileUpdateResult = await updateProfile(userId, {email: newEmail});
 
   if (profileUpdateResult.kind === "ProfileUpdated") {
     return {
-      kind: "EmailChangeConfirmed",
+      kind: "EmailChanged",
     };
   } else {
     return profileUpdateResult;
