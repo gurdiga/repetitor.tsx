@@ -4,13 +4,23 @@ import {AuthenticatedState} from "frontend/pages/schimbare-email/src/Authenticat
 import {EmailChangePage} from "frontend/pages/schimbare-email/src/EmailChangePage";
 import {Step1} from "frontend/pages/schimbare-email/src/Step1";
 import {Step2} from "frontend/pages/schimbare-email/src/Step2";
+import {TokenInvalidView} from "frontend/pages/schimbare-email/src/TokenInvalidView";
+import {TokenVerificationView} from "frontend/pages/schimbare-email/src/TokenVerificationView";
 import {UnauthenticatedState} from "frontend/pages/schimbare-email/src/UnauthenticatedState";
 import {Form} from "frontend/shared/src/Components/Form";
 import {TextField} from "frontend/shared/src/Components/FormFields/TextField";
 import {SubmitButton} from "frontend/shared/src/Components/SubmitButton";
 import * as ScenarioRunner from "frontend/shared/src/ScenarioRunner";
-import {Comp, expectAlertMessage, expectProps, Stub, Wrapper} from "frontend/tests/src/TestHelpers";
+import {
+  Comp,
+  expectAlertMessage,
+  expectProps,
+  ServerResponseSimulator,
+  Stub,
+  Wrapper,
+} from "frontend/tests/src/TestHelpers";
 import * as React from "react";
+import {ChangeEmailTokenErrorCode} from "shared/src/Model/EmailChange";
 import * as Sinon from "sinon";
 
 describe("<EmailChangePage/>", () => {
@@ -18,7 +28,7 @@ describe("<EmailChangePage/>", () => {
   let wrapper: Wrapper<typeof EmailChangePage>;
 
   beforeEach(() => {
-    runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario").resolves({kind: "EmailChangeConfirmationRequestSent"});
+    runScenarioStub = Sinon.stub(ScenarioRunner, "runScenario");
   });
 
   afterEach(() => {
@@ -57,6 +67,7 @@ describe("<EmailChangePage/>", () => {
           const currentEmail = "current@email.com";
 
           beforeEach(() => {
+            runScenarioStub.resolves({kind: "EmailChangeConfirmationRequestSent"});
             wrapper = shallow(<Step1 currentEmail={currentEmail} />);
             form = wrapper.find(Form);
           });
@@ -185,6 +196,138 @@ describe("<EmailChangePage/>", () => {
 
           expectProps<typeof Step2>("UI", ui, {
             token: params.token,
+          });
+        });
+
+        describe("<Step2/>", () => {
+          context("when the token is syntactically correct", () => {
+            const token = "0123456789abcdef";
+
+            it("renders <TokenVerificationView/>", () => {
+              const wrapper = shallow(<Step2 token={token} />);
+              const ui = wrapper.find(TokenVerificationView);
+
+              expectProps<typeof TokenVerificationView>("UI", ui, {
+                token,
+              });
+            });
+          });
+
+          context("when the token is NOT syntactically correct", () => {
+            Object.entries({
+              "when the token is empty": {
+                badToken: "",
+                expectedValidationErrorCode: "REQUIRED" as ChangeEmailTokenErrorCode,
+              },
+              "when the token is too short": {
+                badToken: "01234",
+                expectedValidationErrorCode: "BAD_LENGTH" as ChangeEmailTokenErrorCode,
+              },
+              "when the token is too long": {
+                badToken: "0123456789012345678901234567890123456789",
+                expectedValidationErrorCode: "BAD_LENGTH" as ChangeEmailTokenErrorCode,
+              },
+            }).forEach(([description, {badToken, expectedValidationErrorCode}]) => {
+              context(description, () => {
+                it("renders <TokenInvalidView/>", () => {
+                  const wrapper = shallow(<Step2 token={badToken} />);
+                  const ui = wrapper.find(TokenInvalidView);
+
+                  expectProps<typeof TokenInvalidView>("UI", ui, {
+                    validationErrorCode: expectedValidationErrorCode,
+                  });
+                });
+              });
+            });
+          });
+
+          describe("<TokenVerificationView/>", () => {
+            const token = "0123456789abcdef";
+
+            let wrapper: Wrapper<typeof TokenVerificationView>;
+            let simulateServerResponse: ServerResponseSimulator;
+
+            beforeEach(() => {
+              runScenarioStub.returns(new Promise((resolve) => (simulateServerResponse = resolve)));
+              wrapper = shallow(<TokenVerificationView token={token} />);
+            });
+
+            it("asks the server to verify the token", () => {
+              expectAlertMessage("info message", wrapper, "info", "Verificare token…");
+              expect(runScenarioStub).to.have.been.calledOnceWithExactly("EmailChangeStep2", {token});
+            });
+
+            context("when server says the token is OK", () => {
+              beforeEach(async () => {
+                simulateServerResponse({
+                  kind: "EmailChangeConfirmed",
+                });
+              });
+
+              it("displays the success message", () => {
+                expectAlertMessage("success message", wrapper, "success", "Confirmare reușită. Vă mulțumim!");
+              });
+            });
+
+            context("when server responds with a failure", () => {
+              Object.entries({
+                "when the token is invalid": {
+                  serverResponse: {kind: "EmailChangeTokenValidationError", errorCode: "BAD_LENGTH"} as const,
+                  uiErrorMessage: "Tokenul de schimbare a adresei de email a nu corespunde după lungime",
+                },
+                "when the token is syntactically valid but not registered": {
+                  serverResponse: {kind: "EmailChangeTokenUnrecognizedError"} as const,
+                  uiErrorMessage: "Token necunoscut",
+                },
+                "when there was a DB hiccup": {
+                  serverResponse: {kind: "DbError", errorCode: "GENERIC_DB_ERROR"} as const,
+                  uiErrorMessage: "Eroare neprevăzută de bază de date",
+                },
+                "when there was an error while sending the request": {
+                  serverResponse: {kind: "TransportError", error: "UTP cable yanked!"} as const,
+                  uiErrorMessage: "Eroare: UTP cable yanked!",
+                },
+                "when there was an Express.js breaking update": {
+                  serverResponse: {kind: "ServerError", error: "542 Bad Server Setup"} as const,
+                  uiErrorMessage: "Eroare: 542 Bad Server Setup",
+                },
+                "when it all went downhill": {
+                  serverResponse: {kind: "UnexpectedError", error: "Niente"} as const,
+                  uiErrorMessage: "Eroare: Niente",
+                },
+              }).forEach(([description, {serverResponse, uiErrorMessage}]) => {
+                context(description, () => {
+                  beforeEach(async () => {
+                    simulateServerResponse(serverResponse);
+                  });
+
+                  it("displays the error message", () => {
+                    expectAlertMessage("error message", wrapper, "error", uiErrorMessage);
+                  });
+                });
+              });
+            });
+          });
+
+          describe("<TokenInvalidView/>", () => {
+            Object.entries({
+              "when the token is empty": {
+                validationErrorCode: "REQUIRED" as const,
+                uiErrorMessage: "Tokenul de schimbare a adresei de email lipsește",
+              },
+              "when the token is not the right length": {
+                validationErrorCode: "BAD_LENGTH" as const,
+                uiErrorMessage: "Tokenul de schimbare a adresei de email a nu corespunde după lungime",
+              },
+            }).forEach(([description, {validationErrorCode, uiErrorMessage}]) => {
+              context(description, () => {
+                it("reports the error", () => {
+                  const wrapper = shallow(<TokenInvalidView validationErrorCode={validationErrorCode} />);
+
+                  expectAlertMessage("error message", wrapper, "error", uiErrorMessage);
+                });
+              });
+            });
           });
         });
       });

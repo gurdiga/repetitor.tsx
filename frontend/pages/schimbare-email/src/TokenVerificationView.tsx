@@ -44,9 +44,9 @@ export function TokenVerificationView(props: Props) {
       case "DbError":
         [requestState, statusText] = [RequestState.ReceivedError, DbErrorMessages[response.errorCode]];
         break;
-      case "UnexpectedError":
       case "TransportError":
       case "ServerError":
+      case "UnexpectedError":
         [requestState, statusText] = [RequestState.ReceivedError, `Eroare: ${response.error}`];
         break;
       default:
