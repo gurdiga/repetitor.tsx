@@ -86,17 +86,9 @@ open:
 o: open
 
 npm-update:
-	npm --depth 999 update &
-	(cd backend && npm --depth 999 update) &
-	(cd frontend && npm --depth 999 update) &
-	(cd frontend/tests && npm --depth 14 update) &
-	time wait
-
-npm-outdated:
-	npm outdated
-	(cd backend && npm outdated)
-	(cd frontend && npm outdated)
-	(cd frontend/tests && npm outdated)
+	npm --depth 999 update
+	(cd backend; npm --depth 9999 update)
+	(cd frontend; npm --depth 9999 update)
 
 node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules frontend/tests/node_modules backend/node_modules
 backend/node_modules: backend/package.json
@@ -104,7 +96,7 @@ frontend/node_modules: frontend/package.json
 frontend/tests/node_modules: frontend/tests/package.json
 node_modules backend/node_modules frontend/node_modules frontend/tests/node_modules:
 	@set -e
-	( cd $(@D) && ~/.nvm/nvm-exec npm install )
+	(cd $(@D) && ~/.nvm/nvm-exec npm install)
 	touch $@
 
 clean:
