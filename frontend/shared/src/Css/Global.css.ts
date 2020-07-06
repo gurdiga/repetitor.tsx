@@ -16,18 +16,9 @@ export namespace GlobalCss {
 
 function setDefaultFontFamily(rootElementSelector: string) {
   cssRule(rootElementSelector, {
-    fontFamily: [
-      "sans-serif",
-      "'Helvetica Neue'",
-      "'Droid Sans'",
-      "'Fira Sans'",
-      "Cantarell",
-      "Ubuntu",
-      "Oxygen",
-      "Roboto",
-      "'Segoe UI'",
-      "BlinkMacSystemFont",
-      "-apple-system",
-    ],
+    fontFamily: PrimaryFont,
   });
 }
+
+export const PrimaryFont = "Vollkorn";
+export const SecondaryFont = "Inria Sans";

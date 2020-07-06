@@ -119,6 +119,8 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta name="msvalidate.01" content="7349C399D4F768E25C7444A6204D3F13" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
+  <link href="/styles-${VERSION}.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;700&family=Vollkorn:ital,wght@0,400;0,800;1,400&display=swap" rel="stylesheet">
   <script>
     var environment = "${requireEnvVar("NODE_ENV")}";
   </script>
@@ -195,4 +197,8 @@ type ExpressHandler = (err: Error, req: Request, res: Response, next: NextFuncti
 // This function only exists to facilitate stubbing in integration tests for this adapter.
 export function forwardTo<HF extends () => ExpressHandler>(handlerFactory: HF): ExpressHandler {
   return (...args: Parameters<ExpressHandler>): ReturnType<ExpressHandler> => handlerFactory()(...args);
+}
+
+export function sendStyles(_req: Request, res: Response): void {
+  res.sendFile("frontend/shared/build/styles.css", sendFileOptions);
 }

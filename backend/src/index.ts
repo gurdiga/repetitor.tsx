@@ -7,6 +7,7 @@ import {
   sendPageHtml,
   sendSecurityTxt,
   sendSharedBundle,
+  sendStyles,
   sendVendorModule,
   SharedBundles,
 } from "backend/src/Express/Adapter";
@@ -42,6 +43,7 @@ export const app = express()
   .get("/:pagePathName/bundle-*.js", (req, res) => {
     sendPageBundle(req.params.pagePathName, res);
   })
+  .get("/styles-*.css", sendStyles)
   .get("*", csrfProtection, sendPageHtml)
   // uploadParser must go before csrfProtection because for a
   // multipart/form-data request, the req.body needs to be parsed by
