@@ -120,7 +120,7 @@ const htmlTemplate = `<!DOCTYPE html>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
   <link href="/styles-${VERSION}.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;700&family=Vollkorn:ital,wght@0,400;0,800;1,400&display=swap" rel="stylesheet">
+  <link href="/fonts-${VERSION}.css" rel="stylesheet">
   <script>
     var environment = "${requireEnvVar("NODE_ENV")}";
   </script>
@@ -199,6 +199,24 @@ export function forwardTo<HF extends () => ExpressHandler>(handlerFactory: HF): 
   return (...args: Parameters<ExpressHandler>): ReturnType<ExpressHandler> => handlerFactory()(...args);
 }
 
-export function sendStyles(_req: Request, res: Response): void {
-  res.sendFile("frontend/shared/build/styles.css", sendFileOptions);
+export function sendCss(req: Request, res: Response): void {
+  const fileName = path.basename(req.path).replace(`-${VERSION}`, "");
+
+  switch (fileName) {
+    case "styles.css":
+      return res.sendFile(`frontend/shared/build/styles.css`, sendFileOptions);
+    case "fonts.css":
+      return res.sendFile(`${FontsBasePath}/fonts.css`, sendFileOptions);
+    default:
+      res.sendStatus(404);
+  }
+}
+
+const FontsBasePath = "frontend/shared/fonts";
+
+export function sendFont(req: Request, res: Response): void {
+  const fileName = path.basename(req.path);
+  const filePath = path.join(FontsBasePath, fileName);
+
+  res.sendFile(filePath, sendFileOptions);
 }

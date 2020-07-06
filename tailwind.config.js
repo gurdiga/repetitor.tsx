@@ -1,14 +1,19 @@
 // eslint-disable-next-line no-undef
 const defaultTheme = require("tailwindcss/defaultTheme");
 
+const DisplayTypeface = "Vollkorn";
+const BodyTypeface = "'Inria Sans'";
+
 // eslint-disable-next-line no-undef
 module.exports = {
   purge: [],
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inria Sans", ...defaultTheme.fontFamily.sans],
-        serif: ["Vollkorn", ...defaultTheme.fontFamily.serif],
+        sans: [BodyTypeface, ...defaultTheme.fontFamily.sans],
+        serif: [DisplayTypeface, ...defaultTheme.fontFamily.serif],
+        display: [DisplayTypeface],
+        body: [BodyTypeface],
       },
     },
   },
