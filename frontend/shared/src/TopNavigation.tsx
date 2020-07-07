@@ -11,21 +11,24 @@ export function TopNavigation(props: Props) {
 
   return (
     <ul className={TopNavigationCss.LinkList}>
-      <li>
-        <a href={PagePath.Home}>Home</a>
-      </li>
       {isAuthenticated && (
         <li>
-          <a href={PagePath.Profile}>Profil</a>
+          <a className="font-light" href={PagePath.Profile}>
+            Profil
+          </a>
         </li>
       )}
       {!isAuthenticated && (
         <>
           <li>
-            <a href={PagePath.Registration}>Înregistrare</a>
+            <a className="font-light" href={PagePath.Registration}>
+              Înregistrare
+            </a>
           </li>
           <li>
-            <a href={PagePath.Login}>Autentificare</a>
+            <a className="font-light" href={PagePath.Login}>
+              Autentificare
+            </a>
           </li>
         </>
       )}
