@@ -14,6 +14,13 @@ module.exports = {
         display: [DisplayTypeface],
         body: [BodyTypeface],
       },
+      transitionProperty: {
+        height: "height, max-height",
+      },
+      maxHeight: {
+        ...defaultTheme.maxHeight,
+        "0": "0",
+      },
     },
   },
   variants: {},

@@ -19,16 +19,16 @@ export function PageLayout(props: Props) {
   document.title = props.title;
 
   return (
-    <div className="container mx-auto p-2">
+    <div className="container mx-auto">
+      <TopNavigation {...{isAuthenticated}} />
+
       <section className="flex justify-between">
         <div>
           <a className="font-display font-black text-xl uppercase" href={PagePath.Home}>
             Logo
           </a>
         </div>
-        <nav>
-          <TopNavigation {...{isAuthenticated}} />
-        </nav>
+        <nav></nav>
       </section>
 
       <main className={PageLayoutCss.MainContent}>
