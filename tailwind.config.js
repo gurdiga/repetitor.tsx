@@ -1,10 +1,9 @@
-// eslint-disable-next-line no-undef
+/* global module, require */
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 const DisplayTypeface = "Vollkorn";
 const BodyTypeface = "'Inria Sans'";
 
-// eslint-disable-next-line no-undef
 module.exports = {
   purge: [],
   theme: {
@@ -18,5 +17,5 @@ module.exports = {
     },
   },
   variants: {},
-  plugins: [],
+  plugins: [require("@tailwindcss/custom-forms")],
 };

@@ -16,6 +16,7 @@
   },
   "repository": "github:user/repo",
   "devDependencies": {
+    "@tailwindcss/custom-forms": "0.2.1",
     "@types/chai": "4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "7.0.2",
