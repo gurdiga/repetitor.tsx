@@ -117,10 +117,19 @@ open:
 	open http://localhost:$(PORT)
 o: open
 
+NPM_MODULES=. backend frontend
+
 npm-update:
-	npm --depth 999 update
-	(cd backend; npm --depth 9999 update)
-	(cd frontend; npm --depth 9999 update)
+	@set -x
+	for dir in $(NPM_MODULES); do
+		(cd $$dir; npm --depth 999 update)
+	done
+
+audit:
+	@set -x
+	for dir in $(NPM_MODULES); do
+		(cd $$dir; npm audit)
+	done
 
 node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules frontend/tests/node_modules backend/node_modules
 backend/node_modules: backend/package.json
