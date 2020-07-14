@@ -3,6 +3,8 @@ import {errorLoggingMiddleware} from "backend/src/ErrorLogging";
 import {
   forwardTo,
   handlePost,
+  sendCss,
+  sendFont,
   sendPageBundle,
   sendPageHtml,
   sendSecurityTxt,
@@ -42,6 +44,8 @@ export const app = express()
   .get("/:pagePathName/bundle-*.js", (req, res) => {
     sendPageBundle(req.params.pagePathName, res);
   })
+  .get("/*.css", sendCss)
+  .get("/fonts/*", sendFont)
   .get("*", csrfProtection, sendPageHtml)
   // uploadParser must go before csrfProtection because for a
   // multipart/form-data request, the req.body needs to be parsed by

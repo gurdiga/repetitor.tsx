@@ -1,9 +1,6 @@
-import {center, horizontal, padding, vertical, margin, maxWidth} from "csstips";
+import {center, horizontal, margin, maxWidth, padding, vertical} from "csstips";
 import {em} from "csx";
 import {style} from "typestyle";
-import {GlobalCss} from "frontend/shared/src/Css/Global.css";
-
-GlobalCss.setupGlobalStyles();
 
 export namespace PageLayoutCss {
   export const Wrapper = style(vertical, center, {

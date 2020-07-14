@@ -28,7 +28,7 @@ export function TextField(props: Props) {
   return (
     <>
       <Label htmlFor={id}>{label}:</Label>
-      <input {...{type, id, onInput, value, autoFocus, readOnly}} className={TextFieldCss.Input} />
+      <input {...{type, id, onInput, value, autoFocus, readOnly}} className="form-input" />
       {showValidationMessage && <ValidationMessage text={validationMessage} />}
       {additionalControls &&
         (typeof additionalControls === "string" ? (

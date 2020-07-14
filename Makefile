@@ -4,6 +4,37 @@ SHELL=bash
 default:
 	make --no-print-directory test-frontend FILES=frontend/tests/src/pages/EmailChangePageTest.tsx
 
+h:
+	make --no-print-directory build PROJECT=frontend/pages/home
+
+hw:
+	make --no-print-directory watch PROJECT=frontend/pages/home
+
+css: frontend/shared/build/styles.css
+frontend/shared/build/styles.css: tailwind.config.js frontend/shared/styles.css
+	npm run css
+
+fonts: frontend/shared/fonts/fonts.css
+frontend/shared/fonts/fonts.css:
+	set -e
+	rm -rf $(@D)
+	mkdir -p $(@D)
+	( \
+		echo 'https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'; \
+		echo 'https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap'; \
+	) \
+	| while read url; do \
+		curl \
+			-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:69.0) Gecko/20100101 Firefox/69.0' \
+			--fail "$$url" >> $@; \
+	done
+	grep -Po 'https://fonts.gstatic.com\S+.woff2' $@ | xargs wget --continue --directory-prefix=$(@D)/
+	sed -i 's|https://fonts.gstatic.com/.*/|fonts/|' $@
+
+cf: clean-fonts fonts
+clean-fonts:
+	rm -rf frontend/shared/fonts
+
 test: test-backend test-frontend
 t: test
 
@@ -43,9 +74,9 @@ test-frontend: node_modules
 tf: test-frontend
 
 c: build
-build: node_modules
+build: node_modules css fonts
 	~/.nvm/nvm-exec \
-	node_modules/.bin/tsc --build -v
+	node_modules/.bin/tsc --build -v $(PROJECT)
 
 cc: clean build
 
@@ -54,6 +85,7 @@ watch: node_modules
 		--build \
 		--watch \
 		--preserveWatchOutput \
+		$(PROJECT) \
 	| tee >( \
 		while read line; do
 			STATUS_LINE=`echo $$line | grep -Po 'Found \d+ errors?'`
