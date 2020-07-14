@@ -16,7 +16,6 @@
   },
   "repository": "github:user/repo",
   "devDependencies": {
-    "@tailwindcss/custom-forms": "0.2.1",
     "@types/chai": "4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "7.0.2",
@@ -30,6 +29,7 @@
     "sinon": "9.0.2"
   },
   "dependencies": {
+    "@tailwindcss/custom-forms": "0.2.1",
     "@typescript-eslint/eslint-plugin": "2.28.0",
     "@typescript-eslint/parser": "2.34.0",
     "amd-loader": "0.0.8",
