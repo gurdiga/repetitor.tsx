@@ -14,6 +14,12 @@ import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 export async function handlePost(req: Request, res: Response): Promise<void> {
   const {scenarioName} = req.body;
 
+  if (!req.session) {
+    res.status(500).json({error: "SESSION_NOT_INITIALIZED"});
+    logError(new Error("Express.js session is not initialized"));
+    return;
+  }
+
   try {
     const scenarioInput: object = getScenarioInput(req);
 

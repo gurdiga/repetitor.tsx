@@ -280,6 +280,25 @@ describe("Express integration", () => {
       beforeEach(() => (logErrorStub = Sinon.stub(ErrorLogging, "logError")));
       afterEach(() => logErrorStub.restore());
 
+      context("when Express.js session is not initialized", () => {
+        // Don’t know how to simulate a request with an uninitialized
+        // session, so I’m leaving this here just for documenation
+        // purposes.
+        //
+        // it("responds with JSON 500 SESSION_NOT_INITIALIZED and logs the error", async () => {
+        //   const scenarioName = "TestScenario";
+        //   const scenarioInput = {one: 1, two: 2};
+        //   const res = await simulateJsonPost({scenarioName, scenarioInput});
+        //
+        //   expect(res, "responds with HTTP 500").to.have.status(500);
+        //   expect(res.body).to.deep.equal({error: "SESSION_NOT_INITIALIZED"});
+        //
+        //   const expectedError = instanceOf(Error).and(has("message", "Express.js session is not initialized"));
+        //   const expectedErrorData = {context: "getScenarioInput", scenarioName: "TestScenario"};
+        //   expect(logErrorStub).to.have.been.calledOnceWithExactly(expectedError, expectedErrorData);
+        // });
+      });
+
       context("when request is a form upload", () => {
         context("when the scenarioInput form field is not a valid JSON string", () => {
           it("responds with JSON 500 SCENARIO_INPUT_ERROR", async () => {
@@ -288,7 +307,7 @@ describe("Express integration", () => {
               scenarioInput: "some non-JSON blob",
             });
 
-            expect(res, "responds with HTTP 500 ").to.have.status(500);
+            expect(res, "responds with HTTP 500").to.have.status(500);
             expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
 
             const expectedError = instanceOf(Error).and(has("message", "Unable to parse scenario input JSON"));
@@ -305,7 +324,7 @@ describe("Express integration", () => {
                 scenarioInput: invalidInput,
               });
 
-              expect(res, "responds with HTTP 500 ").to.have.status(500);
+              expect(res, "responds with HTTP 500").to.have.status(500);
               expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
 
               const expectedError = instanceOf(Error).and(has("message", "Scenario input is expected to be an object"));
@@ -325,7 +344,7 @@ describe("Express integration", () => {
                 scenarioInput: invalidInput,
               });
 
-              expect(res, "responds with HTTP 500 ").to.have.status(500);
+              expect(res, "responds with HTTP 500").to.have.status(500);
               expect(res.body).to.deep.equal({error: "SCENARIO_INPUT_ERROR"});
 
               const expectedError = instanceOf(Error).and(has("message", "Scenario input is expected to be an object"));
@@ -344,7 +363,7 @@ describe("Express integration", () => {
             scenarioInput: "{}",
           });
 
-          expect(res, "responds with HTTP 500 ").to.have.status(500);
+          expect(res, "responds with HTTP 500").to.have.status(500);
           expect(res.body).to.deep.equal({error: "SCENARIO_EXECUTION_ERROR"});
 
           const expectedError = instanceOf(Error).and(has("message", "Beep!"));
