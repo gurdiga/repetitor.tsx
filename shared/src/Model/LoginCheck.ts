@@ -1,9 +1,8 @@
-import {DataProps} from "shared/src/Model/Utils";
-import {LoginInput} from "shared/src/Scenarios/Login";
 import {EmailError, EmailValidationRules} from "shared/src/Model/Email";
 import {PasswordError, PasswordValidationRules} from "shared/src/Model/Password";
-import {validateWithRules, PredicateFn} from "shared/src/Utils/Validation";
-import {UserSession} from "shared/src/Model/UserSession";
+import {DataProps} from "shared/src/Model/Utils";
+import {LoginInput} from "shared/src/Scenarios/Login";
+import {PredicateFn, validateWithRules} from "shared/src/Utils/Validation";
 
 export interface LoginCheck {
   kind: "LoginCheck";
@@ -19,7 +18,7 @@ export type LoginCheckSuccess = {
 
 export type LoginCheckInfo = {
   kind: "LoginCheckInfo";
-  userId: UserSession["userId"];
+  userId: number;
 };
 
 export type LoginCheckError = UnknownEmailError | IncorrectPasswordError;

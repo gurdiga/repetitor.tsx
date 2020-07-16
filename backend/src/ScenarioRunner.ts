@@ -31,6 +31,8 @@ export async function runScenario(scenarioName?: string, scenarioInput: any = {}
   const scenarioHandler = scenarioHandlers[scenarioName as ScenarioName];
 
   if (scenarioHandler) {
+    // TODO: Only pass the session.userSession to scenarioHandler
+
     return await scenarioHandler(scenarioInput, session);
   } else {
     if (!scenarioName) {
