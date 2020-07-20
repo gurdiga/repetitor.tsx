@@ -24,5 +24,6 @@
     "**/build": true,
     "**/package-lock.json": true
   },
-  "eslint.enable": true
+  "eslint.enable": true,
+  "editor.formatOnSave": true
 }
