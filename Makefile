@@ -117,7 +117,7 @@ open:
 	open http://localhost:$(PORT)
 o: open
 
-NPM_MODULES=. backend frontend
+NPM_MODULES=. backend frontend frontend/tests
 
 npm-update:
 	@set -x
