@@ -5,7 +5,7 @@
   "repository": "none",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/storage": "4.7.0",
+    "@google-cloud/storage": "5.3.0",
     "@types/compression": "1.7.0",
     "@types/cors": "2.8.7",
     "@types/csurf": "^1.9.36",
