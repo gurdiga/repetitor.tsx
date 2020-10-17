@@ -4,17 +4,15 @@
   "description": "none",
   "repository": "none",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "@types/enzyme": "3.10.7",
     "@types/enzyme-adapter-react-16": "1.0.6",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "1.15.4"
-  },
-  "dependencies": {
     "@types/react": "16.9.49",
     "@types/react-dom": "16.9.6",
     "csstips": "^1.2.0",
     "csx": "^10.0.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "1.15.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "requirejs": "^2.3.6",
