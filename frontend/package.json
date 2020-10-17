@@ -4,6 +4,12 @@
   "description": "none",
   "repository": "none",
   "license": "MIT",
+  "devDependencies": {
+    "@types/enzyme": "3.10.7",
+    "@types/enzyme-adapter-react-16": "1.0.6",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "1.15.4"
+  },
   "dependencies": {
     "@types/react": "16.9.49",
     "@types/react-dom": "16.9.6",

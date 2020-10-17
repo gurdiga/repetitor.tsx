@@ -117,7 +117,7 @@ open:
 	open http://localhost:$(PORT)
 o: open
 
-NPM_MODULES=. backend frontend frontend/tests
+NPM_MODULES=. backend frontend
 
 npm-update:
 	@set -x
@@ -131,11 +131,10 @@ audit:
 		(cd $$dir; npm audit)
 	done
 
-node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules frontend/tests/node_modules backend/node_modules
+node_modules: package.json ~/.nvm $(NODE_BINARY_PATH) frontend/node_modules backend/node_modules
 backend/node_modules: backend/package.json
 frontend/node_modules: frontend/package.json
-frontend/tests/node_modules: frontend/tests/package.json
-node_modules backend/node_modules frontend/node_modules frontend/tests/node_modules:
+node_modules backend/node_modules frontend/node_modules:
 	@set -e
 	(cd $(@D) && ~/.nvm/nvm-exec npm install)
 	touch $@
@@ -146,11 +145,10 @@ clean:
 		backend/build/ \
 		backend/tests/build/ \
 		frontend/shared/build/ \
-		frontend/tests/build/ \
 		frontend/pages/*/build/
 
 uninstall: clean
-	rm -rf {.,backend,frontend,frontend/tests}/node_modules
+	rm -rf {.,backend,frontend}/node_modules
 
 NODE_BINARY_PATH=$(shell echo "~/.nvm/versions/node/`cat .nvmrc`/bin/node")
 $(NODE_BINARY_PATH):
