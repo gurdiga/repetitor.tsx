@@ -5,7 +5,7 @@ import {PageBundleFilePaths, PagePathNames, RequireModulePaths} from "backend/sr
 import {getUploadParsingResult} from "backend/src/Express/UploadParsing";
 import {VendorModulesWebPaths, VersionedVendorModulePaths} from "backend/src/Express/VendorModules";
 import {runScenario} from "backend/src/ScenarioRunner";
-import {NextFunction, Request, Response} from "express";
+import {ErrorRequestHandler, Request, Response} from "express";
 import * as path from "path";
 import {UserSession} from "shared/src/Model/UserSession";
 import {isObject} from "shared/src/Utils/Language";
@@ -14,17 +14,16 @@ import {pagePropsFromSession} from "shared/src/Utils/PageProps";
 export async function handlePost(req: Request, res: Response): Promise<void> {
   const {scenarioName} = req.body;
 
-  if (!req.session) {
-    res.status(500).json({error: "SESSION_NOT_INITIALIZED"});
-    logError(new Error("Express.js session is not initialized"));
-    return;
-  }
-
   try {
     const scenarioInput: object = getScenarioInput(req);
 
+    // I use bang! here because the csrfProtection middleware runs
+    // before this function and would reject a request with no session,
+    // and so there is no way to get here without `req.session`.
+    const session = req.session!;
+
     try {
-      res.json(await runScenario(scenarioName, scenarioInput, req.session));
+      res.json(await runScenario(scenarioName, scenarioInput, session));
     } catch (error) {
       logError(error, {scenarioName, context: "runScenario"});
       res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});
@@ -198,11 +197,9 @@ Contact: mailto:gurdiga@gmail.com`
   );
 }
 
-type ExpressHandler = (err: Error, req: Request, res: Response, next: NextFunction) => void;
-
 // This function only exists to facilitate stubbing in integration tests for this adapter.
-export function forwardTo<HF extends () => ExpressHandler>(handlerFactory: HF): ExpressHandler {
-  return (...args: Parameters<ExpressHandler>): ReturnType<ExpressHandler> => handlerFactory()(...args);
+export function forwardTo<HF extends () => ErrorRequestHandler>(handlerFactory: HF): ErrorRequestHandler {
+  return (...args: Parameters<ErrorRequestHandler>): ReturnType<ErrorRequestHandler> => handlerFactory()(...args);
 }
 
 export function sendCss(req: Request, res: Response): void {
