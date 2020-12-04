@@ -2,7 +2,7 @@ import {isDevelopmentEnvironment, isTestEnvironment, requireEnvVar} from "backen
 import {NextFunction, Request, Response} from "express";
 import * as Rollbar from "rollbar";
 
-const rollbar = new Rollbar({
+const rollbarInstance = new Rollbar({
   accessToken: requireEnvVar("APP_ROLLBAR_POST_SERVER_ITEM_TOKEN"),
   captureUncaught: true,
   captureUnhandledRejections: true,
@@ -12,10 +12,12 @@ const rollbar = new Rollbar({
   verbose: isTestEnvironment() || isDevelopmentEnvironment(),
 });
 
+const handler = rollbarInstance.errorHandler();
+
 export function errorLoggingMiddleware(err: Error, req: Request, res: Response, next: NextFunction): void {
-  rollbar.errorHandler()(err, req, res, next);
+  handler(err, req, res, next);
 }
 
 export function logError(...args: Rollbar.LogArgument[]): void {
-  rollbar.error(...args);
+  rollbarInstance.error(...args);
 }
