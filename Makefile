@@ -2,7 +2,7 @@
 SHELL=bash
 
 default:
-	make --no-print-directory test-frontend FILES=frontend/tests/src/pages/EmailChangePageTest.tsx
+	make --no-print-directory test-backend FILES=backend/tests/src/Utils/Express/AdapterTest.ts
 
 h:
 	make --no-print-directory build PROJECT=frontend/pages/home
@@ -47,7 +47,9 @@ test-backend: node_modules
 	TS_NODE_TRANSPILE_ONLY=true \
 	TS_NODE_SCOPE=true \
 	~/.nvm/nvm-exec \
-	node --no-deprecation `# avoid "DeprecationWarning: OutgoingMessage.prototype._headers is deprecated" caused by timed-out` \
+	node \
+		--no-deprecation `# avoid "DeprecationWarning: OutgoingMessage.prototype._headers is deprecated" caused by timed-out` \
+		--trace-warnings \
 	node_modules/.bin/mocha \
 		--require ts-node/register \
 		--require tsconfig-paths/register \
