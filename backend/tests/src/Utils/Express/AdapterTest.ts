@@ -239,10 +239,10 @@ describe("Express integration", () => {
     describe("happy path", () => {
       const scenarioName = "TestScenario";
       const scenarioInput = {one: 1, two: 2};
+      const expectedSession = instanceOf(Object).and(has("cookie").and(has("csrfSecret")));
 
-      context("when request is a form upload", () => {
+      context("when the request is JSON", () => {
         it("runs the scenario and responds with its output", async () => {
-          const expectedSession = instanceOf(Object).and(has("cookie").and(has("csrfSecret")));
           const res = await simulateJsonPost({scenarioName, scenarioInput});
 
           expect(runScenarioStub).to.have.been.calledOnceWithExactly(scenarioName, scenarioInput, expectedSession);
@@ -250,16 +250,15 @@ describe("Express integration", () => {
         });
       });
 
-      context("when the request is JSON", () => {
+      context("when request is a form upload", () => {
         it("runs the scenario and responds with its output", async () => {
           const file = __filename;
-          const expectedSession = instanceOf(Object).and(has("cookie").and(has("csrfSecret")));
           const expectedInput = instanceOf(Object)
-            .and(has("one", 1))
-            .and(has("two", 2))
+            .and(has("one", scenarioInput["one"]))
+            .and(has("two", scenarioInput["two"]))
             .and(hasNested("upload[0].destination", "uploads/"))
             .and(hasNested("upload[0].fieldname", "files"))
-            .and(hasNested("upload[0].mimetype", "video/mp2t"))
+            .and(hasNested("upload[0].mimetype", "video/mp2t")) // because .ts is recognized as MPEG Transport Stream (TS) by MIME library
             .and(hasNested("upload[0].size", fs.statSync(file)["size"]))
             .and(hasNested("upload[0].originalname", path.basename(file)));
 
@@ -335,6 +334,7 @@ describe("Express integration", () => {
           });
         });
       });
+
       context("when input is OK, but scenario handler fails", () => {
         beforeEach(() => runScenarioStub.throws(new Error("Beep!")));
 

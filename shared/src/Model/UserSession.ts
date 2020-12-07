@@ -5,10 +5,10 @@ export interface UserSession {
   email?: string;
 }
 
-export type UserSession2 = {
+export interface UserSession2 {
   userId: number;
   profile: ClientSideProfile;
-};
+}
 
 export function initializeUserSession(sessionObject: UserSession, props: Required<UserSession>): void {
   for (const propName in props) {

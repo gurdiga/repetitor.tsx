@@ -18,7 +18,7 @@ export async function handlePost(req: Request, res: Response): Promise<void> {
     const scenarioInput: object = getScenarioInput(req);
 
     // I use bang! here because the csrfProtection middleware runs
-    // before this function and would reject a request with no session,
+    // before this function and rejects any request with no session,
     // and so there is no way to get here without `req.session`.
     const session = req.session!;
 
