@@ -20,10 +20,10 @@ export async function handlePost(req: Request, res: Response): Promise<void> {
     // I use bang! here because the csrfProtection middleware runs
     // before this function and rejects any request with no session,
     // and so there is no way to get here without `req.session`.
-    const session = req.session!;
+    const userSession = createUserSession(req.session!);
 
     try {
-      res.json(await runScenario(scenarioName, scenarioInput, session));
+      res.json(await runScenario(userSession, scenarioName, scenarioInput));
     } catch (error) {
       logError(error, {scenarioName, context: "runScenario"});
       res.status(500).json({error: "SCENARIO_EXECUTION_ERROR"});
@@ -32,6 +32,14 @@ export async function handlePost(req: Request, res: Response): Promise<void> {
     logError(error, {scenarioName, context: "getScenarioInput"});
     res.status(500).json({error: "SCENARIO_INPUT_ERROR"});
   }
+}
+
+function createUserSession(expressSession: any): UserSession {
+  if (!expressSession.userSession) {
+    expressSession.userSession = {};
+  }
+
+  return expressSession.userSession;
 }
 
 function getScenarioInput(req: Request): object {

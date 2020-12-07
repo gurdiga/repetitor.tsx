@@ -239,13 +239,15 @@ describe("Express integration", () => {
     describe("happy path", () => {
       const scenarioName = "TestScenario";
       const scenarioInput = {one: 1, two: 2};
-      const expectedSession = instanceOf(Object).and(has("cookie").and(has("csrfSecret")));
+
+      const hasNoProps = Sinon.match((value) => Object.keys(value).length === 0, "hasNoProps");
+      const expectedSession = instanceOf(Object).and(hasNoProps);
 
       context("when the request is JSON", () => {
         it("runs the scenario and responds with its output", async () => {
           const res = await simulateJsonPost({scenarioName, scenarioInput});
 
-          expect(runScenarioStub).to.have.been.calledOnceWithExactly(scenarioName, scenarioInput, expectedSession);
+          expect(runScenarioStub).to.have.been.calledOnceWithExactly(expectedSession, scenarioName, scenarioInput);
           expect(res).to.have.status(200);
         });
       });
@@ -267,8 +269,8 @@ describe("Express integration", () => {
             scenarioInput: JSON.stringify(scenarioInput),
           });
 
-          expect(runScenarioStub).to.have.been.calledOnceWithExactly(scenarioName, expectedInput, expectedSession);
-          expect(isUploadedFile(runScenarioStub.firstCall.args[1].upload[0])).to.be.true;
+          expect(runScenarioStub).to.have.been.calledOnceWithExactly(expectedSession, scenarioName, expectedInput);
+          expect(isUploadedFile(runScenarioStub.firstCall.args[2].upload[0])).to.be.true;
           expect(res).to.have.status(200);
         });
       });
