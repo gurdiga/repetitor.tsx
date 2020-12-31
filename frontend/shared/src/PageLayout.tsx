@@ -1,8 +1,9 @@
 import {PageLayoutCss} from "frontend/shared/src/Css/PageLayout.css";
+import {UtilsCss} from "frontend/shared/src/Css/Utils.css";
 import {Footer} from "frontend/shared/src/Footer";
 import {TopNavigation} from "frontend/shared/src/TopNavigation";
 import * as React from "react";
-import {PagePath} from "shared/src/Utils/PagePath";
+import {classes} from "typestyle";
 
 const DEBUG_LAYOUT = false;
 
@@ -19,23 +20,14 @@ export function PageLayout(props: Props) {
   document.title = props.title;
 
   return (
-    <div className="container mx-auto">
-      <TopNavigation {...{isAuthenticated}} />
-
-      <section className="flex justify-between">
-        <div>
-          <a className="font-display font-black text-xl uppercase" href={PagePath.Home}>
-            Logo
-          </a>
-        </div>
-        <nav></nav>
-      </section>
-
+    <div className={classes(PageLayoutCss.Wrapper, DEBUG_LAYOUT && UtilsCss.DebugLayout)}>
+      <nav>
+        <TopNavigation {...{isAuthenticated}} />
+      </nav>
       <main className={PageLayoutCss.MainContent}>
-        <h1 className="font-display font-bold text-3xl pt-4">{props.title}</h1>
+        <h1 className={PageLayoutCss.Title}>{props.title}</h1>
         {props.children}
       </main>
-
       <footer className={PageLayoutCss.FooterWrapper}>{props.footerContent || <Footer />}</footer>
     </div>
   );

@@ -10,10 +10,6 @@ h:
 hw:
 	make --no-print-directory watch PROJECT=frontend/pages/home
 
-css: frontend/shared/build/styles.css
-frontend/shared/build/styles.css: tailwind.config.js frontend/shared/styles.css
-	npm run css
-
 fonts: frontend/shared/fonts/fonts.css
 frontend/shared/fonts/fonts.css:
 	set -e
@@ -74,7 +70,7 @@ test-frontend: node_modules
 tf: test-frontend
 
 c: build
-build: node_modules css fonts
+build: node_modules fonts
 	~/.nvm/nvm-exec \
 	node_modules/.bin/tsc --build -v $(PROJECT)
 

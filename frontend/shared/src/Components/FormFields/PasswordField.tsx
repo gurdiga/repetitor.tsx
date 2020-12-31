@@ -1,12 +1,12 @@
 import {FormField} from "frontend/shared/src/Components/FormFields/FormField";
-import {Label} from "frontend/shared/src/Components/FormFields/Label";
 import {PasswordFieldCss} from "frontend/shared/src/Components/FormFields/PasswordField.css";
-import {TextFieldCss} from "frontend/shared/src/Components/FormFields/TextField.css";
 import {ValidationMessage} from "frontend/shared/src/Components/FormFields/ValidationMessage";
 import {FormValidation} from "frontend/shared/src/FormValidation";
 import {PasswordGenerator} from "frontend/shared/src/PasswordGenerator";
 import * as React from "react";
 import {getValidationErrorCode} from "shared/src/Utils/Validation";
+import {TextFieldCss} from "frontend/shared/src/Components/FormFields/TextField.css";
+import {Label} from "frontend/shared/src/Components/FormFields/Label";
 
 interface Props extends FormField.CommonProps {
   hasGenerateButton?: boolean;
@@ -40,7 +40,7 @@ export function PasswordField(props: Props) {
           autoFocus={!!autoFocus}
           value={value}
           onInput={onInput}
-          className="form-input"
+          className={PasswordFieldCss.Input}
           ref={inputRef}
         />
 

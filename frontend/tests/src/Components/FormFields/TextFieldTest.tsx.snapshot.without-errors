@@ -3,7 +3,7 @@
     First name
     :
   </Label>
-  <input type="text" id="firstName" onInput={[Function (anonymous)]} value="" autoFocus={[undefined]} readOnly={[undefined]} className="form-input" />
+  <input type="text" id="firstName" onInput={[Function (anonymous)]} value="" autoFocus={[undefined]} readOnly={[undefined]} className="Input_fz2n9dn" />
   <p className="Info_f1h3qb4v">
     Va fi afișat pe pagina dumneavoastră de profil
   </p>

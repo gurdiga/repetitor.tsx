@@ -45,7 +45,6 @@ describe("Express integration", () => {
   <meta name="msvalidate.01" content="7349C399D4F768E25C7444A6204D3F13" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
-  <link href="/styles-VERSION.css" rel="stylesheet">
   <link href="/fonts-VERSION.css" rel="stylesheet">
   <script>
     var environment = "test";

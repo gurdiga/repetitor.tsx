@@ -119,7 +119,6 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta name="msvalidate.01" content="7349C399D4F768E25C7444A6204D3F13" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <title>Loading…</title>
-  <link href="/styles-${VERSION}.css" rel="stylesheet">
   <link href="/fonts-${VERSION}.css" rel="stylesheet">
   <script>
     var environment = "${requireEnvVar("NODE_ENV")}";
@@ -203,8 +202,6 @@ export function sendCss(req: Request, res: Response): void {
   const fileName = path.basename(req.path).replace(`-${VERSION}`, "");
 
   switch (fileName) {
-    case "styles.css":
-      return res.sendFile(`frontend/shared/build/styles.css`, sendFileOptions);
     case "fonts.css":
       return res.sendFile(`${FontsBasePath}/fonts.css`, sendFileOptions);
     default:
