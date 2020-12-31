@@ -1,3 +1,7 @@
+## Tis is archived
+
+This has been an interesting toy-project: I’ve learned TS project references, and got to practice many things that I couldn’t at work. I’m archiving this to make room for the next one.
+
 ## The arrangement
 
 Here I’m trying to come up with a way to put together a whole system, frontend and backend, in a way that makes it understandable and maintainable.
